@@ -1,0 +1,2536 @@
+AndsoForth...
+CopyrightJ.L.Bezemer
+2001-04-06
+2
+Contents
+1Preface 5
+1.1Copyright...........................................5
+1.2Introduction ..........................................5
+1.3Aboutthisprimer.......................................5
+2Forthfundamentals 7
+2.1Makingcalculations withoutparenthesis ...........................7
+2.2Manipulating thestack....................................8
+2.3Deepstackmanipulators ...................................9
+2.4Passargumentstofunctions ..................................9
+2.5Makingyourownwords...................................10
+2.6Addingcomment .......................................11
+2.7Text-format ofForthsource..................................11
+2.8Displaying stringconstants ..................................12
+2.9Declaring variables ......................................12
+2.10Usingvariables ........................................12
+2.11Built-invariables .......................................13
+2.12Whatisacell?.........................................13
+2.13Declaring andusingconstants ................................13
+2.14Built-inconstants .......................................13
+2.15Usingbooleans ........................................13
+2.16IF-ELSE constructs ......................................14
+2.17FOR-NEXT constructs ....................................14
+2.18WHILE-DO constructs ....................................15
+2.19REPEAT-UNTILconstructs .................................16
+2.20Inﬁniteloops.........................................16
+2.21Gettinganumberfromthekeyboard.............................16
+2.22Aligning numbers .......................................17
+3
+4 CONTENTS
+3Arraysandstrings 19
+3.1Declaring arraysofnumbers .................................19
+3.2Usingarraysofnumbers ...................................19
+3.3Creatingarraysofconstants ..................................19
+3.4Usingarraysofconstants ...................................20
+3.5Creatingstrings........................................20
+3.6Initializing strings.......................................20
+3.7Gettingthelengthofastring.................................21
+3.8Printingastringvariable...................................21
+3.9Copyingastringvariable...................................22
+3.10Slicingstrings.........................................23
+3.11Appending strings.......................................25
+3.12Comparing strings.......................................26
+3.13Removingtrailingspaces...................................26
+3.14Stringconstants andstringvariables .............................27
+3.15Thecountbyte........................................27
+3.16Printingindividualcharacters .................................27
+3.17GettingASCIIvalues.....................................28
+3.18Whentouse[CHAR]orCHAR...............................28
+3.19Printingspaces........................................28
+3.20Fetching individualcharacters ................................29
+3.21Storingindividualcharacters .................................30
+3.22Gettingastringfromthekeyboard..............................31
+3.23WhatistheTIB?.......................................32
+3.24WhatisthePAD?.......................................32
+3.25HowdoIuseTIBandPAD?.................................32
+3.26Temporary stringconstants ..................................33
+3.27Simpleparsing ........................................33
+3.28Convertingastringtoanumber................................34
+3.29Controlling theradix.....................................35
+3.30Picturednumericoutput....................................38
+3.31Convertinganumbertoastring................................40
+CONTENTS 5
+4Stacksandcolondeﬁnitions 41
+4.1Theaddressofacolon-deﬁnition ...............................41
+4.2Vectoredexecution......................................41
+4.3Usingvalues..........................................42
+4.4Thestacks...........................................43
+4.5Savingtemporary values...................................44
+4.6TheReturnStackandtheDO..LOOP ............................45
+4.7OtherReturnStackmanipulations ..............................46
+4.8AlteringtheﬂowwiththeReturnStack...........................47
+4.9Leavingacolon-deﬁnition ..................................48
+4.10Howdeepisyourstack?...................................48
+5Advancedtopics 49
+5.1Booleans andnumbers ....................................49
+5.2Including yourowndeﬁnitions ................................50
+5.3Conditional compilation ...................................51
+5.4Exceptions ...........................................53
+5.5Lookuptables.........................................56
+5.6WhatDOES>CREATEdo?.................................59
+5.7Fixedpointcalculation ....................................61
+5.8Recursion ...........................................63
+5.9Forwarddeclarations .....................................63
+5.10Thisistheend.........................................64
+IAppendices 65
+6 CONTENTS
+Chapter 1
+Preface
+1.1Copyright
+Copyright(c)2001J.L.Bezemer.
+Permission isgrantedtocopy,distributeand/ormodifythisdocument underthetermsoftheGNUFree
+Documentation License,Version1.1oranylaterversionpublished bytheFreeSoftwareFoundation; with
+theInvariantSectionsbeing”GNUFreeDocumentation License”, ”Introduction and”Aboutthisprimer”,
+withtheFront-CoverTextsbeing”AndsoForth...,J.L.Bezemer”, andwiththeBack-CoverTextsbeing
+”TheinitialversionofthisprimerwaswrittenbyHansBezemer,authorofthe4tHcompiler.”.Acopyof
+thelicenseisincludedinthesectionentitled"GNUFreeDocumentation License".
+1.2Introduction
+Don’tyouhateit?You’vejustgotanewprogramming language andyou’retryingtowriteyourﬁrst
+program. Youwanttouseacertainfeature(youknowit’sgottobethere)andyoucan’tﬁnditinthe
+manual.
+I’vehadthatexperience manytimes.Sointhismanualyouwillﬁndmanyshortfeaturesonallkindof
+topics.Howtoinputanumberfromthekeyboard,whatacellis,etc.
+Ihopethiswillenableyoutogetquicklyonyourway.Ifitdidn’t,emailmeat’hansoft@bigfoot.com’.
+Youwillnotonlygetananswer,butyouwillhelpfutureForthusersaswell.
+Youcanusethismanualtwoways.Youcaneitherjustgetwhatyouneedorworkyourwaythrough.Every
+sectionbuildsontheknowledgeyouobtainedintheprevioussections. Allsectionsaregroupedintolevels.
+Weadviseyoutousewhatyou’velearnedafteryou’veworkedyourwaythroughalevel.
+Ifthisisn’tenoughtoteachyouForthyoucanalwaysgetarealgoodtextbookonForth,like"Starting
+Forth"byLeoBrodie.Havefun!
+1.3Aboutthisprimer
+Thisprimerwasoriginally writtenfor4tH,myownForthcompiler.4tHisn’tANS-Forthcompliant, by
+ANS-Forthstandards notevenaANS-Forthsystem.AfterawhileIgotquestions whycertainexamples
+weren’tworking.SinceItestedeverysingleoneofthemIwonderedwhy.Untilitdawnedonme:people
+learningForthwereusingmyprimer!
+7
+8 CHAPTER 1.PREFACE
+SoduetohighdemandIstartedtorewriteitforANS-Forthcompliant systems. Mostofthesesystems
+don’tevenhaveamanualatallsotheneedforitshouldbegreat.Thenextquestionwas:whichformat.
+SinceIwantedtolearnLYXanyway,Isettledforthat.Youcanproducevariousformatswithitwhichare
+readableonmostsystems,including MS-DOS, MS-WindowsandLinux.
+Thenextquestionwas:howfardoyougo.Theoriginalversionwasheavilygearedtowards4tH,which
+reﬂectsmyownviewsonForth.Andthoseviewssometimes contradict tothoseofANS-Forth.However,
+sinceLeoBrodietookthelibertyin”Thinking Forth”toexpresshisviews,IthoughtIshouldhavethe
+freedomtoexpressmine.
+Someexamples, especially inthe”Advancedtopics”chapter,usespecial4tHextensions. Fortunately
+WilBadenhadhelpedmetowritea4tH-to-ANS-F orthinterface.Sincesomeoftheseextensions cover
+functionalities commonly foundinotherlanguages Idecidedtokeepthosesectionsin,usingtheEasy4tH
+deﬁnitions. Inthepreviouschaptersyou’llﬁndsome4tHwordsaswell,butverysparingly.
+YoumayﬁndthatsomeexamplesarenotworkingwithyourspeciﬁcForthcompiler.Thatmayhaveseveral
+reasons.First,yourcompiler maynotsupportallANS-Forthwordsets.Second,yourcompiler maynotbe
+completely ANS-Forthcompliant. I’vetestedmostoftheseexampleswithGForthorWin32Forth,which
+are(almost)100%ANS-Forthcompliant. Third,yourcompiler mightbecase-sensiti ve.
+TheANS-Forthstandardisaveryimportant document. Icanonlyadviseyoutogetit.Youshouldhave
+notroubleﬁndingitontheinternet.Icanonlyhopethatthecompiler youchoseatleastdocumented its
+ANS-Forthcompatibility .
+ThisprimerwaswritteninthehopethatitwillbeusefulandthatstartingForthersaren’tputoffbythehigh
+priceofForthtextbooks.Itisdedicated toLeoBrodie,whotaughtmemuchmorethanjustForth.
+HansBezemer
+DenHaag,2001-03-07
+Chapter 2
+Forthfundamentals
+2.1Makingcalculations withoutparenthesis
+TouseForthyoumustunderstand ReversePolishNotation. Thisisawaytowritearithmetic expressions.
+Theformisabittrickyforpeopletounderstand, sinceitisgearedtowardsmakingiteasyforthecomputer
+toperformcalculations; however,mostpeoplecangetusedtothenotationwithabitofpractice.
+ReversePolishNotation storesvaluesinastack.Astackofvaluesisjustlikeastackofbooks:onevalue
+isplacedontopofanother.Whenyouwanttoperformacalculation, thecalculation usesthetopnumbers
+onthestack.Forexample,here’satypicaladditionoperation:
+12+
+WhenForthreadsanumber,itjustputsthevalueontothestack.Thus1goesonthestack,then2goeson
+thestack.Whenyouputavalueontothestack,wesaythatyoupushitontothestack.WhenForthreads
+theoperator’+’,ittakesthetoptwovaluesoffthestack,addsthem,thenpushestheresultbackontothe
+stack.Thismeansthatthestackcontains:
+3
+aftertheaboveaddition. Asanotherexample,consider:
+234+*
+(The’*’standsformultiplication.) Forthbeginsbypushingthethreenumbers ontothestack.Whenit
+ﬁndsthe’+’,ittakesthetoptwonumbers offthestackandaddsthem.(Takingavalueoffthestackis
+calledpoppingthestack.)Forththenpushestheresultoftheadditionbackontothestackinplaceofthe
+twonumbers. Thusthestackcontains:
+27
+WhenForthﬁndsthe’*’operator,itagainpopsthetoptwovaluesoffthestack.Itmultiplies them,then
+pushestheresultbackontothestack,leaving:
+14
+9
+10 CHAPTER 2.FORTHFUNDAMENTALS
+ThefollowinglistgivesafewmoreexamplesofReversePolishexpressions. Aftereach,weshowthe
+contentsofthestack,inparentheses.
+72- (5)
+27- (-5)
+123/ (4)
+-123/ (-4)
+45+2* (18)
+452+* (28)
+452*- (-6)
+2.2Manipulating thestack
+Youwilloftenﬁndthattheitemsonthestackarenotintherightorderorthatyouneedacopy.Thereare
+stack-manipulators whichcantakecareofthat.
+Todisplayanumberyouuse’.’,pronounced "dot".Ittakesanumberfromthestackanddisplaysit.
+’SWAP’reversestheorderoftwoitemsonthestack.Ifweenter:
+23..cr
+Forthanswers:
+32
+Ifyouwanttodisplaythenumbersinthesameorderasyouenteredthem,youhavetoenter:
+23swap..cr
+InthatcaseForthwillanswer:
+23
+Youcanduplicate anumberusing’DUP’.Ifyouenter:
+2..cr
+Forthwillcomplain thatthestackisempty.However,ifyouenter:
+2dup..cr
+Forthwilldisplay:
+22
+Anotherwaytoduplicate anumberisusing’OVER’.Inthatcasenotthetopmostnumberofthestackis
+duplicated, butthenumberbeneath.E.g.
+23dup...cr
+2.3.DEEPSTACKMANIPULA TORS 11
+willgiveyouthefollowingresult:
+332
+Butthisone:
+23over...cr
+willgiveyou:
+232
+Sometimes youwanttodiscardanumber,e.g.youduplicated ittocheckacondition, butsincethetest
+failed,youdon’tneeditanymore.’DROP’isthewordweusetodiscardnumbers. Sothis:
+23drop.
+willgiveyou"2"insteadof"3",sincewedroppedthe"3".
+TheﬁnaloneIwanttointroduce is’ROT’.Mostusersﬁnd’ROT’themostcomplexonesinceithasits
+effectsdeepinthestack.Thethirdmost itemtobeexact.Thisitemistakenfromitsplaceandputontop
+ofthestack.Itis’rotated’,asthissmallprogramwillshowyou:
+123 \1isthethirdmost item
+...cr \display allnumbers
+(Thiswilldisplay '321'asexpected)
+123 \samenumbers stacked
+rot \performs a'ROT'
+...cr \sameoperation
+(Thiswilldisplay '132'!)
+2.3Deepstackmanipulators
+Therearetwomanipulators thatcandigdeeperintothestack,called’PICK’and’ROLL’butIcannot
+recommend them.AstackisNOTanarray!SoiftherearesomeForth-83usersoutthere,Icanonlytell
+you:learnForththeproperway.Programs thathavesomanyitemsonthestackarejustbadlywritten.Leo
+Brodieagreeswithme.
+Ifyouarein’deep’troubleyoucanalwaysusethereturnstack manipulators. Checkoutthatsection.
+2.4Passarguments tofunctions
+Thereisnoeasierwaytopassargumentstofunctions asinForth.Functions haveanothernameinForth.
+Wecallthem"words".Wordstaketheir"arguments" fromthestackandleavethe"result"onthestack.
+Otherlanguages, likeC,doexactlythesame.Buttheyhidetheprocessfromyou.Becausepassingdatato
+thestackismadeexplicitinForthithaspowerfulcapabilities. Inotherlanguages, youcangetbackonly
+oneresult.InForthyoucangetbackseveral!
+AllwordsinForthhaveastack-effect-diagram. Itdescribes whatdataispassedtothestackinwhatorder
+andwhatisreturned. Theword’*’forinstancetakesnumbersfromthestack,multiplies themandleaves
+theresultonthestack.It’sstack-effect-diagram is:
+12 CHAPTER 2.FORTHFUNDAMENTALS
+n1n2--n3
+Meaning ittakesnumbern1andn2fromthestack,multiplies themandleavestheproduct(numbern3)on
+thestack.Therightmost numberisalwaysontopofthestack,whichmeansitistheﬁrstnumberwhich
+willbetakenfromthestack.Theword’.’isdescribed likethis:
+n--
+Whichmeansittakesanumberfromthestackandleavesnothing.Nowwegettothemostpowerfulfeature
+ofitall.Takethisprogram:
+2 (leaves anumber onthestack)
+3 (leaves anumber onthestack ontopofthe2)
+* (takes bothfromthestack andleaves theresult)
+. (takes theresult fromthestack anddisplays it)
+Notethatalldatabetweenthewords’*’and’.’ispassedimplicitly! LikeputtingLEGOstonesontopof
+another.Isn’titgreat?
+2.5Makingyourownwords
+Ofcourse,everyseriouslanguage hastohaveacapability toextendit.SohasForth.Theonlything
+youhavetodoistodetermine whatnameyouwanttogiveit.Let’ssayyouwanttomakeawordwhich
+multiplies twonumbersanddisplaystheresult.
+Well,that’seasy.We’vealreadyseenhowyouhavetocodeit.Theonlywordsyouneedare’*’and’.’.
+Youcan’tnameit’*’becausethatnameisalreadytaken.Youcouldnameit’multiply’, butisthataword
+youwanttotypeinforever?No,fartoolong.
+Let’scallit’*.’.Isthatavalidname?Ifyou’veprogrammed inotherlanguages, you’llprobably sayitisn’t.
+Butitis!Theonlycharacters youcan’tuseinanamearewhitespace characters (<CR>,<LF>,<space>,
+<TAB>).ItdependsontheForthyou’reusingwhetheritiscase-sensitiveornot,butusuallyitisn’t.
+So’*.’isokay.Nowhowdoweturnitintoaself-deﬁned word.Justaddacolonatthebeginninganda
+semi-colon attheend:
+:*.*.;
+That’sit.Yourwordisreadyforuse.Soinsteadof:
+23*.
+Wecantype:
+:*.*.;
+23*.
+Andwecanuseour’*.’overandoveragain.Hurray,you’vejustdeﬁnedyourﬁrstwordinForth!
+2.6.ADDING COMMENT 13
+2.6Addingcomment
+Addingcomment isverysimple.Infact,therearetwowaystoaddcomment inForth.Thatisbecausewe
+likeprograms withalotofcomment.
+Theﬁrstformyou’vealreadyencountered. Let’ssaywewanttoaddcomment tothislittleprogram:
+:*.*.;
+23*.
+Soweaddourcomment:
+:*.*.; Thiswillmultiply andprint twonumbers
+23*.
+Forthwillnotunderstand this.Itwilldesperately lookforthewords’this’,’will’,etc.Howevertheword
+’\’willmarkeverythinguptotheendofthelineascomment. Sothiswillwork:
+:*.*.; \Thiswillmultiply andprint twonumbers
+23*.
+Thereisanotherwordcalled’(’whichwillmarkeverythinguptothenext’)’ascomment. Yes,even
+multiplelines.Ofcourse,theselinesmaynotcontaina’)’oryou’llmakeForthveryconfused. Sothis
+comment willberecognized too:
+:*.*.; (Thiswillmultiply andprint twonumbers)
+23*.
+Notethatthereisawhitespace-character afterboth’\’and’(’.Thisismandatory!
+2.7Text-formatofForthsource
+ForthsourcecanbesimpleASCII-ﬁles. Andyoucanuseanylayoutaslongathisruleisfollowed:
+Allwordsareseparated byatleastonewhitespace character!
+Well,inFortheverythingisawordorbecoming aword.Yes,even’\’and’(’arewords!Andyoucanadd
+alltheemptylinesorspacesortabsyoulike,Forthwon’tcareandyourharddisksuppliereither.
+However,someForthsstilluseaspeciallineeditor,whichworkswithscreens. Screensareusually1K
+blocks,dividedinto16linesof64characters. Explaining howthesekindofeditorsworkgoesbeyondthe
+scopeofthismanual.Youhavetocheckthedocumentation ofyourForthcompiler onthat.Theﬁlesthese
+editorsproducearecalledblockﬁles.
+14 CHAPTER 2.FORTHFUNDAMENTALS
+2.8Displaying stringconstants
+Displaying astringisaseasyasaddingcomment. Let’ssayyouwanttomaketheultimateprogram, one
+thatisdisplaying "Helloworld!".Well,that’salmosttheentireprogram. Thefamous’helloworld’program
+issimplythisinForth:
+.(Hello world!)
+Enterthisanditworks.Yes,that’sit!Nodeclaration thatthisisthemainfunctionanditisbeginninghere
+andendingthere.Maybeyouthinkitlooksfunnyonthedisplay.Well,youcanaddacarriagereturnby
+addingtheword’CR’.Sonowitlookslike:
+.(Hello world!) cr
+Stillprettysimple,huh?
+2.9Declaring variables
+Onetimeoranotheryou’regoingtoneedvariables.Declaring avariableiseasy.
+variable one
+Thesamerulesfordeclaring wordsapplyforvariables.Youcan’tuseanamethatalreadyhasbeentaken
+oryou’llgetprettystrangeresults.Avariableisawordtoo!Andwhitespace characters arenotallowed.
+NotethatForthisusuallynotcase-sensiti ve!
+2.10Usingvariables
+Ofcoursevariablesareoflittleusewhenyoucan’tassignvaluestothem.Thisassignsthenumber6to
+variable’ONE’:
+6one!
+Wedon’tcall’!’bangorsomething likethat,wecallit’store’.Ofcourseyoudon’thavetoputanumber
+onthestacktouseit,youcanuseanumberthatisalreadyonthestack.Toretrievethevaluestoredin
+’ONE’weuse:
+one@
+Theword’@’iscalled’fetch’anditputsthenumberstoredin’one’onthestack.Todisplayityouuse’.’:
+one@.
+Thereisashortcutforthat,theword’?’,whichwillfetchthenumberstoredin’ONE’anddisplaysit:
+one?
+2.11.BUILT-INVARIABLES 15
+2.11Built-invariables
+Forthhastwobuilt-invariablesyoucanuseforyourownpurposes. Theyarecalled’BASE’and’>IN’.
+’BASE’controlstheradixatrun-time, ’>IN’isusedby’WORD’and’PARSE’.
+2.12Whatisacell?
+Acellissimplythespaceanumbertakesup.Sothesizeofavariableisonecell.Thesizeofacellis
+important sinceitdetermines therangeForthcanhandle.We’llcometothatfurtheron.
+2.13Declaring andusingconstants
+Declaring asimpleconstantiseasytoo.Let’ssaywewanttomakeaconstantcalled’FIVE’:
+5constant five
+Nowyoucanuse’FIVE’likeyouwould’5’.E.g.thiswillprintﬁvespaces:
+fivespaces
+Thesamerulesfordeclaring wordsapplyforconstants. Youshouldn’tuseanamethatalreadyhasbeen
+taken.Aconstantisawordtoo!Andwhitespace characters arenotallowed.NotethatForthisusuallynot
+case-sensiti ve.
+2.14Built-inconstants
+Thereareseveralbuilt-inconstants. Ofcourse,theyareallliteralsincaseyouwonder.Here’salist.Refer
+totheglossaryforamoredetaileddescription:
+1.BL
+2.FALSE
+3.PAD
+4.TIB
+5.TRUE
+2.15Usingbooleans
+Booleans areexpressions orvaluesthatareeithertrueorfalse.Theyareusedtoconditionally executeparts
+ofyourprogram. InForthavalueisfalsewhenitiszeroandtruewhenitisnon-zero. Mostbooleans come
+intoexistencewhenyoudocomparisons. Thisonewilldetermine whetherthevalueinvariable’VAR’is
+greaterthan5.Trytopredictwhetheritwillevaluatetotrueorfalse:
+variable var
+4var!
+var@5>.
+No,itwasn’t!Buthey,youcanprintbooleans asnumbers. Well,theyarenumbers. Butwithaspecial
+meaningaswewillseeinthenextsection.
+16 CHAPTER 2.FORTHFUNDAMENTALS
+2.16IF-ELSE constructs
+Likemostotherlanguages youcanuseIF-ELSE constructs. Let’senhanceourpreviousexample:
+variable var
+4var!
+:test
+var@5>
+if."Greater" cr
+else."Lessorequal" cr
+then
+;
+test
+Sonowourprogramdoesthejob.Ittellsyouwhenit’sgreaterandwhennot.Notethatcontrarytoother
+languages thecondition comesbeforethe’IF’and’THEN’endstheIF-clause. Inotherwords,whatever
+paththeprogramtakes,italwayscontinues afterthe’THEN’. Atip:thinkof’THEN’as’ENDIF’..
+2.17FOR-NEXT constructs
+ForthdoesalsohaveFOR-NEXT constructs. Thenumberofiterations isknowninthisconstruct. E.g.let’s
+printthenumbersfrom1to10:
+:test
+111doi.crloop
+;
+test
+Theﬁrstnumberpresentsthelimit.Whenthelimitisgoesbeyondthelimitminusonetheloopterminates.
+Thesecondnumberpresentstheinitialvalueoftheindex.That’swhereitstartsof.Soremember ,thisloop
+iteratesatleastonce!Youcanuse’?DO’insteadof’DO’.Thatwillnotentertheloopifthelimitandthe
+indexarethesametobeginwith:
+:test
+00?doi.crloop
+;
+test
+’I’represents theindex.Itisnotavariableoraconstant, itisapredeﬁned word,whichputstheindexon
+thestack,so’.’cangetitfromthestackandprintit.
+ButwhatifIwanttoincreasetheindexbytwo?Orwanttocountdownwards?Isthatpossible. Sure.
+Thereisanotherconstruct todojustthat.Okay,let’staketheﬁrstquestion:
+:test
+111doi.cr2+loop
+;
+test
+2.18.WHILE-DO CONSTR UCTS 17
+Thisonewillproduceexactlywhatyouaskedfor.Anincrement bytwo.Thisonewillproduceallnegative
+numbersfrom-1to-11:
+:test
+-11-1doi.cr-1+loop
+;
+test
+Why-11?Becausetheloopterminates whenitreachedthelimitminusone.Andwhenyou’recounting
+downward,thatis-11.Youcanchangethestepifyouwantto,e.g.:
+:test
+32767 1doi.i+loop
+;
+test
+Thiswillprint:1,2,4,8,allupto16384.Prettyﬂexible,Iguess.Youcanbreakoutofaloopbyusing
+’LEAVE’:
+:test
+100doidup5=ifdropleave else.crthenloop
+:
+test
+2.18WHILE-DO constructs
+AWHILE-DO construction isaconstruction thatwillperformzeroormoreiterations. Firstacondition is
+checked,thenthebodyisexecuted.Thenitwillbranchbacktothecondition. InForthitlookslikethis:
+BEGIN <condition> WHILE <body> REPEAT
+Thecondition willhavetoevaluatetoTRUEinordertoexecutethebody.IfitevaluatestoFALSEit
+branches tojustaftertheREPEAT.ThisexampledoesaFibbonaci test.
+:fib01
+begin
+dup>rrotdupr>> \condition
+while
+rotrotduprot+dup.\body
+repeat
+dropdropdrop; \after loophasexecuted
+Youmightnotunderstand allofthecommands, butwe’llgettothat.Ifyouenter"20ﬁb"youwillget:
+123581321
+Thisconstruct isparticularly handyifyouarenotsurethatalldatawillpassthecondition.
+18 CHAPTER 2.FORTHFUNDAMENTALS
+2.19REPEAT-UNTILconstructs
+Thecounterpart ofWHILE-DO constructs istheREPEAT-UNTILconstruct. Thisexecutesthebody,then
+checksacondition at’UNTIL’.Iftheexpression evaluatestoFALSE,itbranches backtothetopofthe
+body(markedby’BEGIN’) again.Itexecutesatleastonce.Thisprogramcalculates thelargestcommon
+divisor.
+:lcd
+begin
+swapovermod \body
+dup0= \condition
+until drop.;
+Ifyouenter"2721lcd"theprograms willanswer"3".
+2.20Inﬁniteloops
+Inordertomakeaninﬁnitelooponecouldwrite:
+:test
+begin ."Diamonds areforever" cr0until
+;
+test
+Butthereisanicerwaytodojustthat:
+:test
+begin ."Diamonds areforever" cragain
+;
+test
+Thiswillexecuteuntiltheendoftimes,unlessyouexittheprogramanotherway.
+2.21Gettinganumberfromthekeyboard
+Let’sstartwith"you’renotsupposed tounderstand this".IfyoudigdeeperinForthyou’llﬁndoutwhy
+itworksthewayitworks.Butifyoudeﬁnethiswordinyourprogramitwillreadanumberfromthe
+keyboardandputitonthestack.Ifyouhaven’tenteredavalidnumber,itwillpromptyouagain.
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+NEGATE 1-CONSTANT (ERROR) \create constant (ERROR)
+[THEN]
+:number (a--n)
+0.Rotdup1+c@[char] -=>rcount r@if1/string then>number nip
+2.22.ALIGNING NUMBERS 19
+0=ifd>sr>ifnegate thenelser>drop2drop (error) then;
+:input# (--n)
+begin
+refill dropblwordnumber (n)
+dup(error) <> (nf)
+dup0= (nf-f)
+ifswapdropthen (f|nf)
+until ;
+2.22Aligning numbers
+Youmayﬁndthatprintingnumbersincolumns(Iprefer"right-aligned") canbeprettyhard.Thatisbecause
+thestandardwordtoprintnumbers(’.’)printsthenumberandthenatrailingspace.Thatiswhy’.R’was
+added.
+Theword’.R’worksjustlike’.’butinsteadofjustprintingthenumberwithatrailingspace’.R’willprint
+thenumberright-aligned inaﬁeldofNcharacters wide.Trythisandyouwillseethedifference:
+140.cr
+1505.rcr
+Inthisexampletheﬁeldisﬁvecharacters wide,so’150’willbeprintedwithtwoleadingspaces.
+20 CHAPTER 2.FORTHFUNDAMENTALS
+Chapter 3
+Arraysandstrings
+3.1Declaring arraysofnumbers
+Youcanmakearraysofnumbersveryeasily.Itisverymuchlikemakingavariable.Let’ssaywewantan
+arrayof16numbers:
+create sixteen 16cells allot
+That’sit,we’redone!
+3.2Usingarraysofnumbers
+Youcanusearraysofnumbersjustlikevariables.Thearraycellsarenumbered from0toN,Nbeingthe
+sizeofthearrayminusone.Storingavalueinthe0thcelliseasy.Itworksjustlikeasimplevariable:
+5sixteen 0cells +!
+Whichwillstore’5’inthe0thcell.Sostoring’7’inthe8thcell
+isdonelikethis:
+7sixteen 8cells +!
+Isn’tForthwonderful? Fetchingisdonethesameofcourse:
+sixteen 0cells +@
+sixteen 4cells +@
+Plainandeasy.
+3.3Creatingarraysofconstants
+Makinganarrayofconstants isquiteeasy.Firstyouhavetodeﬁnethenameofthearraybyusingtheword
+’CREATE.Thenyouspecifyallitselements. Allelements (eventhelast)areterminated bytheword’,’.
+Anexample:
+create sizes 18,21,24,27,30,255,
+Pleasenotethat’,’isaword!Ithastobeseparated byspacesonbothends.
+21
+22 CHAPTER 3.ARRAYSANDSTRINGS
+3.4Usingarraysofconstants
+Accessing anarrayofconstants isexactlylikeaccessing anarrayofnumbers. Inanarrayofnumbersyou
+accessthe0thelementlikethis:
+sixteen 0cells +@
+Whenyouaccesstheﬁrstelementofanarrayofconstants youusethisconstruction:
+sizes 0cells +@
+SoIdon’tthinkyou’llhaveanyproblems here.
+3.5Creatingstrings
+InForthyouhavetodeﬁnethemaximum lengthofthestring,likePascal:
+create name10chars allot
+Notethatthestringvariableincludesthecountbyte.Thatisaspecialcharacter thattellsForthhowlonga
+stringis.Youusuallydon’thavetoaddthatyourselfbecauseForthwilldothatforyou.Butyouwillhave
+toreservespaceforit.
+Thatmeansthatthestring"name"wejustdeclaredcancontainuptoninecharacters *AND*thecount
+byte.Thesekindofstringsareusuallyreferredtoascountedstrings.
+E.g.whenyouwanttodeﬁneastringthathastocontain"Hello!"(withoutthequotes)youhavetodeﬁne
+astringthatisatleast7characters long:
+create hello 7chars allot
+Whenyoulaterrefertothestringyoujustdeﬁneditsaddressisthrownonthestack.Anaddressissimplya
+numberthatreferstoitslocation. Asyouwillseeyoucanworkwithstring-addresses withouteverknowing
+whatthatnumberis.Butbecauseitisanumberyoucanmanipulate itlikeanyothernumber.E.g.thisis
+perfectly valid:
+hello \address ofstring onstack
+dup \duplicate it
+dropdrop \dropthemboth
+Inthenextsectionwewilltellyouhowtoget"Hello!"intothestring.
+3.6Initializing strings
+Youcaninitializeastringwiththe’S"’word.Youhaven’tseenthisoneyet,butwewilldiscussitinmore
+depthlateron.Ifyouwantthestringtocontainyourﬁrstnameusethisconstruction:
+3.7.GETTING THELENGTH OFASTRING 23
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create name16chars allot
+s"Hello! "nameplace
+Theword”PLACE”,whichisacommon word1,copiesthecontentsofastringconstantintoastring-
+variable.Ifyoustilldon’tunderstand ityet,don’tworry.Aslongasyouusethisconstruction, you’llget
+whatyouwant.Justremember thatassigning astringconstanttoastringthatistooshortwillresultinan
+errororevenworse,corruptotherstrings.
+3.7Gettingthelengthofastring
+Yougetthelengthofastringbyusingtheword’COUNT’. Itwillnotonlyreturnthelengthofthestring,
+butalsothestringaddress.Itisillustrated bythisshortprogram:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create greeting 32chars allot \define string greeting
+S"Hello!" greeting place \setstring to'Hello!'
+greeting count \getstring length
+.(String length: ).cr \print thelength
+drop \discard theaddress
+Youusuallyhavenothingtodowiththestringaddress.However,itmayberequiredbyotherwordslike
+wewillseeinthefollowingsection.Ifyoujustwantthebarelengthofthestringyoucanalwaysdeﬁnea
+wordlike’length$’:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+:length$ count swapdrop;
+create greeting 32cells allot \define string greeting
+s"Hello!" greeting place \setstring to'Hello!'
+greeting length$ \getstring length
+.(String length: ).cr \print thelength
+3.8Printing astringvariable
+Printingastringvariableisprettystraightforward.Thewordthatisrequiredtoprintastringvariableis
+’TYPE’.Itrequiresthestringaddressandthenumberofcharacters ithastoprint.Yes,thatarethevalues
+thatareleftonthestackby’COUNT’! Soprintingastringmeansissuingboth’COUNT’ and’TYPE’:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create greeting 32cells allot \define string greeting
+s"Hello!" greeting place \setstring to'Hello!'
+greeting count typecr \print thestring
+Ifyoudon’tlikethisyoucanalwaysdeﬁneawordlike’PRINT$’:
+1Although notpartoftheANS-Forthstandard.
+24 CHAPTER 3.ARRAYSANDSTRINGS
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+:print$ count type;
+create greeting 32cells allot \define string greeting
+s"Hello!" greeting place \setstring to'Hello!'
+greeting print$ cr \print thestring
+3.9Copying astringvariable
+Youmightwanttocopyonestringvariabletoanother.Thereisaspecialwordforthat,named’CMOVE’.
+Ittakesthetwostringsandcopiesagivennumberofcharacters fromthesourcetothedestination. Let’s
+takealookatthisexample:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one16chars allot \define thefirst string
+create two16chars allot \define thesecond string
+s"Greetings!" oneplace \initialize string one
+onedup \savetherealaddress
+count \getthelength ofstring one
+1+ \account forthecount byte
+swapdrop \gettherealaddress
+twoswap \gettheorder right
+cmove \copythestring
+twocount type cr \print string two
+Themostdifﬁcultparttounderstand isprobably whyandhowtosetupthedatafor’CMOVE’.Well,
+’CMOVE’wantstoseethesevaluesonthestack:
+source destination #chars
+Withtheexpression:
+onecount
+Wegetthesedataonthestack:
+source+1 length
+Butthecountbytehasn’tbeenaccounted forsofar.That’swhyweadd:
+1+
+Sonowthisparameter hastherightvalue.Nowwehavetorestorethetrueaddressofthestringandtell
+’CMOVE’wheretocopythecontentsofstringoneto.Initially,wegotthecorrectaddress.Thatiswhy
+wesaveditusing:
+dup
+3.10.SLICING STRINGS 25
+Nowwe’regettingridofthe"corrupted" addressbyissuing:
+swapdrop
+Thisiswhatwegotrightnow:
+source #chars
+Ifwesimplyadd:
+two
+Thedataisstillnotpresented intherightorder:
+source #chars destination
+Soweaddtheextra’SWAP’inordertogetitright.Ofcourseyoumaydeﬁneawordthattakescareofall
+that:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+:copy$ swapdupcount 1+swapdroprotswapcmove ;
+create one32chars allot
+create two32chars allot
+s"Greetings!" oneplace
+onetwocopy$
+Youmaywonderwhywekeepondeﬁningwordstomakeyourlifeeasier.Whydidn’twesimplydeﬁne
+thesewordsinthecompiler insteadofusingthesehardtounderstand words?Sure,butIdidn’twritethe
+standard. However,mostForthsallowyoutopermanently storethesewordsintheirvocabulary.Check
+yourdocumentation fordetails.
+3.10Slicingstrings
+Slicingstringsisjustlikecopyingstrings.Wejustdon’tcopyallofitandwedon’talwaysstartcopyingat
+thebeginningofastring.We’llshowyouwhatwemean:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+:nextchar dupdupc@1-swapchar+ c!char+ ;
+create one32chars allot \define string one
+s"HansBezemer" oneplace \initialize string one
+onedupcount typecr \duplicate andprint it
+nextchar \moveonecharacter forward
+dupcount typecr \duplicate andprint itagain
+nextchar \moveonecharacter forward
+dupcount typecr \duplicate andprint itagain
+nextchar \moveonecharacter forward
+count typecr \print itforthelasttime
+26 CHAPTER 3.ARRAYSANDSTRINGS
+Firstitwillprint"HansBezemer", then"ansBezemer", then"nsBezemer" andﬁnally"sBezemer". The
+wordCHAR+isusuallyequivalentto1+,butForthwasdeﬁnedtorunonunusualhardwaretoo-theCPU
+ofapocketcalculator couldbeanibble-machine (4-bit)soeachCHARoccupies infacttwoaddresses.
+Andofcourse,someForthsystemsmaytreatCHARtobea16-bitunicode.Ifwewanttodiscardtheﬁrst
+nameatallwecouldevenwrite:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+s"HansBezemer" oneplace \initialize string one
+onedupc@5- \copyaddress andgetcount
+swap5chars +duprotswapc!\savenewcount
+count typecr \print sliced string
+Theﬁvecharacters wewanttoskiparetheﬁrstname(whichisfourcharacters) andaspace(whichadds
+uptoﬁve).Thereisnospecialwordforslicingstrings.ThereisasmarterwaytohandlestringsinForth,
+whichwewilldiscusslateron.Butifyoudesperately needslicingyoumightwanttouseawordlikethis.
+Itworksjustlike’CMOVE’withanextraparameter:
+:slice$
+swap \reverse destand#chars
+overover \copythedestand#chars
+>r>r>r>r \store onthereturn stack
++ \makeaddress tothesource
+r>r> \restore destand#chars
+char+ \makeaddress todestination
+swapcmove \copythestring
+r>r> \restore destand#chars
+c! \save
+;
+Thisisanotherexampleof"you’renotsupposed tounderstand this".Youcallitwith:
+source index-to-source destination #chars
+Theindex-to-source startscounting atone.Sothiswillcopytheﬁrstnametostring"two"andprintit:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+:slice$
+swap \reverse destand#chars
+overover \copythedestand#chars
+>r>r>r>r \store onthereturn stack
++ \makeaddress tothesource
+r>r> \restore destand#chars
+char+ \makeaddress todestination
+swapcmove \copythestring
+r>r> \restore destand#chars
+c! \save
+;
+create one32chars allot \declare string one
+3.11.APPENDING STRINGS 27
+create two32chars allot \declare string two
+s"HansBezemer" oneplace \initialize string one
+one1two4slice$ \slice thefirst name
+twocount typecr \print string two
+Thiswillslicethelastnameoffandstoreitinstring"two":
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+:slice$
+swap \reverse destand#chars
+overover \copythedestand#chars
+>r>r>r>r \store onthereturn stack
++ \makeaddress tothesource
+r>r> \restore destand#chars
+char+ \makeaddress todestination
+swapcmove \copythestring
+r>r> \restore destand#chars
+c! \save
+;
+create one32chars allot \declare string one
+create two32chars allot \declare string two
+s"HansBezemer" oneplace \initialize string one
+one6two7slice$ \slice thefirst name
+twocount typecr \print string two
+Sincethelastnameissevencharacters longandstartsatpositionsix(startcounting withone!).Although
+thisisvery"Basic"waytoslicestrings,wecandothiskindofstringprocessing theForthway.Itwill
+probably requirelessstackmanipulations.
+3.11Appending strings
+ThereisnostandardwordinForthtoconcatenate strings.Asamatteroffact,stringmanipulation isoneof
+Forthsweakestpoints.Butsincewearefocusedhereondoingthings,wewillpresentyouawordwhich
+willgettheworkdone.
+Theword’APPEND’ appendstwostrings.Inthisexamplestring"one"holdstheﬁrstnameand”Bezemer”
+isappended tostring"one"toformthefullname.Finallystring"one"isprinted.
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+:append (a1n2a2--)
+overover \duplicate target andcount
+>r>r \savethemonthereturn stack
+count chars + \calculate offset target
+swapchars move \nowmovethesource string
+r>r> \gettarget andcount
+dup>r \duplicate target andsaveone
+c@+ \calculate newcount
+r>c! \getaddress andstore
+;
+28 CHAPTER 3.ARRAYSANDSTRINGS
+create one32chars allot \define string one
+s"Hans"oneplace \initialize first string
+s"Bezemer" oneappend \append 'Bezemer' tostring
+onecount typecr \print first string
+Ofcourse,youcanalsofetchthestringtobeappended fromastringvariablebyusing’COUNT’.
+3.12Comparing strings
+Ifyoueversortedstringsyouknowhowindispensable comparing stringsis.Aswementioned before,there
+areveryfewwordsinForththatactonstrings.Buthereisawordthatcancomparetwostrings.
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+create two32chars allot \define string two
+:test
+s"H.Bezemer" oneplace \initialize string one
+s"R.Bezemer" twoplace \initialize string two
+onecount twocount compare \compare twostrings
+if
+."Strings differ" \message: strings ok
+else
+."Strings arethesame" \message: strings notok
+then
+cr \sendCR
+;
+test
+Simplypasstwostringsto’COMPARE’anditwillreturnaTRUEﬂagwhenthestringsaredifferent.This
+mightseemabitodd,butstrcmp()doesexactlythesame.Ifyoudon’tlikethatyoucanalwaysadd’0=’to
+theendof’COMPARE’toreversetheﬂag.
+3.13Removingtrailingspaces
+Youprobably knowtheproblem. Theuserofyourwell-made programtypeshisnameandhitsthespacebar
+beforehittingtheenter-key.Thereyougo.Hisnamewillbestoredinyourdataﬁlewithaspaceandnobody
+willeverﬁndit.
+InForththereisaspecialwordcalled’-TRAILING’ thatremovestheextraspacesattheendwithvery
+littleeffort.Justpasteitafter’COUNT’. Likewedidinthisexample:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define astring
+s"HansBezemer " \string withtrailing spaces
+3.14.STRING CONSTANTSANDSTRING VARIABLES 29
+oneplace \nowcopyittostring one
+onedup \savetheaddress
+."[" \print abracket
+count type \oldmethod ofprinting
+."]"cr \print bracket andnewline
+."[" \print abracket
+count -trailing type \newmethod ofprinting
+."]"cr \print abracket andnewline
+Youwillseethatthestringisprintedtwice.Firstwiththetrailingspaces,secondwithouttrailingspaces.
+Andwhataboutleadingspaces?Patience,oldchap.You’vegotalotofgroundtocover.
+3.14Stringconstants andstringvariables
+Mostcomputer languages allowyoutomixstringconstants andstringvariables. NotinForth.InForth
+theyaretwodistinctdatatypes. Toprintastringconstantyouusetheword’."’.Toprintastringvariable
+youusethe’COUNT TYPE’construction.
+Thereareonlytwodifferentactionsyoucandowithastringconstant. First,youcandeﬁneoneusing’s"’.
+Second,youcanprintoneusing’."’.
+Therearetwodifferentwaystorepresent astringvariableinForth.First,byusingjustitsaddress,the
+so-called countedstring.Forthreliesonthecountbytetoﬁndtheendofthestring.Second,byusingits
+addressanditslength.Thisrequirestwovalues.
+Theword’TYPE’requiresthelatterform.Therefore, youhavetoconvertacountedstringinordertoprint
+it.Youcanconvertancountedstringtoan"address-count string"withtheword’COUNT’. Ifyoumoved
+astring(byusing’CMOVE’)withouttakingthecountbyteintoaccountyouhavetosetityourself.
+Thismayseemabitmind-boggling toyounow,butwe’llelaborate abitfurtheronthissubjectinthe
+followingsections.
+3.15Thecountbyte
+Thecountbyteisusedtosetthelengthofacountedstring.IthasnothingtodowithBritishroyalty!Itis
+simplytheveryﬁrstbyteofastring,containing thelengthoftheactualstringfollowingit.
+3.16Printing individualcharacters
+"Ialreadyknowthat!"
+Sureyoudo.Ifyouwanttoprint"G"yousimplywrite:
+.(G)
+Don’tyou?ButwhatifyouwanttouseaTABcharacter (ASCII9)?Youcan’ttypeinthatonesoeasily,
+huh?Youmayevenﬁnditdoesn’tworkatall!
+Don’teverusecharacters outsidetheASCIIrange32to127decimal.Itmayormaynotwork,butitwon’t
+beportableanyway.theword’EMIT’maybeofsomehelp.IfyouwanttousetheTAB-character simply
+write:
+30 CHAPTER 3.ARRAYSANDSTRINGS
+9emit
+Thatworks!
+3.17GettingASCIIvalues
+Ok,’EMIT’isaniceaddition, butithasitsdrawbacks.Whatifyouwanttoemitthecharacter "G".Do
+youhavetolookuptheASCIIvalueinatable?No.Forthhasanotherwordthatcanhelpyouwiththat.It
+iscalled’CHAR’. Thiswillemita"G":
+charGemit
+Theword’CHAR’ looksuptheASCII-valueof"G"andleaveitonthestack.Notethat’CHAR’ only
+workswithprintable characters (ASCII33to127decimal).
+3.18Whentouse[CHAR] orCHAR
+Thereisnotone,buttwowordsforgettingtheASCIIcodeofacharacter,’[CHAR]’ and’CHAR’. Why
+isthat?Well,thecomplete storyissomewhatcomplex,butoneisforuseinsidecolondeﬁnitions andone
+isforuseoutsidecolondeﬁnitions. And’CHAR’isn’ttheonlywordwhichisaffected.We’veputitall
+togetherinaneattableforyou:
+INSIDEADEFINITIONOUTSIDEADEFINITION
+.” .(
+[CHAR] CHAR
+[’] ’
+Forexample,thisproduces thesameresults:
+:Hello ."Hello world" [char] !emitcr;Hello
+.(Hello world!) char!emitcr
+Youshouldalsohavenoticedinthemeanwhile thatyoucan’tusecontrolstructures likeDO..LOOP or
+IF..THENoutsidecolondeﬁnitions. Andnotonlythese,otherslike’C””can’tbeusedaswell.RealForth-
+erscallthis”insideacolondeﬁnition” thingcompilation modeandworkingfromthepromptinterpretation
+mode.Youcandoreallyneatthingswithit,butthatisstillbeyondyounow.
+3.19Printing spaces
+Ifyoutrytoprintaspacebyusingthisconstruction:
+char emit
+Youwillnoticeitwon’twork.Sure,youcanalsouse:
+.()
+3.20.FETCHING INDIVIDU ALCHARACTERS 31
+Butthatisn’ttooelegant.Youcanusethebuilt-inconstant’BL’whichholdstheASCII-valueofaspace:
+blemit
+Thatismuchbetter.Butyoucanachievethesamethingbysimplywriting:
+space
+Whichmeansthatifyouwanttowritetwospacesyouhavetowrite:
+space space
+Ifyouwanttowritetenspacesyoueitherhavetorepeatthecommand ’SPACE’tentimesoruseaDO-
+LOOPconstruction, whichisabitcumbersome. Ofcourse,Forthhasamoreelegantsolutionforthat:
+10spaces
+Whichwilloutputtenspaces.NeedIsaymore?
+3.20Fetchingindividualcharacters
+Takealookatthissmallprogram:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+s"Hans" oneplace \initialize string one
+Whatisthesecondcharacter ofstring"one"?Sure,itsan"a".Buthowcanyouletyourprogramdetermine
+that?Youcan’tuse’@’becausethatwordcanonlyaccessvariables.
+Sure,youcandothatinForth,butitrequiresanewword,called’C@’.Thinkofastringasanarrayof
+characters andyouwillﬁnditmucheasiertopicturetheidea.ArraysinForthalwaysstartwithzeroinstead
+ofone,butthatisthecountbyte.Soaccessing theﬁrstcharacter mightbedonewith:
+one1chars +c@
+Thisisthecomplete program:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+s"Hans" oneplace \initialize string one
+one2chars +c@ \getthesecond character
+emitcr \print it
+32 CHAPTER 3.ARRAYSANDSTRINGS
+3.21Storingindividualcharacters
+Storingindividualcharacters worksjustthesame.Keepthatarrayofcharacters inmind.Whenwewantto
+fetchavariablewewrite:
+my_var @
+Whenwewanttostoreavalueinavariablewewrite:
+5my_var !
+Fetchingonlyrequirestheaddressofthevariable.Storingrequiresboththeaddressofthevariable*AND*
+thevaluewewanttostore.Ontopofthestackistheaddressofthevariable,belowthatisvaluewewant
+tostore.Keepthatinmind,thisisveryimportant. Let’ssaywehavethisprogram:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+s"Hans" oneplace \initialize string one
+Nowwewanttochange"Hans"to"Hand".Ifwewanttoﬁndoutwhatthe4thcharacter ofstring"one"is
+wewrite:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+s"Hans" oneplace \initialize string one
+one4chars +c@ \getthefourth character
+Remember ,westartcounting fromone!Ifwewanttostorethecharacter "d"inthefourthcharacter,we
+havetouseanewword,and(yes,youguesseditright!)itiscalled’C!’:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+s"Hans" oneplace \initialize string one
+one4chars + \address ofthefourth char
+chard \wewanttostore 'd'
+swap \gettheorder right
+c! \nowstore 'd'
+Ifwethrowthecharacter "d"onthestackbeforewecalculate theaddress,wecanevenremovethe’SWAP’:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot \define string one
+chard \wewanttostore 'd'
+s"Hans" oneplace \initialize string one
+one4chars + \address ofthefourth char
+c! \nowstore 'd'
+3.22.GETTING ASTRING FROMTHEKEYBOARD 33
+Wewillpresenttheverysameprograms, butnowwithstack-effect-diagrams inordertoexplainhowthis
+works.Wewillcalltheindex’i’,thecharacter wewanttostore’c’andtheaddressofthestring’a’.By
+convention,stack-effect-diagrams areenclosedbyparenthesis.
+Ifyoucreatecomplexprograms thistechnique canhelpyoutounderstand moreclearlyhowyourprogram
+actuallyworks.Itmightevensaveyoualotofdebugging.Thisistheﬁrstversion:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot (--)
+s"Hans" oneplace (--)
+one (a)
+4chars (ai)
++ (a+i)
+chard (a+ic)
+swap (ca+i)
+c! (--)
+Nowthesecond,optimized version:
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+create one32chars allot (--)
+chard (c)
+s"Hans" oneplace (c)
+one (ca)
+4chars (cai)
++ (ca+i)
+c! (--)
+3.22Gettingastringfromthekeyboard
+Ofcourse,youdon’twanttoinitialize stringsallyourlife.Realapplications gettheirinputfromthe
+keyboard.We’vealreadyshownyouhowtogetanumberfromthekeyboard.Nowweturntostrings.
+Whenprogramming inBASIC,stringsusuallyhaveanundeﬁned length.SomeBASICsmovestrings
+aroundinmemory,othershavetoperformsomekindof"garbage-collection". Whatevermethodtheyuse,
+ittakesupmemoryandprocessor -time.
+Forthforcesyoutothinkaboutyourapplication. E.g.whenyouwanttostoresomebodies nameinastring
+variable,16characters willbetoofewand256characters toomany.But64characters willprobably do.
+Butthatposesaproblemwhenyouwanttogetastringfromthekeyboard.Howcanyoupreventthat
+somebody typesastringthatisjusttoolong?
+Theword’ACCEPT’takestwoarguments. First,thestringvariablewhereyouwanttosavetheinputand
+second,themaximum numberofcharacters itcantake.Butthereisacatch.Thisprogramcangetyouinto
+trouble:
+64constant #name \length ofstring
+create name#name chars allot \define string 'name'
+name#name accept \input string
+name1+swaptypecr \swapcount andprint
+34 CHAPTER 3.ARRAYSANDSTRINGS
+Since64characters *PLUS* thecountbyteaddupto65characters. Youwillprobably wanttousethis
+deﬁnition instead:
+:saccept 1-swap1+swapaccept ;\define safe'ACCEPT'
+64constant #name \length ofstring
+create name#name chars allot \define string 'name'
+name#name saccept \input string
+name1+swaptypecr \print string
+This"safe"versiondecrements thecountsotheuserinputwillﬁtnicelyintothestringvariable.Inorder
+toterminate ityouwrite:
+:saccept 1-swap1+swapaccept ;\define safe'ACCEPT'
+64constant #name \length ofstring
+create name#name chars allot \define string 'name'
+namedup#name saccept \input string
+swapc! \setcount byte
+Theword’ACCEPT’alwaysreturnsthenumberofcharacters itreceived.Thisistheendofthesecond
+level.Nowyoushouldbeabletounderstand mostoftheexampleprograms andwritesimpleones.I
+suggestyoudojustthat.Experience isthebestteacherafterall.
+3.23WhatistheTIB?
+TheTIBstandsfor"TerminalInputBuffer"andisusedbyonesingle,butveryimportant wordcalled
+’REFILL’.Inessence,’REFILL’doesthesamethingas’ACCEPT’, exceptthatithasadedicated areato
+storeitsdataandsetsupeverythingforparsing.Whateveryoutypewhenyoucall’REFILL’,itisstored
+intheTIB.
+3.24WhatisthePAD?
+ThePADisshortfor"scratch-pad". Itisatemporary storageareaforstrings.ItisheavilyusedbyForth
+itself,e.g.whenyouprintanumberthestringisformedinthePAD.Yes,that’sright:whenyouprint
+anumberitisﬁrstconvertedtoastring.Thenthatstringis’COUNT’ed and’TYPE’d.Youcaneven
+programthatsubsystem yourselfaswewillseewhenweencounter formatted numbers.
+3.25HowdoIuseTIBandPAD?
+Ingeneral,youdon’t.TheTIBisasystem-related areaanditisconsidered badpracticewhenyouma-
+nipulateityourself. ThePADcanbeusedfortemporary storage,butbeware!Temporary reallymeans
+temporary .Afewwordsatthemost,providedyoudon’tgenerateanyoutputordoanyparsing.
+Thinkofboththeseareasaspredeﬁned strings.Youcanrefertothemas’TIB’and’PAD’.Youdon’thave
+todeclaretheminanyway.Thisprogramisperfectly alright:
+3.26.TEMPORAR YSTRING CONSTANTS 35
+:place overover>r>rchar+ swapchars cmove r>r>c!;
+s"Hello world" padplace \store astring inpad
+padcount typecr \print contents ofthepad
+3.26Temporary stringconstants
+Hey,haven’twealreadyseenthis?Yes,youhave.
+s"Thisisastring" typecr
+No’COUNT’? No.’S"’leavesitsaddressanditslengthonthestack,sowecancall’TYPE’rightaway.
+Notethatthisstringdoesn’tlastforever.Ifyouwaittoolongitwillbeoverwritten. Itdependsonyour
+systemhowlongthestringwilllast.
+3.27Simpleparsing
+Wehavealreadydiscussed ’REFILL’abit.We’veseenthatitiscloselyrelatedto’ACCEPT’. ’REFILL’
+returnsatrueﬂagifalliswell.Whenyouusethekeyboarditusuallyis,sowecansafelydropit,butwe
+willencounter asituationwherethisﬂagcomesinhandy.Ifyouwanttogetastringfromthekeyboard,
+youonlyhavetotype:
+refill drop \getstring fromkeyboard
+Everynextcallto’REFILL’willoverwriteanypreviouslyenteredstring.Soifyouwanttodosomething
+withthatstringyou’vegottogetitoutofthere,usuallytooneofyourownstrings.
+Butifaccessing theTIBdirectlyisnottheproperway,whatis?Theuseof’REFILL’iscloselylinkedto
+theword’WORD’,whichisaparser.’WORD’looksforthedelimiter,whoseASCIIcodeisonthestack.
+Ifthestringstartswiththedelimiter,itwillskipthisandallsubsequent occurrences untilitﬁndsastring.
+Thenitwilllookforthedelimiter againandslicethestringrightthere.Itthencopiestheslicedstringto
+PADandreturnsitsaddress.Thisextremely handywhenyouwanttoobtainﬁlteredinput.E.g.whenyou
+wanttosplitsomebodies nameintoﬁrstname,initialsandlastname:
+HansL.Bezemer
+Justusethisprogram:
+:test
+."Givefirst name, initials, lastname: "
+refill drop \getstring fromkeyboard
+blword \parse first name
+."First name: " \write message
+count typecr \typefirst name
+blword \parse initials
+."Initials :" \write message
+count typecr \typeinitials
+blword \parse lastname
+."Lastname:" \write message
+36 CHAPTER 3.ARRAYSANDSTRINGS
+count typecr \write lastname
+;
+test
+Youdon’thavetoparsetheentirestringwiththesamecharacter.ThisprogramwillsplitupanMS-DOS
+ﬁlenameintoitscomponents:
+:test
+."DOSfilename: "refill \input aDOSfilename
+dropcr \getridoftheflag
+[char] :word \parse drive
+."Drive: "count type.":"cr
+\print drive
+begin
+[char] \word \parse path
+dupcount 0<> \ifnotaNULLstring
+while \print path
+drop."Path:"count typecr
+repeat \parse again
+dropdrop \discard addresses
+;
+test
+If’WORD’reachestheendofthestringandthedelimiter isstillnotfound,itreturnstheremainder ofthat
+string.Ifyoutrytoparsebeyondtheendofthestring,itreturnsaNULLstring.Thatisanemptystringor,
+inotherwords,astringwithlengthzero.
+Therefore, wecheckedwhetherthestringhadzerolength.Ifithad,wehadreachedtheendofthestring
+andfurtherparsingwasdeemeduseless.
+3.28Convertingastringtoanumber
+Wenowlearnedhowtoparsestringsandretrievecomponents fromthem.Butwhatifthesecomponents are
+numbers? Well,thereisawayinForthtoconvertastringtoanumber,butlikeeverynumber-conversion
+routineithastoactoninvalidstrings.Thatis,stringsthatcannotbeconvertedtoavalidnumber.
+Thisimplementation usesaninternalerror-value,called’(ERROR)’.Theconstant’(ERROR)’isastrange
+number.Youcan’tnegateit,youcan’tsubtractanynumberfromitandyoucan’tprintit.If’NUMBER’
+can’tconvertastringitreturnsthatconstant. Forthhasitsownconversionwordcalled’>NUMBER’, but
+thatisalothardertouse.Let’stakealookatthisprogram:
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+NEGATE 1-CONSTANT (ERROR) \create constant (ERROR)
+[THEN]
+:number 0.Rotdup1+c@[char] -=>rcount r@if1/string
+then>number nip0=ifd>sr>ifnegate thenelser>drop
+2drop (error) then;
+3.29.CONTROLLING THERADIX 37
+:test
+."Enter anumber: " \write prompt
+refill drop \enter string
+blword \parse string
+number dup \convert toanumber
+(error) = \testforvalid number
+if \ifnotvalid
+."Youdidn't enter avalid number!" dropcr
+else \print ifvalid
+."Thenumber was:".cr
+then
+;
+test
+Youﬁrstenterastring,thenitparsedand’WORD’returnstheaddresswherethatstringisstored.’NUM-
+BER’triestoconvertit.If’NUMBER’ returns’(ERROR)’itwasn’tavalidstring.Otherwise, thenumber
+itrightonthestack,waitingtobeprinted.Thatwasn’tsohard,wasit?
+3.29Controllingtheradix
+Ifyouareaprogrammer ,youknowhowimportant thissubjectistoyou.Sometimes, youwanttoprint
+numbersinoctal,binaryorhex.Forthcandothattoo.Let’stakethepreviousprogramandalteritabit:
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+NEGATE 1-CONSTANT (ERROR) \create constant (ERROR)
+[THEN]
+:number 0.Rotdup1+c@[char] -=>rcount r@if1/string
+then>number nip0=ifd>sr>ifnegate thenelser>drop
+2drop (error) then;
+:test
+."Enter anumber: " \write prompt
+refill drop \enter string
+blword \parse string
+number dup \convert toanumber
+(error) = \testforvalid number
+if \ifnotvalid
+."Youdidn't enter avalid number!" dropcr
+else \print ifvalid
+hex
+."Thenumber was:".cr
+then
+;
+test
+Weaddedtheword’HEX’justbeforeprintingthenumber.Nowthenumberwillbeprintedinhexadecimal.
+Forthhasanumberofwordsthatcanchangetheradix,like’DECIMAL ’and’OCTAL’.Theyworkinthe
+samewayas’HEX’.
+38 CHAPTER 3.ARRAYSANDSTRINGS
+Forthalwaysstartsindecimal. Afterthatyouareresponsible. Notethatallradixcontrolfollowstheﬂow
+oftheprogram. Ifyoucallaself-deﬁned wordthatalterstheradixallsubsequent conversionisdonetooin
+thatradix:
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+NEGATE 1-CONSTANT (ERROR) \create constant (ERROR)
+[THEN]
+:number 0.Rotdup1+c@[char] -=>rcount r@if1/string
+then>number nip0=ifd>sr>ifnegate thenelser>drop
+2drop (error) then;
+:.hexhex.; \print anumber inhex
+:test
+."Enter anumber: " \write prompt
+refill drop \enter string
+blword \parse string
+number dup \convert toanumber
+(error) = \testforvalid number
+if \ifnotvalid
+."Youdidn't enter avalid number!" dropcr
+else \print ifvalid
+."Thenumber was:".hexcr
+then
+;
+test
+Inthisexamplenotonlythatsinglenumberisprintedinhex,butalsoallsubsequent numbers willbe
+printedinhex!Abetterversionofthe".HEX"deﬁnition wouldbe:
+:.hexhex.decimal ;
+Sincethatoneresetstheradixbacktodecimal. Wordslike’HEX’donotonlycontroltheoutputofa
+number,buttheinputofnumbersisalsoaffected:
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+NEGATE 1-CONSTANT (ERROR) \create constant (ERROR)
+[THEN]
+:number 0.Rotdup1+c@[char] -=>rcount r@if1/string
+then>number nip0=ifd>sr>ifnegate thenelser>drop
+2drop (error) then;
+:test
+."Enter anumber: " \write prompt
+refill drop \enter string
+blword \parse string
+hex \convert hexadecimal
+3.29.CONTROLLING THERADIX 39
+number dup \convert toanumber
+(error) = \testforvalid number
+if \ifnotvalid
+."Youdidn't enter avalid number!" dropcr
+else \print ifvalid
+dup
+."Thenumber was:"decimal .."decimal" cr
+."Thenumber was:"hex.."hex"cr
+then
+;
+test
+’NUMBER’ willnowalsoaccepthexadecimal numbers. Ifthenumberisnotavalidhexadecimal number,
+itwillreturn’(ERROR)’.Youprobably knowthereismoretoradixcontrolthan’OCTAL’,’HEX’and
+’DECIMAL ’.No,wehavenotforgottenthem.Infact,youcanchooseanyradixbetween2and36.This
+slightlymodiﬁed programwillonlyacceptbinarynumbers:
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+NEGATE 1-CONSTANT (ERROR) \create constant (ERROR)
+[THEN]
+:number 0.Rotdup1+c@[char] -=>rcount r@if1/string
+then>number nip0=ifd>sr>ifnegate thenelser>drop
+2drop (error) then;
+:binary 2base!;
+:test
+."Enter anumber: " \write prompt
+refill drop \enter string
+blword \parse string
+binary \convert hexadecimal
+number dup \convert toanumber
+(error) = \testforvalid number
+if \ifnotvalid
+."Youdidn't enter avalid number!" dropcr
+else \print ifvalid
+dup \bothdecimal andhex
+."Thenumber was:"decimal .."decimal" cr
+."Thenumber was:"hex.."hex"cr
+then
+;
+test
+’BASE’isapredeﬁned variablethatenablesyoutoselectanyradixbetween2and36.ThismakesForth
+veryﬂexible:
+hex02Bdecimal .cr
+However,thiswon’twork:
+40 CHAPTER 3.ARRAYSANDSTRINGS
+:wont-work hex02Bdecimal .cr;
+Butthiswill:
+hex
+:will-work 02Bdecimal .cr;
+Whythat?Well,’HEX’willjustbecompiled, notexecuted.SowhenForthtriestocompile”02B”,it
+doesn’trecognize itasahexadecimal numberandwilltrytoﬁndword’02B’.Whichitcan’tofcourse.
+Notethatafter”WILL-W ORK”hasbeencompiled allnumbers followingitwillstuillbecompiled as
+hexadecimal numbers. Why?Because’DECIMAL ’iscompiled too!Youshouldplacea’DECIMAL ’
+outsidethedeﬁnition inordertoresettheradix.BTW,itisalwaysagoodideatoaddaleadingzerotoa
+hexadecimal number.Forexample,isthisahexnumberoraword:
+face
+3.30Picturednumeric output
+Youprobably haveusedthisbefore,likewhenwritingBasic.Neverheardof"PRINTUSING.."? Well,it
+isawaytoprintnumbersinacertainformat.Liketelephone-numbers, time,dates,etc.OfcourseForth
+candothistoo.Infact,you’veprobably useditbefore.Both’.’and’.R’usethesameinternalroutines.
+Theyarecalledjustbeforeanumberisprinted.
+ThisnumericstringiscreatedinthePADandoverwritten witheachnewcall.Butwe’llgointothatabit
+lateron.
+Whatyouhavetoremember isthatyoudeﬁnetheformatreverse.Whatisprintedﬁrst,isdeﬁnedlastin
+theformat.Soifyouwanttoprint:
+060-5556916
+Youhavetodeﬁneitthisway:
+6196555-060
+Formatting beginswiththeword’<#’andendswiththeword’#>’.Asinglenumberisprintedusing’#’
+andtheremainder ofthenumberisprintedusing’#s’(whichisalwaysatleastonedigit).Let’sgoabit
+furtherintothat:
+:print# s>d<##s#>typecr;
+256print#
+Thissimplyprintsasinglenumber(sinceonly’#S’isbetweenthe’<#’andthe’#>’andgoestoanew
+line.Thereishardlyanydifferencewith’.’.Youcantryany(positive)number.Notethatthevaluesthat
+’#>’leavesonthestackcandirectlybeusedby’TYPE’.Youcanforgetaboutthe’S>D’word.Justdon’t
+forgettoputitthere.
+Thisisaslightlydifferentformat:
+:print3# s>d<#####>typecr;
+256print3#
+1print3#
+1000print3#
+3.30.PICTURED NUMERIC OUTPUT 41
+Thisonewillprint"256","001"and"000".Alwaysthelastthreepositions. The’#’simplystandsfor’print
+asingledigit’.Soifyouwanttoprintanumberwithatleastthreedigits,theformatwouldbe:
+#s##
+Thatis:printtheremainder ofthenumber(atleastonedigit)andthentwomore.Nowreverseit:
+###s
+Encloseitby’S>D’,’<#’and’#>’andadd’TYPECR’:
+s>d<####s#>typecr
+Andthat’sit!Isit?Notquite.Sofarwe’veonlyprintedpositivenumbers. Ifyoutryanegativenumber,
+youwillﬁnditprintsgarbage.Thisbehaviorcanbeﬁxedwiththeword’SIGN’.
+’SIGN’simplytakesthenumberfromthestackandprintsa"-"whenitisnegative.Theproblemisthatall
+otherformatting wordscanonlyhandlepositivenumbers. Soweneedthesamenumbertwice.Onewith
+thesignandonewithout.Atypicalsignednumberformatting wordlookslike:
+:signed# dup>rabss>d<##sr>sign#>type;
+Notethe’DUPABS’sequence. Firstthenumberisduplicated (for’SIGN’)andthentheabsolutevalueis
+taken(fortheotherformatting words).Sowegottheonthestacktwice.Firstonthereturnstack withsign
+(for’SIGN’), secondwithoutsign(fortheotherformatting words).Doesthatmakesensetoyou?
+Wecanplace’SIGN’whereverwewant.Ifwewanttoplacethesignafterthenumber(likesomeaccoun-
+tantsdo)wewouldwrite:
+:account# dup>rabss>d<#r>sign#s#>type;
+Butthatisstillnotenoughtowrite"$2000.15" isit?Well,inordertodothatthereisanotherveryhandy
+wordcalled’HOLD’. Theword’HOLD’justcopiesanycharacter intotheformatted number.Let’sgiveit
+atry:
+$2000.16
+Let’sreversethat:
+61.0002$
+Soweﬁrstwanttoprinttwonumbers, evenwhentheyarezero:
+##.0002$
+Thenwewanttoprintadot.Thisiswhere’HOLD’comesin.’HOLD’takesanASCIIcodeandplacesthe
+equivalentcharacter intheformatting string.Wedon’thavetolookuptheASCIIcodeforadotofcourse.
+Wecanuse’CHAR’:
+##char.hold0002$
+42 CHAPTER 3.ARRAYSANDSTRINGS
+Thenwewanttoprinttherestofthenumber(whichisatleastonedigit):
+##char.hold#s$
+Finallywewanttoprintthecharacter "$".Anotherjobfor’HOLD’:
+##char.hold#schar$hold
+Sothisisourformatting word:
+:currency <###[char] .hold#s[char] $hold#>typecr;
+Andwecallitlikethis:
+200016 currency
+Youcandosomeprettycomplexstuffwiththeseformatting words.Trytoﬁgureoutthisonefromthe
+masterhimself,LeoBrodie:
+:sextal 6base!;
+::00#sextal #decimal 58hold;
+:time# s>d<#:00:00#S#>typecr;
+3615time#
+Yeah,itprintsthetime!Prettyneat,huh?Nowtrythetelephone-number wediscussed inthebeginning.
+Thatshouldn’tbetoohard.
+3.31Convertinganumbertoastring
+SincethereisnospecialwordinForthwhichwillconvertanumbertoastring,we’llhavetocreateit
+ourselves.IntheprevioussectionwehaveseenhowanumericstringiscreatedinthePAD.Wecanuse
+thistocreateawordthatconvertsanumbertoastring.
+BecausethePADishighlyvolatile,wehavetomovethestringimmediately afteritscreation. Sowe’ll
+createawordthatnotonlycreatesthestring,butmovesitdirectlytoitsproperlocation:
+:>string >rdup>rabss>d<##sr>sign#>
+r@char+ swapdup>rcmove r>r>c!;
+(na--)
+Ittakesanumber,theaddressofastringandreturnsnothing.Example:
+create num$16chars allot
+-1024 num$>string
+num$count typecr
+Chapter 4
+Stacksandcolondeﬁnitions
+4.1Theaddressofacolon-deﬁnition
+Youcangettheaddressofacolondeﬁnition byusingtheword”’(tick):
+:add+; \acolon definition
+'add.cr \display address
+Verynice,butwhatgoodisitfor?Well,ﬁrstofalltheconstruction "’ADD"throwstheaddressof"ADD"
+onthestack.Youcanassignittoavariable,deﬁneaconstantforit,orcompileitintoanarrayofconstants:
+'addconstant add-address
+variable addr
+'addaddr!
+create addresses 'add,
+Areyouwithussofar?Ifwewouldsimplywrite"ADD","ADD"wouldbeexecutedrightawayandno
+valuewouldbeleftonthestack.TickforcesForthtothrowtheaddressof"ADD"onthestackinsteadof
+executing"ADD".Whatyoucanactuallydowithit,wewillshowyouinthenextsection.
+4.2Vectoredexecution
+Thisisathingthatcanbeterriblydifﬁcultinotherlanguages, butisextremely easyinForth.Maybeyou’ve
+everseenaBASICprogramlikethis:
+10LETA=40
+20GOSUB A
+30END
+40PRINT "Hello"
+50RETURN
+60PRINT "Goodbye"
+70RETURN
+43
+44 CHAPTER 4.STACKSANDCOLONDEFINITIONS
+Ifyouexecutethisprogram, itwillprint"Hello".Ifyouchangevariable"A"to"60",itwillprint"Good-
+bye".Infact,themereexpression "GOSUB A"candotwodifferentthings.InForthyoucandothismuch
+morecomfortable:
+:goodbye ."Goodbye" cr;
+:hello ."Hello" cr;
+variable a
+:greet a@execute ;
+'hello a!
+greet
+'goodbye a!
+greet
+Whatarewedoinghere?First,wedeﬁneafewcolon-deﬁnitions, called"HELLO" and"GOODBYE".
+Second,wedeﬁneavariablecalled"A".Third,wedeﬁneanothercolon-deﬁnition whichfetchesthe
+valueof"A"andexecutesitbycalling’EXECUTE’. Then,wegettheaddressof"HELLO" (byusing"’
+HELLO") andassignitto"A"(byusing"A!").Finally,weexecute"GREET" anditsays"Hello".
+Itseemsasif"GREET" issimplyanaliasfor"HELLO", butifitwereitwouldprint"Hello"throughout
+theprogram. However,thesecondtimeweexecute"GREET", itprints"Goodbye". Thatisbecausewe
+assignedtheaddressof"GOODBYE" to"A".
+Thetrickbehindthisallis’EXECUTE’. ’EXECUTE’ takestheaddressofe.g."HELLO" fromthestack
+andcallsit.Infact,theexpression:
+hello
+Isequivalentto:
+'hello execute
+Thiscanbeextremely useful.We’llgiveyoualittlehint:
+create subs'hello ,'goodbye ,
+Doesthisgiveyouanyideas?
+4.3Usingvalues
+Avalueisacross-overbetweenavariableandaconstant. Maybethisexamplewillgiveyouanidea:
+declaration:
+variable a (Noinitial value)
+1constant b(Initial value, can't change)
+2b+value c(Initial value, canchange)
+4.4.THESTACKS 45
+fetching:
+a@ (Variable throws address onstack)
+b (Constant throws value onstack)
+c (Value throws value onstack)
+storing:
+2b+a! (Expression canbestored atruntime)
+(Constant cannot bereassigned)
+2b+toc (Expression canbestored atruntime)
+Inmanyaspects,valuesbehavelikevariablesandcanreplacevariables. Theonlythingyoucannotdois
+makearraysofvalues.
+Infact,avalueisavariablethatbehavesincertainaspectslikeaconstant. Whyuseavalueatall?Well,
+therearesituations whereavaluecanhelp,e.g.whenaconstantCANchangeduringexecution. Itis
+certainlynotagoodideatoreplaceallvariablesbyvalues.
+4.4Thestacks
+Forthhastwostacks.Sofarwe’vetalkedaboutonestack,whichistheDataStack.TheDataStackis
+heavilyused,e.g.whenyouexecutethiscode:
+23+.
+OnlytheDataStackisused.First,"2"isthrownonit.Second,"3"isthrownonit.Third,’+’takesboth
+valuesfromthestackandreturnsthesum.Fourth,thisvalueistakenfromthestackby’.’anddisplayed.
+Sowheredoweneedtheotherstackfor?
+Well,weneeditwhenwewanttocallacolon-deﬁnition. Beforeexecutioncontinues atthecolon-deﬁnition,
+itsavestheaddressofthecurrently executeddeﬁnition ontheotherstack,whichiscalledtheReturnStack
+forobviousreasons.
+Thenexecutioncontinues atthecolon-deﬁnition. Everycolon-deﬁni tionisterminated by’;’,whichcom-
+pilesinto’EXIT’.When’EXIT’isencountered, theaddressontopoftheReturnStackispopped.Execu-
+tionthencontinues atthataddress,whichinfactistheplacewherewecamefrom.
+IfwewouldstorethataddressontheDataStack,thingswouldgowrong,becausewecanneverbesure
+howmanyvalueswereonthatstackwhenwecalledthecolon-deﬁnition, norwouldbeknowhowmany
+thereareonthatstackwhenweencounter ’EXIT’.Aseparatestacktakescareofthat.
+Tryandﬁgureouthowthisalgorithm workswhenwecallacolon-deﬁnition fromacolon-deﬁnition and
+youwillseethatitworks(Forthisproofofthat).
+Itnowbecomes clearhow’EXECUTE’ works.When’EXECUTE’ iscalled,theaddressofthecolon-
+deﬁnition isontheDataStack.All’EXECUTE’ doesiscopyitsaddressontheReturnStack,takethe
+addressfromtheDataStackandcallit.’EXIT’neverknowsthedifference..
+ButtheReturnStackisusedbyotherwordstoo.Like’DO’and’LOOP’. ’DO’takesthelimitandthe
+counterfromtheDataStackandputsthemontheReturnStack.’LOOP’takesbothofthemfromthe
+ReturnStackandcompares them.Iftheydon’tmatch,itcontinues executionafter’DO’.Thatisoneofthe
+reasonsthatyoucannotsplita’DO..’LOOP’.
+However,ifyoucallacolon-deﬁnition fromwithina’DO’..’LOOP’youwillseeitworks:thereturn
+addressisputontopofthelimitandthecounter.AslongasyoukeeptheReturnStackbalanced (which
+isn’ttoohard)youcangetawaywithquiteafewthingsaswewillseeinthefollowingsection.
+46 CHAPTER 4.STACKSANDCOLONDEFINITIONS
+4.5Savingtemporary values
+Wehaven’tshownyouhowtheReturnStackworksjustforthefunofit.Although itisanareathatis
+almostexclusivelyusedbythesystemyoucanuseittoo.
+Weknowwecanmanipulate theDataStackonlythreeitemsdeep(using’ROT’).Mostofthetimethatis
+morethanenough,butsometimes itisn’t.
+InForththerearespecialwordstomanipulate stackitemsinpairs,e.g."2DUP"(n1n2–n1n2n1n2)
+or"2DROP"(n1n2–).InmostForthstheyarealreadyavailable,butwecouldeasilydeﬁnethosetwo
+ourselves:
+:2dupoverover;
+:2drop dropdrop;
+Youwillnoticethat"2SWAP"(n1n2n3n4–n3n4n1n2)becomes alotharder.Howcanwegetthis
+deep?YoucanusetheReturnStackforthat..
+Theword’>R’takesanitemfromtheDataStackandputsitontheReturnStack.Theword’R>’doesit
+theotherwayaround.IttakesthetopmostitemfromtheReturnStackandputsitontheDataStack.Let’s
+tryitout:
+:2swap (n1n2n3n4)\fouritems onthestack
+rot(n1n3n4n2)\rotate thetopmost three
+>r(n1n3n4) \n2isnowontheReturn Stack
+rot(n3n4n1) \rotate other items
+r>(n3n4n1n2)\getn2fromtheReturn Stack
+;
+Andwhydoesitworkinthiscolon-deﬁnition? Whydoesn’ttheprogramgohaywire? BecausetheReturn
+Stackisandwasperfectly balanced. Theonlythingwehadtodowastogetoff"n2"beforethesemi-colon
+wasencountered. Remember ,thesemi-colon compiles into’EXIT’and’EXIT’popsareturn-address from
+theReturnStack.Okay,letmeshowyoutheReturnStackeffects:
+:2swap (r1)
+rot(r1)
+>r(r1n2)
+rot(r1n2)
+r>(r1)
+; (--)
+Note,thesearetheReturnStackeffects!"R1"isthereturn-address. AnditisthereontopontheReturn
+Stackwhen’EXIT’isencountered. Thegeneralruleis:
+Cleanupyourmessinsideacolon-deﬁnition
+IfyousavetwovaluesontheReturnStack,getthemofftherebeforeyouattempttoleave.Ifyousavethree,
+getthreeoff.Andsoon.Thismeansyouhavetobeverycarefulwithloopingandbranching. Otherwise
+youhaveaprogramthatworksperfectly inonesituationandnotinanother:
+:this-wont-work (n1n2--n1n2)
+>r (n1)
+0=if (--)
+4.6.THERETURN STACKANDTHEDO..LOOP 47
+r> (n2)
+dup (n2n2)
+else
+12 (12)
+then
+;
+Thisprogramwillworkperfectly ifn1equalszero.Why?Let’slookattheReturnStackeffects:
+:this-wont-work (r1)
+>r (r1n2)
+0=if (r1n2)
+r> (r1)
+dup (r1)
+else (r1n2)
+12 (r1n2)
+then
+;
+Youseewhenitentersthe’ELSE’clausetheReturnStackisnevercleanedup,soForthattemptstoreturn
+tothewrongaddress.Avoidthis,sincethiscanbeveryhardbugstoﬁx.
+4.6TheReturnStackandtheDO..LOOP
+We’vealreadytoldyouthatthelimitandthecounterofaDO..LOOP (orDO..+LOOP) arestoredonthe
+ReturnStack.Buthowdoesthisaffectsavingvaluesinthemiddleofaloop?Well,thisexamplewillmake
+thatquiteclear:
+:test
+1 (n)
+100do (n)
+>r (--)
+i. (--)
+r> (n)
+loop (n)
+cr (n)
+drop (--)
+;
+test
+Youmightexpectthatitwillshowyouthevalueofthecountertentimes.Infact,itdoesn’t.Let’stakea
+lookattheReturnStack:
+:test
+1 (--)
+100do (lc)
+>r (lcn)
+i. (lcn)
+r> (lc)
+48 CHAPTER 4.STACKSANDCOLONDEFINITIONS
+loop (--)
+cr (--)
+drop (--)
+;
+test
+Youmighthavenoticed(unlessyou’reblind)thatitprintstentimesthenumber"1".Wheredoesitcome
+from?Usually’I’printsthevalueofthecounter,whichisontopoftheReturnStack.
+Thistimeitisn’t:thenumber"1"isthere.So’I’thinksthat"1"isactuallythecounteranddisplaysit.
+SincethatvalueisremovedfromtheReturnStackwhen’LOOP’isencountered, itdoesn’tdomuchharm.
+Weseethatwecansafelystoretemporary valuesontheReturnStackinsideaDO..LOOP ,butwehaveto
+cleanupthemess,beforeweencounter ’LOOP’. So,thisruleappliesheretoo:
+CleanupyourmessinsideaDO..LOOP
+Butwestillhavetobepreparedthattheword’I’willnotprovidetheexpectedresult(whichisthecurrent
+valueofthecounter). Infact,’I’doessimplycopythetopmostvalueontheReturnStack.Whichisusually
+correct,unlessyou’vemanipulated theReturnStackyourself.
+Notethatthereareotherwordsbeside’I’,whichdoexactlythesamething:copythetopoftheReturn
+Stack.ButtheyareintendedtobeusedoutsideaDO..LOOP .We’llseeanexampleofthatinthefollowing
+section.
+4.7OtherReturnStackmanipulations
+TheReturnStackcanavoidsomecomplexstackacrobatics. Stackacrobatics? Well,youknowitbynow.
+Sometimes allthesevaluesandaddresses arejustnotinpropersequence, soyouhaveto’SWAP’and
+’ROT’alotuntiltheyare.
+Youcanavoidsomeoftheseconstructions byjustmovingasinglevalueontheReturnStack.Youcan
+returnittotheDataStackwhenthetimeisthere.OryoucanusethetopoftheReturnStackasakindof
+localvariable.
+No,youdon’thavetomoveitaroundbetweenbothstacksallthetimeandyoudon’thavetouse’I’outof
+itscontext.Thereisawell-established word,whichdoesthesamething:’R@’.Thisisanexampleofthe
+useof’R@’:
+:delete (n--)
+>r#lag+ (a1)
+r@-#lag (a1a2n2)
+r@negate (a1a2n2n3)
+r#+! (a1a2n2)
+#lead + (a1a2n2a3)
+swapcmove (a1)
+r>blanks (--)
+;
+’R@’copiesthetopoftheReturnStacktotheDataStack.ThisexampleistakenfromaForth-editor .It
+deletes"n"characters leftofthecursor.Byputtingthenumberofcharacters ontheReturnStackright
+away,itsvaluecanbefetchedby’R@’withoutusing’DUP’or’OVER’.Sinceitcanbefetchedatany
+time,no’SWAP’or’ROT’hastocomein.
+4.8.ALTERING THEFLOWWITHTHERETURN STACK 49
+4.8Altering theﬂowwiththeReturnStack
+Themerefactthatreturnaddresses arekeptonthestackmeansthatyoucanaltertheﬂowofaprogram.
+Thisishardlyevernecessary ,butifyou’rearealhackeryou’lltrythisanyway,sowe’dbettergiveyou
+somepointersonhowitisdone.Let’stakealookatthisprogram. Notethatwecomment ontheReturn
+Stackeffects:
+:soup."soup"; (r1r2)
+:dessert ."dessert "; (r1r6)
+:chicken ."chicken "; (r1r3r4)
+:rice."rice"; (r1r3r5)
+:entree chicken rice; (r1r3)
+:dinner soupentree dessert ; (r1)
+dinner cr (--)
+Andthisistheoutput:
+soupchicken ricedessert
+Beforeweexecute"DINNER" theReturnStackisempty.Whenweenter"DINNER" thereturnaddressto
+themainprogramisontheReturnStack(r1).
+"DINNER" calls"SOUP". Whenweenter"SOUP"thereturnaddressto"DINNER" isontheReturnStack
+(r2).Whenwearedonewith"SOUP", itsreturnaddressdisappears fromtheReturnStackandexecution
+continues within"DINNER".
+Then"ENTREE" iscalled,puttinganotherreturnaddressontheReturnStack(r3)."ENTREE" onits
+turn,calls"CHICKEN". Anotherreturnaddress(r4)isputontheReturnStack.Let’stakealookonwhat
+currently liesontheReturnStack:
+-TopOfReturn Stack (TORS) -
+r4 -returns toENTREE
+r3 -returns toDINNER
+r1 -returns tomainprogram
+Aswealreadyknow,’;’compiles an’EXIT’,whichtakestheTORSandjumpstothataddress.Whatifwe
+losethecurrentTORS?Willthesystemcrash?
+Apartfromotherstackeffects(e.g.toofeworthewrongdataareleftontheDataStack)nothingwill
+gowrong.Unlessthecolon-deﬁnition wascalledfrominsideaDO..LOOP ,ofcourse.ButwhatDOES
+happen? Thesolutionisprovidedbythetable:itwilljumpbackto"DINNER" andcontinue execution
+fromthere.
+:soup."soup"; (r1r2)
+:dessert ."dessert "; (r1r6)
+:chicken ."chicken "r>drop; (r1r3-r4getslost!)
+:rice."rice"; (r1r3r5)
+:entree chicken rice; (r1r3)
+:dinner soupentree dessert ;(r1)
+dinner cr (--)
+Since"CHICKEN" getsridofthereturnaddressto"ENTREE", "RICE"isnevercalled.Instead,ajump
+ismadeto"DINNER" thatassumesthat"ENTREE" isdone,soitcontinues with"DESSER T".Thisisthe
+output:
+50 CHAPTER 4.STACKSANDCOLONDEFINITIONS
+soupchicken dessert
+Notethatthisisnotcommonpracticeandwedonotencourage itsuse.However,itgivesyouaprettygood
+ideahowtheReturnStackisusedbythesystem.
+4.9Leavingacolon-deﬁnition
+Youcansometimes achievetheverysameeffectbyusingtheword’EXIT’onastrategicplace.We’ve
+alreadyencountered ’EXIT’.Itistheactualwordthatiscompiled by’;’.
+Whatyoudidn’tknowisthatyoucancompilean’EXIT’withoutusinga’;’.Anditdoestheverysame
+thing:itpopsthereturnaddressfromtheReturnStackandjumpstoit.Let’stakealookatourslightly
+modiﬁed previousexample:
+:soup."soup"; (r1r2)
+:dessert ."dessert "; (r1r6)
+:chicken ."chicken "; (r1r3r4)
+:rice."rice"; (isnever reached)
+:entree chicken exitrice; (r1r3)
+:dinner soupentree dessert ;(r1)
+dinner cr (--)
+After"CHICKEN" hasbeenexecutedby"ENTREE", an’EXIT’isencountered. ’EXIT’worksjustlike
+’;’,soForththinksthecolon-deﬁnition hascometoanendandjumpsbackto"DINNER". Itnevercomes
+tocalling"RICE",sotheoutputis:
+soupchicken dessert
+’EXIT’ismostlyusedincombination withsomekindofbranching likeIF..ELSE..THEN. Compare itwith
+’LEAVE’thatleavesaDO..LOOP early.
+Butnowforthebigquestion: whatisthedifferencebetween’EXIT’and’;’?Bothcompilean’EXIT’,
+buttheyarenotaliases.Forthshutsdownthecompiler whenencountering ’;’.Thisisnotperformed by
+’EXIT’.
+4.10Howdeepisyourstack?
+YoucanaskForthhowmanyvaluesareontheDataStackusing’DEPTH’. Itwillreportthenumberof
+values,beforeyouexecuted’DEPTH’. Let’selaborate onthatalittlemore:
+.(Begin) cr (novalues onthestack)
+10 (1value onthestack)
+5 (2values onthestack)
+9 (3values onthestack)
+depth (4values onthestack)
+.cr (Forth reports "3")
+Chapter 5
+Advancedtopics
+5.1Booleans andnumbers
+Youmighthaveexpectedwehaddiscussed thissubjectmuchearlier.Butwehaven’tandforonevery
+goodreason.We’vetoldyouafewchaptersagothat’IF’branches ifthetopofthestackisnon-zero. Any
+numberwilldo.Soyouwouldexpectthatthisprogramwillprint"I’mhere":
+:test
+12and
+if
+."I'mhere"
+then
+;
+test
+Infact,itdoesn’t!Why?Well,’AND’isaBINARYoperator,notaLOGICAL operator.Thatmeansit
+reactsonbit-patterns. Giventwonumbers, itwillevaluatebitsatthesameposition.
+Thenumber"1"is"01"inbinary.Thenumber"2"is"10"inbinary.’AND’willevaluatetheﬁrstbit(binary
+digit,nowyouknowwherethatcamefrom!).Theﬁrstbitistherightmost bit,so"0"forthenumber"2"
+and"1"forthenumber"1".
+’AND’worksonasimplerule,ifbothbitsare"1"theresultwillbe"1"onthatposition. Otherwise itwill
+be"0".So"1"and"0"are"0".Theevaluationofthesecondbithasthesameresult:"0".We’restuckwith
+anumberthatis"0".False.So’IF’concludes thattheexpression isnottrue:
+2base! \setradix tobinary
+10 (binary number "2")
+01AND (binary number "1")
+=.cr (binary result after AND)
+Itwillprint"0".However,"3"and"2"wouldworkjustﬁne:
+2base! \setradix tobinary
+10 (binary number "2")
+11AND (binary number "3")
+.cr (binary result after AND)
+51
+52 CHAPTER 5.ADVANCEDTOPICS
+Itwillprint"10".Thesameappliestootherbinaryoperators as’OR’and’INVERT’.’OR’worksjust
+like’AND’butworkstheotherwayaround.Ifbothbitsare"0"theresultwillbe"0"onthatposition.
+Otherwise itwillbe"1":
+2base! \setradix tobinary
+10 (binary number "2")
+01OR (binary number "1")
+.cr (binary result after OR)
+Itwillprint"11".Wedonotencourage theuseof’INVERT’forlogicaloperations, although thestandard
+allowsit.Youshoulduse’0=’instead.’0=’takesthetopofthestackandleaveatrue-ﬂagifitiszero.
+Otherwise itwillleaveafalse-ﬂag. Thatmeansthatifacondition istrue(non-zero), itwillleaveafalse-ﬂag.
+WhichisexactlywhatalogicalNOTshoulddo.
+Takealookathisbrother’0<>’.’0<>’takesthetopofthestackandleavesatrue-ﬂagifitisnon-zero.
+Otherwise itwillleaveafalse-ﬂag.Thefunnythingis’AND’and’OR’workperfectly withﬂagsand
+behaveasexpected.’0<>’willconvertavaluetoaﬂagforyou.Sothisworks:
+:test
+10<>
+20<>
+andif
+."I'mhere" cr
+then
+;
+test
+Ofcourse,youdon’thavetouse’0<>’whenawordreturnsaﬂag.Youshouldcheckthestandardfor
+detailsonthat.
+5.2Including yourowndeﬁnitions
+Atacertainpointyoumayhavewrittenalotofdeﬁnitions you’reveryfondof.Youusetheminmostof
+yourprograms, sobeforeyouactuallygettotheprograms youhavetoworkyourwaythroughallthese
+standarddeﬁnitions. Evenworse,whenyouchangeoneofthemyouhavetoeditallyourprograms. Most
+Forthshaveawaytopermanently includetheminthekernel,butifyou’renotuptothatorwantyour
+programs tobeasportableaspossibleyoucansolvethisinabetterway.
+Justputallofyourdeﬁnitions inasingleﬁleandstartyourprogramwith:
+s"mydefs.fs" included
+Thecompilerwillnowﬁrstcompileallthedeﬁnitions in”mydefs.fs” beforestartingwiththemainprogram.
+We’vedoneexactlythesameinthefollowingsections. Mostofthecodeyou’llﬁndthereusestheEasy4tH
+extensions, soinsteadoflistingthemeverysingletime,we’vejustincludedthem.Easy4tHhasoldfavorites
+like”PLACE”and”NUMBER” alreadyavailabletoyou.
+Youhavetodeﬁnetheconstant”/STRING-SP ACE”ﬁrstinordertouseit.Avalueof16384shouldbeﬁne
+inmostcases.Ifyougetanerror,youcanalwaysincreaseit.
+5.3.CONDITION ALCOMPILA TION 53
+5.3Conditional compilation
+Thisissomething whichcanbeveryhandywhenyou’redesigning aForthprogramfordifferentenviron-
+mentsorevendifferentForthcompilers. Let’ssayyou’vewrittenageneralledgerprograminForththatis
+sogood,youcansellit.Yourcustomers wantademo,ofcourse.You’rewillingtogiveonetothem,but
+you’reafraidthey’regoingtousethedemowithouteverpayingforit.
+Onethingyoucandoislimitthenumberofentriestheycanmake.So,youcopythesourceandmakea
+specialdemoversion.Butyouhavetodothatforeverynewrelease.Wouldn’titjustbeeasiertohaveone
+versionoftheprogramandjustchangeonesingleconstant? Youcanwithconditional compilation:
+true constant DEMO
+DEMO[if]
+256constant #Entries
+[else]
+65536 constant #Entries
+[then]
+variable CurrentEntry
+create Entries #Entries cells allot
+Wedeﬁnedaconstant, called"DEMO", whichistrue.So,whenthecompiler reachesthe"DEMO[if]"line,
+itknowsthatithastocompile"256constantEntries",since"DEMO" istrue.Whenitcomesto"[else]",it
+knowsithastoskipeverythingupto"[then]". So,inthiscasethecompiler behaveslikeyou’vewritten:
+256constant #Entries
+variable CurrentEntry
+create Entries #Entries cells allot
+Wouldyouchange"DEMO" tofalse,thecompiler wouldbehaveasifyouwrote:
+variable CurrentEntry
+65536 constant #Entries
+create Entries #Entries cells allot
+Theword’[IF]’onlyworksatcompiletimeandisnevercompiled intotheobject.’[IF]’takesaexpression.
+Ifthisexpression istrue,thecodefrom’[IF]’until’[ELSE]’ iscompiled, justas’[IF]’wasn’tthere.Isthis
+expression isfalse,everything’[IF]’upto’[ELSE]’ isdiscarded asifitwasn’tthere.
+Thatalsomeansyoucandiscardanycodethatissuperﬂuous intheprogram. E.g.whenyou’remakinga
+colon-deﬁnition tocheckwhetheryoucanmakeanymoreentries.Ifyoudidn’tuseconditional compila-
+tion,youmighthavewrittenitlikethis:
+:CheckIfFull (n--n)
+dup#Entries = (nf)
+if (n)
+drop (--)
+DEMO (f)
+if (--)
+."Buythefullversion"
+else \givemessage andexitprogram
+54 CHAPTER 5.ADVANCEDTOPICS
+."Nomoreentries"
+then (--)
+crquit
+then (n)
+;
+Butthisoneisnicerandwilltakeuplesscode:
+DEMO[IF]
+:.Message ."Buythefullversion" ;
+[ELSE]
+:.Message ."Nomoreentries" ;
+[THEN]
+:CheckIfFull (n--n)
+dup#Entries = (nf)
+if (n)
+drop (--)
+.Message
+crquit
+then (n)
+;
+Youcanalsouseconditional compilation todiscardlargechunksofcode.Thisisamuchbetterwaythan
+tocomment allthelinesout,e.g.thiswon’tworkanyway:
+(
+:room? \isitavalid variable?
+dup (nn)
+size1-invert and (nf)
+if \exitprogram
+drop."Notanelement ofROOM" crquit
+then
+;
+)
+Thisisprettycumbersome andpronetoerror:
+\ :room? \isitavalid variable?
+\ dup (nn)
+\ size1-invert and (nf)
+\ if \exitprogram
+\ drop."Notanelement ofROOM" crquit
+\ then
+\ ;
+Butthisissomething thatcaneasilybehandled:
+false [if]
+:room? \isitavalid variable?
+dup (nn)
+5.4.EXCEPTIONS 55
+size1-invert and (nf)
+if \exitprogram
+drop."Notanelement ofROOM" crquit
+then
+;
+[then]
+Justchange"false"to"true"andthecolon-deﬁnition ispartoftheprogram again.Notethat’[IF]..
+[THEN]’ canbenested!Conditional compilation isverypowerfulandoneoftheeasiestfeaturesalanguage
+canhave.
+5.4Exceptions
+YouknowwhenyouviolatetheintegrityofForth,itwillexitandreportthecauseandlocationoftheerror.
+Wouldn’titbeniceifyoucouldcatchtheseerrorswithintheprogram? Itwouldsavealotoferror-checking
+anyway.ItisquitepossibletocheckeveryvaluewithinForth,butittakescodeandperformance, which
+makesyourprogramlesscompactandslower.
+Well,youcandothattooinForth.Andnoteventhat,youcantriggeryourownerrorsaswell.Thissimple
+programtriggersanerrorandexitsForthwhenyouentera"0":
+16384 constant /string-space
+s"easy4th.fs" included
+:input# \getanumber
+begin
+refill drop (--)
+blwordnumber (n)
+dup(error) <> (nf)
+dup0= (nf-f)
+ifswapdropthen (f|nf)
+until (input routine )
+;
+\getanumber
+\ifnon-zero, return it
+\ifzero, throw exception
+:could-fail (--n)
+input# dup0=
+if1throw then
+;
+\dropnumbers and
+\callCOULD-FAIL
+:do-it (--)
+dropdropcould-fail
+;
+\put2numsonstack and
+\execute DO-IT
+:try-it (--)
+12[']do-it execute
+."Thenumber was".cr
+;
+\callTRY-IT
+try-it
+56 CHAPTER 5.ADVANCEDTOPICS
+"TRY-IT"putstwonumbersonthestack,getstheexecutiontokenof"DO-IT" andexecutesit."DO-IT"
+dropsbothnumbers andcalls"COULD-F AIL"."COULD-F AIL"getsanumberandcompares itagainst
+"0".Ifzero,itcallsanexception. Ifnot,itreturnsthenumber.
+Theexpression "1THROW"hasthesameeffectascalling’QUIT’.Theprogramexits,butwiththeerror
+message"Unhandled exception". Youcanuseanypositivenumberfor’THROW’,but"0THROW"hasno
+effect.Thisiscalleda"userexception", whichmeansyoudeﬁnedandtriggered theerror.
+Therearealsosystemexceptions. Thesearetriggered bythesystem,e.g.whenyouwanttoaccessan
+undeﬁned variableorprintanumberwhenthestackisempty.Theseexceptions haveanegativenumber,
+so:
+throw -4
+Willtriggerthe"Stackempty"error.Youcanusetheseifyouwantbutwedon’trecommend it,sinceit
+willconfusetheusersofyourprogram.
+You’reprobably notinterested inanalternativefor’QUIT’.Well,’THROW’isn’t.Itjustenablesyouto
+"throw"anexceptionandexceptions canbecaughtbyyourprogram. ThatmeansthatForthwon’texit,but
+transferscontrolbacktosomeroutine.Let’sdojustthat:
+16384 constant /string-space
+s"easy4th.fs" included
+:input#
+begin
+refill drop (--)
+blwordnumber (n)
+dup(error) <> (nf)
+dup0= (nf-f)
+ifswapdropthen (f|nf)
+until (input routine )
+;
+:could-fail (--n)
+input# dup0=
+if1throw then
+;
+:do-it (--)
+dropdropcould-fail
+;
+:try-it (--)
+12[']do-it catch
+ifdropdrop."There wasanexception" cr
+else."Thenumber was".cr
+then
+;
+try-it
+Theonlythingswechangedisasomewhatmoreelaborate "TRY-IT"deﬁnition andwereplaced’EXE-
+CUTE’by’CATCH’.
+5.4.EXCEPTIONS 57
+’CATCH’worksjustlike’EXECUTE’, exceptitreturnsaresult-code. Iftheresult-code iszero,everything
+isokay.Ifitisn’t,itreturnsthevalueof’THROW’.Inthiscaseitwouldbe"1",sinceweexecute"1
+THROW".Thatiswhy"0THROW"doesn’thaveanyeffect.
+Ifyouenteranonzerovalueattheprompt,youwon’tseeanydifferencewiththepreviousversion.How-
+ever,ifweenter"0",we’llgetthemessage"Therewasanexception", beforetheprogramexits.
+Buthey,ifwegotthatmessage, thatmeansForthwasstillincontrol!Infact,itwas.When"1THROW"was
+executed,thestack-pointers wererestoredandweweredirectlyreturnedto"TRY-IT".Asif"1THROW"
+performed an’EXIT’tothetokenfollowing’CATCH’.
+Sincethestack-pointers werereturnedtotheiroriginalstate,thetwovalueswediscarded in"DO-IT" are
+stillonthestack.Butthepossibility existstheyhavebeenalteredbypreviousdeﬁnitions. Thebestthing
+wecandoisdiscardthem.
+So,theﬁrstversionexitedwhenyoudidn’tenteranonzerovalue.Thesecondversiondidtoo,butnotafter
+givingusamessage. Can’twemakeaversioninwhichwecanhaveanothertry?Yeswecan:
+16384 constant /string-space
+s"easy4th.fs" included
+:input#
+begin
+refill drop (--)
+blwordnumber (n)
+dup(error) <> (nf)
+dup0= (nf-f)
+ifswapdropthen (f|nf)
+until (input routine )
+;
+:could-fail (--n)
+input# dup0=
+if1throw then
+;
+:do-it (--)
+dropdropcould-fail
+;
+:retry-it (--)
+begin
+12[']do-it catch
+while
+dropdrop."Exception, keeptrying" cr
+repeat
+."Thenumber was".cr
+;
+retry-it
+Thisversionwillnotonlycatchtheerror,butitallowsustohaveanothergo!Wecankeeponentering
+"0",untilweenteranonzerovalue.Isn’tthatgreat?Butitgetsevenbetter!Wecanexhaustthestack,
+triggerasystemexceptionandstillkeepongoing.Butlet’stakeitonestepatthetime.Firstwechange
+"COULD-F AIL"into:
+58 CHAPTER 5.ADVANCEDTOPICS
+:could-fail (--n)
+input# dup0=
+ifdrop."Stack: "depth .cr1throw then
+;
+Thiswilltellusthatthestackisexhausted athispoint.Let’sexhaustisalittlefurtherbyredeﬁning
+"COULD-F AIL"again:
+:could-fail (--n)
+input# dup0=
+ifdropdropthen
+;
+Another’DROP’?Butwouldn’tthattriggeran"Stackempty"error?Yeah,itdoes.Butinsteadofexiting,
+theprogramwillreactasifwewrote"-4THROW"insteadof"DROPDROP".Theprogramwillcorrectly
+reportanexceptionwhenweenter"0"andactaccordingly .
+Thiswillworkwithvirtuallyeveryruntimeerror.Whichmeanswewon’thavetoprotectourprogram
+againsteverypossibleuser-error,butletForthdothechecking.
+Wewon’tevenhavetosetﬂagsineverypossiblecolon-deﬁnition, sinceForthwillautomatically skipevery
+levelbetween’THROW’and’CATCH’.Evenbetter,thestackswillberestoredtothesamedepthasthey
+werebefore’CATCH’wascalled.
+Youcanhandletheerrorinanywayyouwant.Youcandisplayanerrormessage, callsomekindof
+error-handler,orjustignoretheerror.Isthatenoughﬂexibilityforyou?
+5.5Lookuptables
+LeoBrodiewrote:"Iconsiderthecasestatement anelegantsolutiontoamisguided problem: attempting
+analgorithmic expression ofwhatismoreaptlydescribed inadecisiontable".Andthatisexactlywhatwe
+aregoingtoteachyou.
+Let’ssaywewantaroutinethattakesanumberandthenprintstheappropriate month.InANS-Forth,you
+coulddothatthisway:
+:Get-Month
+case
+1of."January "endof
+2of."February "endof
+3of."March "endof
+4of."April "endof
+5of." May "endof
+6of."June "endof
+7of."July "endof
+8of."August "endof
+9of."September" endof
+10of."October "endof
+11of."November "endof
+12of."December "endof
+endcase
+cr
+;
+5.5.LOOKUP TABLES 59
+Thistakesalotofcodeandalotofcomparing. Inthiscase(littlewordplay)youwouldbebetterofwith
+anindexedtable,likethis:
+16384 constant /string-space
+s"easy4th.fs" included
+create MonthTable
+$"January ",
+$"February ",
+$"March ",
+$"April ",
+$" May ",
+$"June ",
+$"July ",
+$"August ",
+$"September" ,
+$"October ",
+$"November ",
+$"December ",
+:Get-Month (n--)
+12min1-MonthTable swapcells +@padcopy1count typecr
+;
+Whichdoestheverysamethingandwillcertainly workfaster.Normally ,youcan’tdothatthiseasilyin
+ANS-Forth,butwiththisprimeryoucan,souseit!Butcanyouusethesamemethodwhenyou’reworking
+witharandomsetofvalueslike"2,1,3,12,5,6,4,7,11,8,10,9".Yes,youcan.Butyouneedaspecial
+routinetoaccesssuchatable.Ofcoursewedesigned oneforyou:
+:Search-Table (n1a1n2n3--n4f)
+swap>r (n1a1n3)
+rotrot (n3n1a1)
+overover (n3n1a1n1a1)
+0 (n3n1a1n1a1n2)
+begin (n3n1a1n1a1n2)
+swapover (n3n1a1n1n2a1n2)
+cells + (n3n1a1n1n2a2)
+@dup (n3n1a1n1n2n3n3)
+0>>r (n3n1a1n1n2n3)
+rot<> (n3n1a1n2f)
+r@and (n3n1a1n2f)
+while (n3n1a1n2)
+r>drop (n3n1a1n2)
+r@+ (n3n1a1n2+2)
+>roverover (n3n1a1n1a1)
+r> (n3n1a1n1a1n2+2)
+repeat (n3n1a1n2)
+r@if
+>rrotr> (n1a1n3n2)
+1”COPY” ispartoftheEasy4tHextensions andwillcopyacountedstringfromoneaddresstoanother(addr1addr2–addr2).
+60 CHAPTER 5.ADVANCEDTOPICS
++cells +@ (n1n4)
+swapdrop (n3)
+else
+dropdropdrop (n1)
+then
+r> (nf)
+r>drop (nf)
+;
+Thisroutinetakesfourvalues.Theﬁrstoneisthevalueyouwanttosearch.Thesecondistheaddressof
+thetableyouwanttosearch.Thethirdoneisthenumberofﬁeldsthistablehas.Andontopofthestack
+you’llﬁndtheﬁeldwhichvalueithastoreturn.Theﬁrstﬁeldmustbethe"index"ﬁeld.Itcontainsthe
+valueswhichhavetobecompared. Thatﬁeldhasnumberzero.
+Thisroutinecansearchzero-terminated tables.Thatmeansthelastvalueintheindexﬁeldmustbezero.
+Finally,itcanonlylookuppositivevalues.Youcanchangeallthatbymodifying thelinewith"0>>r".It
+returnsthevalueintheappropriate ﬁeldandaﬂag.Iftheﬂagisfalse,thevaluewasnotfound.
+Now,howdoweapplythistoourmonthtable?First,wehavetoredeﬁneit:
+16384 constant /string-space
+s"easy4th.fs" included
+0Constant NULL
+create MonthTable
+1,$"January ",
+2,$"February ",
+3,$"March ",
+4,$"April ",
+5,$" May ",
+6,$"June ",
+7,$"July ",
+8,$"August ",
+9,$"September" ,
+10,$"October ",
+11,$"November ",
+12,$"December ",
+NULL,
+Notethatthistableissorted,butthatdoesn’tmatter.Itwouldworkjustaswellwhenitwasunsorted. Let’s
+getourstufftogether: theaddressofthetableis"MonthTable",ithastwoﬁeldsandwewanttoreturnthe
+addressofthestring,whichislocatedinﬁeld1.Field0containsthevalueswewanttocompare. Wecan
+nowdeﬁnearoutinewhichsearchesourtable:
+:Search-Month MonthTable 21Search-Table ; (n1--n2f)
+Now,wedeﬁneanew"Get-Month" routine:
+:Get-Month (n--)
+Search-Month \search table
+5.6.WHATDOES>CREATEDO? 61
+if \ifmonth isfound
+padcopycount type \print itsname
+else \ifmonth isnotfound
+drop."Notfound" \dropvalue
+then \andshowmessage
+cr
+;
+Isthisﬂexible?Oh,youbet!Wecanextendthetablewithease:
+16384 constant /string-space
+s"easy4th.fs" included
+0Constant NULL
+3Constant #MonthFields
+create MonthTable
+1,$"January ",31,
+2,$"February ",28,
+3,$"March ",31,
+4,$"April ",30,
+5,$" May ",31,
+6,$"June ",30,
+7,$"July ",31,
+8,$"August ",31,
+9,$"September" ,30,
+10,$"October ",31,
+11,$"November ",30,
+12,$"December ",31,
+NULL,
+Nowwemakeaslightmodiﬁcation to"Search-Month":
+:Search-Month MonthTable #MonthFields 1Search-Table ;
+Thisenablesustoaddmoreﬁeldswithouteverhavingtomodify"Search-Month" again.Ifweaddanother
+ﬁeld,wejusthavetomodify"#MonthFields". Wecannowevenaddanotherroutine,whichenablesusto
+retrievethenumberofdaysinamonth:
+:Search-#Days MonthTable #Monthfields 2Search-Table ;
+Ofcourse,thereisroomforevenmoreoptimization, butfornowweleaveitatthat.Doyounowunderstand
+whyForthshouldn’thaveaCASEconstruct?
+5.6WhatDOES>CREATEdo?
+Let’stakeacloserlookat’CREATE’.Whatdoes’CREATE’actuallydo?Well,ittakesthestringafterward
+asanameandmakesawordoutofit.Let’strythis:
+CREATE aname
+62 CHAPTER 5.ADVANCEDTOPICS
+Youcaneventypethatattheprompt.Itworks,itjustmakesaword.Ifyoudon’tbelieveme,typethis:
+aname .
+Now"ANAME"justwroteoutanaddress.Whenyou’restillatthepromptandhaven’tdoneanythingelse,
+typethis:
+5,
+Rightafterourdeﬁnition wejustcompiled in"5".Isthatuseful?Canweeverretrieveit?Sure,wejust
+created"ANAME",didn’twe?Andtheaddress"ANAME"gaveisexactlytheaddresswhereout"5"was
+compiled! Believeitornot:
+aname @.
+Sure,itanswers"5".Wecanevencompileanothernumber:
+10,
+Andretrieveit:
+aname 1cells +@.
+Looksalotlikeanarraydoesn’tit?Well,underthehoodForthisactuallydoingthesamething.Let’ssay
+wewantawordthatcompiles anumberandmakesanameforit.Wecoulddeﬁnethis:
+:compilenumber create ,;
+Nowlet’suseit:
+10compilenumber anothername
+anothername @.
+First’CREATE’doesit’sjobandandcreatestheword"ANOTHERNAME".Second,’,’kicksinand
+compiles thenumberthatisonthestack,justlikeatourpreviousexample.Whenweexecute,theaddress
+ofthenumberisthrownonthestack,sowecanretrievethecontentsanddisplaythem.
+Don’tyouthink"COMPILENUMBER" isabadname.Whatweactuallydidwascreateaninitialized
+variable!Sowhatdoyouthinktheword’VARIABLE’ does?Simple:
+:variable create 1cells allot ;
+Itcreatesanameandreservessomespaceforit!Butcan’twedoanythingelsethanjustthrowaaddress.
+Yes,youcannotjustdeﬁnethewayForthcompiles aword,butalsowhatitdoesatruntime. Youuse
+’DOES>’ todeﬁneit.Let’ssaywewantittodisplaythecontentsrightaway.Wealreadygotanaddress.
+Whatnext?Sure:
+@.
+Thatwillgetthecontentsoftheaddressandshow’em.Justputthembehind’DOES>’:
+5.7.FIXEDPOINTCALCULA TION 63
+:displaynumber create ,does> @.;
+That’sit!Let’suseit:
+11displaynumber anumber
+anumber
+Great,isn’tit?Looksalotlike’CONSTANT’,doesn’tit?Let’sﬁllyouinonthat.’CONSTANT’isdeﬁned
+likethis:
+:constant create ,does> @;
+Thereisreallynothingmoretoit.Yeah,youcandogreatthingswiththat.Makeyouowndatatypes and
+such.We’llseemoreofthatlateron.
+5.7Fixedpointcalculation
+Wealreadylearnedthatifwecan’tcalculate itoutindollars,wecancalculate itincents.Andstillpresent
+theresultindollarsusingpicturednumericoutput:
+:currency <###[char] .hold#s[char] $hold#>typecr;
+Inthiscase,this:
+200012 currency
+willprintthis:
+$2000.12
+Well,thatmaybeareliefforthebookkeepers,butwhataboutusscientists? Youcandotheverysametrick.
+WehaveconvertedsomeForthcodeforyouthatgivesyouveryaccurateresults.Youcanuseroutineslike
+SIN,COSandSQRT.Asmallexample:
+31415 CONSTANT PI
+10000 CONSTANT 10K (scaling constant )
+VARIABLE XS (square ofscaled angle )
+:KN(n1n2--n3,n3=10000-n1*x*x/n2 where xistheangle )
+XS@SWAP/ (x*x/n2 )
+NEGATE 10K*/ (-n1*x*x/n2 )
+10K+ (10000-n1*x*x/n2 )
+;
+:(SIN) (x--sine*10K, xinradian*10K )
+DUPDUP10K*/ (x*xscaled by10K)
+XS! (saveitinXS)
+10K72KN (lastterm)
+42KN20KN6KN (terms 3,2,and1)
+64 CHAPTER 5.ADVANCEDTOPICS
+10K*/ (times x)
+;
+:SIN (degree --sine*10K )
+PI180*/ (convert toradian )
+(SIN) (compute sine)
+;
+Ifyouenter:
+45sin.cr
+Youwillget"7071",becausetheresultismultiplied by10000.Youcancorrectthisthesamewayyoudid
+withthedollars:justprintthenumberintherightformat.
+:/10K. <#####[char] .hold#S#>typecr;
+45sin/10K.
+Thisonewillactuallyprint:
+0.7071
+ButnotethatForthinternally stillworkswiththescalednumber,whichis"7071".Anotherexample:
+:SQRT (n1--n2,n2**2<=n1 )
+0 (initial root)
+SWAP0 (setn1asthelimit )
+DO1+DUP (refresh root)
+2*1+ (2n+1)
++LOOP (add2n+1tosum,loopif)
+; (lessthann1,elsedone)
+:.fp<##[char] .hold#S#>typecr;
+Ifyouenteranumberofwhichtherootisaninteger,youwillgetacorrectanswer.Youdon’tevenneeda
+specialformatting routine.Ifyouenteranyothernumber,itwillreturnonlytheintegerpart.Youcanﬁx
+thisbyscalingthenumber.
+However,scalingitby10willgetyounowhere,since"3"isthesquarerootof"9",but"30"isnotthe
+squarerootof"90".Inthatcase,wehavetoscaleitby100,10,000oreven1,000,000 togetacorrect
+answer.Inordertoretrievethenextdigitofthesquarerootof"650",wehavetomultiplyitby100:
+650100*sqrt.fp
+Whichwillprint:
+25.4
+Toacquiregreaterprecision wehavetoscaleitupevenfurther,like10,000.Thiswillshowus,that"25.49"
+bringsusevenclosertothecorrectanswer.
+5.8.RECURSION 65
+5.8Recursion
+Yes,butcanshedorecursion? Ofcourseshecan!Inordertoletacolon-deﬁnition callitself,youhaveto
+usetheword’RECURSE’. Everybodyknowshowtocalculate afactorial.InForthyoucandothisby:
+:factorial (n1--n2)
+dup2>
+if
+dup1-
+recurse *
+then
+;
+10factorial .cr
+Ifyouusetheword’RECURSE’ outsideacolon-deﬁnition, theresultsareundeﬁned. Notethatrecursion
+laysaheavyburdenonthereturnstack.Sometimes itiswisertoimplement sucharoutinedifferently:
+:factorial
+dup
+begin
+dup2>
+while
+1-swapover*swap
+repeat
+drop
+;
+10factorial .cr
+Soifyoueverrunintostackerrorswhenyouuserecursion, keepthisinmind.
+5.9Forwarddeclarations
+Itdoesn’thappenveryoften,butsometimes youhaveaprogramwheretwocolon-deﬁnitions calleach
+other.Thereisnospecialinstruction inForthtodothis,likePascals"FORWARD"keyword,butstillit
+canbedone.Itevenworksthesameway.Let’ssaywe’vegottwocolon-deﬁnitions called"STEP1" and
+"STEP2". "STEP1" calls"STEP2" andviceversa.Firstwecreateavaluecalled"(STEP2)". Weassignit
+thevalue’-1’sinceitishighlyunlikely,therewilleverbeawordwiththataddress:
+-1value (Step2)
+Thenweusevectoredexecutiontocreateaforwarddeclaration for"STEP2":
+:Step2 (Step2) execute ;
+Nowwecancreate"STEP1" withoutaproblem:
+66 CHAPTER 5.ADVANCEDTOPICS
+:Step1 1+dup.crStep2 ;
+But"STEP2" doesnothaveabodyyet.Ofcourse,youcouldcreateanewcolon-deﬁnition, tickitand
+assigntheexecutiontokento"(STEP2)", butthiscreatesasuperﬂuous word.
+Itismuchneatertouse’:NONAME’.’:NONAME’canbeusedlikeanormal’:’,butitdoesn’trequirea
+name.Instead,itpushestheexecutiontokenofthecolon-deﬁnition itcreatedonthestack.No,’:NON-
+AME’does*NOT*createaliteralexpression, butitisjustwhatweneed:
+:noname 1+dup.crStep1 ;to(Step2)
+Nowweareready!Wecansimplyexecutetheprogrambycalling"STEP1":
+1Step1
+Notethatifyourunthisprogram, you’llgetstackerrors!Sorry,buttheexamplehasbeentakenfroma
+TurboPascalmanual;).
+5.10Thisistheend
+Thisistheendofit.Ifyoumastered allwehavewrittenaboutForth,youmaybejustasproﬁcient as
+weare.Orevenbetter.Inthemeanwhile youmayevenhaveacquiredatasteforthisstrange,butelegant
+language. Ifyoudo,thereisplentyleftforyoutolearn.
+Ifyouﬁndanyerrorsinthisprimerorjustwanttomakearemarkorsuggestion, youcancontactusby
+sendinganemailto:
+hansoft@bigfoot.com
+Wedoalsohaveaweb-site:
+http://hansoft.come.to
+Youwillﬁndtherelotsofdocumentation andnewson4tH,ourownForthcompiler.
+PartI
+Appendices
+67
+
+Bibliograph y
+ANSIX3/X3J14 (1993).
+DraftproposedAmerican National Standrad forInformation Systems—Programming Languages
+—Forth.GlobalEngineering Documents, 15InvernessWayEast,Englewood,CO80122-5704, USA,
+sixthedition,1993.Document Number: ANSI/IEEE X3.215-1994.
+LeoBrodie(1982).
+StartingForth.PrenticeHallInternational, secondedition,1982.
+LeoBrodie(1984).
+Thinking Forth.PrenticeHallInternational, 1984.
+HansBezemer /Benjamin Hoyt(1997).
+LookupTables.ForthDimensions, VolumeXIX,Number 3,September 1997October.
+69
+70
+History
+VERSIONAUTHORDATEMODIFICATION
+0.1 HansBezemer 2001-03-07 Initialdocument
+0.2 HansBezemer 2001-03-11 Used’COMUS’ APPEND andchanged”to$”insection’LookupTables’
+0.3 HansBezemer 2001-03-25 Changed severalthingsinEasy4tHandﬁxedsomeerrorsinexampleprograms
+0.4 HansBezemer 2001-04-06 GotridofSCOPYandadded’WhatDOES>CREATEdo’
+71
+72
+Easy4tH
+\easy4th V1.0d A4tHtoANSForth interface
+\Typical usage:
+\4096constant /string-space
+\s"easy4th.fs" included
+\ThisisanANSForth program requiring:
+\ 1.ThewordNIPintheCoreExt.wordset
+\ 2.Theword/STRING intheString wordset
+\ 3.ThewordD>SintheDouble wordset
+\ 4.Thewords MSandTIME&DATE intheFacility Ext.wordset
+\ 5.Thewords [IF]and[THEN] intheTools Ext.wordset.
+\(c)Copyright 1997,2001 WilBaden, HansBezemer. Permission isgranted bythe
+\authors tousethissoftware foranyapplication provided this
+\copyright notice ispreserved.
+\Uncomment thenextlineifREFILL doesnotfunction properly
+\:refill query crtrue;
+\4tHdatatypes
+:ARRAY CREATE CELLS ALLOT ;
+:STRING CREATE CHARS ALLOT ;
+:TABLE CREATE ;
+\4tHconstants
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+NEGATE 1-CONSTANT (ERROR) \create constant (ERROR)
+[ELSE]
+.(Error: MAX-N undefined) cr
+[THEN]
+S"MAX-N" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+CONSTANT MAX-N \create constant MAX-N
+[ELSE]
+.(Error: MAX-N undefined) cr
+[THEN]
+S"STACK-CELLS" ENVIRONMENT? \query environment
+73
+74
+[IF] \ifsuccessful
+CONSTANT STACK-CELLS \create constant STACK-CELLS
+[ELSE]
+.(Error: STACK-CELLS undefined) cr
+[THEN]
+S"/PAD" ENVIRONMENT? \query environment
+[IF] \ifsuccessful
+CONSTANT /PAD \create constant /PAD
+[ELSE]
+.(Error: /PADundefined) cr
+[THEN]
+\4tHcompiletime words
+:[NOT] 0=;
+:[*]*;
+:[+]+;
+\4tHwordset
+:THCELLS +;
+:@'@;
+:COPY(ab--b)>RDUPC@1+R@SWAPMOVE R>;
+:WAIT1000*MS;
+:NUMBER (a--n)
+0.ROTDUP1+C@[CHAR] -=>RCOUNT
+R@IF1/STRING THEN>NUMBER NIP0=
+IFD>SR>IFNEGATE THENELSER>DROP2DROP (ERROR) THEN
+;
+(Reserve STRING-SPACE indata-space. )
+CREATE STRING-SPACE /STRING-SPACE CHARS ALLOT
+VARIABLE NEXT-STRING 0NEXT-STRING !
+(caddr naddr--)
+:PLACE OVEROVER>R>RCHAR+ SWAPCHARS MOVER>R>C!;
+("string<">" --caddr )
+:$"[CHAR] "PARSE
+DUP1+NEXT-STRING @+/STRING-SPACE >
+ABORT" String Space Exhausted. "
+STRING-SPACE NEXT-STRING @CHARS +>R
+DUP1+NEXT-STRING +!
+R@PLACE
+R>
+;
+\4tHsRandom generator
+(Default RNGfromtheCStandard. `RAND' hasreasonable )
+(properties, plustheadvantage ofbeing widely used. )
+VARIABLE RANDSEED
+32767 CONSTANT MAX-RAND
+75
+:RAND (--random )
+RANDSEED @(random) 1103515245 *12345 +DUPRANDSEED !
+16RSHIFT MAX-RAND AND
+;
+:SRAND (n--)RANDSEED !;1SRAND
+(Don't mumble. )
+:random (--n) RAND;
+:set-random (n--) SRAND ;
+(Mix'emup.)
+:randomize (--)
+TIME&DATE 12*+31*+24*+60*+60*+set-random
+;
+randomize
+76
+GNUFreeDocumentation License
+GNUFreeDocumentation License
+Version1.1,March2000
+Copyright(C)2000FreeSoftwareFoundation, Inc.59TemplePlace,Suite330,Boston,MA02111-1307
+USA
+Everyoneispermitted tocopyanddistributeverbatimcopiesofthislicensedocument, butchanging itis
+notallowed.
+0.PREAMBLE
+ThepurposeofthisLicenseistomakeamanual,textbook,orotherwrittendocument "free"inthesenseof
+freedom: toassureeveryonetheeffectivefreedomtocopyandredistributeit,withorwithoutmodifying it,
+eithercommercially ornoncommercially .Secondarily ,thisLicensepreservesfortheauthorandpublisher
+awaytogetcreditfortheirwork,whilenotbeingconsidered responsible formodiﬁcations madebyothers.
+ThisLicenseisakindof"copyleft",whichmeansthatderivativeworksofthedocument mustthemselves
+befreeinthesamesense.Itcomplements theGNUGeneralPublicLicense,whichisacopyleftlicense
+designed forfreesoftware.
+Wehavedesigned thisLicenseinordertouseitformanualsforfreesoftware,becausefreesoftware
+needsfreedocumentation: afreeprogramshouldcomewithmanualsprovidingthesamefreedoms thatthe
+softwaredoes.ButthisLicenseisnotlimitedtosoftwaremanuals; itcanbeusedforanytextualwork,
+regardlessofsubjectmatterorwhetheritispublished asaprintedbook.Werecommend thisLicense
+principally forworkswhosepurposeisinstruction orreference.
+1.APPLICABILITY ANDDEFINITIONS
+ThisLicenseappliestoanymanualorotherworkthatcontainsanoticeplacedbythecopyrightholder
+sayingitcanbedistributedunderthetermsofthisLicense. The"Document", below,referstoanysuch
+manualorwork.Anymemberofthepublicisalicensee,andisaddressed as"you".
+A"Modiﬁed Version"oftheDocument meansanyworkcontaining theDocument oraportionofit,either
+copiedverbatim,orwithmodiﬁcations and/ortranslated intoanotherlanguage.
+A"Secondary Section"isanamedappendix orafront-matter sectionoftheDocument thatdealsexclu-
+sivelywiththerelationship ofthepublishers orauthorsoftheDocument totheDocument’ soverallsubject
+(ortorelatedmatters)andcontainsnothingthatcouldfalldirectlywithinthatoverallsubject.(Forex-
+ample,iftheDocument isinpartatextbookofmathematics, aSecondary Sectionmaynotexplainany
+mathematics.) Therelationship couldbeamatterofhistorical connection withthesubjectorwithrelated
+matters,oroflegal,commercial, philosophical, ethicalorpoliticalpositionregardingthem.
+77
+78
+The"InvariantSections" arecertainSecondary Sections whosetitlesaredesignated, asbeingthoseof
+InvariantSections, inthenoticethatsaysthattheDocument isreleasedunderthisLicense.
+The"CoverTexts"arecertainshortpassages oftextthatarelisted,asFront-CoverTextsorBack-Cover
+Texts,inthenoticethatsaysthattheDocument isreleasedunderthisLicense.
+A"Transparent" copyoftheDocument meansamachine-readable copy,represented inaformatwhose
+speciﬁcation isavailabletothegeneralpublic,whosecontentscanbeviewedandediteddirectlyand
+straightforw ardlywithgenerictexteditorsor(forimagescomposed ofpixels)genericpaintprograms or
+(fordrawings)somewidelyavailabledrawingeditor,andthatissuitableforinputtotextformatters or
+forautomatic translation toavarietyofformatssuitableforinputtotextformatters. Acopymadeinan
+otherwise Transparent ﬁleformatwhosemarkuphasbeendesigned tothwartordiscourage subsequent
+modiﬁcation byreadersisnotTransparent. Acopythatisnot"Transparent" iscalled"Opaque".
+Examples ofsuitableformatsforTransparent copiesincludeplainASCIIwithoutmarkup,Texinfoinput
+format,LATEXinputformat,SGMLorXMLusingapubliclyavailableDTD,andstandard-conforming
+simpleHTMLdesigned forhumanmodiﬁcation. OpaqueformatsincludePostScript, PDF,proprietary
+formatsthatcanbereadandeditedonlybyproprietary wordprocessors, SGMLorXMLforwhichthe
+DTDand/orprocessing toolsarenotgenerally available,andthemachine-generated HTMLproduced by
+somewordprocessors foroutputpurposes only.
+The"TitlePage"means,foraprintedbook,thetitlepageitself,plussuchfollowingpagesasareneeded
+tohold,legibly,thematerialthisLicenserequirestoappearinthetitlepage.Forworksinformatswhich
+donothaveanytitlepageassuch,"TitlePage"meansthetextnearthemostprominent appearance ofthe
+work’stitle,preceding thebeginningofthebodyofthetext.
+2.VERBATIMCOPYING
+YoumaycopyanddistributetheDocument inanymedium, eithercommercially ornoncommercially ,
+providedthatthisLicense,thecopyrightnotices,andthelicensenoticesayingthisLicenseappliestothe
+Document arereproduced inallcopies,andthatyouaddnootherconditions whatsoevertothoseofthis
+License. Youmaynotusetechnical measures toobstructorcontrolthereadingorfurthercopyingofthe
+copiesyoumakeordistribute.However,youmayacceptcompensation inexchangeforcopies.Ifyou
+distributealargeenoughnumberofcopiesyoumustalsofollowtheconditions insection3.
+Youmayalsolendcopies,underthesameconditions statedabove,andyoumaypubliclydisplaycopies.
+3.COPYING INQUANTITY
+IfyoupublishprintedcopiesoftheDocument numbering morethan100,andtheDocument’ slicense
+noticerequiresCoverTexts,youmustenclosethecopiesincoversthatcarry,clearlyandlegibly,allthese
+CoverTexts:Front-CoverTextsonthefrontcover,andBack-CoverTextsonthebackcover.Bothcovers
+mustalsoclearlyandlegiblyidentifyyouasthepublisher ofthesecopies.Thefrontcovermustpresentthe
+fulltitlewithallwordsofthetitleequallyprominent andvisible.Youmayaddothermaterialonthecovers
+inaddition. Copyingwithchangeslimitedtothecovers,aslongastheypreservethetitleoftheDocument
+andsatisfytheseconditions, canbetreatedasverbatimcopyinginotherrespects.
+Iftherequiredtextsforeithercoveraretoovoluminous toﬁtlegibly,youshouldputtheﬁrstoneslisted(as
+manyasﬁtreasonably) ontheactualcover,andcontinuetherestontoadjacentpages.
+IfyoupublishordistributeOpaquecopiesoftheDocument numbering morethan100,youmusteitherin-
+cludeamachine-readable Transparent copyalongwitheachOpaquecopy,orstateinorwitheachOpaque
+copyapublicly-accessible computer -networklocationcontaining acomplete Transparent copyoftheDoc-
+ument,freeofaddedmaterial, whichthegeneralnetwork-using publichasaccesstodownloadanony-
+mouslyatnochargeusingpublic-standard networkprotocols. Ifyouusethelatteroption,youmusttake
+79
+reasonably prudentsteps,whenyoubegindistributionofOpaquecopiesinquantity,toensurethatthis
+Transparent copywillremainthusaccessible atthestatedlocationuntilatleastoneyearafterthelasttime
+youdistributeanOpaquecopy(directlyorthroughyouragentsorretailers) ofthateditiontothepublic.
+Itisrequested, butnotrequired, thatyoucontacttheauthorsoftheDocument wellbeforeredistributingany
+largenumberofcopies,togivethemachancetoprovideyouwithanupdatedversionoftheDocument.
+4.MODIFICA TIONS
+YoumaycopyanddistributeaModiﬁed VersionoftheDocument undertheconditions ofsections2and3
+above,providedthatyoureleasetheModiﬁed Versionunderprecisely thisLicense,withtheModiﬁed Ver-
+sionﬁllingtheroleoftheDocument, thuslicensing distributionandmodiﬁcation oftheModiﬁed Version
+towhoeverpossesses acopyofit.Inaddition, youmustdothesethingsintheModiﬁed Version:
+A.UseintheTitlePage(andonthecovers,ifany)atitledistinctfromthatoftheDocument, andfrom
+thoseofpreviousversions(whichshould,iftherewereany,belistedintheHistorysectionoftheDoc-
+ument). Youmayusethesametitleasapreviousversioniftheoriginalpublisher ofthatversiongives
+permission.
+B.ListontheTitlePage,asauthors,oneormorepersonsorentitiesresponsible forauthorship ofthe
+modiﬁcations intheModiﬁed Version,togetherwithatleastﬁveoftheprincipal authorsoftheDocument
+(allofitsprincipal authors,ifithaslessthanﬁve).
+C.StateontheTitlepagethenameofthepublisher oftheModiﬁed Version,asthepublisher.
+D.PreserveallthecopyrightnoticesoftheDocument.
+E.Addanappropriate copyrightnoticeforyourmodiﬁcations adjacenttotheothercopyrightnotices.
+F.Include,immediately afterthecopyrightnotices,alicensenoticegivingthepublicpermission tousethe
+Modiﬁed VersionunderthetermsofthisLicense,intheformshownintheAddendum below.
+G.PreserveinthatlicensenoticethefulllistsofInvariantSectionsandrequiredCoverTextsgiveninthe
+Document’ slicensenotice.
+H.Includeanunaltered copyofthisLicense.
+I.Preservethesectionentitled"History", anditstitle,andaddtoitanitemstatingatleastthetitle,year,new
+authors,andpublisher oftheModiﬁed VersionasgivenontheTitlePage.Ifthereisnosectionentitled
+"History" intheDocument, createonestatingthetitle,year,authors,andpublisher oftheDocument as
+givenonitsTitlePage,thenaddanitemdescribing theModiﬁed Versionasstatedintheprevioussentence.
+J.Preservethenetworklocation, ifany,givenintheDocument forpublicaccesstoaTransparent copy
+oftheDocument, andlikewisethenetworklocations givenintheDocument forpreviousversionsitwas
+basedon.Thesemaybeplacedinthe"History" section.Youmayomitanetworklocationforaworkthat
+waspublished atleastfouryearsbeforetheDocument itself,oriftheoriginalpublisher oftheversionit
+referstogivespermission.
+K.Inanysectionentitled"Acknowledgements" or"Dedications", preservethesection’stitle,andpreserve
+inthesectionallthesubstance andtoneofeachofthecontributoracknowledgements and/ordedications
+giventherein.
+L.PreservealltheInvariantSectionsoftheDocument, unaltered intheirtextandintheirtitles.Section
+numbersortheequivalentarenotconsidered partofthesectiontitles.
+M.Deleteanysectionentitled"Endorsements". SuchasectionmaynotbeincludedintheModiﬁed Ver-
+sion.
+N.Donotretitleanyexistingsectionas"Endorsements" ortoconﬂictintitlewithanyInvariantSection.If
+theModiﬁed Versionincludesnewfront-matter sectionsorappendices thatqualifyasSecondary Sections
+80
+andcontainnomaterialcopiedfromtheDocument, youmayatyouroptiondesignate someorallofthese
+sectionsasinvariant.Todothis,addtheirtitlestothelistofInvariantSectionsintheModiﬁed Version’s
+licensenotice.Thesetitlesmustbedistinctfromanyothersectiontitles.
+Youmayaddasectionentitled"Endorsements", provideditcontainsnothingbutendorsements ofyour
+Modiﬁed Versionbyvariousparties–for example,statements ofpeerrevieworthatthetexthasbeenap-
+provedbyanorganization astheauthoritati vedeﬁnition ofastandard.
+YoumayaddapassageofuptoﬁvewordsasaFront-CoverText,andapassageofupto25wordsas
+aBack-CoverText,totheendofthelistofCoverTextsintheModiﬁed Version.Onlyonepassageof
+Front-CoverTextandoneofBack-CoverTextmaybeaddedby(orthrougharrangements madeby)any
+oneentity.IftheDocument alreadyincludesacovertextforthesamecover,previouslyaddedbyyouor
+byarrangement madebythesameentityyouareactingonbehalfof,youmaynotaddanother;butyou
+mayreplacetheoldone,onexplicitpermission fromthepreviouspublisher thataddedtheoldone.
+Theauthor(s) andpublisher(s) oftheDocument donotbythisLicensegivepermission tousetheirnames
+forpublicity forortoassertorimplyendorsement ofanyModiﬁed Version.
+5.COMBINING DOCUMENTS
+YoumaycombinetheDocument withotherdocuments releasedunderthisLicense,underthetermsdeﬁned
+insection4aboveformodiﬁed versions,providedthatyouincludeinthecombination alloftheInvari-
+antSectionsofalloftheoriginaldocuments, unmodiﬁed, andlistthemallasInvariantSectionsofyour
+combined workinitslicensenotice.
+Thecombined workneedonlycontainonecopyofthisLicense,andmultipleidenticalInvariantSections
+maybereplacedwithasinglecopy.IftherearemultipleInvariantSectionswiththesamenamebutdifferent
+contents, makethetitleofeachsuchsectionuniquebyaddingattheendofit,inparentheses, thenameof
+theoriginalauthororpublisher ofthatsectionifknown,orelseauniquenumber.
+Makethesameadjustment tothesectiontitlesinthelistofInvariantSectionsinthelicensenoticeofthe
+combined work.
+Inthecombination, youmustcombineanysectionsentitled"History" inthevariousoriginaldocuments,
+formingonesectionentitled"History"; likewisecombineanysectionsentitled"Acknowledgements", and
+anysectionsentitled"Dedications". Youmustdeleteallsectionsentitled"Endorsements."
+6.COLLECTIONS OFDOCUMENTS
+Youmaymakeacollection consisting oftheDocument andotherdocuments releasedunderthisLicense,
+andreplacetheindividualcopiesofthisLicenseinthevariousdocuments withasinglecopythatisincluded
+inthecollection, providedthatyoufollowtherulesofthisLicenseforverbatimcopyingofeachofthe
+documents inallotherrespects.
+Youmayextractasingledocument fromsuchacollection, anddistributeitindividuallyunderthisLicense,
+providedyouinsertacopyofthisLicenseintotheextracteddocument, andfollowthisLicenseinallother
+respectsregardingverbatimcopyingofthatdocument.
+7.AGGREGA TIONWITHINDEPENDENT WORKS
+Acompilation oftheDocument oritsderivativeswithotherseparateandindependent documents orworks,
+inoronavolumeofastorageordistributionmedium, doesnotasawholecountasaModiﬁed Version
+81
+oftheDocument, providednocompilation copyrightisclaimedforthecompilation. Suchacompilation
+iscalledan"aggregate",andthisLicensedoesnotapplytotheotherself-contained worksthuscompiled
+withtheDocument, onaccountoftheirbeingthuscompiled, iftheyarenotthemselvesderivativeworksof
+theDocument.
+IftheCoverTextrequirement ofsection3isapplicable tothesecopiesoftheDocument, thenifthe
+Document islessthanonequarteroftheentireaggregate,theDocument’ sCoverTextsmaybeplaced
+oncoversthatsurround onlytheDocument withintheaggregate.Otherwise theymustappearoncovers
+aroundthewholeaggregate.
+8.TRANSLA TION
+Translation isconsidered akindofmodiﬁcation, soyoumaydistributetranslations oftheDocument under
+thetermsofsection4.Replacing InvariantSectionswithtranslations requiresspecialpermission from
+theircopyrightholders,butyoumayincludetranslations ofsomeorallInvariantSectionsinadditionto
+theoriginalversionsoftheseInvariantSections. Youmayincludeatranslation ofthisLicenseprovided
+thatyoualsoincludetheoriginalEnglishversionofthisLicense. Incaseofadisagreement betweenthe
+translation andtheoriginalEnglishversionofthisLicense,theoriginalEnglishversionwillprevail.
+9.TERMIN ATION
+Youmaynotcopy,modify,sublicense, ordistributetheDocument exceptasexpresslyprovidedforunder
+thisLicense. Anyotherattempttocopy,modify,sublicense ordistributetheDocument isvoid,andwill
+automatically terminate yourrightsunderthisLicense. However,partieswhohavereceivedcopies,or
+rights,fromyouunderthisLicensewillnothavetheirlicensesterminated solongassuchpartiesremain
+infullcompliance.
+10.FUTURE REVISIONS OFTHISLICENSE
+TheFreeSoftwareFoundation maypublishnew,revisedversionsoftheGNUFreeDocumentation License
+fromtimetotime.Suchnewversionswillbesimilarinspirittothepresentversion,butmaydifferindetail
+toaddressnewproblems orconcerns. Seehttp://www .gnu.org/copyleft/.
+EachversionoftheLicenseisgivenadistinguishing versionnumber.IftheDocument speciﬁes thata
+particular numbered versionofthisLicense"oranylaterversion"appliestoit,youhavetheoptionof
+followingthetermsandconditions eitherofthatspeciﬁed versionorofanylaterversionthathasbeen
+published (notasadraft)bytheFreeSoftwareFoundation. IftheDocument doesnotspecifyaversion
+numberofthisLicense,youmaychooseanyversioneverpublished (notasadraft)bytheFreeSoftware
+Foundation.
+ADDENDUM: HowtousethisLicenseforyourdocuments
+TousethisLicenseinadocument youhavewritten,includeacopyoftheLicenseinthedocument andput
+thefollowingcopyrightandlicensenoticesjustafterthetitlepage:
+Copyright(c)YEARYOURNAME.
+Permission isgrantedtocopy,distributeand/ormodifythisdocument underthetermsofthe
+GNUFreeDocumentation License, Version1.1oranylaterversionpublished bytheFree
+82
+SoftwareFoundation; withtheInvariantSectionsbeingLISTTHEIRTITLES, withtheFront-
+CoverTextsbeingLIST,andwiththeBack-CoverTextsbeingLIST.Acopyofthelicenseis
+includedinthesectionentitled"GNUFreeDocumentation License".
+IfyouhavenoInvariantSections, write"withnoInvariantSections" insteadofsayingwhichonesare
+invariant.IfyouhavenoFront-CoverTexts,write"noFront-CoverTexts"insteadof"Front-Co verTexts
+beingLIST";likewiseforBack-CoverTexts.
+Ifyourdocument containsnontrivialexamplesofprogramcode,werecommend releasing theseexamples
+inparallelunderyourchoiceoffreesoftwarelicense,suchastheGNUGeneralPublicLicense,topermit
+theiruseinfreesoftware.

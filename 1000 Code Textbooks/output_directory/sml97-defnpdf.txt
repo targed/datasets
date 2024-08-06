@@ -1,0 +1,3570 @@
+The Denition of Standard ML
+The Denition of Standard ML
+(Revised)
+Robin Milner, Mads Tofte, Robert Harper and David MacQueen
+The MIT Press
+Cambridge, Massachusetts
+London, England
+c1997 Robin Milner
+All rights reserved. No part of this book may be reproduced in any form
+by any electronic or mechanical means (including photocopying, recording,
+or information storage and retrieval) without permission in writing from the
+publisher.
+Printed and bound in the United States of America.
+Library of Congress Cataloging-in-Publication Data
+The denition of standard ML: revised / Robin Milner :::et al.
+p. cm.
+Includes bibliographical references and index.
+ISBN 0-262-63181-4 (alk. paper)
+1. ML (Computer program language) I. Milner, R. (Robin), 1934-
+QA76.73.M6D44 1997
+005:1303|dc21
+97-59
+CIP
+Contents
+1 Introduction 1
+2 Syntax of the Core 3
+2.1 Reserved Words . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+2.2 Special constants . . . . . . . . . . . . . . . . . . . . . . . . . 3
+2.3 Comments . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+2.4 Identiers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+2.5 Lexical analysis . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.6 Inxed operators . . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.7 Derived Forms . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+2.8 Grammar . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+2.9 Syntactic Restrictions . . . . . . . . . . . . . . . . . . . . . . . 9
+3 Syntax of Modules 12
+3.1 Reserved Words . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+3.2 Identiers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+3.3 Inxed operators . . . . . . . . . . . . . . . . . . . . . . . . . 12
+3.4 Grammar for Modules . . . . . . . . . . . . . . . . . . . . . . 13
+3.5 Syntactic Restrictions . . . . . . . . . . . . . . . . . . . . . . . 13
+4 Static Semantics for the Core 16
+4.1 Simple Objects . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+4.2 Compound Objects . . . . . . . . . . . . . . . . . . . . . . . . 17
+4.3 Projection, Injection and Modication . . . . . . . . . . . . . 17
+4.4 Types and Type functions . . . . . . . . . . . . . . . . . . . . 19
+4.5 Type Schemes . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+4.6 Scope of Explicit Type Variables . . . . . . . . . . . . . . . . 20
+4.7 Non-expansive Expressions . . . . . . . . . . . . . . . . . . . . 21
+4.8 Closure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+4.9 Type Structures and Type Environments . . . . . . . . . . . . 22
+4.10 Inference Rules . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+4.11 Further Restrictions . . . . . . . . . . . . . . . . . . . . . . . 31
+5 Static Semantics for Modules 33
+5.1 Semantic Objects . . . . . . . . . . . . . . . . . . . . . . . . . 33
+5.2 Type Realisation . . . . . . . . . . . . . . . . . . . . . . . . . 33
+CONTENTS vi
+5.3 Signature Instantiation . . . . . . . . . . . . . . . . . . . . . . 34
+5.4 Functor Signature Instantiation . . . . . . . . . . . . . . . . . 34
+5.5 Enrichment . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+5.6 Signature Matching . . . . . . . . . . . . . . . . . . . . . . . . 35
+5.7 Inference Rules . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+6 Dynamic Semantics for the Core 43
+6.1 Reduced Syntax . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+6.2 Simple Objects . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+6.3 Compound Objects . . . . . . . . . . . . . . . . . . . . . . . . 44
+6.4 Basic Values . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+6.5 Basic Exceptions . . . . . . . . . . . . . . . . . . . . . . . . . 45
+6.6 Function Closures . . . . . . . . . . . . . . . . . . . . . . . . . 45
+6.7 Inference Rules . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+7 Dynamic Semantics for Modules 56
+7.1 Reduced Syntax . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+7.2 Compound Objects . . . . . . . . . . . . . . . . . . . . . . . . 56
+7.3 Inference Rules . . . . . . . . . . . . . . . . . . . . . . . . . . 58
+8 Programs 64
+A Appendix: Derived Forms 67
+B Appendix: Full Grammar 75
+C Appendix: The Initial Static Basis 81
+D Appendix: The Initial Dynamic Basis 84
+E Overloading 86
+E.1 Overloaded special constants . . . . . . . . . . . . . . . . . . . 86
+E.2 Overloaded value identiers . . . . . . . . . . . . . . . . . . . 87
+F Appendix: The Development of ML 89
+G Appendix: What is New? 99
+G.1 Type Abbreviations in Signatures . . . . . . . . . . . . . . . . 99
+G.2 Opaque Signature Matching . . . . . . . . . . . . . . . . . . . 100
+CONTENTS vii
+G.3 Sharing . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 102
+G.3.1 Type Sharing . . . . . . . . . . . . . . . . . . . . . . . 102
+G.3.2 The equality attribute of specied types . . . . . . . . 103
+G.3.3 Structure Sharing . . . . . . . . . . . . . . . . . . . . . 104
+G.4 Value Polymorphism . . . . . . . . . . . . . . . . . . . . . . . 105
+G.5 Identier Status . . . . . . . . . . . . . . . . . . . . . . . . . . 106
+G.6 Replication of Datatypes . . . . . . . . . . . . . . . . . . . . . 107
+G.7 Local Datatypes . . . . . . . . . . . . . . . . . . . . . . . . . . 109
+G.8 Principal Environments . . . . . . . . . . . . . . . . . . . . . . 110
+G.9 Consistency and Admissibility . . . . . . . . . . . . . . . . . . 111
+G.10 Special Constants . . . . . . . . . . . . . . . . . . . . . . . . . 111
+G.11 Comments . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 111
+G.12 Inxed Operators . . . . . . . . . . . . . . . . . . . . . . . . . 112
+G.13 Non-expansive Expressions . . . . . . . . . . . . . . . . . . . . 112
+G.14 Rebinding of built-in identiers . . . . . . . . . . . . . . . . . 112
+G.15 Grammar for Modules . . . . . . . . . . . . . . . . . . . . . . 112
+G.16 Closure Restrictions . . . . . . . . . . . . . . . . . . . . . . . . 112
+G.17 Specications . . . . . . . . . . . . . . . . . . . . . . . . . . . 113
+G.18 Scope of Explicit Type Variables . . . . . . . . . . . . . . . . 113
+G.19 The Initial Basis . . . . . . . . . . . . . . . . . . . . . . . . . 113
+G.20 Overloading . . . . . . . . . . . . . . . . . . . . . . . . . . . . 114
+G.21 Reals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 114
+References 116
+
+Preface
+A precise description of a programming language is a prerequisite for its im-
+plementation and for its use. The description can take many forms, each
+suited to a dierent purpose. A common form is a reference manual, which
+is usually a careful narrative description of the meaning of each construction
+in the language, often backed up with a formal presentation of the gram-
+mar (for example, in Backus-Naur form). This gives the programmer enough
+understanding for many of his purposes. But it is ill-suited for use by an
+implementer, or by someone who wants to formulate laws for equivalence of
+programs, or by a programmer who wants to design programs with mathe-
+matical rigour.
+This document is a formal description of both the grammar and the mean-
+ingof a language which is both designed for large projects and widely used.
+As such, it aims to serve the whole community of people seriously concerned
+with the language. At a time when it is increasingly understood that pro-
+grams must withstand rigorous analysis, particularly for systems where safety
+is critical, a rigorous language presentation is even important for negotiators
+and contractors; for a robust program written in an insecure language is like
+a house built upon sand.
+Most people have not looked at a rigorous language presentation before.
+To help them particularly, but also to put the present work in perspective
+for those more theoretically prepared, it will be useful here to say something
+about three things: the nature of Standard ML, the task of language def-
+inition in general, and the form of the present Denition. We also briey
+describe the recent revisions to the Denition.
+Standard ML
+Standard ML is a functional programming language, in the sense that the
+full power of mathematical functions is present. But it grew in response to a
+particular programming task, for which it was equipped also with full imper-
+ative power, and a sophisticated exception mechanism. It has an advanced
+form of parametric modules, aimed at organised development of large pro-
+grams. Finally it is strongly typed, and it was the rst language to provide a
+particular form of polymorphic type which makes the strong typing remark-
+ably exible. This combination of ingredients has not made it unduly large,
+but their novelty has been a fascinating challenge to semantic method (of
+which we say more below).
+ML has evolved over twenty years as a fusion of many ideas from many
+people. This evolution is described in some detail in Appendix F of the
+book, where also we acknowledge all those who have contributed to it, both
+in design and in implementation.
+`ML' stands for meta language ; this is the term logicians use for a lan-
+guage in which other (formal or informal) languages are discussed and anal-
+ysed. Originally ML was conceived as a medium for nding and performing
+proofs in a logical language. Conducting rigorous argument as dialogue be-
+tween person and machine has been a growing research topic throughout
+these twenty years. The diculties are enormous, and make stern demands
+upon the programming language which is used for this dialogue. Those who
+are not familiar with computer-assisted reasoning may be surprised that a
+programming language, which was designed for this rather esoteric activity,
+should ever lay claim to being generally useful. On reection, they should
+not be surprised. LISP is a prime example of a language invented for esoteric
+purposes and becoming widely used. LISP was invented for use in articial
+intelligence (AI); the important thing about AI here is not that it is esoteric,
+but that it is dicult and varied; so much so, that anything which works well
+for it must work well for many other applications too.
+The same can be said about the initial purpose of ML, but with a dif-
+ferent emphasis. Rigorous proofs are complex things, which need varied and
+sophisticated presentation { particularly on the screen in interactive mode.
+Furthermore the proof methods, or strategies, involved are some of the most
+complex algorithms which we know. This all applies equally to AI, but one
+demand is made more strongly by proof than perhaps by any other applica-
+tion: the demand for rigour.
+This demand established the character of ML. In order to be sure that,
+when the user and the computer claim to have together performed a rigorous
+argument, their claim is justied, it was seen that the language must be
+strongly typed. On the other hand, to be useful in a dicult application, the
+type system had to be rather exible, and permit the machine to guide the
+user rather than impose a burden upon him. A reasonable solution was found,
+in which the machine helps the user signicantly by inferring his types for
+him. Thereby the machine also confers complete reliability on his programs,
+in this sense: If a program claims that a certain result follows from the rules
+of reasoning which the user has supplied, then the claim may be fully trusted.
+The principle of inferring useful structural information about programs is
+also represented, at the level of program modules, by the inference of signa-
+tures . Signatures describe the interfaces between modules, and are vital for
+robust large-scale programs. When the user combines modules, the signature
+discipline prevents him from mismatching their interfaces. By programming
+with interfaces and parametric modules, it becomes possible to focus on the
+structure of a large system, and to compile parts of it in isolation from one
+another { even when the system is incomplete.
+This emphasis on types and signatures has had a profound eect on the
+language Denition. Over half this document is devoted to inferring types
+and signatures for programs. But the method used is exactly the same as for
+inferring what values a program delivers; indeed, a type or signature is the
+result of a kind of abstract evaluation of a program phrase.
+In designing ML, the interplay among three activities { language design,
+denition and implementation { was extremely close. This was particularly
+true for the newest part, the parametric modules. This part of the language
+grew from an initial proposal by David MacQueen, itself highly developed;
+but both formal denition and implementation had a strong inuence on the
+detailed design. In general, those who took part in the three activities cannot
+now imagine how they could have been properly done separately.
+Language Denition
+Every programming language presents its own conceptual view of computa-
+tion. This view is usually indicated by the names used for the phrase classes
+of the language, or by its keywords: terms like package, module, structure,
+exception, channel, type, procedure, reference, sharing, . . . . These terms also
+have their abstract counterparts, which may be called semantic objects ; these
+are what people really have in mind when they use the language, or discuss
+it, or think in it. Also, it is these objects, not the syntax, which represent the
+particular conceptual view of each language; they are the character of the
+language. Therefore a denition of the language must be in terms of these
+objects.
+As is commonly done in programming language semantics, we shall loosely
+talk of these semantic objects as meanings . Of course, it is perfectly possible
+to understand the semantic theory of a language, and yet be unable to un-
+derstand the meaning of a particular program, in the sense of its intention
+orpurpose . The aim of a language denition is not to formalise everything
+which could possibly be called the meaning of a program, but to establish
+a theory of semantic objects upon which the understanding of particular
+programs may rest.
+The job of a language-dener is twofold. First { as we have already sug-
+gested { he must create a world of meanings appropriate for the language, and
+must nd a way of saying what these meanings precisely are. Here, he meets
+a problem; notation of some kind must be used to denote and describe these
+meanings { but not a programming language notation, unless he is passing
+the buck and dening one programming language in terms of another. Given
+a concern for rigour, mathematical notation is an obvious choice. Moreover,
+it is not enough just to write down mathematical denitions. The world
+of meanings only becomes meaningful if the objects possess nice properties,
+which make them tractable. So the language-dener really has to develop a
+small theory of his meanings, in the same way that a mathematician develops
+a theory. Typically, after initially dening some objects, the mathematician
+goes on to verify properties which indicate that they are objects worth study-
+ing. It is this part, a kind of scene-setting, which the language-dener shares
+with the mathematician. Of course he can take many objects and their theo-
+ries directly from mathematics, such as functions, relations, trees, sequences,
+. . . . But he must also give some special theory for the objects which make
+his language particular, as we do for types, structures and signatures in this
+book; otherwise his language denition may be formal but will give no in-
+sight.
+The second part of the dener's job is to dene evaluation precisely. This
+means that he must dene at least what meaning,M, results from evaluating
+any phrase Pof his language (though he need not explain exactly how the
+meaning results; that is he need not give the full detail of every computation).
+This part of his job must be formal to some extent, if only because the phrases
+Pof his language are indeed formal objects. But there is another reason for
+formality. The task is complex and error-prone, and therefore demands a high
+level of explicit organisation (which is, largely, the meaning of `formality');
+moreover, it will be used to specify an equally complex, error-prone and
+formal construction: an implementation.
+We shall now explain the keystone of our semantic method. First, we
+need a slight but important renement. A phrase Pis never evaluated in
+vacuo to a meaning M, but always against a background ; this background
+{ call itB{ is itself a semantic object, being a distillation of the meanings
+preserved from evaluation of earlier phrases (typically variable declarations,
+procedure declarations, etc.). In fact evaluation is background-dependent {
+Mdepends upon Bas well as upon P.
+The keystone of the method, then, is a certain kind of assertion about
+evaluation; it takes the form
+B`P)M
+and may be pronounced: `Against the background B, the phrase Pevaluates
+to the meaning M'.The formal purpose of this Denition is no more, and no
+less, than to decree exactly which assertions of this form are true. This could
+be achieved in many ways. We have chosen to do it in a structured way, as
+others have, by giving rules which allow assertions about a compound phrase
+Pto be inferred from assertions about its constituent phrasesP1;:::;Pn.
+We have written the Denition in a form suggested by the previous re-
+marks. That is, we have dened our semantic objects in mathematical nota-
+tion which is completely independent of Standard ML, and we have developed
+just enough of their theory to give sense to our rules of evaluation.
+Following another suggestion above, we have factored our task by describ-
+ingabstract evaluation { the inference and checking of types and signatures
+(which can be done at compile-time) { completely separately from concrete
+evaluation. It really is a factorisation, because a fullvalue in all its glory {
+you can think of it as a concrete object with a type attached { never has to
+be presented.
+The Revision of Standard ML
+The Denition of Standard ML was published in 1990. Since then the im-
+plementation technology of the language has advanced enormously, and its
+users have multiplied. The language and its Denition have therefore incited
+close scrutiny, evaluation, much approval, sometimes strong criticism.
+The originators of the language have sifted this response, and found that
+there are inadequacies in the original language and its formal Denition.
+They are of three kinds: missing features which many users want; complex
+and little-used features which most users can do without; and mistakes of
+denition. What is remarkable is that these inadequacies are rather few, and
+that they are rather uncontroversial.
+This new version of the Denition addresses the three kinds of inadequacy
+respectively by additions, subtractions and corrections. But we have only
+made such amendments when one or more aspects of SML { the language
+itself, its usage, its implementation, its formal Denition { have thus become
+simpler, without complicating the other aspects. It is worth noting that
+even the additions meet this criterion; for example we have introduced type
+abbreviations in signatures to simplify the use of the language, but the way
+we have done it has even simplied the Denition too. In fact, after our
+changes the formal Denition has fewer rules.
+In this exercise we have consulted the major implementers and several
+users, and have found broad agreement. In the 1990 Denition it was pre-
+dicted that further versions of the Denition would be produced as the lan-
+guage develops, with the intention to minimise the number of versions. This
+is the rst revised version, and we foresee no others. The changes that have
+been made to the 1990 Denition are enumerated in Appendix G.
+The resulting document is, we hope, valuable as the essential point of ref-
+erence for Standard ML. If it is to play this role well, it must be supplemented
+by other literature. Many expository books have already been written, and
+this Denition will be useful as a background reference for their readers. We
+became convinced, while writing the 1990 Denition, that we could not dis-
+cuss many questions without making it far too long. Such questions are:
+Why were certain design choices made? What are their implications for pro-
+gramming? Was there a good alternative meaning for some constructs, or
+was our hand forced? What dierent forms of phrase are equivalent? What
+is the proof of certain claims? Many of these questions are not answered
+by pedagogic texts either. We therefore wrote a Commentary on the 1990
+Denition to assist people in reading it, and to serve as a bridge between the
+Denition and other texts. Though in part outdated by the present revision,
+the Commentary still largely fulls its purpose.
+There exist several textbooks on programming with Standard ML[46, 44,
+56, 50]. The second edition of Paulson's book[46] conforms with the present
+revision.
+We wish to thank Dave Berry, Lars Birkedal, Martin Elsman, Stefan
+Kahrs and John Reppy for many detailed comments and suggestions which
+have assisted the revision.
+Robin Milner Mads Tofte Robert Harper David MacQueen
+November 1996
+
+1 Introduction
+This document formally denes Standard ML.
+To understand the method of denition, at least in broad terms, it helps
+to consider how an implementation of ML is naturally organised. ML is an
+interactive language, and a program consists of a sequence of top-level decla-
+rations ; the execution of each declaration modies the top-level environment,
+which we call a basis , and reports the modication to the user.
+In the execution of a declaration there are three phases: parsing ,elabora-
+tion, and evaluation . Parsing determines the grammatical form of a declara-
+tion. Elaboration, the static phase, determines whether it is well-typed and
+well-formed in other ways, and records relevant type or form information
+in the basis. Finally evaluation, the dynamic phase, determines the value
+of the declaration and records relevant value information in the basis. Cor-
+responding to these phases, our formal denition divides into three parts:
+grammatical rules, elaboration rules, and evaluation rules. Furthermore, the
+basis is divided into the static basis and the dynamic basis; for example, a
+variable which has been declared is associated with a type in the static basis
+and with a value in the dynamic basis.
+In an implementation, the basis need not be so divided. But for the
+purpose of formal denition, it eases presentation and understanding to keep
+the static and dynamic parts of the basis separate. This is further justied
+by programming experience. A large proportion of errors in ML programs
+are discovered during elaboration, and identied as errors of type or form,
+so it follows that it is useful to perform the elaboration phase separately.
+In fact, elaboration without evaluation is part of what is normally called
+compilation ; once a declaration (or larger entity) is compiled one wishes to
+evaluate it { repeatedly { without re-elaboration, from which it follows that
+it is useful to perform the evaluation phase separately.
+A further factoring of the formal denition is possible, because of the
+structure of the language. ML consists of a lower level called the Core lan-
+guage (orCore for short), a middle level concerned with programming-in-the-
+large called Modules , and a very small upper level called Programs . With
+the three phases described above, there is therefore a possibility of nine com-
+ponents in the complete language denition. We have allotted one section
+to each of these components, except that we have combined the parsing,
+elaboration and evaluation of Programs in one section. The scheme for the
+1 INTRODUCTION 2
+ensuing seven sections is therefore as follows:
+Core Modules Programs
+Syntax Section 2 Section 3
+Static Semantics Section 4 Section 5 Section 8
+Dynamic Semantics Section 6 Section 7
+The Core provides many phrase classes, for programming convenience.
+But about half of these classes are derived forms, whose meaning can be
+given by translation into the other half which we call the Bare language.
+Thus each of the three parts for the Core treats only the bare language; the
+derived forms are treated in Appendix A. This appendix also contains a few
+derived forms for Modules. A full grammar for the language is presented in
+Appendix B.
+In Appendices C and D the initial basis is detailed. This basis, divided
+into its static and dynamic parts, contains the static and dynamic meanings
+of a small set of predened identiers. A richer basis is dened in a separate
+document[18].
+The semantics is presented in a form known as Natural Semantics. It
+consists of a set of rules allowing sentences of the form
+A`phrase)A0
+to be inferred, where Ais often a basis (static or dynamic) and A0a semantic
+object { often a type in the static semantics and a value in the dynamic
+semantics. One should read such a sentence as follows: \against the back-
+ground provided by A, the phrase phrase elaborates { or evaluates { to the
+objectA0". Although the rules themselves are formal the semantic objects,
+particularly the static ones, are the subject of a mathematical theory which
+is presented in a succinct form in the relevant sections.
+The robustness of the semantics depends upon theorems. Usually these
+have been proven, but the proof is not included.
+2 Syntax of the Core
+2.1 Reserved Words
+The following are the reserved words used in the Core. They may not (ex-
+cept =) be used as identiers.
+abstype and andalso as case datatype do else
+end exception fn fun handle if in infix
+infixr let local nonfix of op open orelse
+raise rec then type val with withtype while
+( ) [ ] { } , : ; ... _ | = => -> #
+2.2 Special constants
+Aninteger constant (in decimal notation) is an optional negation symbol
+(~) followed by a non-empty sequence of decimal digits 0;::;9. An integer
+constant (in hexadecimal notation) is an optional negation symbol followed
+by0xfollowed by a non-empty sequence of hexadecimal digits 0;::;9and
+a;::;f. (A;::;Fmay be used as alternatives for a;::;f.)
+Aword constant (in decimal notation) is0wfollowed by a non-empty
+sequence of decimal digits. A word constant (in hexadecimal notation) is0wx
+followed by a non-empty sequence of hexadecimal digits. A real constant is
+an integer constant in decimal notation, possibly followed by a point ( .) and
+one or more decimal digits, possibly followed by an exponent symbol ( Eor
+e) and an integer constant in decimal notation; at least one of the optional
+parts must occur, hence no integer constant is a real constant. Examples:
+0.7 3.32E5 3E~7 . Non-examples: 23 .3 4.E5 1E2.0 .
+We assume an underlying alphabet of Ncharacters ( N256), numbered
+0 toN 1, which agrees with the ASCII character set on the characters
+numbered 0 to 127. The interval [0 ;N 1] is called the ordinal range of
+the alphabet. A string constant is a sequence, between quotes ( "), of
+zero or more printable characters (i.e., numbered 33{126), spaces or escape
+sequences. Each escape sequence starts with the escape character \, and
+stands for a character sequence. The escape sequences are:
+\a A single character interpreted by the system as alert (ASCII 7)
+\b Backspace (ASCII 8)
+\t Horizontal tab (ASCII 9)
+2 SYNTAX OF THE CORE 4
+\n Linefeed, also known as newline (ASCII 10)
+\v Vertical tab (ASCII 11)
+\f Form feed (ASCII 12)
+\r Carriage return (ASCII 13)
+\^c The control character c, wherecmay be any character with number
+64{95. The number of \^cis 64 less than the number of c.
+\ddd The single character with number ddd(3 decimal digits denoting
+an integer in the ordinal range of the alphabet).
+\uxxxx The single character with number xxxx (4 hexadecimal digits de-
+noting an integer in the ordinal range of the alphabet).
+\" "
+\\ \
+\ff\This sequence is ignored, where ffstands for a sequence of one
+or more formatting characters.
+The formatting characters are a subset of the non-printable characters
+including at least space, tab, newline, formfeed. The last form allows long
+strings to be written on more than one line, by writing \at the end of one
+line and at the start of the next.
+Acharacter constant is a sequence of the form #s, wheresis a string
+constant denoting a string of size one character.
+Libraries may provide multiple numeric types and multiple string types.
+To each string type corresponds an alphabet with ordinal range [0 ;N 1] for
+someN256; each alphabet must agree with the ASCII character set on the
+characters numbered 0 to 127. When multiple alphabets are supported, all
+characters of a given string constant are interpreted over the same alphabet.
+For each special constant, overloading resolution is used for determining the
+type of the constant (see Appendix E).
+We denote by SCon the class of special constants , i.e., the integer, real,
+word, character and string constants; we shall use scon to range over SCon.
+2.3 Comments
+Acomment is any character sequence within comment brackets (* *) in
+which comment brackets are properly nested. No space is allowed between the
+two characters which make up a comment bracket (*or*). An unmatched
+(*should be detected by the compiler.
+2 SYNTAX OF THE CORE 5
+2.4 Identiers
+The classes of identiers for the Core are shown in Figure 1. We use vid,
+tyvar to range over VId, TyVar etc. For each class X marked \long" there
+is a class longX of long identiers ; ifxranges over X then longx ranges over
+longX. The syntax of these long identiers is given by the following:
+longx ::=x identier
+strid 1::stridn:xqualied identier ( n1)
+The qualied identiers constitute a link between the Core and the Mod-
+ules. Throughout this document, the term \identier", occurring without an
+adjective, refers to non-qualied identiers only.
+An identier is either alphanumeric : any sequence of letters, digits, primes
+(') and underbars ( ) starting with a letter or prime, or symbolic : any non-
+empty sequence of the following symbols
+! % & $ # + - / : < = > ? @ \ ~ ` ^ | *
+In either case, however, reserved words are excluded. This means that for
+example #and |are not identiers, but ##and |=| are identiers.
+The only exception to this rule is that the symbol =, which is a reserved
+word, is also allowed as an identier to stand for the equality predicate. The
+identier =may not be re-bound; this precludes any syntactic ambiguity.
+A type variable tyvar may be any alphanumeric identier starting with
+a prime; the subclass EtyVar of TyVar, the equality type variables, consists
+of those which start with two or more primes. The classes VId, TyCon
+and Lab are represented by identiers not starting with a prime. However,
+*is excluded from TyCon, to avoid confusion with the derived form of tuple
+type (see Figure 23). The class Lab is extended to include the numeric labels
+1 2 3, i.e. any numeral not starting with 0. The identier class StrId is
+represented by alphanumeric identiers not starting with a prime.
+TyVar is therefore disjoint from the other four classes. Otherwise, the
+syntax class of an occurrence of identier idin a Core phrase (ignoring de-
+rived forms, Section 2.7) is determined thus:
+VId (value identiers ) long
+TyVar (type variables )
+TyCon (type constructors ) long
+Lab (record labels )
+StrId (structure identiers ) long
+Figure 1: Identiers
+2 SYNTAX OF THE CORE 6
+1. Immediately before \." { i.e. in a long identier { or in an open
+declaration, idis a structure identier. The following rules assume
+that all occurrences of structure identiers have been removed.
+2. At the start of a component in a record type, record pattern or record
+expression, idis a record label.
+3. Elsewhere in types idis a type constructor.
+4. Elsewhere, idis a value identier.
+By means of the above rules a compiler can determine the class to which
+each identier occurrence belongs; for the remainder of this document we
+shall therefore assume that the classes are all disjoint.
+2.5 Lexical analysis
+Each item of lexical analysis is either a reserved word, a numeric label, a
+special constant or a long identier. Comments and formatting characters
+separate items (except within string constants; see Section 2.2) and are oth-
+erwise ignored. At each stage the longest next item is taken.
+2.6 Inxed operators
+An identier may be given inx status by the infix orinfixr directive,
+which may occur as a declaration; this status only pertains to its use as a vid
+within the scope (see below) of the directive, and in these uses it is called an
+inxed operator . (Note that qualied identiers never have inx status.) If
+vidhas inx status, then \ exp1vid exp2" (resp. \ pat1vid pat2") may occur {
+in parentheses if necessary { wherever the application \ vid{1=exp1,2=exp2}"
+or its derived form \ vid(exp1,exp2)" (resp \ vid(pat1,pat2)") would other-
+wise occur. On the other hand, an occurrence of any long identier (qualied
+or not) prexed by opis treated as non-inxed. The only required use of op
+is in prexing a non-inxed occurrence of an identier vidwhich has inx
+status; elsewhere op, where permitted, has no eect. Inx status is cancelled
+by the nonfix directive. We refer to the three directives collectively as
+xity directives .
+The form of the xity directives is as follows ( n1):
+infixhdivid1vidn
+2 SYNTAX OF THE CORE 7
+infixrhdivid1vidn
+nonfix vid1vidn
+wherehdiis an optional decimal digit dindicating binding precedence. A
+higher value of dindicates tighter binding; the default is 0.infix and
+infixr dictate left and right associativity respectively. In an expression of
+the form exp1vid1exp2vid2exp3, where vid1and vid2are inxed operators
+with the same precedence, either both must associate to the left or both
+must associate to the right. For example, suppose that <<and>>have equal
+precedence, but associate to the left and right respectively; then
+x << y << z parses as (x << y) << z
+x >> y >> z parses as x >> (y >> z)
+x << y >> z is illegal
+x >> y << z is illegal
+The precedence of inxed operators relative to other expression and pat-
+tern constructions is given in Appendix B.
+The scope of a xity directive diris the ensuing program text, except
+that if diroccurs in a declaration decin either of the phrases
+letdecinend
+local decinend
+then the scope of dirdoes not extend beyond the phrase. Further scope
+limitations are imposed for Modules (see Section 3.3).
+These directives and opare omitted from the semantic rules, since they
+aect only parsing.
+2.7 Derived Forms
+There are many standard syntactic forms in ML whose meaning can be ex-
+pressed in terms of a smaller number of syntactic forms, called the bare lan-
+guage. These derived forms, and their equivalent forms in the bare language,
+are given in Appendix A.
+2.8 Grammar
+The phrase classes for the Core are shown in Figure 2. We use the variable
+atexp to range over AtExp, etc. The grammatical rules for the Core are
+shown in Figures 3 and 4.
+2 SYNTAX OF THE CORE 8
+AtExp atomic expressions
+ExpRow expression rows
+Exp expressions
+Match matches
+Mrule match rules
+Dec declarations
+ValBind value bindings
+TypBind type bindings
+DatBind datatype bindings
+ConBind constructor bindings
+ExBind exception bindings
+AtPat atomic patterns
+PatRow pattern rows
+Pat patterns
+Ty type expressions
+TyRow type-expression rows
+Figure 2: Core Phrase Classes
+The following conventions are adopted in presenting the grammatical
+rules, and in their interpretation:
+The bracketshienclose optional phrases.
+For any syntax class X (over which xranges) we dene the syntax class
+Xseq (over which xseqranges) as follows:
+xseq ::=x (singleton sequence)
+(empty sequence)
+(x1,,xn)(sequence,n1)
+(Note that the \" used here, meaning syntactic iteration, must not
+be confused with \ ..." which is a reserved word of the language.)
+Alternative forms for each phrase class are in order of decreasing prece-
+dence; this resolves ambiguity in parsing, as explained in Appendix B.
+L (resp. R) means left (resp. right) association.
+2 SYNTAX OF THE CORE 9
+The syntax of types binds more tightly than that of expressions.
+Each iterated construct (e.g. match ,) extends as far right as pos-
+sible; thus, parentheses may be needed around an expression which
+terminates with a match, e.g. \ fnmatch ", if this occurs within a
+larger match.
+atpat ::= wildcard
+scon special constant
+hopilongvid value identier
+{hpatrowi} record
+(pat)
+patrow ::= ... wildcard
+lab=path,patrowipattern row
+pat ::= atpat atomic
+hopilongvid atpat constructed pattern
+pat1vid pat2 inxed value construction
+pat:ty typed
+hopividh:tyiaspat layered
+ty ::= tyvar type variable
+{htyrowi} record type expression
+tyseq longtycon type construction
+ty->ty0function type expression (R)
+(ty)
+tyrow ::= lab:tyh,tyrowi type-expression row
+Figure 3: Grammar: Patterns and Type expressions
+2.9 Syntactic Restrictions
+No expression row, pattern row or type-expression row may bind the
+same labtwice.
+No binding valbind ,typbind ,datbind orexbind may bind the same
+identier twice; this applies also to value identiers within a datbind .
+2 SYNTAX OF THE CORE 10
+Notyvarseq may contain the same tyvar twice.
+For each value binding pat=expwithin rec,expmust be of the form
+fnmatch . The derived form of function-value binding given in Ap-
+pendix A, page 71, necessarily obeys this restriction.
+Nodatbind ,valbind orexbind may bind true ,false ,nil,::orref.
+Nodatbind orexbind may bind it.
+No real constant may occur in a pattern.
+In a value declaration valtyvarseq valbind , ifvalbind contains another
+value declaration valtyvarseq0valbind0then tyvarseq andtyvarseq0must
+be disjoint. In other words, no type variable may be scoped by two
+value declarations of which one occurs inside the other. This restric-
+tion applies after tyvarseq andtyvarseq0have been extended to include
+implicitly scoped type variables, as explained in Section 4.6.
+2 SYNTAX OF THE CORE 11
+atexp ::= scon special constant
+hopilongvid value identier
+{hexprowi} record
+letdecinexpend local declaration
+(exp)
+exprow ::= lab=exph,exprowi expression row
+exp ::= atexp atomic
+exp atexp application (L)
+exp1vid exp2 inxed application
+exp:ty typed (L)
+exphandle match handle exception
+raise exp raise exception
+fnmatch function
+match ::= mruleh|matchi
+mrule ::= pat=>exp
+dec ::= valtyvarseq valbind value declaration
+type typbind type declaration
+datatype datbind datatype declaration
+datatype tycon -=-datatype longtycon datatype replication
+abstype datbind with decend abstype declaration
+exception exbind exception declaration
+local dec1indec2end local declaration
+open longstrid1longstridn open declaration ( n1)
+empty declaration
+dec1h;idec2 sequential declaration
+infixhdivid1vidn inx (L) directive
+infixrhdivid1vidn inx (R) directive
+nonfix vid1vidn nonx directive
+valbind ::= pat=exphandvalbindi
+recvalbind
+typbind ::= tyvarseq tycon =tyhandtypbindi
+datbind ::= tyvarseq tycon =conbindhanddatbindi
+conbind ::=hopividhoftyih|conbindi
+exbind ::=hopividhoftyihandexbindi
+hopivid=hopilongvidhandexbindi
+Figure 4: Grammar: Expressions, Matches, Declarations and Bindings
+3 Syntax of Modules
+For Modules there are further reserved words, identier classes and derived
+forms. There are no further special constants; comments and lexical analysis
+are as for the Core. The derived forms for modules appear in Appendix A.
+3.1 Reserved Words
+The following are the additional reserved words used in Modules.
+eqtype functor include sharing sig
+signature struct structure where :>
+3.2 Identiers
+The additional identier classes for Modules are SigId (signature identiers)
+and FunId (functor identiers). Functor and signature identiers must be
+alphanumeric, not starting with a prime. The class of each identier oc-
+currence is determined by the grammatical rules which follow. Henceforth,
+therefore, we consider all identier classes to be disjoint.
+3.3 Inxed operators
+In addition to the scope rules for xity directives given for the Core syn-
+tax, there is a further scope limitation: if diroccurs in a structure-level
+declaration strdec in any of the phrases
+letstrdec inend
+local strdec inend
+struct strdec end
+then the scope of dirdoes not extend beyond the phrase.
+One eect of this limitation is that xity is local to a basic structure
+expression | in particular, to such an expression occurring as a functor
+body.
+3 SYNTAX OF MODULES 13
+StrExp structure expressions
+StrDec structure-level declarations
+StrBind structure bindings
+SigExp signature expressions
+SigDec signature declarations
+SigBind signature bindings
+Spec specications
+ValDesc value descriptions
+TypDesc type descriptions
+DatDesc datatype descriptions
+ConDesc constructor descriptions
+ExDesc exception descriptions
+StrDesc structure descriptions
+FunDec functor declarations
+FunBind functor bindings
+TopDec top-level declarations
+Figure 5: Modules Phrase Classes
+3.4 Grammar for Modules
+The phrase classes for Modules are shown in Figure 5. We use the variable
+strexp to range over StrExp, etc. The conventions adopted in presenting the
+grammatical rules for Modules are the same as for the Core. The grammatical
+rules are shown in Figures 6, 7 and 8.
+3.5 Syntactic Restrictions
+No binding strbind ,sigbind , or funbind may bind the same identier
+twice.
+No description valdesc ,typdesc ,datdesc ,exdesc orstrdesc may describe
+the same identier twice; this applies also to value identiers within a
+datdesc .
+Notyvarseq may contain the same tyvar twice.
+3 SYNTAX OF MODULES 14
+strexp ::= struct strdec end basic
+longstrid structure identier
+strexp :sigexp transparent constraint
+strexp :>sigexp opaque constraint
+funid (strexp ) functor application
+letstrdec instrexp end local declaration
+strdec ::= dec declaration
+structure strbind structure
+local strdec 1instrdec 2end local
+empty
+strdec 1h;istrdec 2 sequential
+strbind ::= strid =strexphand strbindi
+sigexp ::= sigspec end basic
+sigid signature identier
+sigexp where type type realisation
+tyvarseq longtycon =ty
+sigdec ::= signature sigbind
+sigbind ::= sigid =sigexphandsigbindi
+Figure 6: Grammar: Structure and Signature Expressions
+Any tyvar occurring on the right side of a datdesc of the form tyvarseq tycon =
+must occur in the tyvarseq ; similarly, in signature expressions of the
+form
+sigexp where type tyvarseq longtycon =ty, any tyvar occurring in ty
+must occur in tyvarseq .
+Nodatdesc ,valdesc orexdesc may describe true ,false ,nil,::or
+ref. No datdesc orexdesc may describe it.
+3 SYNTAX OF MODULES 15
+spec ::= valvaldesc value
+type typdesc type
+eqtype typdesc eqtype
+datatype datdesc datatype
+datatype tycon -=-datatype longtycon replication
+exception exdesc exception
+structure strdesc structure
+include sigexp include
+empty
+spec1h;ispec2 sequential
+spec sharing type sharing
+longtycon1==longtyconn (n2)
+valdesc ::= vid:tyhandvaldesci
+typdesc ::= tyvarseq tyconhandtypdesci
+datdesc ::= tyvarseq tycon =condeschanddatdesci
+condesc ::= vidhoftyih|condesci
+exdesc ::= vidhoftyi handexdesci
+strdesc ::= strid :sigexphandstrdesci
+Figure 7: Grammar: Specications
+fundec ::= functor funbind
+funbind ::= funid (strid :sigexp ) = strexp functor binding
+handfunbindi
+topdec ::= strdechtopdeci structure-level declaration
+sigdechtopdeci signature declaration
+fundechtopdeci functor declaration
+Restriction: Notopdec may contain, as an initial segment, a strdec followed
+by a semicolon.
+Figure 8: Grammar: Functors and Top-level Declarations
+4 Static Semantics for the Core
+Our rst task in presenting the semantics { whether for Core or Modules,
+static or dynamic { is to dene the objects concerned. In addition to the
+class of syntactic objects, which we have already dened, there are classes
+of so-called semantic objects used to describe the meaning of the syntac-
+tic objects. Some classes contain simple semantic objects; such objects are
+usually identiers or names of some kind. Other classes contain compound
+semantic objects, such as types or environments, which are constructed from
+component objects.
+4.1 Simple Objects
+All semantic objects in the static semantics of the entire language are built
+from identiers and two further kinds of simple objects: type constructor
+names and identier status descriptors. Type constructor names are the
+values taken by type constructors; we shall usually refer to them briey as
+type names, but they are to be clearly distinguished from type variables and
+type constructors. The simple object classes, and the variables ranging over
+them, are shown in Figure 9. We have included TyVar in the table to make
+visible the use of in the semantics to range over TyVar.
+ortyvar2TyVar type variables
+t2TyName type names
+is2IdStatus =fc;e;vgidentier status descriptors
+Figure 9: Simple Semantic Objects
+Each2TyVar possesses a boolean equality attribute, which determines
+whether or not it admits equality , i.e. whether it is a member of EtyVar
+(dened on page 5).
+Eacht2TyName has an arity k0, and also possesses an equality
+attribute. We denote the class of type names with arity kby TyName(k).
+With each special constant scon we associate a type name type( scon)
+which is either int,real ,word ,char orstring as indicated by Section 2.2.
+(However, see Appendix E concerning types of overloaded special constants.)
+4 STATIC SEMANTICS FOR THE CORE 17
+4.2 Compound Objects
+WhenAandBare sets Fin Adenotes the set of nite subsets of A, and
+An!Bdenotes the set of nite maps (partial functions with nite domain)
+fromAtoB. The domain and range of a nite map, f, are denoted Dom f
+and Ranf. A nite map will often be written explicitly in the form fa17!
+b1;;ak7!bkg; k0; in particular the empty map is fg. We shall use the
+formfx7!e;g{ a form of set comprehension { to stand for the nite
+mapfwhose domain is the set of values xwhich satisfy the condition , and
+whose value on this domain is given by f(x) =e.
+Whenfandgare nite maps the map f+g, calledfmodied byg, is
+the nite map with domain Dom f[Domgand values
+(f+g)(a) = ifa2Domgtheng(a) elsef(a).
+The compound objects for the static semantics of the Core Language are
+shown in Figure 10. We take [to mean disjoint union over semantic object
+classes. We also understand all the dened object classes to be disjoint.
+Note that  and 8bind type variables. For any semantic object A,
+tynamesAand tyvarsAdenote respectively the set of type names and the
+set of type variables occurring free in A.
+Also note that a value environment maps value identiers to a pair of a
+type scheme and an identier status. If VE(vid) = (;is), we say that vid
+has status isinVE. An occurrence of a value identier which is elaborated
+inVEis referred to as a value variable , avalue constructor or an exception
+constructor , depending on whether its status in VEisv,core, respectively.
+4.3 Projection, Injection and Modication
+Projection : We often need to select components of tuples { for example,
+the value-environment component of a context. In such cases we rely on
+metavariable names to indicate which component is selected. For instance
+\VEofE" means \the value-environment component of E".
+Moreover, when a tuple contains a nite map we shall \apply" the tuple to
+an argument, relying on the syntactic class of the argument to determine the
+relevant function. For instance C(tycon ) means (TEofC)tycon andC(vid)
+means (VEof (EofC))(vid).
+4 STATIC SEMANTICS FOR THE CORE 18
+2Type = TyVar[RowType[FunType[ConsType
+(1;;k) or(k)2Typek
+(1;;k) or(k)2TyVark
+%2RowType = Labn!Type
+!02FunType = Type Type
+ConsType =[k0ConsType(k)
+(k)t2ConsType(k)= TypekTyName(k)
+or (k):2TypeFcn =[k0TyVarkType
+or8(k):2TypeScheme =[k0TyVarkType
+(;VE )2TyStr = TypeFcn ValEnv
+SE2StrEnv = StrIdn!Env
+TE2TyEnv = TyConn!TyStr
+VE2ValEnv = VIdn!TypeSchemeIdStatus
+Eor (SE;TE;VE )2Env = StrEnvTyEnvValEnv
+T2TyNameSet = Fin(TyName)
+U2TyVarSet = Fin(TyVar)
+CorT;U;E2Context = TyNameSet TyVarSetEnv
+Figure 10: Compound Semantic Objects
+Finally, environments may be applied to long identiers. For instance if
+longvid =strid 1::stridk:vidthenE(longvid ) means
+(VEof (SEof(SEof (SEofE)strid 1)strid 2)stridk)vid:
+Injection : Components may be injected into tuple classes; for example,
+\VEin Env" means the environment ( fg;fg;VE).
+Modication : The modication of one map fby another map g, written
+f+g, has already been mentioned. It is commonly used for environment
+modication, for example E+E0. Often, empty components will be left
+implicit in a modication; for example E+VEmeansE+ (fg;fg;VE). For
+set components, modication means union, so that C+ (T;VE ) means
+( (TofC)[T; U ofC;(EofC) +VE)
+Finally, we frequently need to modify a context Cby an environment E(or a
+type environment TEsay), at the same time extending TofCto include the
+4 STATIC SEMANTICS FOR THE CORE 19
+type names of E(or ofTEsay). We therefore dene CTE, for example,
+to meanC+ (tynames TE;TE ).
+4.4 Types and Type functions
+A typeis an equality type , oradmits equality , if it is of one of the forms
+, whereadmits equality;
+flab17!1;;labn7!ng, where each iadmits equality;
+(k)t, wheretand all members of (k)admit equality;
+(0)ref.
+A type function = (k):has arityk; the bound variables must be dis-
+tinct. Two type functions are considered equal if they only dier in their
+choice of bound variables (alpha-conversion). In particular, the equality at-
+tribute has no signicance in a bound variable of a type function; for example,
+:!and :!are equal type functions even if admits equal-
+ity butdoes not. If thas arityk, then we write tto mean (k):(k)t
+(eta-conversion); thus TyName TypeFcn.= (k):is an equality type
+function, or admits equality , if when the type variables (k)are chosen to
+admit equality then also admits equality.
+We write the application of a type function to a vector (k)of types as
+(k). If= (k):we set(k)=f(k)=(k)g(beta-conversion).
+We writef(k)=t(k)gfor the result of substituting type functions (k)for
+type names t(k)in. We assume that all beta-conversions are carried out
+after substitution, so that for example
+((k)t)f(k):=tg=f(k)=(k)g:
+4.5 Type Schemes
+A type scheme =8(k):generalises a type0, written0, if0=
+f(k)=(k)gfor some(k), where each member iof(k)admits equality if
+idoes. If0=8(l):0thengeneralises 0, written0, if0and
+4 STATIC SEMANTICS FOR THE CORE 20
+(l)contains no free type variable of . It can be shown that 0i, for
+all00, whenever 000then also00.
+Two type schemes and0are considered equal if they can be obtained
+from each other by renaming and reordering of bound type variables, and
+deleting type variables from the prex which do not occur in the body. Here,
+in contrast to the case for type functions, the equality attribute must be
+preserved in renaming; for example 8:!and8:!are only equal
+if either both andadmit equality, or neither does. It can be shown that
+=0i0and0.
+We consider a type to be a type scheme, identifying it with 8():.
+4.6 Scope of Explicit Type Variables
+In the Core language, a type or datatype binding can explicitly introduce
+type variables whose scope is that binding. Moreover, in a value declaration
+val tyvarseq valbind , the sequence tyvarseq binds type variables: a type
+variable occurs free in val tyvarseq valbind i it occurs free in valbind and
+is not in the sequence tyvarseq . However, explicit binding of type variables
+atvalis optional, so we still have to account for the scope of an explicit
+type variable occurring in the \ :ty" of a typed expression or pattern or in
+the \ ofty" of an exception binding. For the rest of this section, we consider
+such free occurrences of type variables only.
+Every occurrence of a value declaration is said to scope a set of explicit
+type variables determined as follows.
+First, a free occurrence of in a value declaration valtyvarseq valbind
+is said to be unguarded if the occurrence is not part of a smaller value dec-
+laration within valbind . In this case we say that occurs unguarded in the
+value declaration.
+Then we say that isimplicitly scoped at a particular value declara-
+tion val tyvarseq valbind in a program if (1) occurs unguarded in this
+value declaration, and (2) does not occur unguarded in any larger value
+declaration containing the given one.
+Henceforth, we assume that for every value declaration valtyvarseq
+occurring in the program, every explicit type variable implicitly scoped at
+thevalhas been added to tyvarseq (subject to the syntactic constraint in
+Section 2.9). Thus for example, in the two declarations
+val x = let val id:'a->'a = fn z=>z in id id end
+4 STATIC SEMANTICS FOR THE CORE 21
+val x = (let val id:'a->'a = fn z=>z in id id end; fn z=>z:'a)
+the type variable 'ais scoped dierently; they become respectively
+val x = let val 'a id:'a->'a = fn z=>z in id id end
+val 'a x = (let val id:'a->'a = fn z=>z in id id end; fn z=>z:'a)
+Then, according to the inference rules in Section 4.10 the rst example
+can be elaborated, but the second cannot since 'ais bound at the outer value
+declaration leaving no possibility of two dierent instantiations of the type
+ofidin the application id id .
+4.7 Non-expansive Expressions
+In order to treat polymorphic references and exceptions, the set Exp of ex-
+pressions is partitioned into two classes, the expansive and the non-expansive
+expressions. An expression is non-expansive in context Cif, after replacing
+inxed forms by their equivalent prexed forms, and derived forms by their
+equivalent forms, it can be generated by the following grammar from the
+non-terminal nexp:
+nexp ::= scon nexprow ::= lab=nexph,nexprowi
+hopilongvid
+{hnexprowi} conexp ::= (conexph:tyi)
+(nexp ) hopilongvid
+conexp nexp
+nexp :ty
+fnmatch
+Restriction: Within a conexp , we require longvid6=refandisofC(longvid )2
+fc;eg.
+All other expressions are said to be expansive (in C). The idea is that the
+dynamic evaluation of a non-expansive expression will neither generate an
+exception nor extend the domain of the memory, while the evaluation of an
+expansive expression might.
+4.8 Closure
+Letbe a type and Aa semantic object. Then Clos A(), the closure ofwith
+respect toA, is the type scheme 8(k):, where(k)= tyvars()ntyvarsA.
+4 STATIC SEMANTICS FOR THE CORE 22
+Commonly, Awill be a context C. We abbreviate the total closure Closfg()
+to Clos(). If the range of a value environment VEcontains only types
+(rather than arbitrary type schemes) we set
+ClosAVE=fvid7!(ClosA();is) ;VE(vid) = (;is)g
+Closing a value environment VEthat stems from the elaboration of a value
+binding valbind requires extra care to ensure type security of references and
+exceptions and correct scoping of explicit type variables. Recall that valbind
+is not allowed to bind the same variable twice. Thus, for each vid2DomVE
+there is a unique pat=expinvalbind which binds vid. IfVE(vid) = (;is),
+let ClosC;valbindVE(vid) = (8(k):;is), where
+(k)=tyvarsntyvarsC;ifexpis non-expansive in C;
+(); ifexpis expansive in C.
+4.9 Type Structures and Type Environments
+A type structure ( ;VE ) iswell-formed if eitherVE=fg, oris a type
+namet. (The latter case arises, with VE6=fg, indatatype declarations.)
+An object or assembly Aof semantic objects is well-formed if every type
+structure occurring in Ais well-formed.
+A type structure ( t;VE ) is said to respect equality if, whenever tadmits
+equality, then either t=ref(see Appendix C) or, for each VE(vid) of the
+form (8(k):(!(k)t);is), the type function  (k):also admits equality.
+(This ensures that the equality predicate =will be applicable to a con-
+structed value ( vid;v) of type(k)tonly when it is applicable to the value v
+itself, whose type is f(k)=(k)g.) A type environment TErespects equality
+if all its type structures do so.
+LetTEbe a type environment, and let Tbe the set of type names tsuch
+that (t;VE ) occurs in TEfor someVE6=fg. ThenTEis said to maximise
+equality if (a)TErespects equality, and also (b) if any larger subset of T
+were to admit equality (without any change in the equality attribute of any
+type names not in T) thenTEwould cease to respect equality.
+For anyTEof the form
+TE=ftyconi7!(ti;VEi) ; 1ikg;
+4 STATIC SEMANTICS FOR THE CORE 23
+where noVEiis the empty map, and for any Ewe dene Abs( TE;E ) to
+be the environment obtained from EandTEas follows. First, let Abs( TE)
+be the type environment ftyconi7!(ti;fg) ; 1ikgin which all value
+environments VEihave been replaced by the empty map. Let t0
+1;;t0
+kbe
+new distinct type names none of which admit equality. Then Abs( TE;E )
+is the result of simultaneously substituting t0
+iforti, 1ik, throughout
+Abs(TE) +E. (The eect of the latter substitution is to ensure that the use
+of equality on an abstype is restricted to the with part.)
+4.10 Inference Rules
+Each rule of the semantics allows inferences among sentences of the form
+A`phrase)A0
+whereAis usually a context, phrase is a phrase of the Core, and A0is a
+semantic object { usually a type or an environment. It may be pronounced
+\phrase elaborates to A0in (context) A". Some rules have extra hypotheses
+not of this form; they are called side conditions .
+In the presentation of the rules, phrases within single angle brackets
+hiare called rst options , and those within double angle brackets hhii are
+called second options . To reduce the number of rules, we have adopted the
+following convention:
+In each instance of a rule, the rst options must be either all
+present or all absent; similarly the second options must be either
+all present or all absent.
+Although not assumed in our denitions, it is intended that every context
+C=T;U;E has the property that tynames ET. ThusTmay be thought
+of, loosely, as containing all type names which \have been generated". It is
+necessary to include Tas a separate component in a context, since tynames E
+may not contain all the type names which have been generated; one reason is
+that a context T;;;Eis a projection of the basis B=T;F;G;E whose other
+components FandGcould contain other such names { recorded in Tbut
+not present in E. Of course, remarks about what \has been generated" are
+not precise in terms of the semantic rules. But the following precise result
+may easily be demonstrated:
+4 STATIC SEMANTICS FOR THE CORE 24
+Let S be a sentence T;U;E`phrase)Asuch that tynames E
+T, and let S0be a sentence T0;U0;E0`phrase0)A0occurring
+in a proof of S; then also tynames E0T0.
+Atomic Expressions C`atexp)
+C`scon)type( scon)(1)
+C(longvid ) = (;is)
+C`longvid)(2)
+hC`exprow)%i
+C`{hexprowi})fgh +%iin Type(3)
+C`dec)E CE`exp) tynamesTofC
+C`letdecinexpend)(4)
+C`exp)
+C`(exp))(5)
+Comments:
+(2) The instantiation of type schemes allows dierent occurrences of a single
+longvid to assume dierent types. Note that the identier status is not
+used in this rule.
+(4) The use of, here and elsewhere, ensures that type names generated
+by the rst sub-phrase are dierent from type names generated by the
+second sub-phrase.The side condition prevents type names generated
+bydecfrom escaping outside the local declaration.
+Expression Rows C`exprow)%
+C`exp)hC`exprow)%i
+C`lab=exph,exprowi)f lab7!gh+%i(6)
+4 STATIC SEMANTICS FOR THE CORE 25
+Expressions C`exp)
+C`atexp)
+C`atexp)(7)
+C`exp)0! C`atexp)0
+C`exp atexp)(8)
+C`exp) C`ty)
+C`exp:ty)(9)
+C`exp) C`match)exn!
+C`exphandle match)(10)
+C`exp)exn
+C`raise exp)(11)
+C`match)
+C`fnmatch)(12)
+Comments:
+(7) The relational symbol `is overloaded for all syntactic classes (here
+atomic expressions and expressions).
+(9) Hereis determined by Cand ty. Notice that type variables in ty
+cannot be instantiated in obtaining ; thus the expression 1:'a will not
+elaborate successfully, nor will the expression (fn x=>x):'a->'b . The
+eect of type variables in an explicitly typed expression is to indicate
+exactly the degree of polymorphism present in the expression.
+(11) Note that does not occur in the premise; thus a raise expression has
+\arbitrary" type.
+Matches C`match)
+C`mrule)hC`match)i
+C`mruleh|matchi)(13)
+4 STATIC SEMANTICS FOR THE CORE 26
+Match Rules C`mrule)
+C`pat)(VE; )C+VE`exp)0tynamesVETofC
+C`pat=>exp)!0
+(14)
+Comment: This rule allows new free type variables to enter the context.
+These new type variables will be chosen, in eect, during the elaboration of
+pat(i.e., in the inference of the rst hypothesis). In particular, their choice
+may have to be made to agree with type variables present in any explicit
+type expression occurring within exp(see rule 9).
+Declarations C`dec)E
+U= tyvars( tyvarseq )
+C+U`valbind)VE VE0= ClosC;valbindVE U\tyvarsVE0=;
+C`val tyvarseq valbind)VE0in Env
+(15)
+C`typbind)TE
+C`type typbind)TEin Env(16)
+CTE`datbind)VE;TE8(t;VE0)2RanTE; t =2(TofC)
+TEmaximises equality
+C`datatype datbind)(VE;TE ) in Env(17)
+C(longtycon ) = (;VE )TE=ftycon7!(;VE )g
+C`datatype tycon -=-datatype longtycon)(VE;TE ) in Env(18)
+CTE`datbind)VE;TE8(t;VE0)2RanTE; t =2(TofC)
+C(VE;TE )`dec)E TE maximises equality
+C`abstype datbind with decend)Abs(TE;E )
+(19)
+C`exbind)VE
+C`exception exbind)VEin Env(20)
+4 STATIC SEMANTICS FOR THE CORE 27
+C`dec1)E1CE1`dec2)E2
+C`local dec1indec2end)E2(21)
+C(longstrid1) =E1C(longstridn) =En
+C`open longstrid1longstridn)E1++En(22)
+C` )fg in Env(23)
+C`dec1)E1CE1`dec2)E2
+C`dec1h;idec2)E1+E2(24)
+Comments:
+(15) HereVEwill contain types rather than general type schemes. The
+closure ofVEallows value identiers to be used polymorphically, via
+rule 2.
+The side-condition on Uensures that the type variables in tyvarseq are
+bound by the closure operation, if they occur free in the range of VE.
+On the other hand, if the phrase valtyvarseq valbind occurs inside some
+larger value binding valtyvarseq0valbind0then no type variable listed
+intyvarseq0will become bound by the Clos C;valbindVEoperation; for 
+must be in UofCand hence excluded from closure by the denition of
+the closure operation (Section 4.8, page 22) since UofCtyvarsC.
+(17),(19) The side conditions express that the elaboration of each datatype
+binding generates new type names and that as many of these new names
+as possible admit equality. Adding TEto the context on the left of the
+`captures the recursive nature of the binding.
+(18) Note that no new type name is generated (i.e., datatype replication is
+not generative).
+(19) The Abs operation was dened in Section 4.9, page 23.
+(20) No closure operation is used here, as this would make the type sys-
+tem unsound. Example: exception E of 'a; val it = (raise E
+5) handle E f => f(2) .
+4 STATIC SEMANTICS FOR THE CORE 28
+Value Bindings C`valbind)VE
+C`pat)(VE; )C`exp)hC`valbind)VE0i
+C`pat=exphandvalbindi)VEh+VE0i(25)
+C+VE`valbind)VE tynamesVETofC
+C`recvalbind)VE(26)
+Comments:
+(25) When the option is present we have Dom VE\DomVE0=;by the
+syntactic restrictions.
+(26) Modifying CbyVEon the left captures the recursive nature of the
+binding. From rule 25 we see that any type scheme occurring in VE
+will have to be a type. Thus each use of a recursive function in its own
+body must be assigned the same type. Also note that C+VEmay
+overwrite identier status. For example, the program datatype t =
+f; val rec f = fn x => x; is legal.
+Type Bindings C`typbind)TE
+tyvarseq =(k)C`ty)hC`typbind)TEi
+C`tyvarseq tycon =tyhandtypbindi)
+ftycon7!((k):;fg)gh+TEi(27)
+Comment: The syntactic restrictions ensure that the type function  (k):
+satises the well-formedness constraint of Section 4.4 and they ensure tycon =2
+DomTE.
+Datatype Bindings C`datbind)VE;TE
+tyvarseq =(k)C;(k)t`conbind)VE arityt=k
+hC`datbind0)VE0;TE08(t0;VE00)2RanTE0;t6=t0i
+C`tyvarseq tycon =conbindhanddatbind0i)
+(ClosVEh+VE0i;ftycon7!(t;ClosVE)gh+TE0i(28)
+Comment: The syntactic restrictions ensure Dom VE\DomVE0=;and
+tycon=2DomTE0.
+4 STATIC SEMANTICS FOR THE CORE 29
+Constructor Bindings C;`conbind)VE
+hC`ty)0i hhC;`conbind)VEii
+C;`vidhoftyihh|conbindii)
+fvid7!(;c)gh+fvid7!(0!;c)gihh +VEii(29)
+Comment: By the syntactic restrictions vid=2DomVE.
+Exception Bindings C`exbind)VE
+hC`ty)i hhC`exbind)VEii
+C`vidhoftyihhandexbindii)
+fvid7!(exn;e)gh+fvid7!(!exn;e)gihh +VEii(30)
+C(longvid ) = (;e)hC`exbind)VEi
+C`vid=longvidhandexbindi)f vid7!(;e)gh+VEi(31)
+Comments:
+(30) Notice that may contain type variables.
+(30),(31) For each Cand exbind , there is at most one VEsatisfyingC`
+exbind)VE.
+Atomic Patterns C`atpat)(VE; )
+C`)(fg;)(32)
+C`scon)(fg;type( scon))(33)
+vid=2Dom(C) or isofC(vid) =v
+C`vid)(fvid7!(;v)g;)(34)
+C(longvid ) = (;is) is6=v(k)t
+C`longvid)(fg;(k)t)(35)
+hC`patrow)(VE;% )i
+C`{hpatrowi})(fgh+VEi;fgh+%iin Type )(36)
+4 STATIC SEMANTICS FOR THE CORE 30
+C`pat)(VE; )
+C`(pat))(VE; )(37)
+Comments:
+(34), (35) The context Cdetermines which of these two rules applies. In
+rule 34, note that vidcan assume a type, not a general type scheme.
+Pattern Rows C`patrow)(VE;% )
+C`...)(fg;%)(38)
+C`pat)(VE; )
+hC`patrow)(VE0;%) DomVE\DomVE0=;i
+C`lab=path,patrowi)(VEh+VE0i;flab7!gh+%i)(39)
+Comment:
+(39) The syntactic restrictions ensure lab=2Dom%.
+Patterns C`pat)(VE; )
+C`atpat)(VE; )
+C`atpat)(VE; )(40)
+C(longvid ) = (;is) is6=v0! C`atpat)(VE;0)
+C`longvid atpat)(VE; )
+(41)
+C`pat)(VE; )C`ty)
+C`pat:ty)(VE; )(42)
+vid=2Dom(C) or isofC(vid) =v
+hC`ty)iC`pat)(VE; ) vid=2DomVE
+C`vidh:tyiaspat)(fvid7!(;v)g+VE; )(43)
+4 STATIC SEMANTICS FOR THE CORE 31
+Type Expressions C`ty)
+tyvar =
+C`tyvar)(44)
+hC`tyrow)%i
+C`{htyrowi})fgh +%iin Type(45)
+tyseq =ty1tykC`tyi)i(1ik)
+C(longtycon ) = (;VE )
+C`tyseq longtycon)(k)(46)
+C`ty) C`ty0)0
+C`ty->ty0)!0(47)
+C`ty)
+C`(ty))(48)
+Comments:
+(46) Recall that for (k)to be dened, must have arity k.
+Type-expression Rows C`tyrow)%
+C`ty)hC`tyrow)%i
+C`lab:tyh,tyrowi)f lab7!gh+%i(49)
+Comment: The syntactic constraints ensure lab=2Dom%.
+4.11 Further Restrictions
+There are a few restrictions on programs which should be enforced by a
+compiler, but are better expressed apart from the preceding Inference Rules.
+They are:
+1. For each occurrence of a record pattern containing a record wildcard,
+i.e. of the form {lab1=pat1,,labm=patm,...} the program context
+must determine uniquely the domain flab1;;labngof its row type,
+wheremn; thus, the context must determine the labels flabm+1;;labng
+of the elds to be matched by the wildcard. For this purpose, an ex-
+plicit type constraint may be needed.
+4 STATIC SEMANTICS FOR THE CORE 32
+2. In a match of the form pat1=>exp1|| patn=>expnthe pattern
+sequence pat1;:::; patnshould be irredundant ; that is, each patjmust
+match some value (of the right type) which is not matched by patifor
+anyi<j . In the context fnmatch , the match must also be exhaustive ;
+that is, every value (of the right type) must be matched by some pati.
+The compiler must give warning on violation of these restrictions, but
+should still compile the match. The restrictions are inherited by de-
+rived forms; in particular, this means that in the function-value binding
+vid atpat1atpatnh:tyi=exp(consisting of one clause only), each
+separate atpatishould be exhaustive by itself.
+3. For each value binding pat=expthe compiler must issue a report
+(but still compile) if patis not exhaustive. This will detect a mistaken
+declaration like val nil = expin which the user expects to declare
+a new variable nil(whereas the language dictates that nilis here a
+constant pattern, so no variable gets declared). However, this warning
+should not be given when the binding is a component of a top-level
+declaration valvalbind ; e.g. val x::l = exp1and y = exp2is not
+faulted by the compiler at top level, but may of course generate a Bind
+exception (see Section 6.5).
+5 Static Semantics for Modules
+5.1 Semantic Objects
+The simple objects for Modules static semantics are exactly as for the Core.
+The compound objects are those for the Core, augmented by those in Fig-
+ure 11.
+ or (T)E2Sig = TyNameSet Env
+ or (T)(E;(T0)E0)2FunSig = TyNameSet (EnvSig)
+G2SigEnv = SigIdn!Sig
+F2FunEnv = FunIdn!FunSig
+BorT;F;G;E2Basis = TyNameSet FunEnvSigEnvEnv
+Figure 11: Further Compound Semantic Objects
+The prex ( T), in signatures and functor signatures, binds type names.
+Certain operations require a change of bound names in semantic objects; see
+for example Section 5.2. When bound type names are changed, we demand
+that all of their attributes (i.e. equality and arity) are preserved.
+The operations of projection, injection and modication are as for the
+Core. Moreover, we dene CofBto be the context ( TofB;;;EofB),
+i.e. with an empty set of explicit type variables. Also, we frequently need to
+modify a basis Bby an environment E(or a structure environment SEsay),
+at the same time extending TofBto include the type names of E(or ofSE
+say). We therefore dene BSE, for example, to mean B+(tynames SE;SE ).
+There is no separate kind of semantic object to represent structures:
+structure expressions elaborate to environments, just as structure-level dec-
+larations do. Thus, notions which are commonly associated with structures
+(for example the notion of matching a structure against a signature) are
+dened in terms of environments.
+5.2 Type Realisation
+A(type) realisation is a map': TyName!TypeFcn such that tand'(t)
+have the same arity, and if tadmits equality then so does '(t).
+5 STATIC SEMANTICS FOR MODULES 34
+Thesupport Supp'of a type realisation 'is the set of type names tfor
+which'(t)6=t. The yield Yield'of a realisation 'is the set of type names
+which occur in some '(t) for which t2Supp'.
+Realisations 'are extended to apply to all semantic objects; their eect
+is to replace each name tby'(t). In applying 'to an object with bound
+names, such as a signature ( T)E, rst bound names must be changed so that,
+for each binding prex ( T),
+T\(Supp'[Yield') =;:
+5.3 Signature Instantiation
+An environment E2is an instance of a signature  1= (T1)E1, written  1E2,
+if there exists a realisation 'such that'(E1) =E2and Supp'T1.
+5.4 Functor Signature Instantiation
+A pair (E;(T0)E0) is called a functor instance . Given  = ( T1)(E1;(T0
+1)E0
+1),
+a functor instance ( E2;(T0
+2)E0
+2) is an instance of , written (E2;(T0
+2)E0
+2),
+if there exists a realisation 'such that'(E1;(T0
+1)E0
+1) = (E2;(T0
+2)E0
+2) and
+Supp'T1.
+5.5 Enrichment
+In matching an environment to a signature, the environment will be allowed
+both to have more components, and to be more polymorphic, than (an in-
+stance of) the signature. Precisely, we dene enrichment of environments
+and type structures recursively as follows.
+An environment E1= (SE1;TE 1;VE 1)enriches another environment
+E2 = ( SE2;
+TE2;VE 2), writtenE1E2, if
+1. DomSE1DomSE2, andSE1(strid )SE2(strid ) for all strid2
+DomSE2
+2. DomTE1DomTE2, andTE1(tycon )TE2(tycon ) for all tycon2
+DomTE2
+5 STATIC SEMANTICS FOR MODULES 35
+3. DomVE1DomVE2, andVE1(vid)VE2(vid) for all vid2DomVE2,
+where (1;is1)(2;is2) means12and
+is1=is2oris2=v
+Finally, a type structure ( 1;VE 1)enriches another type structure ( 2;VE 2),
+written (1;VE 1)(2;VE 2), if
+1.1=2
+2. EitherVE1=VE2orVE2=fg
+5.6 Signature Matching
+An environment Ematches a signature  1if there exists an environment E 
+such that  1E E. Thus matching is a combination of instantiation
+and enrichment. There is at most one such E , given  1andE.
+5.7 Inference Rules
+As for the Core, the rules of the Modules static semantics allow sentences of
+the form
+A`phrase)A0
+to be inferred, where in this case Ais either a basis, a context or an envi-
+ronment and A0is a semantic object. The convention for options is as in the
+Core semantics.
+Although not assumed in our denitions, it is intended that every ba-
+sisB=T;F;G;E in which a topdec is elaborated has the property that
+tynamesF[tynamesG[tynamesET. The following Theorem can be
+proved:
+Let S be an inferred sentence B`topdec)B0in whichB
+satises the above condition. Then B0also satises the condition.
+Moreover, if S0is a sentence of the form B00`phrase)Aoccur-
+ring in a proof of S, where phrase is any Modules phrase, then
+B00also satises the condition.
+Finally, ifT;U;E`phrase)Aoccurs in a proof of S, where
+phrase is a phrase of Modules or of the Core, then tynames ET.
+5 STATIC SEMANTICS FOR MODULES 36
+Structure Expressions B`strexp)E
+B`strdec)E
+B`struct strdec end)E(50)
+B(longstrid ) =E
+B`longstrid)E(51)
+B`strexp)E B`sigexp) E0E
+B`strexp :sigexp)E0(52)
+B`strexp)E B`sigexp)(T0)E0
+(T0)E0E00E T0\(TofB) =;
+B`strexp :>sigexp)E0(53)
+B`strexp)E
+B(funid )(E00;(T0)E0); EE00
+(tynamesE[TofB)\T0=;
+B`funid (strexp ))E0(54)
+B`strdec)E1BE1`strexp)E2
+B`letstrdec instrexp end)E2(55)
+Comments:
+(54) The side condition (tynames E[TofB)\T0=;can always be satised
+by renaming bound names in ( T0)E0; it ensures that the generated
+datatypes receive new names.
+LetB(funid ) = (T)(Ef;(T0)E0
+f). Let'be a realisation such that
+'(Ef;(T0)E0
+f) = (E00;(T0)E0). Sharing between argument and result
+specied in the declaration of the functor funid is represented by the
+occurrence of the same name in both EfandE0
+f, and this repeated
+occurrence is preserved by ', yielding sharing between the argument
+structureEand the result structure E0of this functor application.
+5 STATIC SEMANTICS FOR MODULES 37
+(55) The use of, here and elsewhere, ensures that type names generated
+by the rst sub-phrase are distinct from names generated by the second
+sub-phrase.
+Structure-level Declarations B`strdec)E
+CofB`dec)E
+B`dec)E(56)
+B`strbind)SE
+B`structure strbind)SEin Env(57)
+B`strdec 1)E1BE1`strdec 2)E2
+B`local strdec 1instrdec 2end)E2(58)
+B` )fg in Env(59)
+B`strdec 1)E1BE1`strdec 2)E2
+B`strdec 1h;istrdec 2)E1+E2(60)
+Structure Bindings B`strbind)SE
+B`strexp)EhB+ tynamesE`strbind)SEi
+B`strid =strexphand strbindi)f strid7!Egh+SEi(61)
+Signature Expressions B`sigexp)E
+B`spec)E
+B`sigspec end)E(62)
+B(sigid ) = (T)E T\(TofB) =;
+B`sigid)E(63)
+5 STATIC SEMANTICS FOR MODULES 38
+B`sigexp)Etyvarseq =(k)CofB`ty)
+E(longtycon ) = (t;VE )t =2TofB
+'=ft7!(k):g(k):admits equality, if tdoes'(E) well-formed
+B`sigexp where type tyvarseq longtycon =ty)'(E)
+(64)
+Comments:
+(63) The bound names of B(sigid ) can always be renamed to satisfy T\
+(TofB) =;, if necessary.
+B`sigexp)
+B`sigexp)E T = tynamesEn(TofB)
+B`sigexp)(T)E(65)
+Comment: A signature expression sigexp which is an immediate constituent of
+a signature binding, a signature constraint, or a functor binding is elaborated
+to a signature, see rules 52, 53, 67 and 86.
+Signature Declarations B`sigdec)G
+B`sigbind)G
+B`signature sigbind)G(66)
+Signature Bindings B`sigbind)G
+B`sigexp)hB`sigbind)Gi
+B`sigid =sigexphandsigbindi)f sigid7!gh+Gi(67)
+Specications B`spec)E
+CofB`valdesc)VE
+B`valvaldesc)ClosVEin Env(68)
+5 STATIC SEMANTICS FOR MODULES 39
+CofB`typdesc)TE8(t;VE )2RanTE; t does not admit equality
+B`type typdesc)TEin Env
+(69)
+CofB`typdesc)TE8(t;VE )2RanTE; t admits equality
+B`eqtype typdesc)TEin Env(70)
+CofBTE`datdesc)VE;TE8(t;VE0)2RanTE;t =2TofB
+TEmaximises equality
+B`datatype datdesc)(VE;TE ) in Env(71)
+B(longtycon ) = (;VE )TE=ftycon7!(;VE )g
+B`datatype tycon -=-datatype longtycon)(VE;TE ) in Env(72)
+CofB`exdesc)VE
+B`exception exdesc)VEin Env(73)
+B`strdesc)SE
+B`structure strdesc)SEin Env(74)
+B`sigexp)E
+B`include sigexp)E(75)
+B` )fg in Env(76)
+B`spec1)E1BE1`spec2)E2 Dom(E1)\Dom(E2) =;
+B`spec1h;ispec2)E1+E2
+(77)
+5 STATIC SEMANTICS FOR MODULES 40
+B`spec)E E (longtyconi) = (ti;VEi); i= 1::n
+t2ft1;:::;tngtadmits equality, if some tidoes
+ft1;:::;tng\TofB=;'=ft17!t;:::;tn7!tg
+B`spec sharing type longtycon1==longtyconn)'(E)(78)
+Comments:
+(68)VEis determined by Band valdesc .
+(69){(71) The type names in TEare new.
+(73)VEis determined by Band exdesc and contains monotypes only.
+(77) Note that no sequential specication is allowed to specify the same
+identier twice.
+Value Descriptions C`valdesc)VE
+C`ty)hC`valdesc)VEi
+C`vid:tyhandvaldesci)f vid7!(;v)gh+VEi(79)
+Type Descriptions C`typdesc)TE
+tyvarseq =(k)t =2TofCarityt=k
+hC`typdesc)TE t =2tynamesTEi
+C`tyvarseq tyconhandtypdesci)f tycon7!(t;fg)gh+TEi(80)
+Comment: Note that the value environment in the resulting type structure
+must be empty. For example, datatype s=C type t sharing type t=s is
+a legal specication, but the type structure bound to tdoes not bind any
+value constructors.
+Datatype Descriptions C`datdesc)VE;TE
+tyvarseq =(k)C;(k)t`condesc)VE arityt=k
+hC`datdesc0)VE0;TE08(t0;VE00)2RanTE0; t6=t0i
+C`tyvarseq tycon =condeschanddatdesc0i)
+ClosVEh+VE0i;ftycon7!(t;ClosVE)gh+TE0i(81)
+5 STATIC SEMANTICS FOR MODULES 41
+Constructor Descriptions C;`condesc)VE
+hC`ty)0i hhC;`condesc)VEii
+C;`vidhoftyihh|condescii)
+fvid7!(;c)gh+fvid7!(0!;c)gihh +VEii(82)
+Exception Descriptions C`exdesc)VE
+hC`ty) tyvars() =;i hhC`exdesc)VEii
+C`vidhoftyi hhandexdescii)
+fvid7!(exn;e)gh+fvid7!(!exn;e)gihh+VEii(83)
+Structure Descriptions B`strdesc)SE
+B`sigexp)EhB+ tynamesE`strdesc)SEi
+B`strid :sigexphandstrdesci)f strid7!Egh+SEi(84)
+Functor Declarations B`fundec)F
+B`funbind)F
+B`functor funbind)F(85)
+Functor Bindings B`funbind)F
+B`sigexp)(T)E Bfstrid7!Eg`strexp)E0
+T\(TofB) =;T0= tynamesE0n((TofB)[T)
+hB`funbind)Fi
+B`funid (strid :sigexp ) = strexphand funbindi)
+ffunid7!(T)(E;(T0)E0)gh+Fi(86)
+Comment: Sinceis used, any type name tinEacts like a constant in the
+functor body; in particular, it ensures that further names generated during
+elaboration of the body are distinct from t. The setT0is chosen such that
+every name free in ( T)Eor (T)(E;(T0)E0) is free inB.
+5 STATIC SEMANTICS FOR MODULES 42
+Top-level Declarations B`topdec)B0
+B`strdec)EhBE`topdec)B0i
+B00= (tynames E;E)in Basish+B0ityvarsB00=;
+B`strdechtopdeci)B00(87)
+B`sigdec)GhBG`topdec)B0i
+B00= (tynames G;G) in Basish+B0i
+B`sigdechtopdeci)B00(88)
+B`fundec)FhBF`topdec)B0i
+B00= (tynames F;F) in Basish+B0ityvarsB00=;
+B`fundechtopdeci)B00(89)
+Comments:
+(87){(89) No free type variables enter the basis: if B`topdec)B0then
+tyvars(B0) =;.
+6 Dynamic Semantics for the Core
+6.1 Reduced Syntax
+Since types are mostly dealt with in the static semantics, the Core syntax
+is reduced by the following transformations, for the purpose of the dynamic
+semantics:
+All explicit type ascriptions \ :ty" are omitted, and qualications
+\ofty" are omitted from constructor and exception bindings.
+The Core phrase classes Ty and TyRow are omitted.
+6.2 Simple Objects
+All objects in the dynamic semantics are built from identier classes together
+with the simple object classes shown (with the variables which range over
+them) in Figure 12.
+a2Addr addresses
+en2ExName exception names
+b2BasVal basic values
+sv2SVal special values
+fFAILg failure
+Figure 12: Simple Semantic Objects
+Addr and ExName are innite sets. BasVal is described below. SVal is
+the class of values denoted by the special constants SCon. Each integer, word
+or real constant denotes a value according to normal mathematical conven-
+tions; each string or character constant denotes a sequence of characters as
+explained in Section 2.2. The value denoted by scon is written val( scon).
+FAIL is the result of a failing attempt to match a value and a pattern. Thus
+FAIL is neither a value nor an exception, but simply a semantic object used
+in the rules to express operationally how matching proceeds.
+Exception constructors evaluate to exception names. This is to accom-
+modate the generative nature of exception bindings; each evaluation of a
+declaration of a exception constructor binds it to a new unique name.
+6 DYNAMIC SEMANTICS FOR THE CORE 44
+v2Val =f:=g[SVal[BasVal[VId
+[(VIdVal)[ExVal
+[Record[Addr[FcnClosure
+r2Record = Labn!Val
+e2ExVal = ExName [(ExNameVal)
+[e] orp2Pack = ExVal
+(match;E;VE )2FcnClosure = Match EnvValEnv
+mem2Mem = Addrn!Val
+ens2ExNameSet = Fin(ExName)
+(mem;ens) ors2State = MemExNameSet
+(SE;TE;VE ) orE2Env = StrEnvTyEnvValEnv
+SE2StrEnv = StrIdn!Env
+TE2TyEnv = TyConn!ValEnv
+VE2ValEnv = VIdn!ValIdStatus
+Figure 13: Compound Semantic Objects
+6.3 Compound Objects
+The compound objects for the dynamic semantics are shown in Figure 13.
+Many conventions and notations are adopted as in the static semantics; in
+particular projection, injection and modication all retain their meaning. We
+generally omit the injection functions taking VId, VId Val etc into Val. For
+recordsr2Record however, we write this injection explicitly as \in Val"; this
+accords with the fact that there is a separate phrase class ExpRow, whose
+members evaluate to records.
+We take[to mean disjoint union over semantic object classes. We also
+understand all the dened object classes to be disjoint. A particular case
+deserves mention; ExVal and Pack (exception values and packets) are iso-
+morphic classes, but the latter class corresponds to exceptions which have
+been raised, and therefore has dierent semantic signicance from the former,
+which is just a subclass of values.
+Although the same names, e.g. Efor an environment, are used as in
+the static semantics, the objects denoted are dierent. This need cause no
+6 DYNAMIC SEMANTICS FOR THE CORE 45
+confusion since the static and dynamic semantics are presented separately.
+6.4 Basic Values
+The basic values in BasVal are values bound to predened value variables.
+In this document, we take BasVal to be the singleton set f=g; however,
+libraries may dene a larger set of basic values. The meaning of basic values
+is represented by a function
+APPLY : BasVal Val!Val[Pack
+which satises that APPLY( =;f17!v1;27!v2g) istrue orfalse according
+as the values v1andv2are, or are not, identical values.
+6.5 Basic Exceptions
+A subset BasExName ExName of the exception names are bound to pre-
+dened exception constructors in the initial dynamic basis (see Appendix D).
+These names are denoted by the identiers to which they are bound in the
+initial basis, and are as follows:
+Match Bind
+The exceptions Match and Bind are raised upon failure of pattern-matching
+in evaluating a function fnmatch or a valbind , as detailed in the rules to
+follow. Recall from Section 4.11 that in the context fnmatch , the match
+must be irredundant and exhaustive and that the compiler should ag the
+match if it violates these restrictions. The exception Match can only be raised
+for a match which is not exhaustive, and has therefore been agged by the
+compiler.
+6.6 Function Closures
+The informal understanding of a function closure (match;E;VE ) is as follows:
+when the function closure is applied to a value v,match will be evaluated
+againstv, in the environment Emodied in a special sense by VE. The
+domain Dom VEof this third component contains those identiers to be
+treated recursively in the evaluation. To achieve this eect, the evaluation
+ofmatch will take place not in E+VEbut inE+ RecVE, where
+Rec : ValEnv!ValEnv
+6 DYNAMIC SEMANTICS FOR THE CORE 46
+is dened as follows:
+Dom(RecVE) = DomVE
+IfVE(vid)=2FcnClosurefvg, then (Rec VE)(vid) =VE(vid)
+IfVE(vid) = (( match0;E0;VE0);v) then (Rec VE)(vid) = (( match0;E0;VE);v)
+The eect is that, before application of ( match;E;VE ) tov, the function
+closures in Ran VEare \unrolled" once, to prepare for their possible recursive
+application during the evaluation of match uponv.
+This device is adopted to ensure that all semantic objects are nite (by
+controlling the unrolling of recursion). The operator Rec is invoked in just
+two places in the semantic rules: in the rule for recursive value bindings of the
+form \ recvalbind ", and in the rule for evaluating an application expression
+\expatexp " in the case that expevaluates to a function closure.
+6.7 Inference Rules
+The semantic rules allow sentences of the form
+s;A`phrase)A0;s0
+to be inferred, where Ais usually an environment, A0is some semantic object
+ands,s0are the states before and after the evaluation represented by the
+sentence. Some hypotheses in rules are not of this form; they are called side-
+conditions . The convention for options is the same as for the Core static
+semantics.
+In most rules the states sands0are omitted from sentences; they are
+only included for those rules which are directly concerned with the state {
+either referring to its contents or changing it. When omitted, the convention
+for restoring them is as follows. If the rule is presented in the form
+A1`phrase1)A0
+1A2`phrase2)A0
+2
+An`phrasen)A0
+n
+A`phrase)A0
+then the full form is intended to be
+s0;A1`phrase1)A0
+1;s1s1;A2`phrase2)A0
+2;s2
+sn 1;An`phrasen)A0
+n;sn
+s0;A`phrase)A0;sn
+6 DYNAMIC SEMANTICS FOR THE CORE 47
+(Any side-conditions are left unaltered). Thus the left-to-right order of the
+hypotheses indicates the order of evaluation. Note that in the case n= 0,
+when there are no hypotheses (except possibly side-conditions), we have sn=
+s0; this implies that the rule causes no side eect. The convention is called
+thestate convention , and must be applied to each version of a rule obtained
+by inclusion or omission of its options.
+A second convention, the exception convention , is adopted to deal with
+the propagation of exception packets p. For each rule whose full form (ignor-
+ing side-conditions) is
+s1;A1`phrase1)A0
+1;s0
+1sn;An`phrasen)A0
+n;s0
+n
+s;A`phrase)A0;s0
+and for each k, 1kn, for which the result A0
+kis not a packet p, an extra
+rule is added of the form
+s1;A1`phrase1)A0
+1;s0
+1sk;Ak`phrasek)p0;s0
+s;A`phrase)p0;s0
+wherep0does not occur in the original rule.1This indicates that evaluation
+of phrases in the hypothesis terminates with the rst whose result is a packet
+(other than one already treated in the rule), and this packet is the result of
+the phrase in the conclusion.
+A third convention is that we allow compound variables (variables built
+from the variables in Figure 13 and the symbol \/") to range over unions
+of semantic objects. For instance the compound variable v=pranges over
+Val[Pack. We also allow x=FAIL to range over X[fFAILgwherexranges
+overX; furthermore, we extend environment modication to allow for failure
+as follows:
+VE+ FAIL = FAIL :
+Atomic Expressions E`atexp)v=p
+E`scon)val(scon)(90)
+E(longvid ) = (v;is)
+E`longvid)v(91)
+1There is one exception to the exception convention; no extra rule is added for rule 104
+which deals with handlers, since a handler is the only means by which propagation of an
+exception can be arrested.
+6 DYNAMIC SEMANTICS FOR THE CORE 48
+hE`exprow)ri
+E`{hexprowi})fgh +riin Val(92)
+E`dec)E0E+E0`exp)v
+E`letdecinexpend)v(93)
+E`exp)v
+E`(exp))v(94)
+Comments:
+(91) As in the static semantics, value identiers are looked up in the envi-
+ronment and the identier status is not used.
+Expression Rows E`exprow)r=p
+E`exp)vhE`exprow)ri
+E`lab=exph,exprowi)f lab7!vgh+ri(95)
+Comment: We may think of components as being evaluated from left to right,
+because of the state and exception conventions.
+Expressions E`exp)v=p
+E`atexp)v
+E`atexp)v(96)
+E`exp)vid vid6=refE`atexp)v
+E`exp atexp)(vid;v)(97)
+E`exp)enE`atexp)v
+E`exp atexp)(en;v)(98)
+s;E`exp)ref;s0s0;E`atexp)v;s00a =2Dom( mem ofs00)
+s;E`exp atexp)a; s00+fa7!vg
+(99)
+6 DYNAMIC SEMANTICS FOR THE CORE 49
+s;E`exp):=;s0s0;E`atexp)f17!a;27!vg;s00
+s;E`exp atexp)fg in Val; s00+fa7!vg(100)
+E`exp)b E`atexp)v APPLY(b;v) =v0=p
+E`exp atexp)v0=p(101)
+E`exp)(match;E0;VE)E`atexp)v
+E0+ RecVE; v`match)v0
+E`exp atexp)v0(102)
+E`exp)(match;E0;VE)E`atexp)v
+E0+ RecVE; v`match)FAIL
+E`exp atexp)[Match ](103)
+E`exp)v
+E`exphandle match)v(104)
+E`exp)[e]E;e`match)v
+E`exphandle match)v(105)
+E`exp)[e]E;e`match)FAIL
+E`exphandle match)[e](106)
+E`exp)e
+E`raise exp)[e](107)
+E`fnmatch)(match;E;fg)(108)
+Comments:
+(99) The side condition ensures that a new address is chosen. There are no
+rules concerning disposal of inaccessible addresses.
+(97){(103) Note that none of the rules for function application has a premise
+in which the operator evaluates to a constructed value, a record or an
+address. This is because we are interested in the evaluation of well-
+typed programs only, and in such programs expwill always have a
+functional type.
+6 DYNAMIC SEMANTICS FOR THE CORE 50
+(104) This is the only rule to which the exception convention does not apply.
+If the operator evaluates to a packet then rule 105 or rule 106 must be
+used.
+(106) Packets that are not handled by the match propagate.
+(108) The third component of the function closure is empty because the
+match does not introduce new recursively dened values.
+Matches E;v`match)v0=p=FAIL
+E;v`mrule)v0
+E;v`mruleh|matchi)v0(109)
+E;v`mrule)FAIL
+E;v`mrule)FAIL(110)
+E;v`mrule)FAILE;v`match)v0=FAIL
+E;v`mrule |match)v0=FAIL(111)
+Comment: A valuevoccurs on the left of the turnstile, in evaluating a match .
+We may think of a match as being evaluated against a value; similarly, we
+may think of a pattern as being evaluated against a value. Alternative match
+rules are tried from left to right.
+Match Rules E;v`mrule)v0=p=FAIL
+E;v`pat)VE E +VE`exp)v0
+E;v`pat=>exp)v0(112)
+E;v`pat)FAIL
+E;v`pat=>exp)FAIL(113)
+Declarations E`dec)E0=p
+E`valbind)VE
+E`valtyvarseq valbind)VEin Env(114)
+6 DYNAMIC SEMANTICS FOR THE CORE 51
+`typbind)TE
+E`type typbind)TEin Env(115)
+`datbind)VE;TE
+E`datatype datbind)(VE;TE ) in Env(116)
+E(longtycon ) =VE
+E`datatype tycon -=-datatype longtycon)(VE;ftycon7!VEg) in Env
+(117)
+`datbind)VE;TE E +VE`dec)E0
+E`abstype datbind with decend)E0(118)
+E`exbind)VE
+E`exception exbind)VEin Env(119)
+E`dec1)E1E+E1`dec2)E2
+E`local dec1indec2end)E2(120)
+E(longstrid1) =E1E(longstridn) =En
+E`open longstrid1longstridn)E1++En(121)
+E` )fg in Env(122)
+E`dec1)E1E+E1`dec2)E2
+E`dec1h;idec2)E1+E2(123)
+6 DYNAMIC SEMANTICS FOR THE CORE 52
+Value Bindings E`valbind)VE=p
+E`exp)v E;v`pat)VEhE`valbind)VE0i
+E`pat=exphandvalbindi)VEh+VE0i(124)
+E`exp)v E;v`pat)FAIL
+E`pat=exphandvalbindi)[Bind ](125)
+E`valbind)VE
+E`recvalbind)RecVE(126)
+Type Bindings `typbind)TE
+h`typbind)TEi
+`tyvarseq tycon =tyhandtypbindi)f tycon7!fggh +TEi(127)
+Datatype Bindings `datbind)VE;TE
+`conbind)VEh`datbind0)VE0;TE0i
+`tyvarseq tycon =conbindhanddatbind0i)VEh+VE0i;ftycon7!VEgh+TE0i
+(128)
+Constructor Bindings `conbind)VE
+h`conbind)VEi
+`vidh|conbindi)f vid7!(vid;c)gh+VEi(129)
+Exception Bindings E`exbind)VE
+en=2ensofs s0=s+feng hs0;E`exbind)VE;s00i
+s;E`vidhandexbindi)f vid7!(en;e)gh+VEi; s0h0i(130)
+E(longvid ) = ( en;e)hE`exbind)VEi
+E`vid=longvidhandexbindi)f vid7!(en;e)gh+VEi(131)
+Comments:
+6 DYNAMIC SEMANTICS FOR THE CORE 53
+(130) The two side conditions ensure that a new exception name is generated
+and recorded as \used" in subsequent states.
+Atomic Patterns E;v`atpat)VE=FAIL
+E;v`)fg(132)
+v= val( scon)
+E;v`scon)fg(133)
+v6= val( scon)
+E;v`scon)FAIL(134)
+vid=2Dom(E) or isofE(vid) =v
+E;v`vid)fvid7!(v;v)g(135)
+E(longvid ) = (v;is) is6=v
+E;v`longvid)fg(136)
+E(longvid ) = (v0;is) is6=vv6=v0
+E;v`longvid)FAIL(137)
+v=fgh+riin ValhE;r`patrow)VE=FAILi
+E;v`{hpatrowi})fgh +VE=FAILi(138)
+E;v`pat)VE=FAIL
+E;v`(pat))VE=FAIL(139)
+Comments:
+(134), (137) Any evaluation resulting in FAIL must do so because rule 134,
+rule 137, rule 145, or rule 147 has been applied.
+6 DYNAMIC SEMANTICS FOR THE CORE 54
+Pattern Rows E;r`patrow)VE=FAIL
+E;r`...)fg(140)
+E;r(lab)`pat)FAIL
+E;r`lab=path,patrowi)FAIL(141)
+E;r(lab)`pat)VEhE;r`patrow)VE0=FAILi
+E;r`lab=path,patrowi)VEh+VE0=FAILi(142)
+Comments:
+(141),(142) For well-typed programs labwill be in the domain of r.
+Patterns E;v`pat)VE=FAIL
+E;v`atpat)VE=FAIL
+E;v`atpat)VE=FAIL(143)
+E(longvid ) = ( vid;c) vid6=refv= (vid;v0)
+E;v0`atpat)VE=FAIL
+E;v`longvid atpat)VE=FAIL(144)
+E(longvid ) = ( vid;c) vid6=refv =2fvidgVal
+E;v`longvid atpat)FAIL(145)
+E(longvid ) = ( en;e)v= (en;v0)
+E;v0`atpat)VE=FAIL
+E;v`longvid atpat)VE=FAIL(146)
+E(longvid ) = ( en;e)v =2fengVal
+E;v`longvid atpat)FAIL(147)
+s(a) =v s;E;v`atpat)VE=FAIL;s
+s;E;a`refatpat)VE=FAIL;s(148)
+6 DYNAMIC SEMANTICS FOR THE CORE 55
+E;v`pat)VE=FAIL
+E;v`vidaspat)fvid7!(v;v)g+VE=FAIL(149)
+Comments:
+(145),(147) Any evaluation resulting in FAIL must do so because rule 134,
+rule 137, rule 145, or rule 147 has been applied.
+7 Dynamic Semantics for Modules
+7.1 Reduced Syntax
+Since signature expressions are mostly dealt with in the static semantics,
+the dynamic semantics need only take limited account of them. However,
+they cannot be ignored completely; the reason is that an explicit signature
+ascription plays the r^ ole of restricting the \view" of a structure { that is, re-
+stricting the domains of its component environments and imposing identier
+status on value identiers. The syntax is therefore reduced by the following
+transformations (in addition to those for the Core), for the purpose of the
+dynamic semantics of Modules:
+Qualications \ ofty" are omitted from constructor and exception de-
+scriptions.
+Any qualication sharing typeon a specication or where type
+on a signature expression is omitted.
+7.2 Compound Objects
+The compound objects for the Modules dynamic semantics, extra to those
+for the Core dynamic semantics, are shown in Figure 14. An interface
+(strid :I;strexp;B)2FunctorClosure
+= (StrIdInt)StrExpBasis
+Ior (SI;TI;VI )2Int = StrIntTyIntValInt
+SI2StrInt = StrIdn!Int
+TI2TyInt = TyConn!ValInt
+VI2ValInt = VIdn!IdStatus
+G2SigEnv = SigIdn!Int
+F2FunEnv = FunIdn!FunctorClosure
+(F;G;E ) orB2Basis = FunEnvSigEnvEnv
+(G;I) orIB2IntBasis = SigEnv Int
+Figure 14: Compound Semantic Objects
+7 DYNAMIC SEMANTICS FOR MODULES 57
+I2Int represents a \view" of a structure. Specications and signature
+expressions will evaluate to interfaces; moreover, during the evaluation of
+a specication or signature expression, structures (to which a specication
+or signature expression may refer via datatype replicating specications) are
+represented only by their interfaces. To extract a value interface from a
+dynamic value environment we dene the operation Inter : ValEnv !ValInt
+as follows:
+Inter(VE) =fvid7!is;VE(vid) = (v;is)g
+In other words, Inter( VE) is the value interface obtained from VEby remov-
+ing all values from VE. We then extend Inter to a function Inter : Env !Int
+as follows:
+Inter(SE;TE;VE ) = (SI;TI;VI )
+whereVI= Inter(VE) and
+SI=fstrid7!InterE;SE(strid ) =Eg
+TI=ftycon7!InterVE0;TE(tycon ) =VE0g
+Aninterface basis IB= (G;I) is a value-free part of a basis, sucient to eval-
+uate signature expressions and specications. The function Inter is extended
+to create an interface basis from a basis Bas follows:
+Inter(F;G;E ) = (G;InterE)
+A further operation
+#: EnvInt!Env
+is required, to cut down an environment Eto a given interface I, representing
+the eect of an explicit signature ascription. We rst dene #: ValEnv
+ValInt!ValEnv by
+VE#VI=fvid7!(v;is) ;VE(vid) = (v;is0) andVI(vid) =isg
+(Note thatVEandVIneed not have the same domain and that the identier
+status is taken from VI.) We then dene #: StrEnvStrInt!StrEnv,
+#: TyEnvTyInt!TyEnv and#: EnvInt!Env simultaneously as
+follows:
+7 DYNAMIC SEMANTICS FOR MODULES 58
+SE#SI=fstrid7!E#I;SE(strid ) =EandSI(strid ) =Ig
+TE#TI=ftycon7!VE0#VI0;TE(tycon ) =VE0andTI(tycon ) =VI0g
+(SE;TE;VE )#(SI;TE;VI ) = (SE#SI;TE#TI;VE#VI)
+It is important to note that an interface can also be obtained from the static
+value  of a signature expression; it is obtained by rst replacing every type
+structure (;VE ) in the range of every type environment TEbyVEand then
+replacing each pair ( ;is) in the range of every value environment VEbyis.
+Thus in an implementation interfaces would naturally be obtained from the
+static elaboration; we choose to give separate rules here for obtaining them
+in the dynamic semantics since we wish to maintain our separation of the
+static and dynamic semantics, for reasons of presentation.
+7.3 Inference Rules
+The semantic rules allow sentences of the form
+s;A`phrase)A0;s0
+to be inferred, where Ais either a basis, a signature environment or empty, A0
+is some semantic object and s,s0are the states before and after the evaluation
+represented by the sentence. Some hypotheses in rules are not of this form;
+they are called side-conditions . The convention for options is the same as for
+the Core static semantics.
+The state and exception conventions are adopted as in the Core dynamic
+semantics. However, it may be shown that the only Modules phrases whose
+evaluation may cause a side-eect or generate an exception packet are of the
+form strexp ,strdec ,strbind ortopdec .
+Structure Expressions B`strexp)E=p
+B`strdec)E
+B`struct strdec end)E(150)
+B(longstrid ) =E
+B`longstrid)E(151)
+B`strexp)E InterB`sigexp)I
+B`strexp :sigexp)E#I(152)
+7 DYNAMIC SEMANTICS FOR MODULES 59
+B`strexp)E InterB`sigexp)I
+B`strexp :>sigexp)E#I(153)
+B(funid ) = ( strid :I;strexp0;B0)
+B`strexp)E B0+fstrid7!E#Ig`strexp0)E0
+B`funid (strexp ))E0(154)
+B`strdec)E B +E`strexp)E0
+B`letstrdec instrexp end)E0(155)
+Comments:
+(154) Before the evaluation of the functor body strexp0, the actual argument
+Eis cut down by the formal parameter interface I, so that any opening
+ofstrid resulting from the evaluation of strexp0will produce no more
+components than anticipated during the static elaboration.
+Structure-level Declarations B`strdec)E=p
+EofB`dec)E0
+B`dec)E0(156)
+B`strbind)SE
+B`structure strbind)SEin Env(157)
+B`strdec 1)E1B+E1`strdec 2)E2
+B`local strdec 1instrdec 2end)E2(158)
+B` )fg in Env(159)
+B`strdec 1)E1B+E1`strdec 2)E2
+B`strdec 1h;istrdec 2)E1+E2(160)
+7 DYNAMIC SEMANTICS FOR MODULES 60
+Structure Bindings B`strbind)SE=p
+B`strexp)EhB`strbind)SEi
+B`strid =strexphand strbindi)f strid7!Egh+SEi(161)
+Signature Expressions IB`sigexp)I
+IB`spec)I
+IB`sigspec end)I(162)
+IB(sigid ) =I
+IB`sigid)I(163)
+Signature Declarations IB`sigdec)G
+IB`sigbind)G
+IB`signature sigbind)G(164)
+Signature Bindings IB`sigbind)G
+IB`sigexp)IhIB`sigbind)Gi
+IB`sigid =sigexphandsigbindi)f sigid7!Igh+Gi(165)
+Specications IB`spec)I
+`valdesc)VI
+IB`valvaldesc)VIin Int(166)
+`typdesc)TI
+IB`type typdesc)TIin Int(167)
+`typdesc)TI
+IB`eqtype typdesc)TIin Int(168)
+`datdesc)VI;TI
+IB`datatype datdesc)(VI;TI ) in Int(169)
+7 DYNAMIC SEMANTICS FOR MODULES 61
+IB(longtycon ) =VI TI =ftycon7!VIg
+IB`datatype tycon -=-datatype longtycon)(VI;TI ) in Int(170)
+`exdesc)VI
+IB`exception exdesc)VIin Int(171)
+IB`strdesc)SI
+IB`structure strdesc)SIin Int(172)
+IB`sigexp)I
+IB`include sigexp)I(173)
+IB` )fg in Int(174)
+IB`spec1)I1IB+I1`spec2)I2
+IB`spec1h;ispec2)I1+I2(175)
+Value Descriptions `valdesc)VI
+h`valdesc)VIi
+`vidhandvaldesci)f vid7!vgh+VIi(176)
+Type Descriptions `typdesc)TI
+h`typdesc)TIi
+`tyvarseq tyconhandtypdesci)f tycon7!fggh +TIi(177)
+Datatype Descriptions `datdesc)VI;TI
+`condesc)VIh`datdesc0)VI0;TI0i
+`tyvarseq tycon =condeschanddatdesc0i)VIh+VI0i;ftycon7!VIgh+TI0i
+(178)
+7 DYNAMIC SEMANTICS FOR MODULES 62
+Constructor Descriptions `condesc)VI
+h`condesc)VIi
+`vidh|condesci)f vid7!cgh+VIi(179)
+Exception Descriptions `exdesc)VI
+h`exdesc)VIi
+`vidhand exdesci)f vid7!egh+VIi(180)
+Structure Descriptions IB`strdesc)SI
+IB`sigexp)IhIB`strdesc)SIi
+IB`strid :sigexphandstrdesci)f strid7!Igh+SIi(181)
+Functor Bindings B`funbind)F
+InterB`sigexp)IhIB`funbind)Fi
+IB`funid (strid :sigexp ) = strexphandfunbindi)
+ffunid7!(strid :I;strexp;B)gh+Fi(182)
+Functor Declarations B`fundec)F
+B`funbind)F
+B`functor funbind)F(183)
+Top-level Declarations B`topdec)B0=p
+B`strdec)E B0=Ein BasishB+B0`topdec)B00i
+B`strdechtopdeci)B0h0i(184)
+InterB`sigdec)G B0=Gin BasishB+B0`topdec)B00i
+B`sigdechtopdeci)B0h0i(185)
+7 DYNAMIC SEMANTICS FOR MODULES 63
+B`fundec)F B0=Fin BasishB+B0`topdec)B00i
+B`fundechtopdeci)B0h0i(186)
+8 Programs
+The phrase class Program of programs is dened as follows
+program ::=topdec ;hprogrami
+Hitherto, the semantic rules have not exposed the interactive nature of
+the language. During an ML session the user can type in a phrase, more
+precisely a phrase of the form topdec as dened in Figure 8, page 15. Upon
+the following semicolon, the machine will then attempt to parse, elaborate
+and evaluate the phrase returning either a result or, if any of the phases fail,
+an error message. The outcome is signicant for what the user subsequently
+types, so we need to answer questions such as: if the elaboration of a top-
+level declaration succeeds, but its evaluation fails, then does the result of the
+elaboration get recorded in the static basis?
+In practice, ML implementations may provide a directive as a form of
+top-level declaration for including programs from les rather than directly
+from the terminal. In case a le consists of a sequence of top-level declara-
+tions (separated by semicolons) and the machine detects an error in one of
+these, it is probably sensible to abort the execution of the directive. Rather
+than introducing a distinction between, say, batch programs and interactive
+programs, we shall tacitly regard all programs as interactive, and leave to
+implementers to clarify how the inclusion of les, if provided, aects the
+updating of the static and dynamic basis. Moreover, we shall focus on elabo-
+ration and evaluation and leave the handling of parse errors to implementers
+(since it naturally depends on the kind of parser being employed). Hence, in
+this section the execution of a program means the combined elaboration and
+evaluation of the program.
+So far, for simplicity, we have used the same notation Bto stand for both a
+static and a dynamic basis, and this has been possible because we have never
+needed to discuss static and dynamic semantics at the same time. In giving
+the semantics of programs, however, let us rename as StaticBasis the class
+Basis dened in the static semantics of modules, Section 5.1, and let us use
+BSTAT to range over StaticBasis. Similarly, let us rename as DynamicBasis
+the class Basis dened in the dynamic semantics of modules, Section 7.2, and
+let us useBDYNto range over DynamicBasis. We now dene
+Bor (BSTAT;BDYN)2Basis = StaticBasis DynamicBasis :
+8 PROGRAMS 65
+Further, we shall use `STAT for elaboration as dened in Section 5, and
+`DYNfor evaluation as dened in Section 7. Then `will be reserved for the
+execution of programs, which thus is expressed by a sentence of the form
+s;B`program)B0;s0
+This may be read as follows: starting in basis Bwith statesthe execution
+ofprogram results in a basis B0and a state s0.
+It must be understood that executing a program never results in an excep-
+tion. If the evaluation of a topdec yields an exception (for instance because
+of a raise expression) then the result of executing the program \ topdec ;"
+is the original basis together with the state which is in force when the ex-
+ception is generated. In particular, the exception convention of Section 6.7
+is not applicable to the ensuing rules.
+We represent the non-elaboration of a top-level declaration by :::`STAT
+topdec6).
+Programs s;B`program)B0;s0
+BSTAT ofB`STAT topdec6) hs;B`program)B0;s0i
+s;B`topdec ;hprogrami)Bh0i;sh0i(187)
+BSTAT ofB`STAT topdec)B(1)
+STAT
+s;B DYNofB`DYN topdec)p;s0hs0;B`program)B0;s00i
+s;B`topdec ;hprogrami)Bh0i;s0h0i(188)
+BSTAT ofB`STAT topdec)B(1)
+STAT
+s;B DYNofB`DYN topdec)B(1)
+DYN;s0B0=B(B(1)
+STAT;B(1)
+DYN)
+hs0;B0`program)B00;s00i
+s;B`topdec ;hprogrami)B0h0i;s0h0i
+(189)
+Comments:
+(187) A failing elaboration has no eect whatever.
+(188) An evaluation which yields an exception nullies the change in the
+static basis, but does not nullify side-eects on the state which may
+have occurred before the exception was raised.
+8 PROGRAMS 66
+Core language Programs
+A program is called a core language program if it can be parsed in the reduced
+grammar dened as follows:
+1. Replace the denition of top-level declarations by
+topdec ::= strdec
+2. Replace the denition of structure-level declarations by
+strdec ::= dec
+A Appendix: Derived Forms
+Several derived grammatical forms are provided in the Core; they are pre-
+sented in Figures 15, 16 and 17. Each derived form is given with its equivalent
+form. Thus, each row of the tables should be considered as a rewriting rule
+Derived form =)Equivalent form
+and these rules may be applied repeatedly to a phrase until it is transformed
+into a phrase of the bare language. See Appendix B for the full Core gram-
+mar, including all the derived forms.
+In the derived forms for tuples, in terms of records, we use nto mean the
+ML numeral which stands for the natural number n.
+Note that a new phrase class FvalBind of function-value bindings is
+introduced, accompanied by a new declaration form fun tyvarseq fvalbind .
+The mixed forms val tyvarseq rec fvalbind ,val tyvarseq fvalbind and
+fun tyvarseq valbind are not allowed { though the rst form arises during
+translation into the bare language.
+The following notes refer to Figure 17:
+There is a version of the derived form for function-value binding which
+allows the function identier to be inxed; see Figure 21 in Appendix B.
+In the two forms involving withtype , the identiers bound by dat-
+bind and by typbind must be distinct. Then the transformed binding
+datbind0in the equivalent form is obtained from datbind by expanding
+out all the denitions made by typbind . More precisely, if typbind is
+tyvarseq1tycon1=ty1andand tyvarseqntyconn=tyn
+then datbind0is the result of simultaneous replacement (in datbind ) of
+every type expression tyseqityconi(1in) by the corresponding
+dening expression
+tyiftyseqi=tyvarseqig
+Figure 18 shows derived forms for functors. They allow functors to take,
+say, a single type or value as a parameter, in cases where it would seem
+clumsy to \wrap up" the argument as a structure expression.
+Finally, Figure 19 shows the derived forms for specications and sig-
+nature expressions. The last derived form for specications allows sharing
+A APPENDIX: DERIVED FORMS 68
+between structure identiers as a shorthand for type sharing specications.
+The phrase
+spec sharing longstrid1==longstridk
+is a derived form whose equivalent form is
+A APPENDIX: DERIVED FORMS 69
+spec
+sharing type longtycon1=longtycon0
+1
+
+sharing type longtyconm=longtycon0
+m
+determined as follows. First, note that spec species a set of (possibly long)
+type constructors and structure identiers, either directly or via signature
+identiers and include specications. Then the equivalent form contains all
+type-sharing constraints of the form
+sharing type longstridi:longtycon =longstridj:longtycon
+(1i<jk), such that both sides of the equation are long type construc-
+tors specied by spec.
+The meaning of the derived form does not depend on the order of the
+type-sharing constraints in the equivalent form.
+A APPENDIX: DERIVED FORMS 70
+Derived Form Equivalent Form
+Expressions exp
+() { }
+(exp1,,expn) {1=exp1,,n=expn} (n2)
+#lab fn {lab=vid,...} => vid (vidnew)
+case expofmatch (fnmatch )(exp)
+ifexp1then exp2else exp3case exp1of true => exp2
+| false => exp3
+exp1orelse exp2 ifexp1then true else exp2
+exp1andalso exp2 ifexp1then exp2else false
+(exp1;;expn;exp) case exp1of ( ) => (n1)
+
+case expnof ( ) => exp
+letdecin letdecin (n2)
+exp1;;expnend (exp1;;expn) end
+while exp1doexp2 let val rec vid= fn () => (vidnew)
+ifexp1then ( exp2;vid()) else ()
+invid() end
+[exp1,,expn] exp1::::expn:: nil (n0)
+Figure 15: Derived forms of Expressions
+Derived Form Equivalent Form
+Patterns pat
+() { }
+(pat1,,patn) {1=pat1,,n=patn} (n2)
+[pat1,,patn] pat1::::patn:: nil (n0)
+Pattern Rows patrow
+vidh:tyihaspatih,patrowivid=vidh:tyihaspatih,patrowi
+Type Expressions ty
+ty1**tyn {1:ty1,,n:tyn} (n2)
+Figure 16: Derived forms of Patterns and Type Expressions
+A APPENDIX: DERIVED FORMS 71
+Derived Form Equivalent Form
+Function-value Bindings fvalbind
+hopivid= fn vid1=>fnvidn=>
+case ( vid1,,vidn) of
+hopivid atpat11atpat1nh:tyi=exp1 (atpat 11,,atpat 1n)=>exp1h:tyi
+|hopivid atpat21atpat2nh:tyi=exp2 |(atpat 21,,atpat 2n)=>exp2h:tyi
+|  | 
+|hopivid atpatm1atpatmnh:tyi=expm|(atpatm1,,atpatmn)=>expmh:tyi
+handfvalbindi handfvalbindi
+(m;n1;vid1;;vidndistinct and new)
+Declarations dec
+funtyvarseq fvalbind valtyvarseq recfvalbind
+datatype datbind withtype typbind datatype datbind0; type typbind
+abstype datbind withtype typbind abstype datbind0
+with decend with type typbind ;decend
+(see note in text concerning datbind0)
+Figure 17: Derived forms of Function-value Bindings and Declarations
+A APPENDIX: DERIVED FORMS 72
+Derived Form Equivalent Form
+Structure Bindings strbind
+strid :sigexp =strexphand strbindi strid =strexp :sigexphand strbindi
+strid :>sigexp =strexphand strbindistrid =strexp :>sigexphand strbindi
+Structure Expressions strexp
+funid (strdec ) funid ( struct strdec end )
+Functor Bindings funbind
+funid (strid :sigexp ):sigexp0= funid (strid :sigexp ) =
+strexphandfunbindi strexp :sigexp0handfunbindi
+funid (strid :sigexp ):>sigexp0= funid (strid :sigexp ) =
+strexphandfunbindi strexp :>sigexp0handfunbindi
+funid (spec )h:sigexpi= funid (strid: sig spec end ) =
+strexphandfunbindi let open stridinstrexph:sigexpi
+endhandfunbindi
+funid (spec )h:>sigexpi= funid (strid: sig spec end ) =
+strexphandfunbindi let open stridinstrexph:>sigexpi
+endhandfunbindi
+(stridnew)
+Programs program
+exp;hprogrami val it = exp;hprogrami
+Figure 18: Derived forms of Functors, Structure Bindings and Programs
+A APPENDIX: DERIVED FORMS 73
+Derived Form Equivalent Form
+Specications spec
+type tyvarseq tycon =ty include
+sig type tyvarseq tycon
+end where type tyvarseq tycon =ty
+type tyvarseq1tycon1=ty1 type tyvarseq1tycon1=ty1
+and type
+ 
+and tyvarseqntyconn=tyn type tyvarseqntyconn=tyn
+include sigid1sigidn include sigid1;;includesigidn
+spec sharing longstrid1= spec
+=longstridk sharing type longtycon1=
+longtycon0
+1
+
+sharing type longtyconm=
+longtycon0
+m
+(see note in text concerning longtycon1;:::; longtycon0
+m)
+Signature Expressions sigexp
+sigexp sigexp
+where type tyvarseq1longtycon1=ty1 where type tyvarseq1longtycon1=ty1
+and type where type
+ 
+and type tyvarseqnlongtyconn=tyn where type tyvarseqnlongtyconn=tyn
+Figure 19: Derived forms of Specications and Signature Expressions
+
+B Appendix: Full Grammar
+The full grammar of programs is exactly as given at the start of Section 8.
+The full grammar of Modules consists of the grammar of Figures 5{8
+in Section 3, together with the derived forms of Figures 18 and 19 in Ap-
+pendix A.
+The remainder of this Appendix is devoted to the full grammar of the
+Core. Roughly, it consists of the grammar of Section 2 augmented by the de-
+rived forms of Appendix A. But there is a further dierence: two additional
+subclasses of the phrase class Exp are introduced, namely AppExp (appli-
+cation expressions) and InfExp (inx expressions). The inclusion relation
+among the four classes is as follows:
+AtExpAppExpInfExpExp
+The eect is that certain phrases, such as \ 2 + whiledo", are now
+disallowed.
+The grammatical rules are displayed in Figures 20, 21, 22 and 23. The
+grammatical conventions are exactly as in Section 2, namely:
+The bracketshienclose optional phrases.
+For any syntax class X (over which xranges) we dene the syntax class
+Xseq (over which xseqranges) as follows:
+xseq ::=x (singleton sequence)
+(empty sequence)
+(x1,,xn)(sequence,n1)
+(Note that the \" used here, a meta-symbol indicating syntactic rep-
+etition, must not be confused with \ ..." which is a reserved word of
+the language.)
+Alternative forms for each phrase class are in order of decreasing prece-
+dence. This precedence resolves ambiguity in parsing in the following
+way. Suppose that a phrase class | we take expas an example | has
+two alternative forms F1andF2, such that F1ends with an expandF2
+starts with an exp. A specic case is
+F1:ifexp1then exp2else exp3
+F2:exphandle match
+B APPENDIX: FULL GRAMMAR 76
+It will be enough to see how ambiguity is resolved in this specic case.
+Suppose that the lexical sequence
+ ifthenelse exphandle
+is to be parsed, where expstands for a lexical sequence which is already
+determined as a subphrase (if necessary by applying the precedence
+rule). Then the higher precedence of F2(in this case) dictates that exp
+associates to the right, i.e. that the correct parse takes the form
+ ifthenelse (exphandle)
+not the form
+(ifthenelse exp)handle
+Note particularly that the use of precedence does not decrease the class
+of admissible phrases; it merely rejects alternative ways of parsing cer-
+tain phrases. In particular, the purpose is not to prevent a phrase,
+which is an instance of a form with higher precedence, having a con-
+stituent which is an instance of a form with lower precedence. Thus for
+example
+ifthen whiledoelse whiledo
+is quite admissible, and will be parsed as
+ifthen (whiledo)else (whiledo)
+L (resp. R) means left (resp. right) association.
+The syntax of types binds more tightly than that of expressions.
+Each iterated construct (e.g. match ,) extends as far right as pos-
+sible; thus, parentheses may be needed around an expression which
+terminates with a match, e.g. \ fnmatch ", if this occurs within a
+larger match.
+B APPENDIX: FULL GRAMMAR 77
+atexp ::= scon special constant
+hopilongvid value identier
+{hexprowi} record
+#lab record selector
+() 0-tuple
+(exp1,,expn) n-tuple,n2
+[exp1,,expn] list,n0
+(exp1;;expn) sequence,n2
+letdecinexp1;;expnend local declaration, n1
+(exp)
+exprow ::= lab=exph,exprowi expression row
+appexp ::= atexp
+appexp atexp application expression
+infexp ::= appexp
+infexp1vid infexp2 inx expression
+exp ::= infexp
+exp:ty typed (L)
+exp1andalso exp2 conjunction
+exp1orelse exp2 disjunction
+exphandle match handle exception
+raise exp raise exception
+ifexp1then exp2else exp3 conditional
+while exp1doexp2 iteration
+case expofmatch case analysis
+fnmatch function
+match ::= mruleh|matchi
+mrule ::= pat=>exp
+Figure 20: Grammar: Expressions and Matches
+B APPENDIX: FULL GRAMMAR 78
+dec ::= valtyvarseq valbind value declaration
+funtyvarseq fvalbind function declaration
+type typbind type declaration
+datatype datbindhwithtype typbindidatatype declaration
+datatype tycon -=-datatype longtycon datatype replication
+abstype datbindhwithtype typbindi abstype declaration
+with decend
+exception exbind exception declaration
+local dec1indec2end local declaration
+open longstrid1longstridn open declaration, n1
+empty declaration
+dec1h;idec2 sequential declaration
+infixhdivid1vidn inx (L) directive, n1
+infixrhdivid1vidn inx (R) directive, n1
+nonfix vid1vidn nonx directive, n1
+valbind ::= pat=exphandvalbindi
+recvalbind
+fvalbind ::=hopivid atpat11atpat1nh:tyi=exp1m;n1
+|hopivid atpat21atpat2nh:tyi=exp2 See also note below
+| 
+|hopivid atpatm1atpatmnh:tyi=expm
+handfvalbindi
+typbind ::= tyvarseq tycon =tyhandtypbindi
+datbind ::= tyvarseq tycon =conbindhanddatbindi
+conbind ::=hopividhoftyih|conbindi
+exbind ::=hopividhoftyihandexbindi
+hopivid=hopilongvidhandexbindi
+Note: In the fvalbind form, if vidhas inx status then either opmust be
+present, or vidmust be inxed. Thus, at the start of any clause, \ opvid
+(atpat ,atpat0)" may be written \ (atpat vid atpat0)"; the parentheses
+may also be dropped if \ :ty" or \ =" follows immediately.
+Figure 21: Grammar: Declarations and Bindings
+B APPENDIX: FULL GRAMMAR 79
+atpat ::= wildcard
+scon special constant
+hopilongvid value identier
+{hpatrowi} record
+() 0-tuple
+(pat1,,patn) n-tuple,n2
+[pat1,,patn] list,n0
+(pat)
+patrow ::= ... wildcard
+lab=path,patrowi pattern row
+vidh:tyihaspatih,patrowilabel as variable
+pat ::= atpat atomic
+hopilongvid atpat constructed value
+pat1vid pat2 constructed value (inx)
+pat:ty typed
+hopividh:tyiaspat layered
+Figure 22: Grammar: Patterns
+ty ::= tyvar type variable
+{htyrowi} record type expression
+tyseq longtycon type construction
+ty1**tyn tuple type, n2
+ty->ty0function type expression (R)
+(ty)
+tyrow ::= lab:tyh,tyrowitype-expression row
+Figure 23: Grammar: Type expressions
+
+C Appendix: The Initial Static Basis
+In this appendix (and the next) we dene a minimal initial basis for ex-
+ecution. Richer bases may be provided by libraries. We shall indicate
+components of the initial basis by the subscript 0. The initial static basis is
+B0=T0;F0;G0;E0, whereF0=fg,G0=fgand
+T0=fbool;int;real;string;char;word;list;ref;exng
+The members of T0are type names, not type constructors; for convenience we
+have used type-constructor identiers to stand also for the type names which
+are bound to them in the initial static type environment TE0. Of these type
+names, list and ref have arity 1, the rest have arity 0; all except exn
+and real admit equality. Finally, E0= (SE0;TE 0;VE 0), whereSE0=fg,
+whileTE0andVE0are shown in Figures 24 and 25, respectively.
+tycon7!(,fvid17!(1;is1);:::; vidn7!(n;isn)g) (n0)
+unit7!( ():fg,fg)
+bool7!(bool ,ftrue7!(bool;c);false7!(bool;c)g)
+int7!(int,fg)
+word7!(word ,fg)
+real7!(real ,fg)
+string7!(string ,fg)
+char7!(char ,fg)
+list7!(list ,fnil7!(8'a:'a list;c),
+::7!(8'a:'a'a list!'a list;c)g)
+ref7!(ref,fref7!(8'a:'a!'a ref;c)g)
+exn7!(exn,fg)
+Figure 24: Static TE0
+C APPENDIX: THE INITIAL STATIC BASIS 82
+NONFIX INFIX
+vid7!(;is) vid7!(;is)
+ref7!(8'a:'a!'a ref ,c)Precedence 5, right associative :
+nil7!(8'a:'a list ,c) ::7!(8'a:'a'a list!'a list ,c)
+true7!(bool;c) Precedence 4, left associative :
+false7!(bool;c) =7!(8''a:''a''a!bool;v)
+Match7!(exn;e) Precedence 3, left associative :
+Bind7!(exn;e) :=7!(8'a:'a ref'a!fg;v)
+Note: In type schemes we have taken the liberty of writing ty1ty2in place
+off17!ty1;27!ty2g.
+Figure 25: Static VE0
+
+D Appendix: The Initial Dynamic Basis
+We shall indicate components of the initial basis by the subscript 0. The
+initial dynamic basis is B0=F0;G0;E0, whereF0=fg,G0=fgand
+E0= (SE0;TE 0;VE 0), whereSE0=fg,TE0is shown in Figure 26 and
+VE0=f=7!(=;v);:=7!(:=;v);Match7!(Match;e);Bind7!(Bind;e);
+true7!(true;c);false7!(false;c);
+nil7!(nil;c);::7!(::;c);ref7!(ref;c)g.
+tycon7! f vid17!(v1;is1);:::; vidn7!(vn;isn)g(n0)
+unit7! fg
+bool7! f true7!(true;c);false7!(false;c)g
+int7! fg
+word7! fg
+real7! fg
+string7! fg
+char7! fg
+list7! f nil7!(nil;c);::7!(::;c)g
+ref7! f ref7!(ref;c)g
+exn7! fg
+Figure 26: Dynamic TE0
+
+E Overloading
+Two forms of overloading are available:
+Certain special constants are overloaded. For example, 0w5may have
+type word or some other type, depending on the surrounding program
+text;
+Certain operators are overloaded. For example, +may have type int
+int!intorrealreal!real , depending on the surrounding
+program text;
+Programmers cannot dene their own overloaded constants or operators.
+Although a formal treatment of overloading is outside the scope of this
+document, we do give a complete list of the overloaded operators and of
+types with overloaded special constants. This list is consistent with the
+Basis Library[18].
+Every overloaded constant and value identier has among its types a
+default type , which is assigned to it, when the surrounding text does not
+resolve the overloading. For this purpose, the surrounding text is no larger
+than the smallest enclosing structure-level declaration; an implementation
+may require that a smaller context determines the type.
+E.1 Overloaded special constants
+Libraries may extend the set T0of Appendix C with additional type names.
+Thereafter, certain subsets of T0have a special signicance; they are called
+overloading classes and they are:
+Int f intg
+Real f realg
+Word f wordg
+String f stringg
+Char f charg
+WordInt = Word [Int
+RealInt = Real [Int
+Num = Word [Real[Int
+NumTxt = Word [Real[Int[String[Char
+Among these, the ve rst (Int, Real, Word, String and Char) are said to
+bebasic ; the remaining are said to be composite . The reason that the basic
+E OVERLOADING 87
+NONFIX INFIX
+var7!set of monotypes var7!set of monotypes
+abs7!realint!realint Precedence 7, left associative :
+~7!realint!realint div7!wordintwordint!wordint
+mod7!wordintwordint!wordint
+*7!numnum!num
+/7!RealReal!Real
+Precedence 6, left associative :
++7!numnum!num
+-7!numnum!num
+Precedence 4, left associative :
+<7!numtxtnumtxt!numtxt
+>7!numtxtnumtxt!numtxt
+<=7!numtxtnumtxt!numtxt
+>=7!numtxtnumtxt!numtxt
+Figure 27: Overloaded identiers
+classes are specied using rather than = is that libraries may extend each
+of the basic overloading classes with further type names. Special constants
+are overloaded within each of the basic overloading classes. However, the
+basic overloading classes must be arranged so that every special constant
+can be assigned types from at most one of the basic overloading classes.
+For example, to 0w5may be assigned type word , or some other member of
+Word, depending on the surrounding text. If the surrounding text does not
+determine the type of the constant, a default type is used. The default types
+for the ve sets are int,real ,word ,string andchar respectively.
+Once overloading resolution has determined the type of a special constant,
+it is a compile-time error if the constant does not make sense or does not
+denote a value within the machine representation chosen for the type. For
+example, an escape sequence of the form \uxxxx in a string constant of 8-bit
+characters only makes sense if xxxx denotes a number in the range [0 ;255].
+E.2 Overloaded value identiers
+Overloaded identiers all have identier status v. An overloaded identier
+may be re-bound with any status ( v,cande) but then it is not overloaded
+within the scope of the binding.
+E OVERLOADING 88
+The overloaded identiers are given in Figure 27. For example, the entry
+abs7!realint!realint
+states that absmay assume one of the types ft!tjt2RealIntg. In
+general, the same type name must be chosen throughout the entire type of
+the overloaded operator; thus absdoes not have type real!int.
+The operator /is overloaded on all members of Real, with default type
+realreal!real . The default type of any other identier is that one
+of its types which contains the type name int. For example, the program
+fun double(x) = x + x; declares a function of type intint!int,
+while fun double(x:real) = x + x; declares a function of type real
+real!real .
+The dynamic semantics of the overloaded operators is dened in [18].
+F Appendix: The Development of ML
+This Appendix records the main stages in the development of ML, and the
+people principally involved. The main emphasis is upon the design of the
+language; there is also a section devoted to implementation. On the other
+hand, no attempt is made to record work on applications of the language.
+Origins
+ML and its semantic description have evolved over a period of about twenty
+years. It is a fusion of many ideas from many people; in this appendix we
+try to record and to acknowledge the important precursors of its ideas, the
+important inuences upon it, and the important contributions to its design,
+implementation and semantic description.
+ML, which stands for meta language , was conceived as a medium for nd-
+ing and performing proofs in a formal logical system. This application was
+the focus of the initial design eort, by Robin Milner in collaboration rst
+with Malcolm Newey and Lockwood Morris, then with Michael Gordon and
+Christopher Wadsworth [20]. The intended application to proof aected the
+design considerably. Higher order functions in full generality seemed neces-
+sary for programming proof tactics and strategies, and also a robust type
+system (see below). At the same time, imperative features were important
+for practical reasons; no-one had experience of large useful programs written
+in a pure functional style. In particular, an exception-raising mechanism was
+highly desirable for the natural presentation of tactics.
+The full denition of this rst version of ML was included in a book [19]
+which describes LCF, the proof system which ML was designed to support.
+The details of how the proof application exerted an inuence on design is
+reported by Milner [39]. Other early inuences were the applicative languages
+already in use in Articial Intelligence, principally LISP [36], ISWIM [28] and
+POP2 [10].
+Polymorphic types
+The polymorphic type discipline and the associated type-assignment algo-
+rithm were
+prompted by the need for security; it is vital to know that when a program
+F APPENDIX: THE DEVELOPMENT OF ML 90
+produces an object which it claims to be a theorem, then it is indeed a the-
+orem. A type discipline provides the security, but a polymorphic discipline
+also permits considerable exibility.
+The key ideas of the type discipline were evolved in combinatory logic
+by Haskell Curry and Roger Hindley, who arrived at dierent but equivalent
+algorithms for computing principal type schemes. Curry's [14] algorithm
+was by equation-solving; Hindley [26] used the unication algorithm of Alan
+Robinson [48] and also presented the precursor of our type inference sys-
+tem. James Morris [43] independently gave an equation-solving algorithm
+very similar to Curry's. The idea of an algorithm for nding principal type
+schemes is very natural and may well have been known earlier. Roger Hindley
+has pointed out that Carew Meredith's inference rule for propositional logic
+called Condensed Detachment, dened in the early 1950s, clearly suggests
+that he knew such an algorithm [37].
+Milner [38], during the design of ML, rediscovered principal types and
+their calculation by unication, for a language (slightly richer than combina-
+tory logic) containing local declarations. He and Damas [15] presented the
+ML type inference systems following Hindley's style. Damas [16], using ideas
+from Michael Gordon, also devised the rst mathematical treatment of poly-
+morphism in the presence of references and assignment. Tofte [54] produced
+a dierent scheme employing so-called imperative types , which was adopted
+in the original version of the language. This approach has been superseded in
+the present language by a simpler scheme, suggested by Tofte [54], Andrew
+Wright [57], and Xavier Leroy [29], according to which polymorphic bindings
+are restricted to non-expansive expressions.
+Renement of the Core Language
+Two movements led to the re-design of ML. One was the work of Rod Burstall
+and his group on specications, crystallised in the specication language
+CLEAR [11] and in the functional programming language HOPE [12]; the
+latter was for expressing executable specications. The outcome of this work
+which is relevant here was twofold. First, there were elegant programming
+features in HOPE, particularly pattern matching and clausal function de-
+nitions; second, there were ideas on modular construction of specications,
+using signatures in the interfaces. A smaller but signicant movement was
+by Luca Cardelli, who extended the data-type repertoire in ML by adding
+named records and variant types.
+F APPENDIX: THE DEVELOPMENT OF ML 91
+In 1983, Milner (prompted by Bernard Sufrin) wrote the rst draft of a
+standard form of ML attempting to unite these ideas; over the next three
+years it evolved into the Standard ML core language. Notable here was the
+harmony found among polymorphism, HOPE patterns and Cardelli records,
+and the nice generalisations of ML exceptions due to ideas from Alan Mycroft,
+Brian Monahan and Don Sannella. A simple stream-based I/O mechanism
+was developed from ideas of Cardelli by Milner and Harper. The Standard
+ML core language is described in detail in a composite report [23] which
+also contains a description of the I/O mechanism and MacQueen's proposal
+for program modules (see later for discussion of this). Since then only few
+changes to the core language have occurred. Milner proposed equality types,
+and these were added, together with a few minor adjustments [40]. The last
+development before the 1990 Denition was in the exception mechanism,
+by MacQueen using an idea from Burstall [3]; it harmonized the ideas of
+exception and data type construction.
+Modules
+Besides contributory ideas to the core language, HOPE [12] contained a sim-
+ple notion of program module. The most important and original feature of
+ML modules, however, stems from the work on parameterised specications
+in CLEAR [11]. MacQueen, who was a member of Burstall's group at the
+time, designed [34] a new parametric module feature for HOPE inspired by
+the CLEAR work. He later extended the parameterisation ideas by a novel
+method of specifying sharing of components among the structure parame-
+ters of a functor, and produced a draft design which accommodated features
+already present in ML { in particular the polymorphic type system. This de-
+sign was discussed in detail at Edinburgh, leading to MacQueen's rst report
+on modules [23].
+Thereafter, the design came under close scrutiny through a draft op-
+erational static semantics and prototype implementation of it by Harper,
+through Kevin Mitchell's implementation of the evaluation, through a deno-
+tational semantics written by Don Sannella, and then through further work
+on operational semantics by Harper, Milner, and Tofte. (More is said about
+this in the later section on Semantics.) In all of this work the central ideas
+withstood scrutiny, while it also became clear that there were gaps in the
+design and ambiguities in interpretation. (An example of a gap was the
+inability to specify sharing between a functor argument structure and its
+F APPENDIX: THE DEVELOPMENT OF ML 92
+result structure; an example of an ambiguity was the question of whether
+sharing exists in a structure over and above what is specied in the signature
+expression which accompanies its declaration.)
+Much discussion ensued; it was possible for a wider group to comment
+on modules through using Harper's prototype implementation, while Harper,
+Milner and Tofte gained understanding during development of this seman-
+tics. In parallel, Sannella and Tarlecki explored the implications of modules
+for the methodology of program development [49]. Tofte, in his thesis [53],
+proved several technical properties of modules in a skeletal language, which
+generated considerable condence in this design. A key point in this devel-
+opment was the proof of the existence of principal signatures, and, in the
+careful distinction between the notion of enrichment of structures, which al-
+lows more polymorphism and more components, and realisation which allows
+more sharing.
+At a meeting in Edinburgh in 1987 a choice of two designs was presented,
+hinging upon whether or not a functor application should coerce its actual
+argument to its argument signature. The meeting chose coercion, and there-
+after the production of Section 5 of this report { the static semantics of
+modules { was a matter of detailed care. That section is undoubtedly the
+most original and demanding part of this semantics, just as the ideas of
+MacQueen upon which it is based are the most far-reaching extension to the
+original design of ML.
+Considerable experience was gained in implementing, programming with,
+and teaching the language during the nearly ten years since the denition was
+rst published. Based on this experience a number of design decisions were
+revisited at a meeting of the authors in Cambridge at the end of 1995. At
+this meeting it was decided to make several modest, but signicant, changes
+to the language in order to simplify the semantics and to correct some short-
+comings that had come to light. The most important of these changes was the
+replacement of the imperative type discipline by the so-called value restric-
+tion (discussed above), the elimination of structure sharing as a separate
+concept from type sharing, and the introduction of the closely connected
+mechanisms of opaque signature matching and type abbreviations in signa-
+tures. An important impetus for these changes to the modules language was
+the work of Leroy [30], and Harper and Lillibridge [21] on the type-theoretic
+interpretation of modules (described below).
+F APPENDIX: THE DEVELOPMENT OF ML 93
+Implementation
+The rst implementation of ML was by Malcolm Newey, Lockwood Mor-
+ris and Robin Milner in 1974, for the DEC10. Later Mike Gordon and
+Chris Wadsworth joined; their work was mainly in specialising ML towards
+machine-assisted reasoning. Around 1980 Luca Cardelli implemented a ver-
+sion on VAX; his work was later extended by Alan Mycroft, Kevin Mitchell
+and John Scott. This version contained one or two new data-type features,
+and was based upon the Functional Abstract Machine (FAM) , a virtual ma-
+chine which has been a considerable stimulus to later implementation. By
+providing a reasonably ecient implementation, this work enabled the lan-
+guage to be taught to students; this, in turn, prompted the idea that it could
+become a useful general purpose language.
+In Gothenburg, an implementation was developed by Lennart Augustsson
+and Thomas Johnsson in 1982, using lazy evaluation rather than call-by-
+value; the result was called Lazy ML and is described in [6]. This work is part
+of continuing research in many places on implementation of lazy evaluation
+in pure functional languages. But for ML, which includes exceptions and
+assignment, the emphasis has been mainly upon strict evaluation (call-by-
+value).
+In Cambridge, in the early 1980s, Larry Paulson made considerable im-
+provements to the Edinburgh ML compiler, as part of his wider programme of
+improving Edinburgh LCF to become Cambridge LCF [45]. This system has
+supported larger proofs than the Edinburgh system, and with greater conve-
+nience; in particular, the compiled ML code ran four to ve times faster.
+Around the same time G erard Huet at INRIA (Versailles) adapted ML
+to Maclisp on Multics, again for use in machine-assisted proof. There was
+close collaboration between INRIA and Cambridge in this period. ML has
+undergone a separate development in the group at INRIA on the CAML
+language [13]. Work on CAML included the development of several exten-
+sions to the core language, notably updatable elds in record types, values
+with dynamic types, support for lazy evaluation, and handling of embedded
+languages with user-dened syntax. It did not, however, include modules.
+The rst implementation of the Standard ML core language was by Mitchell,
+Mycroft and Scott at Edinburgh, around 1984. The prototype implementa-
+tion of modules, before that part of the language settled down, was done in
+1985-6; Mitchell dealt with evaluation, while Harper tackled the elaboration
+(or `signature checking') which raised problems of a kind not previously en-
+F APPENDIX: THE DEVELOPMENT OF ML 94
+countered. Harper's implementation employed a form of unication that was
+later adopted in the static semantics of modules.
+At around the same time the Poly/ML implementation began with a
+suggestion from Mike Gordon that an interesting application of Matthews'
+Poly language would be to implement Standard ML. Important experience
+was gained through Matthews' early implementation of the core language,
+followed by several versions of the modules language as they were devised.
+Poly/ML features arbitrary precision arithmetic, a process package, and a
+windowing system. Considerable experience has been gained with the com-
+piler, notably by Larry Paulson at Cambridge and by Abstract Hardware
+Limited (AHL).
+The Standard ML of New Jersey (SML/NJ) system has been in active
+development since 1986 [5, 2]. Initially started by David MacQueen at Bell
+Laboratories and Andrew Appel at Princeton University, the project has also
+beneted from signicant contributions by Matthias Blume, Emden Gansner,
+Lal George, John Reppy and Zhong Shao. SML/NJ is a robust and com-
+plete environment for Standard ML that supports the implementation of
+large software systems and generates ecient code for a number of dierent
+hardware and software platforms. SML/NJ also serves as a laboratory for
+compiler research: in implementations of module systems for ML; code opti-
+mization based on continuation-passing style; ecient pattern matching; and
+very fast heap allocation and garbage collection. Dozens of researchers have
+contributed to the development of the compiler, in such areas as ecient
+closure representations, rst-class continuations, type-directed compilation,
+concurrent programming, portable code generators, separate compilation,
+and register allocation. SML/NJ has also been widely used to explore ex-
+tending SML with concurrency features.
+In 1989, Mads Tofte, Nick Rothwell and David N. Turner started work on
+theML Kit Compiler in Edinburgh. The ML Kit is a direct translation of the
+1990 Denition into a collection of Standard ML modules, emphasis being on
+clarity rather than eciency. During 1992 and 1993, Version 1 of the ML Kit
+was completed, mostly through the work of Nick Rothwell at Edinburgh and
+Lars Birkedal at DIKU[9]. In 1994, region inference was added to the ML
+Kit, by Mads Tofte. Lars Birkedal wrote a region-based C-code generator
+and a runtime system in C. In 1995, Martin Elsman and Niels Hallenberg
+extended this work to generate native code for the HP PA-RISC architecture.
+Harlequin Ltd. began the implementation of a commercial compiler in
+1990. The MLWorks system is a fully-featured graphical programming en-
+F APPENDIX: THE DEVELOPMENT OF ML 95
+vironment, including an interactive debugger, inspector, browser, extensive
+proling facilities, separate compilation and delivery, a foreign-language in-
+terface, and libraries for threads and windowing systems.
+Caml Light , a lightweight reimplementation of CAML released in 1991,
+added a simple module system in the style of Modula-2, targeted towards sep-
+arate compilation of modules: structures and signatures are identied with
+les, functors and multiple views of a structure are not supported. These
+were added in the Caml Special Light implementation in 1995, while preserv-
+ing the support for separate compilation. Caml Special Light and the present
+version of Standard ML share several important simplications, such as the
+value restriction on polymorphism, type denitions in signatures, and the
+lack of support for structure sharing. The static semantics for Caml Special
+Light is based on the type-theoretic properties of dependent function types
+(functor signatures) and manifest types (type denitions in signatures) [30].
+Moscow ML is an implementation of core Standard ML, created in 1994
+by Sergei Romanenko in Moscow and Peter Sestoft in Copenhagen. The
+Caml Light system was used to implement the dynamic semantics, and the
+ML Kit guided the implementation of the static semantics. The result is a
+compact and robust implementation, suitable for teaching.
+The TIL (Typed Intermediate Languages) compiler developed at Carnegie
+Mellon University by Greg Morrisett, David Tarditi, Perry Cheng, Chris
+Stone, Robert Harper, and Peter Lee demonstrates the use of types in com-
+pilation. All but the last few stages of TIL are expressed as type-directed
+and type-preserving transforms. Types are used at run time to support un-
+boxed, untagged data representations and natural calling conventions in the
+presence of variable types and garbage collection. TIL employs a wide va-
+riety of conventional functional language optimizations found in other SML
+compilers, as well as a set of loop-oriented optimizations. A description of
+the compiler and an analysis of its performance appears in [52].
+Other currently active implementations are by Michael Hedlund at the
+Rutherford-Appleton Laboratory, by Robert Duncan, Simon Nichols and
+Aaron Sloman at the University of Sussex ( POPLOG ) and by Malcolm Newey
+and his group at the Australian National University.
+Semantics
+The description of the rst version of ML [19] was informal, and in an op-
+erational style; around the same time a denotational semantics was written,
+F APPENDIX: THE DEVELOPMENT OF ML 96
+but never published, by Mike Gordon and Robin Milner. Meanwhile struc-
+tured operational semantics, presented as an inference system, was gaining
+credence as a tractable medium. This originates with the reduction rules
+of-calculus, but was developed more widely through the work of Plotkin
+[47], and also by Milner. This was at rst only used for dynamic semantics,
+but later the benet of using inference systems for both static and dynamic
+semantics became apparent. This advantage was realised when Gilles Kahn
+and his group at INRIA were able to execute early versions of both forms
+of semantics for the ML core language using their Typol system [17]. The
+static and dynamic semantics of the core language reached a nal form mostly
+through work by Tofte and Milner.
+The modules of ML presented little diculty as far as dynamic semantics
+is concerned, but the static semantics of modules was a concerted eort by
+several people. MacQueen's original informal description [23] was the start-
+ing point; Sannella wrote a denotational semantics for several versions, which
+showed that several issues had not been settled by the informal description.
+Robert Harper, while writing the rst implementation of modules, made the
+rst draft of the static semantics. Harper's version made clear the impor-
+tance of structure names; work by Milner and Tofte introduced further ideas
+including realisation; thereafter a concerted eort by all three led to several
+suggestions for modication of the language, and a small range of alterna-
+tive interpretations; these were assessed in discussion with MacQueen, and
+more widely with the principal users of the language, and an agreed form
+was reached.
+Concurrently with the formulation of the Denition of Standard ML,
+Harper and Mitchell took up the challenge adumbrated by MacQueen [33] to
+nd a type-theoretic interpretation of Standard ML [25]. This work led to the
+formulation of the XML language, an explicitly-typed -calculus that cap-
+tured many aspects of Standard ML. Although incomplete, their approach
+formed the basis for a number of subsequent studies, including the work of
+Harper and Lillibridge [21] and Leroy [30] on the type-theoretic interpreta-
+tion of modules. This work inuenced the decision to revise the language,
+and culminated in a type-theoretic interpretation of the present language by
+Harper and Stone [51]. The TIL/ML compiler (described above) is based
+directly on this interpretation.
+There is no doubt that the interaction between design and semantic de-
+scription of modules has been one of the most striking phases in the entire
+language development, leading (in the opinion of those involved) to a high
+F APPENDIX: THE DEVELOPMENT OF ML 97
+degree of condence both in the language and in the semantics.
+Program Libraries
+During 1989-1991, Dave Berry produced the rst program library for Stan-
+dard ML[7, 8]. The SML/NJ system is distributed with a rich library or-
+ganised by Emden Gansner and John Reppy; this library was the starting
+point for the SML Basis Library . The SML Basis Library [18] has been
+developed over the past three years in a partnership between the SML/NJ
+eort, MLWorks , and Moscow ML . The resulting library is a much improved
+and extended replacement of the initial basis dened in the 1990 Denition
+of Standard ML.
+
+G Appendix: What is New?
+This appendix gives an overview of how the present Denition diers from
+the 1990 Denition of Standard ML[42]. For the purpose of this appendix,
+we write SML '90 for the language dened by the 1990 Denition and SML
+'97 for the present language. For each major change, we give its rationale
+and an overview of its practical implications. Also, the index may be used
+for locating changes.
+G.1 Type Abbreviations in Signatures
+There are cases of type sharing which cannot be expressed in SML '90 sig-
+natures although they arise in structures. For example, there is no SML '90
+signature which precisely describes the relationship between sandtin
+structure a =
+struct
+datatype s = C
+type t = s * s
+end
+In SML '97, one can write type abbreviations in signatures, e.g.,
+signature A =
+sig
+type s
+type t = s * s
+end
+The need for type abbreviations in signatures was clear when SML '90 was
+dened. However, type abbreviations were not included since, in the pres-
+ence of both structure sharing and type abbreviations, principal signatures
+do not exist[41] { and the SML '90 Denition depended strongly upon the
+notion of principal signature. Subsequently, Harper's and Lillibridge's work
+on translucent sums[22] and Leroy's work on modules[30] showed that, in
+the absence of structure sharing and certain other features of the SML '90
+signatures, type abbreviations in signatures are possible. Type abbreviations
+in signatures were implemented by David MacQueen in SML/NJ 0.93 and
+by Xavier Leroy in Caml Special Light [31].
+G APPENDIX: WHAT IS NEW? 100
+In SML '97, structure sharing has been removed (see Section G.3 below).
+Type abbreviations are not included directly, but they arise as a derived
+form, as follows. First, a new form of signature expression is allowed:
+sigexp where type tyvarseq longtycon =ty
+Here longtycon has to be specied by sigexp . The type expression tymay
+refer to type constructors which are present in the basis in which the whole
+signature expression is elaborated, but not to type constructors specied in
+sigexp .
+The eect of the where type is, roughly speaking, to instantiate longtycon
+toty. For example, the following sequence of declarations is legal:
+signature SIG1 = sig type t; val x: t end;
+signature SIG2 = SIG1 where type t = int*int;
+structure S1: SIG1 = struct type t = real; val x = 1.0 end;
+structure S2: SIG2 = struct type t = int*int; val x = (5, 7) end;
+Next, a type abbreviation is a derived form. For example, type u = t*t
+is equivalent to include sig type u end where type u = t*t . In SML
+'97 it is allowed to include an arbitrary signature expression, not just a
+signature identier.
+G.2 Opaque Signature Matching
+In imposing a signature on a structure, one often wants the types of the
+resulting structure to be \abstract" in order to hide their implementation.
+(Signature matching in SML '90 hides components, but does not hide type
+sharing.) MacQueen originally suggested and implemented an abstraction
+declaration for this purpose[32]. In the Commentary[41] it was pointed out
+that the issue is the semantics of matching. SML '97 provides two kinds of
+matching, as new forms of structure expression:
+strexp :sigexp
+strexp :>sigexp
+The rst ( :) is the SML '90 signature matching; the second ( :>) isopaque
+matching . Opaque matching can be applied to the result structure of a
+functor; thus it is more general than MacQueen's abstraction declaration.
+In CAML Special Light, all signature matching is opaque.
+G APPENDIX: WHAT IS NEW? 101
+With opaque matching, types in the resulting structure will be abstract,
+to precisely the degree expressed in sigexp . Thus
+signature Sig =
+sig
+type t = int
+val x: t
+type u
+val y: u
+end;
+structure S1:> Sig =
+struct type t = int
+val x = 3
+type u = real
+val y = 3.0
+end
+val r = S1.x + 1
+is legal, but a subsequent declaration val s = S1.y + 1.5 will fail to elab-
+orate. Similarly, consider the functor declaration:
+functor Dict(type t; val leq: t*t->int):>
+sig type u = t*t
+type 'a dict
+end =
+struct
+type u = t*t
+type 'a dict = (t * 'a) list
+end
+When applied, Dict will propagate the identity of the type tfrom argument
+to result, but it will produce a fresh dict type upon each application.
+Types which are specied as \abstract" in a opaque functor result signa-
+ture give rise to generation of fresh type names upon each application of the
+functor, even if the functor body is a constant structure. For example, after
+the elaboration of
+structure A = struct type t = int end
+functor f():> sig type t end = A
+structure B = f()
+and C = f();
+G APPENDIX: WHAT IS NEW? 102
+the two types B.tandC.tare dierent.
+G.3 Sharing
+Structure sharing is a key idea in MacQueen's original Modules design[32].
+The theoretical aspects of structure sharing have been the subject of con-
+siderable research attention[24, 53, 1, 55, 35]. However, judging from expe-
+rience, structure sharing is not often used in its full generality, namely to
+ensure identity of values. Furthermore, experience from teaching suggests
+that the structure sharing concept is somewhat hard to grasp. Finally, the
+semantic accounts of structure sharing that have been proposed are rather
+complicated.
+The static semantics of SML '97 has no notion of structure sharing. How-
+ever, SML '97 does provide a weaker form of structure sharing constraints,
+in which structure sharing is regarded as a derived form, equivalent to a
+collection of type sharing constraints.
+G.3.1 Type Sharing
+In SML '90, a type sharing constraint sharing type longtycon1==longtyconn
+was an admissible form of specication. In SML '97 such a constraint does
+not stand by itself as a specication, but may be used to qualify a specica-
+tion. Thus there is a new form of specication, which we shall call a qualied
+specication:
+spec sharing type longtycon1==longtyconn
+Here the long type constructors have to be specied by spec. The type
+constructors may have been specied by type ,eqtype ordatatype speci-
+cations, or indirectly through signature identiers and include . In order for
+the specication to be legal, all the type constructors must denote exible
+type names. More precisely, let Bbe the basis in which the qualied speci-
+cation is elaborated. Let us say that a type name tisrigid (inB)ift2TofB
+and thattisexible (in B)otherwise. For example intis rigid in the initial
+basis and every datatype declaration introduces additional rigid type names
+into the basis. For the qualied specication to elaborate in basis B, it is
+required that each longtyconidenotes a type name which is exible in B. In
+particular, no longtyconimay denote a type function which is not also a type
+name (e.g., a longtycon must not denote () :ss).
+G APPENDIX: WHAT IS NEW? 103
+For example, the two signature expressions
+sig sig
+type s type s
+type t datatype t = C
+sharing type s = t sharing type s = t
+end end
+are both legal. By contrast, the signature expressions
+sig sig
+type s type s = int
+type t = s*s datatype t = C
+sharing type s = t sharing type s = t
+end end
+are both illegal.
+G.3.2 The equality attribute of specied types
+Ifspec sharing type longtycon1==longtyconnelaborates successfully,
+then allntype constructors will thereafter denote the same type name. This
+type name will admit equality, if spec associates an equality type name with
+one of the type constructors. Thus
+eqtype t
+type u
+sharing type t = u
+is legal and both tand uare equality types after the sharing qualication.
+The mechanism for inferring equality attributes for datatype specications is
+the same as for inferring equality attributes for datatype declarations. Thus
+the specication
+datatype answer = YES | NO
+datatype 'a option = Some of 'a | None
+species two equality types. Every specication of the form datatype datdesc
+introduces one type name for each type constructor described by datdesc .
+The equality attribute of such a type name is determined at the point where
+the specication occurs. Thus, in
+G APPENDIX: WHAT IS NEW? 104
+type s
+datatype t = C of s
+the type name associated with twill not admit equality, even if slater
+is instantiated to an equality type. Type names associated with datatype
+specications can be instantiated to other type names by subsequent type
+sharing orwhere type qualications. In this case, no eort is made to ban
+type environments that do not respect equality. For example,
+sig
+eqtype s
+datatype t = C of int -> int
+sharing type s = t
+end
+is legal in SML '97, even though it cannot be matched by any real structure.
+G.3.3 Structure Sharing
+For convenience, structure sharing constraints are provided, but only as a
+shorthand for type sharing constraints. There is a derived form of specica-
+tion
+spec sharing longstrid1==longstridk (k2)
+Here spec must specify longstrid1;:::; longstridk. The equivalent form con-
+sists of spec qualied by all the type sharing constraints
+sharing type longstridi:longtycon =longstridj:longtycon
+(1i<jk) such that both longstridi:longtycon andlongstridj:longtycon
+are specied by spec.
+In SML '90, structure sharing constraints are transitive, but in SML '97
+they are not. For example,
+structure A: sig type t end
+structure B: sig end
+structure C: sig type t end
+sharing A=B=C
+induces type sharing on t, whereas
+G APPENDIX: WHAT IS NEW? 105
+structure A: sig type t end
+structure B: sig end
+structure C: sig type t end
+sharing A=B sharing B=C
+induces no type sharing. Thus a structure sharing constraint in some cases
+induces less sharing in SML '97 than in SML '90.
+Next, SML '97 does not allow structure sharing equations which refer to
+\external" structures. For example, the program
+structure A= struct end;
+signature SIG = sig structure B : sig end
+sharing A = B
+end;
+is not legal in SML '97, because the sharing constraint now only qualies the
+specication structure B: sig end , which does not specify A. Thus not all
+legal SML '90 signatures are legal in SML '97.
+The removal of structure sharing has a dramatic simplifying eect on
+the semantics. Most importantly, the elaboration rules can be made mono-
+genic (i.e., \deterministic"), up to renaming of new type names. The need
+for the notion of principal signature (and even equality-principal signature)
+disappears. The notions of structure name, structure consistency and well-
+formed signature are no longer required. The notion of cover can be deleted.
+Only one kind of realisation, namely type realisation, remains. The notion
+of type-explication has been removed, since it can be proved that signatures
+automatically are type-explicit in the revised language.
+G.4 Value Polymorphism
+The imperative types of SML '90 were somewhat subtle, and they propagated
+into signatures in an unpleasant way. Experiments on existing code suggest
+that the power of imperative types is rarely used fully and that value poly-
+morphism , which can in fact be seen as a restriction of the imperative type
+discipline, usually suces[57]. With value polymorphism, there is only one
+kind of type variable. The denition of non-expansive expressions (see G.13
+below) is relaxed to admit more expressions. In a declaration
+valx=exp
+G APPENDIX: WHAT IS NEW? 106
+the variable xwill only be given a non-trivial polymorphic type scheme (i.e.,
+a type scheme which is not also a type) if expis non-expansive. This applies
+even if there is no application of refin the entire program.
+Example: in the declaration val x = [] @ [] , x can be assigned type
+'a list , but not the type scheme 8'a:'a list (since [] @ [] is an expansive
+expression). Consequently, (1::x, true::x) will not elaborate in the scope
+of the declaration. Also, if the declaration appears at top level, the compiler
+may refuse elaboration due to a top-level free type variable (see G.8). Thus
+the top-level phrase [] @ [] may fail, since it abbreviates val it = [] @
+[]. But of course it will not fail if a monotype is explicitly ascribed, e.g. []
+@ []:int list .
+On the other hand, in fun f() = [] @ [] (orval f = fn () => [] @
+[]),fcan be assigned type scheme 8'a:unit!'a list so that, for example,
+(1::f(),true::f()) elaborates. This transformation ( -conversion) often
+gives the desired polymorphism. But beware that -conversion can change
+the meaning of the program, if expdoes not terminate or has side-eects.
+G.5 Identier Status
+The 1990 Denition treated identier status informally (in Section 2.4); a
+fuller denition was given in the Commentary[41, Appendix B]. However,
+some problems with the handling of exception constructors remained[27,
+Sect. 10.3].
+In the present document, we have collapsed the three identier classes Var,
+ExCon and Con into a single class, VId, of value identiers . The semantic
+objectsVEpreviously called variable environments are replaced by value
+environments . A value environment maps value identiers to pairs of the
+form (o;is), whereois some semantic object and isis an identier status
+(is2 fv;c;eg) indicating whether the identier should be regarded as a
+value variable ( v), a value constructor ( c) or an exception constructor ( e).
+These changes have been carried out both in the static and in the dynamic
+semantics, for both Core and Modules. Thus the assignment of identier
+status is incorporated formally in the present Denition.
+The denition of enrichment has been modied to allow an identier that
+has been specied as a value to be matched by a value constructor or an
+exception constructor. However, a specication of a value or exception con-
+structor must be matched by a value or exception constructor, respectively.
+Thus, the status descriptor says more than just what the lexical status
+G APPENDIX: WHAT IS NEW? 107
+of the identier is | it is a statement about the value in the corresponding
+dynamic environment: if the status of idin the static environment is c, then
+the value in a matching dynamic environment must be a value constructor.
+Similarly, if the status of idin the static environment is e, then the value in a
+matching dynamic environment must be an exception name. If the status of
+idis just v, however, the corresponding value in the dynamic environment can
+be any kind of value (of the appropriate type), including a value constructor
+and an exception name.
+The exception environment ( EE) has been deleted from the semantics,
+since it is no longer required for the denition of enrichment. Also, the
+constructor environment CEin the static semantics has been replaced by a
+value environment in which every identier has status c.
+The new handling of identier status admits some val rec declarations
+that were illegal in SML '90 (see the comment to Rule 26).
+G.6 Replication of Datatypes
+SML '97 allows datatype replication , i.e. declarations and specications of
+the form
+datatype tycon -=-datatype longtycon
+When elaborated, this binds type constructor tycon to the entire type struc-
+ture (value constructors included) to which longtycon is bound in the context.
+Datatype replication does not generate a new datatype: the original and the
+replicated datatype share.
+Here is an example of a use of the new construct:
+signature MYBOOL =
+sig
+type bool
+val xor: bool * bool -> bool
+end;
+structure MyBool: MYBOOL =
+struct
+datatype bool = datatype bool (* from the initial basis *)
+fun xor(true, false) = true
+| xor(false, true) = true
+| xor _ = false
+end;
+G APPENDIX: WHAT IS NEW? 108
+val x = MyBool.xor(true, false);
+Here MyBool.xor(true, false) evaluates to true . Note the use of trans-
+parent signature matching; had opaque matching been used instead, the
+declaration of xwould not have elaborated.
+A datatype replication implicitly introduces the value constructors of
+longtycon into the current scope. This is signicant for signature match-
+ing. For example, the following program is legal:
+datatype t0 = C;
+structure A : sig type t val C: t end =
+struct
+datatype t = datatype t0
+end;
+Note that Cis specied as a value in the signature; the datatype replication
+copies the value environment of t0into the structure and that is why the
+structure contains the required Cvalue.
+To make it possible for datatype replication to copy value environments
+associated with type constructors, the dynamic semantics has been modied
+so that environments now contain a TEcomponent (see Figure 13, page 44).
+Further, in the dynamic semantics of modules, the #operation, which is
+used for cutting down structures when they are matched against signatures,
+has been extended to cover the TEcomponent (see page 57). In the above
+example, the value environment assigned to A.twill be empty, signifying
+that the type has no value constructors. Had the signature instead been
+sig datatype t val C: t end
+then the signature matching would have assigned A.ta value environment
+with domainfCg, indicating that A.thas value constructor C.
+When the datatype replication is used as a specication, longtycon can
+refer to a datatype which has been introduced either by declaration or by
+specication. Here is an example of the former:
+datatype t = C | D;
+signature SIG =
+sig
+datatype t = datatype t (* replication is not recursive! *)
+val f: t -> t
+end
+G APPENDIX: WHAT IS NEW? 109
+G.7 Local Datatypes
+This change is concerned with expressions of the form let decinexp end
+in which deccontains a datatype declaration. Let us refer to such a datatype
+declaration as a local datatype declaration. There are two reasons why
+changes to the handling of local datatype declarations are necessary.
+The rst is that the rule given for elaboration of let-expressions in the
+1990 Denition is unsound[27]; the problem has to do with the ability to
+export type names of locally declared datatypes out of scope.
+The second is that the static semantics relies on the following invariant
+about all contexts, C, which arise in elaboration from the initial basis:
+tynamesCTofC
+This invariant is used, for example, in the rule for elaborating datatype
+declarations, where type names are picked \fresh" with respect to TofC. As
+pointed out by Kahrs, the second premise of rule 16 in the 1990 Denition
+violates the above invariant.
+To solve the rst problem, the rule for elaborating let-expressions (rule
+4 in the present document) has been provided with a side-condition which
+prevents the type of expfrom containing type names generated by dec. For
+example,
+let datatype t = C in C end
+was legal SML '90 but is not legal SML '97.
+To solve the second problem, a side-condition has been added in the
+rule for matches and the rule for val rec (rules 14 and 26 of the present
+document). As a consequence, again fewer programs elaborate. For example,
+the expression
+fn x => let datatype t = C
+val _ = if true then x else C
+in 5
+end
+is not legal SML '97, although it was legal SML '90.
+G APPENDIX: WHAT IS NEW? 110
+G.8 Principal Environments
+In SML '90, the elaboration rule which allows any decto appear as a strdec
+is
+CofB`dec)E E principal for decin (CofB)
+B`dec)E
+The side-condition forces the type scheme in Eto be as general as possible.
+However, this side-condition would be undesirably restrictive in SML '97,
+since the new denition of the Clos operation admits less polymorphism
+than the one used in SML '90. For example, neither
+val f = (fn x => x)(fn x => x)
+structure A = struct end
+val y = f 7
+(where the presence of the structure declaration forces each valdeclaration
+to be parsed as a strdec ), nor
+structure A: sig val f: int -> int end =
+struct
+val f = (fn x => x)(fn x => x)
+end
+would be legal in SML '97, if the side-condition were enforced. (A type-
+checker may at rst infer the type 'a!'afrom the declaration of f, but
+since (fn x => x)(fn x => x) is expansive, the generalisation to 8'a:'a!
+'ais not allowed.) By dropping the side-condition, it becomes possible to
+have the textual context of a structure-level declaration constrain free type
+variables to monotypes. Thus both the above examples can be elaborated.
+Rather than lifting the notion of principal environments to the modules
+level, we have chosen to drop the requirement of principality. Since the
+notion of principal environments is no longer used in the rules, even the
+denition of principal environments has been removed. In practice, however,
+type checkers still have to infer types that are as general as possible, since
+implementations should not reject programs for which successful elaboration
+is possible.
+In order to avoid reporting free type variables to users, rules 87 and 89
+require that the environment to which a topdec elaborates must not contain
+free type variables. It is possible to satisfy this side-condition by replac-
+ing such type variables by arbitrary monotypes; however, implementers may
+instead choose to refuse elaboration in such situations.
+G APPENDIX: WHAT IS NEW? 111
+G.9 Consistency and Admissibility
+The primary purpose of consistency in SML '90 was to allow a very simple
+elaboration rule for structure sharing. A secondary purpose was to ban any
+signature which, because it species a datatype in inconsistent ways (e.g.
+with dierent constructors), can never be matched. With the removal of
+structure sharing, the primary purpose of consistency has gone away. In our
+experience, the secondary purpose has turned out not to be very signicant
+in practice. Textual copying of datatype specications in dierent signatures
+is best avoided, since changes in the datatype will have to be done several
+places. In practice, it is better to specify a datatype in one signature and then
+access it elsewhere using structure specications or include . In SML '90 one
+could specify sharing between a datatype specication and an external (i.e.,
+declared) datatype, and a consistency check was useful in this case. But
+in SML '97 this form of sharing is not allowed, so there remains no strong
+reason for preserving consistency; therefore it has been dropped.
+In SML '90, admissibility was imposed partly to ensure the existence of
+principal signatures (which are no longer needed) and partly to ban certain
+unmatchable signatures. In SML '90, admissibility was the conjunction of
+well-formedness, cycle-freedom and consistency. Cycle-freedom is no longer
+relevant, since there is no structure sharing. We have already discussed
+consistency. Well-formedness of signatures is no longer relevant, but the
+notion of well-formed type structures is still relevant. It turns out that well-
+formedness only needs to be checked in one place (in rule 64). Otherwise,
+well-formedness is preserved by the rules (in a sense which can be made pre-
+cise). Thus one can avoid a global well-formedness requirement and dispense
+with admissibility. This we have done.
+G.10 Special Constants
+The class of special constants has been extended with word and char con-
+stants and with hexadecimal notation. Also, there are additional escape
+sequences in strings and support for UNICODE characters. See Section 2.2.
+G.11 Comments
+A clarication concerning unmatched comment brackets was presented in
+the Commentary; subsequently, Stefan Kahrs discovered a problem with de-
+G APPENDIX: WHAT IS NEW? 112
+manding that an unmatched *)be reported by the compiler. In SML '97,
+we therefore simply demand that an unmatched (*must be reported by the
+compiler.
+G.12 Inxed Operators
+The rules for associativity of inx operators at the same level of precedence
+have been modied, to avoid confusion between right- and left-associative
+operators with the same binding precedence (see Section 2.6).
+G.13 Non-expansive Expressions
+The class of non-expansive expressions (Section 4.7) has been extended, to
+compensate for the loss of polymorphism which value polymorphism entails.
+G.14 Rebinding of built-in identiers
+In SML '97, no datbind ,valbind orexbind may bind true ,false ,nil,::
+orrefand no datbind orexbind may bind it(Section 2.9). Similarly, no
+datdesc ,valdesc orexdesc may describe true ,false ,nil,::orrefand no
+datdesc orexdesc may describe it(Section 3.5). These changes are made
+in order to x the meaning of derived forms and to avoid ambiguity in the
+handling of refin the dynamic semantics of the Core.
+G.15 Grammar for Modules
+There are several new derived forms for modules, see Appendix A (Figures
+18 and 19). The grammar for topdec has been modied, so that there is
+no longer any need to put semicolons at the end of signature and functor
+declarations. Empty and sequential signature and functor declarations have
+been removed, as they no longer serve any purpose. SML '97 has neither
+functor signature expressions nor functor specications, since they could not
+occur in programs and did not gain wide acceptance.
+G.16 Closure Restrictions
+Section 3.6 of the 1990 Denition has been deleted.
+G APPENDIX: WHAT IS NEW? 113
+G.17 Specications
+open and local specications have been criticised on the grounds of pro-
+gramming methodology[4]. Also, they are no longer needed for dening the
+derived forms for functors and they conict with a desire to have all signa-
+tures be type-explicit.
+SML '97 therefore admits neither open norlocal in specications. More-
+over, sequential specications must not specify the same identier twice. As
+a consequence, the denition of type-explication has been removed: type-
+explication is automatically preserved by elaboration (if one starts in the
+initial basis) so there is no need to impose type-explicitness explicitly.
+G.18 Scope of Explicit Type Variables
+A binding construct for explicit type variables has been introduced at val
+and fun(see Figure 21). For example, one can declare the polymorphic
+identity function by
+fun 'a id(x:'a) = x
+There is no requirement that all explicit type variables be bound by this
+binding construct. For those that are not, the scope rules of the 1990 De-
+nition apply. The explicit binding construct has no impact on the dynamic
+semantics. In particular, there are no explicit type abstractions or applica-
+tions in the dynamic semantics.
+G.19 The Initial Basis
+To achieve a clean interface to the new Standard ML Basis Library[18], the
+initial basis (Appendices C and D) has been cut down to a bare minimum.
+The present Denition only provides what is necessary in order to dene
+the derived forms and special constants of type int,real ,word ,char and
+string . The following identiers are no longer dened in the initial ba-
+sis: <>,^,!,@,Abs,arctan ,chr,Chr,close in,close out,cos,Diff ,
+Div,endofstream ,exp,Exp,explode ,floor ,Floor ,implode ,input ,
+instream ,Interrupt ,Io,ln,Ln,lookahead ,map,Mod,Neg,not,real
+(the coercion function), rev,sin,size ,sqrt ,Sqrt ,stdin,stdout,Sum,
+output ,outstream ,Prod ,Quot . The corresponding basic values have also
+been deleted.
+G APPENDIX: WHAT IS NEW? 114
+G.20 Overloading
+The Standard ML Basis Library[18] rests on an overloading scheme for special
+constants and pre-dened identiers. We have adopted this scheme (see
+Appendix E).
+G.21 Reals
+real is no longer an equality type and real constants are no longer allowed
+in patterns. The Basis Library provides IEEE equality operations on reals.
+
+References
+[1] Maria Virginia Aponte. Extending record typing to type paramet-
+ric modules with sharing. In Proc. of the Twentieth Annual ACM
+SIGPLAN-SIGACT Symposium on Principles of Programming Lan-
+guages (POPL) , pages 465{478. ACM Press, January 1993.
+[2] A. W. Appel and D. B. MacQueen. Standard ML of New Jersey. In
+Programming Language Implementation and Logic Programming , vol-
+ume 528 of Lecture Notes in Computer Science , pages 1{26, New York,
+N.Y., August 1991. Springer-Verlag.
+[3] Andrew Appel, David MacQueen, Robin Milner, and Mads Tofte. Uni-
+fying exceptions with constructors in Standard ML. LFCS Report Series
+ECS-LFCS-88-55, Laboratory for Foundations of Computer Science, Ed-
+inburgh University, Mayeld Rd., EH9 3JZ Edinburgh, U.K., June 1988.
+[4] Andrew W. Appel. A critique of Standard ML. Journal of Functional
+Programming , 3(4):391{429, October 1993.
+[5] Andrew W. Appel and David B. MacQueen. A Standard ML compiler.
+In Gilles Kahn, editor, Functional Programming Languages and Com-
+puter Architecture . ACM, Springer-Verlag, Sept 1987.
+[6] Lennart Augustsson and Thomas Johnsson. Lazy ML user's manual.
+Technical report, Department of Computer Science, Chalmers Univer-
+sity of Technology, 1987.
+[7] Dave Berry. The Edinburgh SML Library. Technical Report ECS-LFCS-
+91-148, Laboratory for Foundations of Computer Science, Department
+of Computer Science, Edinburgh University, April 1991.
+[8] Dave Berry. Lessons from the design of a Standard ML library. Journal
+of Functional Programming , 3(4):527{552, October 1993.
+[9] Lars Birkedal, Nick Rothwell, Mads Tofte, and David N. Turner. The
+ML Kit (Version 1). Technical Report DIKU-report 93/14, Department
+of Computer Science, University of Copenhagen, Universitetsparken 1,
+DK-2100 Copenhagen, 1993.
+REFERENCES 117
+[10] R. M. Burstall and R. Popplestone. POP-2 reference manual. In Dale
+and Michie, editors, Machine Intelligence 2 . Oliver and Boyd, 1968.
+[11] Rod Burstall and Joseph A. Goguen. Putting theories together to make
+specications. In Proc. Fifth Int'l Joint Conf. on Articial Intelligence ,
+pages 1045{1058, 1977.
+[12] Rod Burstall, David MacQueen, and Donald Sannella. HOPE: An ex-
+perimental applicative language. In Proc. 1980 LISP Conference , pages
+136{143, Stanford, California, 1980. Stanford University.
+[13] Guy Cousineau, Pierre-Louis Curien, and Michel Mauny. The categori-
+cal abstract machine. Science of Computer Programming , 8, May 1987.
+[14] H. B. Curry. Modied basic functionality in combinatory logic. Dialec-
+tica, 23:83{92, 1969.
+[15] Luis Damas and Robin Milner. Principal type schemes for functional
+programs. In Proc. Ninth ACM Symposium on Principles of Program-
+ming Languages , pages 207{212, 1982.
+[16] Luis Manuel Martins Damas. Type Assignment in Programming Lan-
+guages . PhD thesis, Edinburgh University, 1985.
+[17] Thierry Despeyroux. Executable specications of static semantics. In
+Gilles Kahn, David MacQueen, and Gordon Plotkin, editors, Seman-
+tics of Data Types , volume 173 of Lecture Notes in Computer Science .
+Springer Verlag, June 1984.
+[18] E.R. Gansner and J.H. Reppy (eds.). The Standard ML Basis Library
+reference manual. (In preparation).
+[19] Michael Gordon, Robin Milner, and Christopher Wadsworth. Edinburgh
+LCF: A Mechanized Logic of Computation , volume 78 of Lecture Notes
+in Computer Science . Springer Verlag, 1979.
+[20] M.J.C. Gordon, R. Milner, L. Morris, M.C. Newey, and C.P. Wadsworth.
+A metalanguage for interactive proof in LCF. In Proc. Fifth ACM Sym-
+posium on Principles of Programming Languages , Tucson, AZ, 1978.
+REFERENCES 118
+[21] Robert Harper and Mark Lillibridge. A type-theoretic approach to
+higher-order modules with sharing. In Proc. Twenty-First ACM Sym-
+posium on Principles of Programming Languages , pages 123{137, Port-
+land, OR, January 1994.
+[22] Robert Harper and Mark Lillibridge. A type-theoretic approach to
+higher-order modules with sharing. In Conference Record of POPL '94:
+21st ACM SIGPLAN-SIGACT Symposium on Principles of Program-
+ming Languages , pages 123{137. ACM Press, January 1994.
+[23] Robert Harper, David MacQueen, and Robin Milner. Standard ML.
+Technical Report ECS{LFCS{86{2, Laboratory for Foundations of
+Computer Science, Edinburgh University, March 1986.
+[24] Robert Harper, Robin Milner, and Mads Tofte. A type discipline for
+program modules. In Proc. Int'l Joint Conf. on Theory and Practice
+of Software Development (TAPSOFT) , pages 308{319. Springer-Verlag,
+Mar. 1987. Lecture Notes in Computer Science, Vol. 250.
+[25] Robert Harper and John C. Mitchell. On the type structure of Standard
+ML. ACM Trans. on Prog. Lang. and Sys. , 15(2):211{252, April 1993.
+[26] J. Roger Hindley. The principal type scheme of an object in combinatory
+logic. Transactions of the American Mathematical Society , 146:29{40,
+1969.
+[27] Stefan Kahrs. Mistakes and ambiguities in the Denition of Standard
+ML. Technical Report ECS-LFCS-93-257, Dept. of Computer Science,
+University of Edinburgh, 1993.
+[28] Peter J. Landin. The next 700 programming languages. Comm. ACM ,
+9(3):57{164, 1966.
+[29] Xavier Leroy. Polymorphism by name. In Proc. Twentieth ACM Sym-
+posium on Principles of Programming Languages , January 1993.
+[30] Xavier Leroy. Manifest types, modules and separate compilation. In
+Conference Record of POPL '94: 21st ACM SIGPLAN-SIGACT Sym-
+posium on Principles of Programming Languages , pages 109{122. ACM
+Press, January 1994.
+REFERENCES 119
+[31] Xavier Leroy. The Caml Special Light system. Software and documen-
+tation available on the Web, http://pauillac.inria.fr/csl/ , 1995.
+[32] D. MacQueen. Modules for Standard ML. In Conf. Rec. of the 1984
+ACM Symp. on LISP and Functional Programming , pages 198{207, Aug.
+1984.
+[33] David MacQueen. Using dependent types to express modular struc-
+ture. In Proc. Thirteenth ACM Symposium on Principles of Program-
+ming Languages , 1986.
+[34] David. B. MacQueen. Structures and parameterisation in a typed func-
+tional language. In Proc. Symposium on Functional Programming and
+Computer Architecture , Aspinas, Sweden, 1981.
+[35] David B. MacQueen and Mads Tofte. A semantics for higher-order
+functors. In Donald Sannella, editor, Proceedings of the 5th European
+Symposium on Programming (ESOP) , volume 788 of Lecture Notes in
+Computer Science , pages 409{423. Springer-Verlag, 1994.
+[36] John McCarthy. LISP 1.5 Programmer's Manual . MIT Press, 1956.
+[37] D. Meredith. In memoriam Carew Arthur Meredith. Notre Dame Jour-
+nal of Formal Logic , 18:513{516, 1977.
+[38] Robin Milner. A theory of type polymorphism in programming lan-
+guages. J. Computer and Systems Sciences , 17:348{375, 1978.
+[39] Robin Milner. How ML evolved. Polymorphism: The ML/LCF/Hope
+Newsletter , 1(1), 1983.
+[40] Robin Milner. Changes to the Standard ML core language. Techni-
+cal Report ECS-LFCS-87-33, Laboratory for Foundations of Computer
+Science, Edinburgh University, 1987.
+[41] Robin Milner and Mads Tofte. Commentary on Standard ML . MIT
+Press, 1991.
+[42] Robin Milner, Mads Tofte, and Robert Harper. The Denition of Stan-
+dard ML . MIT Press, 1990.
+REFERENCES 120
+[43] James H. Morris. Lambda Calculus Models of Programming Languages .
+PhD thesis, MIT, 1968.
+[44] Colin Myers, Chris Clack, and Ellen Poon. Programming with Standard
+ML. Prentice Hall, 1993.
+[45] Lawrence C. Paulson. Logic and Computation: Interactive Proof with
+LCF. Cambridge Tracts in Theoretical Computer Science. Cambridge
+University Press, 1987.
+[46] Lawrence C. Paulson. ML for the Working Programmer (2nd edition) .
+Cambridge University Press, 1996.
+[47] Gordon Plotkin. A structural approach to operational semantics. Tech-
+nical Report DAIMI{FN{19, Computer Science Department, Aarhus
+University, 1981.
+[48] John A. Robinson. A machine-oriented logic based on the resolution
+principle. J. ACM , 12(1):23{41, 1965.
+[49] Donald Sannella and Andrzej Tarlecki. Program specication and de-
+velopment in Standard ML. In Proc. Twelfth ACM Symposium on Prin-
+ciples of Programming Languages , New Orleans, 1985.
+[50] Ryan Stansifer. ML Primer . Prentice Hall, 1992.
+[51] Chris Stone and Robert Harper. A type-theoretic account of Standard
+ML 1996. Technical Report CMU-CS-96-136, School of Computer Sci-
+ence, Carnegie Mellon University, School of Computer Science, Carnegie
+Mellon University, Pittsburgh, PA 15213-3891, May 1996.
+[52] David Tarditi, Greg Morrisett, Perry Cheng, Chris Stone, Robert
+Harper, and Peter Lee. TIL: A type-directed optimizing compiler for
+ML. In Proc. ACM SIGPLAN Symposium on Programming Language
+Design and Implementation , Philadelphia, PA, May 1996.
+[53] Mads Tofte. Operational Semantics and Polymorphic Type Inference .
+PhD thesis, Edinburgh University, Department of Computer Science,
+Edinburgh University, Mayeld Rd., EH9 3JZ Edinburgh, May 1988.
+Available as Technical Report CST-52-88.
+REFERENCES 121
+[54] Mads Tofte. Type inference for polymorphic references. Information
+and Computation , 89(1), November 1990.
+[55] Mads Tofte. Principal signatures for higher-order program modules.
+Journal of Functional Programming , 4(3):285{335, July 1994.
+[56] Jerey D. Ullman. Elements of ML Programming . Prentice Hall, 1994.
+[57] Andrew Wright. Simple imperative polymorphism. Journal of Lisp and
+Symbolic Computation , 8(4):343{355, December 1995.
+

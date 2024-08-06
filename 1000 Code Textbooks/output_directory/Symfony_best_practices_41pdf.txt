@@ -1,0 +1,1882 @@
+The Best Practices BookVersion: 4.1
+generated on August 29, 2018
+The Best Practices Book (4.1)
+This work islicensed under the“Attribution-Share Alike 3.0Unported” license (http://creativecommons.org/
+licenses/by-sa/3.0/ ).
+You arefreetoshare (tocopy, distribute andtransmit thework), andtoremix (toadapt thework) under the
+following conditions:
+•Attribution :You must attribute thework inthemanner specified bytheauthor orlicensor (but notin
+any way that suggests that they endorse you or your use of the work).
+•Share Alike :Ifyoualter, transform, orbuild upon thiswork, youmay distribute theresulting work only
+under thesame, similar oracompatible license. Foranyreuse ordistribution, you must make clear to
+others the license terms of this work.
+The information inthisbook isdistributed onan“asis”basis, without warranty. Although every precaution
+hasbeen taken inthepreparation ofthiswork, neither theauthor(s) norSensioLabs shall have anyliability to
+anyperson orentity with respect toanylossordamage caused oralleged tobecaused directly orindirectly by
+the information contained in this work.
+Ifyou find typos orerrors, feel free toreport them bycreating aticket ontheSymfony ticketing system
+(http://github.com/ symfony/ symfony-docs/ issues ).Based on tickets and users feedback, this book is
+continuously updated.
+Contents at a Glance
+The Symfony Framework Best Practices ............................................................................................... 4
+Creating the Project ............................................................................................................................ 6
+Configuration ..................................................................................................................................... 8
+Organizing Your Business Logic ........................................................................................................ 11
+Controllers ....................................................................................................................................... 16
+Templates ......................................................................................................................................... 20
+Forms ............................................................................................................................................... 23
+Internationalization ........................................................................................................................... 27
+Security ............................................................................................................................................ 29
+Web Assets ....................................................................................................................................... 36
+Tests ................................................................................................................................................. 37
+PDF brought to you by
+generated on August 29, 2018Contents at a Glance | iii
+Chapter 1
+The Symfony Framework Best Practices
+The Symfony Framework iswell-known forbeing really flexible and isused tobuild micro-sites,
+enterprise applications that handle billions ofconnections and even asthebasis forother frameworks.
+Since itsrelease inJuly 2011, thecommunity haslearned alotabout what's possible andhow todothings
+best.
+These community resources -like blog posts orpresentations -have created anunofficial setof
+recommendations fordeveloping Symfony applications. Unfortunately, alotofthese recommendations
+areunneeded forweb applications. Much ofthetime, they unnecessarily overcomplicate things anddon't
+follow the original pragmatic philosophy of Symfony.
+What is this Guide About?
+This guide aims tofixthat bydescribing thebest practices fordeveloping web apps with theSymfony
+full-stack Framework .These arebest practices that fitthephilosophy oftheframework asenvisioned
+by its original creator Fabien Potencier1.
+Best practice isanoun that means "awell defined procedure that isknown toproduce near-optimum
+results" .And that's exactly what this guide aims toprovide. Even ifyou don't agree with every
+recommendation, we believe these will help you build great applications with less complexity.
+This guide is specially suited for:
+•Websites and web applications developed with the full-stack Symfony Framework.
+Forother situations, thisguide might beagood starting point that youcanthen extend and fittoyour
+specific needs :
+•Bundles shared publicly to the Symfony community;
+•Advanced developers or teams who have created their own standards;
+•Some complex applications that have highly customized requirements;
+•Bundles that may be shared internally within a company.
+1.https://connect.sensiolabs.com/profile/fabpot
+PDF brought to you by
+generated on August 29, 2018Chapter 1: The Symfony Framework Best Practices | 4
+Listing 1-1Weknow that oldhabits diehard and some ofyouwillbeshocked bysome ofthese best practices. But
+byfollowing these, you'll beable todevelop apps faster, with lesscomplexity andwith thesame oreven
+higher quality. It's also a moving target that will continue to improve.
+Keep inmind that these areoptional recommendations that you and your team may ormay not
+follow todevelop Symfony applications. Ifyou want tocontinue using your own best practices and
+methodologies, you canofcourse doit.Symfony isflexible enough toadapt toyour needs. That will
+never change.
+Who this Book Is for (Hint: It's not a Tutorial)
+Any Symfony developer, whether you areanexpert oranewcomer, canread this guide. Butsince this
+isn't atutorial, you'll need some basic knowledge ofSymfony tofollow everything. Ifyouaretotally new
+to Symfony, welcome! and read the Getting Started guides first.
+We've deliberately kept this guide short. We won't repeat explanations that you can find inthevast
+Symfony documentation, likediscussions about Dependency Injection orfront controllers. We'll solely
+focus on explaining how to do what you already know.
+The Application
+Inaddition tothisguide, asample application called Symfony Demo2hasbeen developed with allthese
+best practices in mind. Execute this command to download the demo application:
+1$composer create-project symfony/symfony-demo
+The demo application isasimple blog engine ,because that will allow ustofocus ontheSymfony
+concepts and features without getting buried indifficult implementation details. Instead ofdeveloping
+the application step by step in this guide, you'll find selected snippets of code through the chapters.
+Don't Update Your Existing Applications
+After reading this handbook, some ofyou may beconsidering refactoring your existing Symfony
+applications. Our recommendation issound and clear: you may use these best practices fornew
+applications butyou should not refactor your existing applications tocomply with these best
+practices . The reasons for not doing it are various:
+•Your existing applications are not wrong, they just follow another set of guidelines;
+•A full codebase refactorization is prone to introduce errors in your applications;
+•The amount ofwork spent onthis could bebetter dedicated toimproving your tests oradding
+features that provide real value to the end users.
+Next: Creating the Project
+2.https://github.com/symfony/demo
+PDF brought to you by
+generated on August 29, 2018Chapter 1: The Symfony Framework Best Practices | 5
+Listing 2-1Chapter 2
+Creating the Project
+Installing Symfony
+Use Composer and Symfony Flex to create and manage Symfony applications.
+Composer1isthepackage manager used bymodern PHP applications tomanage their dependencies.
+Symfony Flex2isaComposer plugin designed toautomate some ofthemost common tasks performed
+inSymfony applications. Using Flex isoptional butrecommended because itimproves your productivity
+significantly.
+Use the Symfony Skeleton to create new Symfony-based projects.
+The Symfony Skeleton3isaminimal and empty Symfony project which you canbase your new projects
+on. Unlike past Symfony versions, this skeleton installs the absolute bare minimum amount of
+dependencies tomake afully working Symfony project. Read theInstalling &Setting uptheSymfony
+Framework article to learn more about installing Symfony.
+Creating the Blog Application
+Inyour command console, browse toadirectory where you have permission tocreate files and execute
+the following commands:
+1
+2$cdprojects/
+$composer create-project symfony/skeleton blog
+This command creates anew directory called blogthat contains afresh new project based onthemost
+recent stable Symfony version available.
+1.https://getcomposer.org/
+2.https://github.com/symfony/flex
+3.https://github.com/symfony/skeleton
+PDF brought to you by
+generated on August 29, 2018Chapter 2: Creating the Project | 6
+Listing 2-2The technical requirements torunSymfony aresimple. Ifyou want tocheck ifyour system meets
+those requirements, read Requirements for Running Symfony .
+Structuring the Application
+After creating theapplication, enter theblog/directory and you'll seeanumber offiles and directories
+generated automatically:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12blog/
+├─ bin/
+│  └─ console
+├─ config/
+└─ public/
+│  └─ index.php
+├─ src/
+│  └─ Kernel.php
+├─ var/
+│  ├─ cache/
+│  └─ log/
+└─ vendor/
+This fileand directory hierarchy istheconvention proposed bySymfony tostructure your applications.
+It'srecommended tokeep thisstructure because it'seasy tonavigate and most directory names areself-
+explanatory, but you can override the location of any Symfony directory :
+Application Bundles
+When Symfony 2.0was released, most developers naturally adopted thesymfony 1.xway ofdividing
+applications into logical modules. That's why many Symfony apps used bundles todivide their code into
+logical features: UserBundle, ProductBundle, InvoiceBundle, etc.
+But abundle ismeant tobesomething that can bereused asastand-alone piece ofsoftware. If
+UserBundle cannot beused "asis"inother Symfony apps, then itshouldn't beitsown bundle. Moreover,
+if InvoiceBundle depends on ProductBundle, then there's no advantage to having two separate bundles.
+Don't create any bundle to organize your application logic.
+Symfony applications canstill usethird-party bundles (installed invendor/)toadd features, butyou
+should use PHP namespaces instead of bundles to organize your own code.
+Next: Configuration
+PDF brought to you by
+generated on August 29, 2018Chapter 2: Creating the Project | 7
+Listing 3-1Chapter 3
+Configuration
+Configuration usually involves different application parts (such asinfrastructure andsecurity credentials)
+and different environments (development, production). That's why Symfony recommends that yousplit
+the application configuration into three parts.
+Infrastructure-Related Configuration
+These aretheoptions that change from onemachine toanother (e.g. from your development machine to
+the production server) but which don't change the application behavior.
+Define theinfrastructure-related configuration options asenvironment variables .During development, usethe
+.envfile at the root of your project to set these.
+Bydefault, Symfony adds these types ofoptions tothe.envfilewhen installing new dependencies inthe
+app:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10# .env
+###> doctrine/doctrine-bundle ###
+DATABASE_URL =sqlite:///%kernel.project_dir%/var/data/blog.sqlite
+###< doctrine/doctrine-bundle ###
+###> symfony/swiftmailer-bundle ###
+MAILER_URL =smtp://localhost?encryption =ssl&auth_mode =login&username =&password =
+###< symfony/swiftmailer-bundle ###
+# ...
+These options aren't defined inside theconfig/services.yaml filebecause they have nothing todo
+with theapplication's behavior. Inother words, your application doesn't care about thelocation ofyour
+database or the credentials to access to it, as long as the database is correctly configured.
+Beware that dumping thecontents ofthe$_SERVER and $_ENVvariables oroutputting the
+phpinfo() contents will display the values ofthe environment variables, exposing sensitive
+information such as the database credentials.
+PDF brought to you by
+generated on August 29, 2018Chapter 3: Configuration | 8
+Listing 3-2
+Listing 3-3Canonical Parameters
+Define all your application's env vars in the .env.dist file.
+Symfony includes aconfiguration filecalled .env.dist attheproject root, which stores thecanonical
+list of environment variables for the application.
+Whenever anew envvarisdefined fortheapplication, youshould also addittothisfileandsubmit the
+changes to your version control system so your workmates can update their .envfiles.
+Application-Related Configuration
+Define the application behavior related configuration options in the config/services.yaml file.
+The services.yaml filecontains theoptions used bytheapplication tomodify itsbehavior, such as
+thesender ofemail notifications, ortheenabled feature toggles1.Defining these values in.envfilewould
+addanextra layer ofconfiguration that's notneeded because youdon't need orwant these configuration
+values to change on each server.
+The configuration options defined intheservices.yaml may vary from oneenvironment toanother.
+That's why Symfony supports defining config/services_dev.yaml and config/
+services_prod.yaml files so that you can override specific values for each environment.
+Constants vs Configuration Options
+One ofthemost common errors when defining application configuration istocreate new options for
+values that never change, such as the number of items for paginated results.
+Use constants to define configuration options that rarely change.
+The traditional approach fordefining configuration options hascaused many Symfony apps toinclude
+anoption likethefollowing, which would beused tocontrol thenumber ofposts todisplay ontheblog
+homepage:
+1
+2
+3# config/services.yaml
+parameters :
+homepage.number_of_items :10
+Ifyou've done something likethisinthepast, it'slikely that you've infactnever actually needed tochange
+that value. Creating aconfiguration option foravalue that you arenever going toconfigure just isn't
+necessary. Our recommendation istodefine these values asconstants inyour application. You could, for
+example, define a NUMBER_OF_ITEMS constant in the Postentity:
+1
+2
+3
+4
+5
+6
+7
+8
+9// src/Entity/Post.php
+namespace App\Entity ;
+classPost
+{
+constNUMBER_OF_ITEMS =10;
+// ...
+}
+1.https://en.wikipedia.org/wiki/Feature_toggle
+PDF brought to you by
+generated on August 29, 2018Chapter 3: Configuration | 9
+Listing 3-4
+Listing 3-5
+Listing 3-6The main advantage ofdefining constants isthat youcanusetheir values everywhere inyour application.
+When using parameters, they are only available from places with access to the Symfony container.
+Constants can be used for example in your Twig templates thanks to the constant() function2:
+1
+2
+3<p>
+Displaying the {{constant ('NUMBER_OF_ITEMS' ,post)}}most recent results.
+</p>
+And Doctrine entities andrepositories cannow easily access these values, whereas they cannot access the
+container parameters:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12namespace App\Repository ;
+useApp\Entity\Post ;
+useDoctrine\ORM\EntityRepository ;
+classPostRepository extends EntityRepository
+{
+publicfunction findLatest ($limit=Post::NUMBER_OF_ITEMS )
+{
+// ...
+}
+}
+The only notable disadvantage ofusing constants forthiskind ofconfiguration values isthat youcannot
+redefine them easily in your tests.
+Parameter Naming
+Thename ofyour configuration parameters should beasshort aspossible andshould include acommon prefix
+for the entire application.
+Using app.astheprefix ofyour parameters isacommon practice toavoid collisions with Symfony and
+third-party bundles/ libraries parameters. Then, usejustoneortwo words todescribe thepurpose ofthe
+parameter:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10# config/services.yaml
+parameters :
+# don't do this: 'dir' is too generic and it doesn't convey any meaning
+app.dir:'...'
+# do this: short but easy to understand names
+app.contents_dir :'...'
+# it's OK to use dots, underscores, dashes or nothing, but always
+# be consistent and use the same format for all the parameters
+app.dir.contents :'...'
+app.contents-dir :'...'
+Next: Organizing Your Business Logic
+2.https://twig.symfony.com/doc/2.x/functions/constant.html
+PDF brought to you by
+generated on August 29, 2018Chapter 3: Configuration | 10
+Listing 4-1Chapter 4
+Organizing Your Business Logic
+Incomputer software, business logic ordomain logic is"the part oftheprogram that encodes thereal-
+world business rules that determine how data canbecreated, displayed, stored, and changed" (read full
+definition1).
+InSymfony applications, business logic isallthecustom code youwrite foryour appthat's notspecific to
+theframework (e.g. routing and controllers). Domain classes, Doctrine entities and regular PHP classes
+that are used as services are good examples of business logic.
+Formost projects, you should store allyour code inside thesrc/directory. Inside here, you cancreate
+whatever directories you want to organize things:
+1
+2
+3
+4
+5
+6
+7
+8
+9symfony-project/
+├─ config/
+├─ public/
+├─ src/
+│  └─ Utils/
+│     └─ MyClass.php
+├─ tests/
+├─ var/
+└─ vendor/
+Services: Naming and Configuration
+Use autowiring to automate the configuration of application services.
+Service autowiring isafeature provided bySymfony's Service Container tomanage services with minimal
+configuration. Itreads thetype-hints onyour constructor (orother methods) and automatically passes
+thecorrect services toeach method. Itcanalso addservice tags totheservices needing them, such asTwig
+extensions, event subscribers, etc.
+The blog application needs autility that cantransform apost title (e.g. "Hello World") into aslug (e.g.
+"hello-world") toinclude itaspart ofthepost URL. Let's create anew Slugger class inside src/
+Utils/:
+1.https://en.wikipedia.org/wiki/Business_logic
+PDF brought to you by
+generated on August 29, 2018Chapter 4: Organizing Your Business Logic | 11
+Listing 4-2
+Listing 4-31
+2
+3
+4
+5
+6
+7
+8
+9
+10// src/Utils/Slugger.php
+namespace App\Utils ;
+classSlugger
+{
+publicfunction slugify(string$value):string
+{
+// ...
+}
+}
+Ifyou're using thedefault services.yaml configuration ,thisclass isauto-registered asaservice whose ID
+isApp\Utils\Slugger (or simply Slugger::class if the class is already imported in your code).
+The idofyour application's services should beequal totheir class name, except when you have multiple
+services configured for the same class (in that case, use a snake case id).
+Now you can use the custom slugger inany other service orcontroller class, such asthe
+AdminController :
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13useApp\Utils\Slugger ;
+publicfunction create(Request $request ,Slugger $slugger )
+{
+// ...
+if($form->isSubmitted ()&&$form->isValid()){
+$slug=$slugger ->slugify($post->getTitle ());
+$post->setSlug($slug);
+// ...
+}
+}
+Services canalso bepublic orprivate .Ifyou usethedefault services.yaml configuration ,allservices are
+private by default.
+Services should beprivate whenever possible. This will prevent you from accessing that service via
+$container->get() . Instead, you will need to use dependency injection.
+Service Format: YAML
+Ifyou use thedefault services.yaml configuration ,most services will beconfigured automatically.
+However, in some edge cases you'll need to configure services (or parts of them) manually.
+Use the YAML format to configure your own services.
+This iscontroversial, and inour experience, YAML and XML usage isevenly distributed among
+developers, with aslight preference towards YAML. Both formats have thesame performance, sothisis
+ultimately a matter of personal taste.
+Werecommend YAML because it'sfriendly tonewcomers and concise. You canofcourse usewhatever
+format you like.
+PDF brought to you by
+generated on August 29, 2018Chapter 4: Organizing Your Business Logic | 12
+Listing 4-4
+Listing 4-5Using a Persistence Layer
+Symfony isanHTTP framework that only cares about generating anHTTP response foreach HTTP
+request. That's why Symfony doesn't provide away totalk toapersistence layer (e.g. database, external
+API). You can choose whatever library or strategy you want for this.
+Inpractice, many Symfony applications rely ontheindependent Doctrine project2todefine their model
+using entities and repositories. Just likewith business logic, werecommend storing Doctrine entities in
+thesrc/Entity/ directory.
+The three entities defined by our sample blog application are a good example:
+1
+2
+3
+4
+5
+6
+7symfony-project/
+├─ ...
+└─ src/
+└─ Entity/
+├─ Comment.php
+├─ Post.php
+└─ User.php
+Doctrine Mapping Information
+Doctrine entities areplain PHP objects that you store insome "database". Doctrine only knows about
+your entities through themapping metadata configured foryour model classes. Doctrine supports four
+metadata formats: YAML, XML, PHP and annotations.
+Use annotations to define the mapping information of the Doctrine entities.
+Annotations arebyfarthemost convenient and agile way ofsetting upand looking formapping
+information:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31namespace App\Entity ;
+useDoctrine\ORM\Mapping asORM;
+useDoctrine\Common\Collections\ArrayCollection ;
+/**
+* @ORM\Entity
+*/
+classPost
+{
+constNUMBER_OF_ITEMS =10;
+/**
+* @ORM\Id
+* @ORM\GeneratedValue
+* @ORM\Column(type="integer")
+*/
+private $id;
+/**
+* @ORM\Column(type="string")
+*/
+private $title;
+/**
+* @ORM\Column(type="string")
+*/
+private $slug;
+/**
+* @ORM\Column(type="text")
+2.http://www.doctrine-project.org/
+PDF brought to you by
+generated on August 29, 2018Chapter 4: Organizing Your Business Logic | 13
+Listing 4-6
+Listing 4-7
+Listing 4-832
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62*/
+private $content ;
+/**
+* @ORM\Column(type="string")
+*/
+private $authorEmail ;
+/**
+* @ORM\Column(type="datetime")
+*/
+private $publishedAt ;
+/**
+* @ORM\OneToMany(
+*      targetEntity="Comment",
+*      mappedBy="post",
+*      orphanRemoval=true
+* )
+* @ORM\OrderBy({"publishedAt"="ASC"})
+*/
+private $comments ;
+publicfunction __construct ()
+{
+$this->publishedAt =new\DateTime ();
+$this->comments =newArrayCollection ();
+}
+// getters and setters ...
+}
+All formats have the same performance, so this is once again ultimately a matter of taste.
+Data Fixtures
+Asfixtures support isnotenabled bydefault inSymfony, youshould execute thefollowing command to
+install the Doctrine fixtures bundle:
+1$composer require "doctrine/doctrine-fixtures-bundle"
+Then, this bundle is enabled automatically, but only for the devandtestenvironments:
+1
+2
+3
+4
+5
+6// config/bundles.php
+return[
+// ...
+Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle ::class=>['dev'=>true,'test'=>true],
+];
+Werecommend creating justonefixture class3forsimplicity, though you're welcome tohave more ifthat
+class gets quite large.
+Assuming youhave atleast onefixtures class andthat thedatabase access isconfigured properly, youcan
+load your fixtures by executing the following command:
+1
+2
+3
+4
+5$php bin/console doctrine:fixtures:load
+Careful, database will be purged. Do you want to continue Y/N ? Y
+>purging database
+>loading App\DataFixtures\ORM\LoadFixtures
+3.https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html#writing-simple-fixtures
+PDF brought to you by
+generated on August 29, 2018Chapter 4: Organizing Your Business Logic | 14
+Coding Standards
+The Symfony source code follows thePSR-14andPSR-25coding standards that were defined bythePHP
+community. You canlearn more about theSymfony Coding standards and even usethePHP-CS-Fixer6,
+which isacommand-line utility that canfixthecoding standards ofanentire codebase inamatter of
+seconds.
+Next: Controllers
+4.https://www.php-fig.org/psr/psr-1/
+5.https://www.php-fig.org/psr/psr-2/
+6.https://github.com/FriendsOfPHP/PHP-CS-Fixer
+PDF brought to you by
+generated on August 29, 2018Chapter 4: Organizing Your Business Logic | 15
+Chapter 5
+Controllers
+Symfony follows thephilosophy of"thin controllers andfatmodels" .This means that controllers should
+hold just the thin layer of glue-code needed to coordinate the different parts of the application.
+Your controller methods should justcalltoother services, trigger some events ifneeded andthen return a
+response, butthey should notcontain anyactual business logic. Ifthey do,refactor itoutofthecontroller
+and into a service.
+Make your controller extend theAbstractController base controller provided bySymfony and use
+annotations to configure routing, caching and security whenever possible.
+Coupling thecontrollers totheunderlying framework allows you toleverage allofitsfeatures and
+increases your productivity.
+And since your controllers should bethin and contain nothing more than afew lines ofglue-code ,
+spending hours trying todecouple them from your framework doesn't benefit you inthelong run. The
+amount of time wasted isn't worth the benefit.
+Inaddition, using annotations forrouting, caching andsecurity simplifies configuration. You don't need
+tobrowse tens offiles created with different formats (YAML, XML, PHP): alltheconfiguration isjust
+where you need it and it only uses one format.
+Overall, thismeans you should aggressively decouple your business logic from theframework while, at
+thesame time, aggressively coupling your controllers and routing totheframework inorder togetthe
+most out of it.
+Controller Action Naming
+Don't add the Actionsuffix to the methods of the controller actions.
+The first Symfony versions required that controller method names ended inAction(e.g. newAction() ,
+showAction() ).This suffix became optional when annotations were introduced forcontrollers. In
+modern Symfony applications thissuffix isneither required norrecommended, soyoucansafely remove
+it.
+PDF brought to you by
+generated on August 29, 2018Chapter 5: Controllers | 16
+Listing 5-1
+Listing 5-2
+Listing 5-3Routing Configuration
+Toload routes defined asannotations inyour controllers, add thefollowing configuration tothemain
+routing configuration file:
+1
+2
+3
+4# config/routes.yaml
+controllers :
+resource :'../src/Controller/'
+type:annotation
+This configuration will load annotations from any controller stored inside thesrc/Controller/
+directory and even from itssubdirectories. Soifyour application defines lotsofcontrollers, it'sperfectly
+ok to reorganize them into subdirectories:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13<your-project>/
+├─ ...
+└─ src/
+├─ ...
+└─ Controller/
+├─ DefaultController.php
+├─ ...
+├─ Api/
+│  ├─ ...
+│  └─ ...
+└─ Backend/
+├─ ...
+└─ ...
+Template Configuration
+Don't use the @Template annotation to configure the template used by the controller.
+The @Template annotation isuseful, butalso involves some magic. Wedon't think itsbenefit isworth
+the magic, and so recommend against using it.
+Most ofthetime, @Template isused without anyparameters, which makes itmore difficult toknow
+which template isbeing rendered. Italso makes itless obvious tobeginners that acontroller should
+always return a Response object (unless you're using a view layer).
+What does the Controller look like
+Considering allthis, here isanexample ofwhat thecontroller should look likeforthehomepage ofour
+app:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13namespace App\Controller ;
+useApp\Entity\Post ;
+useSymfony\Bundle\FrameworkBundle\Controller\AbstractController ;
+useSymfony\Component\Routing\Annotation\Route ;
+classDefaultController extends AbstractController
+{
+/**
+* @Route("/", name="homepage")
+*/
+publicfunction index()
+{
+PDF brought to you by
+generated on August 29, 2018Chapter 5: Controllers | 17
+Listing 5-414
+15
+16
+17
+18
+19
+20
+21
+22$posts=$this->getDoctrine ()
+->getRepository (Post::class)
+->findLatest ();
+return$this->render('default/index.html.twig' ,[
+'posts' =>$posts,
+]);
+}
+}
+Fetching Services
+Ifyouextend thebase AbstractController class, youcan't access services directly from thecontainer
+via$this->container->get() or$this->get() .Instead, you must usedependency injection to
+fetch services: most easily done by type-hinting action method arguments :
+Don't use$this->get() or$this->container->get() tofetch services from thecontainer. Instead,
+use dependency injection.
+Bynotfetching services directly from thecontainer, youcanmake your services private ,which hasseveral
+advantages .
+Using the ParamConverter
+Ifyou're using Doctrine, then you canoptionally usetheParamConverter1toautomatically query foran
+entity and pass it as an argument to your controller.
+Use the ParamConverter trick to automatically query for Doctrine entities when it's simple and convenient.
+For example:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15useApp\Entity\Post ;
+useSymfony\Component\Routing\Annotation\Route ;
+/**
+* @Route("/{id}", name="admin_post_show")
+*/
+publicfunction show(Post$post)
+{
+$deleteForm =$this->createDeleteForm ($post);
+return$this->render('admin/post/show.html.twig' ,[
+'post'=>$post,
+'delete_form' =>$deleteForm ->createView (),
+]);
+}
+Normally, you'd expect a$idargument toshow().Instead, bycreating anew argument ($post)
+and type-hinting itwith thePostclass (which isaDoctrine entity), theParamConverter automatically
+queries foranobject whose $idproperty matches the{id}value. Itwill also show a404 page ifno
+Postcan be found.
+1.https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+PDF brought to you by
+generated on August 29, 2018Chapter 5: Controllers | 18
+Listing 5-5
+Listing 5-6When Things Get More Advanced
+The above example works without any configuration because thewildcard name {id}matches the
+name oftheproperty ontheentity. Ifthis isn't true, orifyou have even more complex logic, the
+easiest thing todoisjust query fortheentity manually. Inourapplication, wehave this situation in
+CommentController :
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15/**
+* @Route("/comment/{postSlug}/new", name="comment_new")
+*/
+publicfunction new(Request $request ,$postSlug )
+{
+$post=$this->getDoctrine ()
+->getRepository (Post::class)
+->findOneBy (['slug'=>$postSlug ]);
+if(!$post){
+throw$this->createNotFoundException ();
+}
+// ...
+}
+You can also use the @ParamConverter configuration, which is infinitely flexible:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13useApp\Entity\Post ;
+useSensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter ;
+useSymfony\Component\HttpFoundation\Request ;
+useSymfony\Component\Routing\Annotation\Route ;
+/**
+* @Route("/comment/{postSlug}/new", name="comment_new")
+* @ParamConverter("post", options={"mapping"={"postSlug"="slug"}})
+*/
+publicfunction new(Request $request ,Post$post)
+{
+// ...
+}
+The point isthis: theParamConverter shortcut isgreat forsimple situations. Butyoushouldn't forget that
+querying for entities directly is still very easy.
+Pre and Post Hooks
+Ifyou need toexecute some code before orafter theexecution ofyour controllers, you can usethe
+EventDispatcher component to set up before and after filters .
+Next: Templates
+PDF brought to you by
+generated on August 29, 2018Chapter 5: Controllers | 19
+Chapter 6
+Templates
+When PHP was created 20years ago, developers loved itssimplicity and how well itblended HTML
+and dynamic code. Butastime passed, other template languages -like Twig1-were created tomake
+templating even better.
+Use Twig templating format for your templates.
+Generally speaking, PHP templates aremore verbose than Twig templates because they lack native
+support forlotsofmodern features needed bytemplates, likeinheritance, automatic escaping andnamed
+arguments for filters and functions.
+Twig isthedefault templating format inSymfony andhasthelargest community support ofallnon-PHP
+template engines (it's used in high profile projects such as Drupal 8).
+Template Locations
+Store the application templates in the templates/ directory at the root of your project.
+Centralizing your templates inasingle location simplifies thework ofyour designers. Inaddition, using
+thisdirectory simplifies thenotation used when referring totemplates (e.g. $this->render('admin/
+post/show.html.twig') instead of$this->render('@SomeTwigNamespace/ Admin/Posts/
+show.html.twig') ).
+Use lowercased snake_case for directory and template names.
+This recommendation aligns with Twig best practices, where variables and template names use
+lowercased snake_case too (e.g. user_profile instead of userProfile and
+edit_form.html.twig instead of EditForm.html.twig ).
+Use a prefixed underscore for partial templates in template names.
+1.https://twig.symfony.com/
+PDF brought to you by
+generated on August 29, 2018Chapter 6: Templates | 20
+Listing 6-1
+Listing 6-2You often want toreuse template code using theinclude function toavoid redundant code. To
+determine those partials easily inthefilesystem youshould prefix partials andanyother template without
+HTML body or extendstag with a single underscore.
+Twig Extensions
+Define your Twig extensions inthesrc/Twig/directory. Your application willautomatically detect them
+and configure them.
+Our application needs acustom md2htmlTwig filter sothat wecantransform theMarkdown contents
+ofeach post into HTML. Todothis, create anew Markdown class that will beused later bytheTwig
+extension. It just needs to define one single method to transform Markdown content into HTML:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11namespace App\Utils ;
+classMarkdown
+{
+// ...
+publicfunction toHtml(string$text):string
+{
+return$this->parser->text($text);
+}
+}
+Next, create anew Twig extension and define afilter called md2html using theTwig\TwigFilter
+class. Inject the newly defined Markdown class in the constructor of the Twig extension:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30namespace App\Twig ;
+useApp\Utils\Markdown ;
+useTwig\Extension\AbstractExtension ;
+useTwig\TwigFilter ;
+classAppExtension extends AbstractExtension
+{
+private $parser;
+publicfunction __construct (Markdown $parser)
+{
+$this->parser=$parser;
+}
+publicfunction getFilters ()
+{
+return[
+newTwigFilter ('md2html' ,[$this,'markdownToHtml' ],[
+'is_safe' =>['html'],
+'pre_escape' =>'html',
+]),
+];
+}
+publicfunction markdownToHtml ($content )
+{
+return$this->parser->toHtml($content );
+}
+}
+And that's it!
+Ifyou're using thedefault services.yaml configuration ,you're done! Symfony will automatically know
+about your new service and tag it to be used as a Twig extension.
+PDF brought to you by
+generated on August 29, 2018Chapter 6: Templates | 21
+Next: Forms
+PDF brought to you by
+generated on August 29, 2018Chapter 6: Templates | 22
+Listing 7-1Chapter 7
+Forms
+Forms areoneofthemost misused Symfony components duetoitsvast scope andendless listoffeatures.
+Inthis chapter we'll show you some ofthebest practices soyou canleverage forms butgetwork done
+quickly.
+Building Forms
+Define your forms as PHP classes.
+The Form component allows you tobuild forms right inside your controller code. This isperfectly fine
+ifyoudon't need toreuse theform somewhere else. Butfororganization and reuse, werecommend that
+you define each form in its own PHP class:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25namespace App\Form ;
+useApp\Entity\Post ;
+useSymfony\Component\Form\AbstractType ;
+useSymfony\Component\Form\FormBuilderInterface ;
+useSymfony\Component\OptionsResolver\OptionsResolver ;
+useSymfony\Component\Form\Extension\Core\Type\TextareaType ;
+useSymfony\Component\Form\Extension\Core\Type\EmailType ;
+useSymfony\Component\Form\Extension\Core\Type\DateTimeType ;
+classPostType extends AbstractType
+{
+publicfunction buildForm (FormBuilderInterface $builder ,array$options )
+{
+$builder
+->add('title')
+->add('summary' ,TextareaType ::class)
+->add('content' ,TextareaType ::class)
+->add('authorEmail' ,EmailType ::class)
+->add('publishedAt' ,DateTimeType ::class)
+;
+}
+publicfunction configureOptions (OptionsResolver $resolver )
+{
+PDF brought to you by
+generated on August 29, 2018Chapter 7: Forms | 23
+Listing 7-2
+Listing 7-3
+Listing 7-426
+27
+28
+29
+30$resolver ->setDefaults ([
+'data_class' =>Post::class,
+]);
+}
+}
+Puttheform type classes intheApp\Form namespace, unless youuseother custom form classes likedata
+transformers.
+To use the class, use createForm() and pass the fully qualified class name:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11// ...
+useApp\Form\PostType ;
+// ...
+publicfunction new(Request $request )
+{
+$post=newPost();
+$form=$this->createForm (PostType ::class,$post);
+// ...
+}
+Form Button Configuration
+Form classes should try to be agnostic to where they will be used. This makes them easier to re-use later.
+Add buttons in the templates, not in the form classes or the controllers.
+The Symfony Form component allows you toadd buttons asfields onyour form. This isanice way to
+simplify thetemplate that renders your form. Butifyouadd thebuttons directly inyour form class, this
+would effectively limit the scope of that form:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12classPostType extends AbstractType
+{
+publicfunction buildForm (FormBuilderInterface $builder ,array$options )
+{
+$builder
+// ...
+->add('save',SubmitType ::class,['label' =>'Create Post' ])
+;
+}
+// ...
+}
+This form may have been designed forcreating posts, butifyouwanted toreuse itforediting posts, the
+button label would be wrong. Instead, some developers configure form buttons in the controller:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12namespace App\Controller\Admin ;
+useApp\Entity\Post ;
+useApp\Form\PostType ;
+useSymfony\Component\HttpFoundation\Request ;
+useSymfony\Bundle\FrameworkBundle\Controller\AbstractController ;
+useSymfony\Component\Form\Extension\Core\Type\SubmitType ;
+classPostController extends AbstractController
+{
+// ...
+PDF brought to you by
+generated on August 29, 2018Chapter 7: Forms | 24
+Listing 7-5
+Listing 7-6
+Listing 7-713
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24publicfunction new(Request $request )
+{
+$post=newPost();
+$form=$this->createForm (PostType ::class,$post);
+$form->add('submit' ,SubmitType ::class,[
+'label' =>'Create' ,
+'attr'=>['class' =>'btn btn-default pull-right' ],
+]);
+// ...
+}
+}
+This isalso animportant error, because you aremixing presentation markup (labels, CSS classes, etc.)
+with pure PHP code. Separation ofconcerns isalways agood practice tofollow, soputalltheview-related
+things in the view layer:
+1
+2
+3
+4
+5{{form_start (form)}}
+{{form_widget (form)}}
+<inputtype="submit" class="btn"value="Create" />
+{{form_end (form)}}
+Rendering the Form
+There arealotofways torender your form, ranging from rendering theentire thing inone line to
+rendering each part ofeach field independently. The best way depends onhow much customization you
+need.
+One ofthesimplest ways -which isespecially useful during development -istorender theform tags and
+use the form_widget() function to render all of the fields:
+1
+2
+3{{form_start (form,{attr:{class:'my-form-class' }})}}
+{{form_widget (form)}}
+{{form_end (form)}}
+Ifyou need more control over how your fields are rendered, then you should remove the
+form_widget(form) function and render your fields individually. See How toCustomize Form
+Rendering formore information onthisand how you cancontrol how theform renders ataglobal level
+using form theming.
+Handling Form Submits
+Handling a form submit usually follows a similar template:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14publicfunction new(Request $request )
+{
+// build the form ...
+$form->handleRequest ($request );
+if($form->isSubmitted ()&&$form->isValid()){
+$entityManager =$this->getDoctrine ()->getManager ();
+$entityManager ->persist($post);
+$entityManager ->flush();
+return$this->redirectToRoute ('admin_post_show' ,[
+'id'=>$post->getId()
+]);
+PDF brought to you by
+generated on August 29, 2018Chapter 7: Forms | 25
+15
+16
+17
+18}
+// render the template
+}
+Werecommend that you useasingle action forboth rendering theform and handling theform submit.
+Forexample, youcould have anew()action that only renders theform andacreate() action that only
+processes theform submit. Both those actions willbealmost identical. Soit'smuch simpler toletnew()
+handle everything.
+Next: Internationalization
+PDF brought to you by
+generated on August 29, 2018Chapter 7: Forms | 26
+Chapter 8
+Internationalization
+Internationalization and localization adapt theapplications and their contents tothespecific region or
+language oftheusers. InSymfony this isanopt-in feature that needs tobeinstalled before using it
+(composer require symfony/translation ).
+Translation Source File Location
+Store the translation files in the translations/ directory at the root of your project.
+Your translators' lives will be much easier if all the application translations are in one central location.
+Translation Source File Format
+The Symfony Translation component supports lotsofdifferent translation formats: PHP, Qt,.po,.mo,
+JSON, CSV, INI, etc.
+Use the XLIFF format for your translation files.
+Ofalltheavailable translation formats, only XLIFF and gettext have broad support inthetools used by
+professional translators. And since it'sbased onXML, you canvalidate XLIFF filecontents asyou write
+them.
+Symfony supports notes inXLIFF files, making them more user-friendly fortranslators. Attheend, good
+translations are all about context, and these XLIFF notes allow you to define that context.
+The PHP Translation Bundle1includes advanced extractors that can read your project and
+automatically update the XLIFF files.
+1.https://github.com/php-translation/symfony-bundle
+PDF brought to you by
+generated on August 29, 2018Chapter 8: Internationalization | 27
+Listing 8-1Translation Keys
+Always use keys for translations instead of content strings.
+Using keys simplifies themanagement ofthetranslation files because you can change theoriginal
+contents without having to update all of the translation files.
+Keys should always describe their purpose and nottheir location. For example, ifaform hasafield
+with the label "Username", then anice key would be label.username ,not
+edit_form.label.username .
+Example Translation File
+Applying alltheprevious best practices, thesample translation fileforEnglish intheapplication would
+be:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12<!-- translations/messages.en.xlf -->
+<?xml version="1.0"?>
+<xliffversion= "1.2"xmlns="urn:oasis:names:tc:xliff:document:1.2" >
+<filesource-language= "en"target-language= "en"datatype= "plaintext" original= "file.ext" >
+<body>
+<trans-unit id="title_post_list" >
+<source> title.post_list </source>
+<target> Post List </target>
+</trans-unit>
+</body>
+</file>
+</xliff>
+Next: Security
+PDF brought to you by
+generated on August 29, 2018Chapter 8: Internationalization | 28
+Chapter 9
+Security
+Authentication and Firewalls (i.e. Getting the User's Credentials)
+You can configure Symfony toauthenticate your users using any method you want and toload user
+information from any source. This isacomplex topic, buttheSecurity guide hasalotofinformation
+about this.
+Regardless ofyour needs, authentication isconfigured insecurity.yaml ,primarily under the
+firewalls key.
+Unless youhave twolegitimately different authentication systems andusers (e.g. form login forthemain site
+andatoken system foryour API only), werecommend having only onefirewall entry with theanonymous
+key enabled.
+Most applications only have one authentication system and one setofusers. Forthis reason, you only
+need onefirewall entry. There areexceptions ofcourse, especially ifyou have separated web and API
+sections on your site. But the point is to keep things simple.
+Additionally, you should usetheanonymous keyunder your firewall. Ifyou need torequire users to
+belogged infordifferent sections ofyour site(ormaybe nearly allsections), usetheaccess_control
+area.
+Use the bcryptencoder for hashing your users' passwords.
+Ifyour users have apassword, then werecommend hashing itusing thebcryptencoder, instead ofthe
+traditional SHA-512 hashing encoder. The main advantages ofbcryptaretheinclusion ofasaltvalue to
+protect against rainbow table attacks, and itsadaptive nature, which allows tomake itslower toremain
+resistant to brute-force search attacks.
+Argon2i isthehashing algorithm asrecommended byindustry standards, butthiswon't beavailable
+toyouunless youareusing PHP 7.2+ orhave thelibsodium1extension installed. bcryptissufficient
+for most applications.
+PDF brought to you by
+generated on August 29, 2018Chapter 9: Security | 29
+Listing 9-1
+Listing 9-2With thisinmind, here istheauthentication setup from ourapplication, which uses alogin form toload
+users from the database:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22# config/packages/security.yaml
+security :
+encoders :
+App\Entity\User :bcrypt
+providers :
+database_users :
+entity:{class:App\Entity\User ,property :username }
+firewalls :
+secured_area :
+pattern:^/
+anonymous :true
+form_login :
+check_path :login
+login_path :login
+logout:
+path:security_logout
+target:homepage
+# ... access_control exists, but is not shown here
+The source code for our project contains comments that explain each part.
+Authorization (i.e. Denying Access)
+Symfony gives youseveral ways toenforce authorization, including theaccess_control configuration
+in security.yaml , the @Security annotation and using isGranted on the
+security.authorization_checker service directly.
+•For protecting broad URL patterns, use access_control ;
+•Whenever possible, use the @Security annotation;
+•Check security directly onthesecurity.authorization_checker service whenever youhave amore complex
+situation.
+There are also different ways to centralize your authorization logic, like with a custom security voter:
+Define a custom security voter to implement fine-grained restrictions.
+The @Security Annotation
+For controlling access onacontroller-by-controller basis, usethe@Security annotation whenever
+possible. It's easy to read and is placed consistently above each action.
+Inourapplication, you need theROLE_ADMIN inorder tocreate anew post. Using @Security ,this
+looks like:
+1.https://pecl.php.net/package/libsodium
+PDF brought to you by
+generated on August 29, 2018Chapter 9: Security | 30
+Listing 9-3
+Listing 9-4
+Listing 9-51
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14useSensio\Bundle\FrameworkExtraBundle\Configuration\Security ;
+useSymfony\Component\Routing\Annotation\Route ;
+// ...
+/**
+* Displays a form to create a new Post entity.
+*
+* @Route("/new", name="admin_post_new")
+* @Security("has_role('ROLE_ADMIN')")
+*/
+publicfunction new()
+{
+// ...
+}
+Using Expressions for Complex Security Restrictions
+Ifyour security logic isalittle bitmore complex, you canuseanexpression inside @Security .Inthe
+following example, auser canonly access thecontroller iftheir email matches thevalue returned bythe
+getAuthorEmail() method on the Postobject:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12useApp\Entity\Post ;
+useSensio\Bundle\FrameworkExtraBundle\Configuration\Security ;
+useSymfony\Component\Routing\Annotation\Route ;
+/**
+* @Route("/{id}/edit", name="admin_post_edit")
+* @Security("user.getEmail() == post.getAuthorEmail()")
+*/
+publicfunction edit(Post$post)
+{
+// ...
+}
+Notice that thisrequires theuseoftheParamConverter2,which automatically queries forthePostobject
+and puts itonthe$postargument. This iswhat makes itpossible tousethepostvariable inthe
+expression.
+This hasonemajor drawback: anexpression inanannotation cannot easily bereused inother parts of
+theapplication. Imagine that youwant toaddalink inatemplate that willonly beseen byauthors. Right
+now you'll need to repeat the expression code using Twig syntax:
+1
+2
+3{%ifapp.user andapp.user.email ==post.authorEmail %}
+<ahref="">...</a>
+{%endif%}
+The easiest solution -ifyour logic issimple enough -istoadd anew method tothePostentity that
+checks if a given user is its author:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12// src/Entity/Post.php
+// ...
+classPost
+{
+// ...
+/**
+* Is the given User the author of this Post?
+*
+* @return bool
+*/
+2.https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+PDF brought to you by
+generated on August 29, 2018Chapter 9: Security | 31
+Listing 9-6
+Listing 9-7
+Listing 9-813
+14
+15
+16
+17publicfunction isAuthor (User$user=null)
+{
+return$user&&$user->getEmail ()===$this->getAuthorEmail ();
+}
+}
+Now you can reuse this method both in the template and in the security expression:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12useApp\Entity\Post ;
+useSensio\Bundle\FrameworkExtraBundle\Configuration\Security ;
+useSymfony\Component\Routing\Annotation\Route ;
+/**
+* @Route("/{id}/edit", name="admin_post_edit")
+* @Security("post.isAuthor(user)")
+*/
+publicfunction edit(Post$post)
+{
+// ...
+}
+1
+2
+3{%ifpost.isAuthor (app.user )%}
+<ahref="">...</a>
+{%endif%}
+Checking Permissions without @Security
+The above example with @Security only works because we're using theParamConverter ,which gives
+theexpression access tothepostvariable. Ifyoudon't usethis, orhave some other more advanced use-
+case, you can always do the same security check in PHP:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32/**
+* @Route("/{id}/edit", name="admin_post_edit")
+*/
+publicfunction edit($id)
+{
+$post=$this->getDoctrine ()
+->getRepository (Post::class)
+->find($id);
+if(!$post){
+throw$this->createNotFoundException ();
+}
+if(!$post->isAuthor ($this->getUser())){
+$this->denyAccessUnlessGranted ('edit',$post);
+}
+// equivalent code without using the "denyAccessUnlessGranted()" shortcut:
+//
+// use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+// use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+//
+// ...
+//
+// public function __construct(AuthorizationCheckerInterface $authorizationChecker) {
+//      $this->authorizationChecker = $authorizationChecker;
+// }
+//
+// ...
+//
+// if (!$this->authorizationChecker->isGranted('edit', $post)) {
+//    throw $this->createAccessDeniedException();
+// }
+PDF brought to you by
+generated on August 29, 2018Chapter 9: Security | 32
+Listing 9-933
+34
+35//
+// ...
+}
+Security Voters
+Ifyour security logic iscomplex and can't becentralized into amethod likeisAuthor() ,you should
+leverage custom voters. These aremuch easier than ACLs and will give you theflexibility you need in
+almost all cases.
+First, create avoter class. The following example shows avoter that implements the same
+getAuthorEmail() logic you used above:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53namespace App\Security ;
+useApp\Entity\Post ;
+useSymfony\Component\Security\Core\Authentication\Token\TokenInterface ;
+useSymfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface ;
+useSymfony\Component\Security\Core\Authorization\Voter\Voter ;
+useSymfony\Component\Security\Core\User\UserInterface ;
+classPostVoter extends Voter
+{
+constCREATE='create' ;
+constEDIT='edit';
+private $decisionManager ;
+publicfunction __construct (AccessDecisionManagerInterface $decisionManager )
+{
+$this->decisionManager =$decisionManager ;
+}
+protected function supports ($attribute ,$subject )
+{
+if(!in_array ($attribute ,[self::CREATE,self::EDIT])){
+returnfalse;
+}
+if(!$subject instanceof Post){
+returnfalse;
+}
+returntrue;
+}
+protected function voteOnAttribute ($attribute ,$subject ,TokenInterface $token)
+{
+$user=$token->getUser();
+/** @var Post */
+$post=$subject ;// $subject must be a Post instance, thanks to the supports method
+if(!$userinstanceof UserInterface ){
+returnfalse;
+}
+switch($attribute ){
+// if the user is an admin, allow them to create new posts
+caseself::CREATE:
+if($this->decisionManager ->decide($token,['ROLE_ADMIN' ])){
+returntrue;
+}
+break;
+// if the user is the author of the post, allow them to edit the posts
+PDF brought to you by
+generated on August 29, 2018Chapter 9: Security | 33
+Listing 9-10
+Listing 9-1154
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64caseself::EDIT:
+if($user->getEmail ()===$post->getAuthorEmail ()){
+returntrue;
+}
+break;
+}
+returnfalse;
+}
+}
+Ifyou're using thedefault services.yaml configuration ,your application willautoconfigure your security
+voter and inject an AccessDecisionManagerInterface instance into it thanks to autowiring .
+Now, you can use the voter with the @Security annotation:
+1
+2
+3
+4
+5
+6
+7
+8/**
+* @Route("/{id}/edit", name="admin_post_edit")
+* @Security("is_granted('edit', post)")
+*/
+publicfunction edit(Post$post)
+{
+// ...
+}
+You canalso usethisdirectly with thesecurity.authorization_checker service orviatheeven
+easier shortcut in a controller:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26/**
+* @Route("/{id}/edit", name="admin_post_edit")
+*/
+publicfunction edit($id)
+{
+$post=...;// query for the post
+$this->denyAccessUnlessGranted ('edit',$post);
+// use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+// use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+//
+// ...
+//
+// public function __construct(AuthorizationCheckerInterface $authorizationChecker) {
+//      $this->authorizationChecker = $authorizationChecker;
+// }
+//
+// ...
+//
+// if (!$this->authorizationChecker->isGranted('edit', $post)) {
+//    throw $this->createAccessDeniedException();
+// }
+//
+// ...
+}
+Learn More
+The FOSUserBundle3,developed bytheSymfony community, adds support foradatabase-backed user
+system inSymfony. Italso handles common tasks like user registration and forgotten password
+functionality.
+3.https://github.com/FriendsOfSymfony/FOSUserBundle
+PDF brought to you by
+generated on August 29, 2018Chapter 9: Security | 34
+Enable the Remember Me feature to allow your users to stay logged in for a long period of time.
+When providing customer support, sometimes it'snecessary toaccess theapplication assome other user
+so that you can reproduce the problem. Symfony provides the ability to impersonate users .
+Ifyour company uses auser login method notsupported bySymfony, you candevelop your own user
+provider andyour own authentication provider .
+Next: Web Assets
+PDF brought to you by
+generated on August 29, 2018Chapter 9: Security | 35
+Chapter 10
+Web Assets
+Web assets arethings likeCSS, JavaScript and image files that make thefrontend ofyour sitelook and
+work great.
+Store your assets in the assets/directory at the root of your project.
+Your designers' andfront-end developers' lives willbemuch easier ifalltheapplication assets areinone
+central location.
+UseWebpack Encore1to compile, combine and minimize web assets.
+Webpack2istheleading JavaScript module bundler that compiles, transforms and packages assets for
+usage inabrowser. Webpack Encore isaJavaScript library that gets ridofmost ofWebpack complexity
+without hiding any of its features or distorting its usage and philosophy.
+Webpack Encore wasdesigned tobridge thegapbetween Symfony applications andtheJavaScript-based
+tools used inmodern web applications. Check outtheofficial Webpack Encore documentation3tolearn
+more about all the available features.
+Next: Tests
+1.https://github.com/symfony/webpack-encore
+2.https://webpack.js.org/
+3.https://symfony.com/doc/current/frontend.html
+PDF brought to you by
+generated on August 29, 2018Chapter 10: Web Assets | 36
+Listing 11-1Chapter 11
+Tests
+Ofallthedifferent types oftestavailable, these best practices focus solely onunit and functional tests.
+Unit testing allows youtotesttheinput andoutput ofspecific functions. Functional testing allows youto
+command a"browser" where youbrowse topages onyour site, click links, filloutforms and assert that
+you see certain things on the page.
+Unit Tests
+Unit tests areused totest your "business logic", which should liveinclasses that areindependent of
+Symfony. Forthat reason, Symfony doesn't really have anopinion onwhat tools youuseforunit testing.
+However, the most popular tools are PHPUnit1andPHPSpec2.
+Functional Tests
+Creating really good functional tests canbetough sosome developers skip these completely. Don't skip
+thefunctional tests! Bydefining some simple functional tests, youcanquickly spot anybigerrors before
+you deploy them:
+Define a functional test that at least checks if your application pages are successfully loading.
+A functional test like this is simple to implement thanks to PHPUnit data providers :
+1
+2
+3
+4
+5
+6
+7
+8
+9// tests/ApplicationAvailabilityFunctionalTest.php
+namespace App\Tests ;
+useSymfony\Bundle\FrameworkBundle\Test\WebTestCase ;
+classApplicationAvailabilityFunctionalTest extends WebTestCase
+{
+/**
+* @dataProvider urlProvider
+1.https://phpunit.de/
+2.https://www.phpspec.net/
+PDF brought to you by
+generated on August 29, 2018Chapter 11: Tests | 37
+Listing 11-210
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28*/
+publicfunction testPageIsSuccessful ($url)
+{
+$client =self::createClient ();
+$client->request('GET',$url);
+$this->assertTrue ($client->getResponse ()->isSuccessful ());
+}
+publicfunction urlProvider ()
+{
+yield['/'];
+yield['/posts' ];
+yield['/post/fixture-post-1' ];
+yield['/blog/category/fixture-category' ];
+yield['/archives' ];
+// ...
+}
+}
+This code checks that allthegiven URLs load successfully, which means that their HTTP response status
+code isbetween 200and 299.This may notlook that useful, butgiven how little effort this took, it's
+worth having it in your application.
+Incomputer software, thiskind oftestiscalled smoke testing3andconsists of"preliminary testing toreveal
+simple failures severe enough to reject a prospective software release" .
+Hardcode URLs in a Functional Test
+Some of you may be asking why the previous functional test doesn't use the URL generator service:
+Hardcode the URLs used in the functional tests instead of using the URL generator.
+Consider thefollowing functional testthat uses therouterservice togenerate theURL ofthetested
+page:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11// ...
+private $router;// consider that this holds the Symfony router service
+publicfunction testBlogArchives ()
+{
+$client =self::createClient ();
+$url=$this->router->generate ('blog_archives' );
+$client->request('GET',$url);
+// ...
+}
+This will work, but ithas one huge drawback. Ifadeveloper mistakenly changes thepath ofthe
+blog_archives route, thetestwillstillpass, buttheoriginal (old) URL won't work! This means that
+any bookmarks for that URL will be broken and you'll lose any search engine page ranking.
+Testing JavaScript Functionality
+The built-in functional testing client isgreat, butitcan't beused totestanyJavaScript behavior onyour
+pages. If you need to test this, consider using the Mink4library from within PHPUnit.
+3.https://en.wikipedia.org/wiki/Smoke_testing_(software)
+4.http://mink.behat.org
+PDF brought to you by
+generated on August 29, 2018Chapter 11: Tests | 38
+Ofcourse, ifyou have aheavy JavaScript front-end, you should consider using pure JavaScript-based
+testing tools.
+Learn More about Functional Tests
+Consider using theHautelookAliceBundle5togenerate real-looking data foryour testfixtures using Faker6
+andAlice7.
+5.https://github.com/hautelook/AliceBundle
+6.https://github.com/fzaninotto/Faker
+7.https://github.com/nelmio/alice
+PDF brought to you by
+generated on August 29, 2018Chapter 11: Tests | 39
+
+

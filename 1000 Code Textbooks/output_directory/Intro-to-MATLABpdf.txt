@@ -1,0 +1,2764 @@
+an interactive introduction to
+MATLAB
+The University of Edinburgh, School of Engineering
+Craig Warren, ©2010-2012
+
+ABOUT THE COURSE
+This course was developed in the School of Engineering to provide appropriate
+material for teaching MATLAB∗in all engineering disciplines as well as to a
+wider audience. It is a self-study, self-paced course that emphasises responsible
+learning. Course material consists of this document used in conjunction with
+extensive online content. If you are a second-year engineering undergraduate
+student, there are also scheduled laboratory sessions where you can practice
+exercises and ask questions.
+Who should use this document?
+This document is targeted at those with no prior knowledge of
+MATLAB , and no previous programming experience. The aim,
+upon completion of the course, is to be competent using the most
+common features in MATLAB and be able to apply them to solve
+engineering problems.
+What is in this document?
+This document forms part of a self-study course to help you get
+started with MATLAB . It should be used along with the support-
+ing online materials available at the course website
+(http://www.eng.ed.ac.uk/teaching/courses/matlab).Themainbody
+of this document contains the fundamental topics for the course and
+there are also several more advanced topics given in appendices.
+How to use this document?
+This document contains diﬀerent elements designed to make your
+learning experience as smooth as possible. To beneﬁt the most from
+these elements you are encouraged to use the online PDF version
+of this document. One of the ﬁrst things you’ll notice is that this You can use the
+commenting tools in
+Adobe Reader to add
+your own notes to this
+PDF documentdocument contains many links: those in red indicate a link to online
+material, and those in blue indicate a link to another section of this
+document.
+A key part of this course are the screencasts, which are video
+screen captures (http://en.wikipedia.org/wiki/Screencast). In this
+∗MATLAB ®is a registered trademark of MathWorks
+iii
+Figure 1: A University of Edinburgh screencast
+document screencasts are indicated by a link in a blue box with a
+clapperboard icon, like the example shown.
+Watching the
+screencasts and trying
+the examples for
+yourself will help you
+develop your skills in
+MATLAB more
+quickly!
+Getting started
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/getting-started.shtml)
+Clicking on a link to a screencast will take you to the appropriate
+page on the course website where you will see the opening image
+to a University of Edinburgh screencast presented in the video
+player (Figure 1). Watching and learning from the screencasts are
+an essential part of the course and will help you develop your skills
+inMATLAB more quickly.
+You will also notice two other types of blue box environments in
+this document: one is for Hints and Tips (with a question mark
+icon), and the other contains exercises that you should complete
+(with an inkwell icon).
+Hints and Tips
+Throughout this document you will also see Hints and Tips boxes like this one.
+Please read these as they contain usefulhints!
+iv
+An example exercise
+Example exercise solutions
+Additionally there are grey box environments in this document.
+Like the example shown (Listing 1), these contain code listings that
+demonstrate actual MATLAB code. Line numbers are given to
+the left of the listings to make is simpler to refer to speciﬁc bits of
+code. Very often you will be required to copy and paste the listing
+intoMATLAB and try running it for yourself.
+Listing 1: Example of a code listing
+1>> 5+5
+2ans =
+310
+Sources of help and further reading
+There are a huge number of textbooks published on the subject of
+MATLAB ! A user-friendly textbook that provides a good intro-
+duction to MATLAB is: Available from Amazon
+for c.£15•Gilat, A. (2008). MATLAB : An Introduction With Applica-
+tions. John Wiley & Sons, Inc., 3rd edition.
+There are a couple of further textbooks listed in the Bibliography
+section at the end of this document. However, throughout this
+course and beyond, the most important source of help is the docu-
+mentationbuilt-into MATLAB .Itiseasilysearchable,andbecause
+MATLAB contains many built-in functions it is worth checking
+out before starting to write your own code.
+•MATLAB help documentation
+(http://www.mathworks.com/access/helpdesk/help/techdoc/)
+Accessed through the help menu in MATLAB , or online.
+•MATLAB Central
+(http://www.mathworks.co.uk/matlabcentral/)
+An open exchange for users, with code snippets, help forums
+and blogs. A great place to search for speciﬁc help!
+v
+Development of the course
+The development of this course was funded through The Edinburgh
+Fund Small Project Grant which is part of The University of Edin-
+burgh Campaign
+(http://www.edinburghcampaign.com/alumni-giving/grants).
+The material for this course was developed by Dr. Tina Düren, Dr.
+Antonis Giannopoulos, Dr. Guillermo Rein, Dr. John Thompson,
+and Dr. Craig Warren.
+vi
+CONTENTS
+0.1What is MATLAB ? . . . . . . . . . . . . . . . . . . . . . . . . 1
+0.2How is MATLAB used in industry? . . . . . . . . . . . . . . . 1
+1 basic concepts 3
+1.1 MATLAB in the School of Engineering . . . . . . . . . . . . . 3
+1.2TheMATLAB environment . . . . . . . . . . . . . . . . . . . 3
+1.3Basic calculations . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+1.4Variables and arrays . . . . . . . . . . . . . . . . . . . . . . . . 7
+1.5Solving systems of linear equations . . . . . . . . . . . . . . . . 13
+2 plotting 19
+2.1Simple 2 dplotting . . . . . . . . . . . . . . . . . . . . . . . . . 19
+2.1.1Multiple plots in one Figure Window . . . . . . . . . . . 23
+2.2Curve-ﬁtting . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+2.33dplotting using plot3 and surf . . . . . . . . . . . . . . . . . . 26
+3 scripts and functions 33
+3.1Script ﬁles . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+3.2Functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+4 decision making 45
+4.1Relational and logical operations . . . . . . . . . . . . . . . . . 45
+4.2The if-else statement . . . . . . . . . . . . . . . . . . . . . . . . 48
+5 loops 57
+5.1for loops . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 57
+5.2while loops . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 60
+a advanced topic: the switch statement 67
+b advanced topic: vectorisation 69
+c additional exercises 71
+c.1Basic Concepts . . . . . . . . . . . . . . . . . . . . . . . . . . . 71
+c.2Plotting . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 76
+c.3Scripts and Functions . . . . . . . . . . . . . . . . . . . . . . . 83
+c.4Decision Making . . . . . . . . . . . . . . . . . . . . . . . . . . 89
+c.5Loops . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 90
+bibliography 93
+vii
+LIST OF SCREENCASTS
+TheMATLAB desktop . . . . . . . . . . . . . . . . . . . . . . . . . 4
+Exercise 1 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+Variables and simple arrays . . . . . . . . . . . . . . . . . . . . . . . 9
+The dot operator . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+Indexing arrays . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+Exercise 2 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+Creating a simple plot . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+Plotting experimental data . . . . . . . . . . . . . . . . . . . . . . . 22
+Exercise 3 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+Basic Curve-ﬁtting . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+Exercise 4 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+Creating a simple script . . . . . . . . . . . . . . . . . . . . . . . . . 35
+Exercise 5 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+Creating a function . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+Exercise 6 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+The if-else statement . . . . . . . . . . . . . . . . . . . . . . . . . . . 51
+Exercise 7 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 55
+The for loop . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 59
+The while loop . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 62
+Exercise 8 Solutions . . . . . . . . . . . . . . . . . . . . . . . . . . . 65
+viii
+LIST OF EXERCISES
+Exercise 1: Basic calculations . . . . . . . . . . . . . . . . . . . . . . 6
+Exercise 2: Variables and arrays . . . . . . . . . . . . . . . . . . . . 15
+Exercise 3: Simple 2 dplotting . . . . . . . . . . . . . . . . . . . . . 24
+Exercise 4: 3 dplotting. . . . . . . . . . . . . . . . . . . . . . . . . . 30
+Exercise 5: Scripts . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+Exercise 6: Functions . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+Exercise 7: Decision making . . . . . . . . . . . . . . . . . . . . . . . 54
+Exercise 8: Loops . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 65
+ix
+LIST OF TABLES
+Table 1 Arithmetic operations . . . . . . . . . . . . . . . . . . . 6
+Table 2 Element-by-element arithmetic operations . . . . . . . . 10
+Table 3 Line styles in plots . . . . . . . . . . . . . . . . . . . . . 20
+Table 4 Colours in plots . . . . . . . . . . . . . . . . . . . . . . . 21
+Table 5 Function deﬁnitions, ﬁlenames, input and output variables 40
+Table 6 Relational operators . . . . . . . . . . . . . . . . . . . . 45
+Table 7 Logical operators . . . . . . . . . . . . . . . . . . . . . . 45
+Table 8 Friction experiment results . . . . . . . . . . . . . . . . 73
+Table 9 Results of a tension test on an aluminium specimen . . 76
+Table 10 Coeﬃcients for the cubic equation for the heat capacity
+of gases . . . . . . . . . . . . . . . . . . . . . . . . . . . 85
+x
+ABOUT MATLAB
+0.1 what is matlab?
+MATLAB is produced by MathWorks, and is one of a number of commercially
+available software packages for numerical computing and programming. MAT-
+LABprovides an interactive environment for algorithm development, data
+visualisation, data analysis, and numerical computation. MATLAB , which
+derives its name from MATrix LABoratory, excels at matrix operations and
+graphics. Its main competitors are Maple, Mathematica, and Mathcad, each
+with their own strengths and weaknesses. MATLAB R2011a
+student version is
+available for around
+£50MATLAB is available in both commercial and academic versions with new
+releases binannually e.g. R2011a (released around March 2011), and R2011b
+(released around September 2011). MATLAB itself is the core product and is
+augmented by additional toolboxes, many of which have to be purchased separ-
+ately. If you want to run MATLAB on your own computer MathWorks oﬀers
+a student version (http://www.mathworks.com/academia/student_version/)
+with some of the most commonly used toolboxes for around £50. The accom-
+panying online material, and the screenshots in this document are based on
+MATLAB R2009a running under Microsoft Windows XP.
+0.2 how is matlab used in industry?
+Knowing how to use
+MATLAB is a vital
+skill for many
+engineering jobs!The ability to use tools such as MATLAB is increasingly required by employ-
+ers of graduate engineers in industry. Many job adverts speciﬁcally mention
+knowledge of MATLAB as an essential skill.
+MATLAB is a widely-used tool in many diﬀerent ﬁelds of engineering and
+science. The following is a brief list of examples from Chemical, Civil, Electrical,
+and Mechanical Engineering:
+•Motorsport Teams Improve Vehicle Performance with MathWorks Tools
+(http://www.mathworks.com/products/simmechanics/userstories.html?ﬁle=11197)
+•Bell Helicopter Develops the First Civilian Tiltrotor
+(http://www.mathworks.com/company/newsletters/news_notes/oct06/bellhelicopter.html)
+1
+2 List of Tables
+•Greenhouse Designed with MATLAB and Simulink Revolutionizes Agri-
+culture in Arid Coastal Regions
+(http://www.mathworks.com/company/user_stories/userstory2347.html?by=industry)
+•Thames Water Aims to Reduce Leaks by More Than 25% Using a
+MATLAB-Based Leak-Location System
+(http://www.mathworks.com/company/user_stories/userstory2354.html?by=industry)
+•Samsung UK Develops 4G Wireless Systems with Simulink
+(http://www.mathworks.com/company/user_stories/userstory10725.html?by=industry)
+•Cambridge Consultants Develops WiMAX Test Bench for Aspex Semi-
+conductor with MATLAB
+(http://www.mathworks.com/company/user_stories/userstory10996.html?by=industry)
+•Halliburton Makes Oil Exploration Safer Using MATLAB and Neural
+Networks
+(http://www.mathworks.com/industrial-automation-machinery/userstories.html?
+ﬁle=2355&title=Halliburton%20Makes%20Oil%20Exploration%20Safer%20Using%20
+MATLAB%20and%20Neural%20Networks)
+1
+BASIC CONCEPTS
+1.1 matlab in the school of engineering
+MATLAB is currently available under Microsoft Windows 7 and Linux oper-
+ating systems in the School of Engineering Computing Labs
+(http://www.eng.ed.ac.uk/it/TLabs/), and also under Microsoft Windows 7 in
+allOpenAccessComputingLabs(http://www.ed.ac.uk/schools-departments/information-
+services/services/computing/desktop-personal/open-access/locations/locations).
+To launch MATLAB under Microsoft Windows 7 in a University of Edin-
+burgh computing lab click on its shortcut, located at Start!All Programs
+!MATLAB!MATLAB R2011a .
+1.2 the matlab environment
+When you launch MATLAB you are presented with the MATLAB desktop
+(Figure 2) which, by default, is divided into 4 windows:
+1.Command Window: This is the main window, and contains the command
+prompt ( »). This is where you will type all commands.
+2.Command History: Displays a list of previously typed commands. The
+command history persists across multiple sessions and commands can be
+dragged into the Command Window and edited, or double-clicked to run
+them again.
+3.Workspace: Lists all the variables you have generated in the current
+session. It shows the type and size of variables, and can be used to
+quickly plot, or inspect the values of variables.
+4.Current Directory: Shows the ﬁles and folders in the current directory.
+The path to the current directory is listed near the top of the MATLAB
+desktop. By default, a MATLAB folder is created in your home directory
+on your M:drive, and this is where you should save your work.
+You will use and become more familiar with the diﬀerent areas of the MATLAB
+desktop as you progress through this course.
+3
+4 basic concepts
+1
+4
+32
+Figure 2: The MATLAB desktop
+TheMATLAB desktop
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit01/MATLAB-
+desktop.shtml)Remember you can
+pause the screencasts
+at any time and try the
+examples for yourself. 1.3 basic calculations
+MATLAB can perform basic calculations such as those you are used to doing
+on your calculator. Listings 1.1–1.5 gives some simple examples (and results)
+of arithmetic operations, exponentials and logarithms, trigonometric functions,
+and complex numbers that can be entered in the Command Window.
+Listing 1.1: Addition
+1>> 4+3
+2ans =
+37
+Try using MATLAB
+as an expensive
+calculator!Listing 1.2: Exponentiation
+1>> 2^2
+2ans =
+34
+1.3basic calculations 5
+Listing 1.3: Trigonometry
+1>> sin(2 *pi)+exp( -3/2)
+2ans =
+30.2231
+The arguments to
+trigonometric functions
+should be given in
+radians.Comments:
+•MATLAB has pre-deﬁned constants e.g. may be typed as pi.
+•You must explicitly type all arithmetic operations e.g. sin(2*pi)not
+sin(2pi) .
+•sin(x)andexp(x)correspond to sin(x)andexrespectively.
+Listing 1.4: Complex numbers
+1>> 5+5j
+2ans =
+35.0000 + 5.0000i
+Comments:
+•Complex numbers can be entered using the basic imaginary unit iorj.
+Listing 1.5: More trigonometry
+1>> atan(5/5)
+2ans =
+30.7854
+5>> 10*log10(0.5)
+6ans =
+7 -3.0103
+Comments:
+•atan(x) andlog10(x) correspond to tan-1(x)andlog10(x)respect-
+ively.
+Built-in functions
+There are many other built-in MATLAB functions for performing basic cal-
+culations. These can be searched from the Help Browser which is opened by
+clicking on its icon (like the icon used to indicate this Hints and Tips section)
+in the MATLAB desktop toolbar.
+6 basic concepts
+Table 1: Arithmetic operations
+command description
++ Addition
+- Subtraction
+* Multiplication
+/ Division
+^ Exponentiation
+Exercise 1: Basic calculations
+1.Launch MATLAB and explore the diﬀerent areas of the MATLAB
+desktop.
+2.Try the basic calculations given in Listings 1.1–1.5, and check you get
+the correct answers.
+3.Arithmetic operations
+Compute the following:
+•25
+25-1and compare with 
+1-1
+25-1
+•p
+5-1
+(p
+5+1)2
+[Answers: 1.0323, 1.0323, 0.1180]
+4.Exponentials and logarithms
+Compute the following:
+•e3
+•ln(e3)
+•log10(e3)
+•log10(105)
+[Answers: 20.0855, 3, 1.3029, 5]
+5.Trigonometric operations
+Compute the following:
+•sin(
+6)
+•cos()
+•tan(
+2)
+•sin2(
+6) +cos2(
+6)
+[Answers: 0.5, -1, 1.6331E16, 1]
+Exercise 1 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit01/Ex1-
+Solutions.shtml)
+1.4variables and arrays 7
+You may have noticed that the result of each of the basic calculations you
+performed was always assigned to a variable called ans. Variables are a very
+important concept in MATLAB .
+1.4 variables and arrays
+A variable is a symbolic name associated with a value. The current value of the
+variable is the data actually stored in the variable. Variables are very important
+inMATLAB because they allow us to easily reference complex and changing
+data. Variables can reference diﬀerent data types i.e. scalars, vectors, arrays,
+matrices, strings etc.... Variable names must consist of a letter which can be
+followed by any number of letters, digits, or underscores. MATLAB is case
+sensitive i.e. it distinguishes between uppercase and lowercase letters e.g. A
+andaare not the same variable.
+Variables you have created in the current MATLAB session can be viewed
+in a couple of diﬀerent ways. The Workspace (shown in Figure 2) lists all the
+current variables and allows you to easily inspect their type and size, as well
+as quickly plot them. Alternatively, the whoscommand can be typed in the
+Command Window and provides information about the type and size of current
+variables. Listing 1.6 shows the output of the whoscommand after storing and
+manipulating a few variables.
+Listing 1.6: Using the whoscommand
+1>> a = 2
+2a =
+32
+4>> b = 3
+5b =
+63
+7>> c = a *b
+8c =
+96
+10>> edinburgh = a+5
+11edinburgh =
+127
+13>> whos
+14Name Size Bytes Class Attributes
+16a 1x1 8 double
+17b 1x1 8 double
+18c 1x1 8 double
+19edinburgh 1x1 8 double
+Arrays are lists of numbers or expressions arranged in horizontal rows and
+vertical columns. A single row, or single column array is called a vector. An
+8 basic concepts
+array withmrows andncolumns is called a matrix of size mn. Listings 1.7–
+1.10 demonstrate how to create row and column vectors, and matrices in
+MATLAB .
+Listing 1.7: Creating a row vector
+1>> x = [1 2 3]
+2x =
+31 2 3
+•Square brackets are used to denote a vector or matrix.
+•Spaces are used to denote columns.
+Listing 1.8: Creating a column vector
+1>> y = [4; 5; 6]
+2y =
+34
+45
+56
+•The semicolon operator is used to separate columns.
+Listing 1.9: The transpose operator
+1>> x'
+2ans =
+3 1
+4 2
+5 3
+7>> y'
+8ans =
+9 4 5 6
+•The single quotation mark 'transposes arrays, i.e. the rows and columns
+are interchanged so that the ﬁrst column becomes the ﬁrst row etc...
+A more eﬃcient method for entering vectors, especially those that con-
+tain many values, is to use ranges. Instead of entering each individual value
+separately, a range of values can be deﬁned as shown in Listing 1.10.
+1.4variables and arrays 9
+Listing 1.10: Creating vectors using ranges
+1>> z = 8:1:10
+2z =
+38 9 10
+5>> v = linspace(0,10,5)
+6v =
+70 2.5000 5.0000 7.5000 10.0000
+Comments:
+•A range can be created using the colon operator, e.g. 8:1:10means
+create a range that starts at 8 and goes up in steps of size 1 until 10.
+•A range can also be created using the linspace function,
+e.g.linspace(0,10,5) means create a range between 0 and 10 with 5
+linearly spaced elements.
+clearandclccommands
+Theclearcommand can be used if you want to clear the current workspace of
+all variables. Additionally, the clccommand can be used to clear the Command
+Window, i.e. remove all text.
+Variables and simple arrays
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit01/variables-
+arrays.shtml)
+MATLAB excels at matrix operations, and consequently the arithmetic
+operators such as multiplication ( *), division ( /), and exponentiation ( ^)
+perform matrix multiplication, division, and exponentiation, when used on a
+vector, by default. To perform an element-by-element multiplication, division,
+or exponentiation you must precede the operator with a dot. Table 2 and
+Listing 1.11 demonstrate the dot operator.
+Listing 1.11: The dot operator
+1>> clear
+2>> a = [2 3; 5 1]
+3a =
+42 3
+55 1
+6>> b = [4 7; 9 6]
+7b =
+84 7
+99 6
+10>> a*b
+11ans =
+10 basic concepts
+1235 32
+1329 41
+14>> a.*b
+15ans =
+168 21
+1745 6
+18>> c = [1 2 3 4]
+19c =
+201 2 3 4
+21>> a*c
+22??? Error using ==> mtimes
+23Inner matrix dimensions must agree.
+24>> a.*c
+25??? Error using ==> mtimes
+26Matrix dimensions must agree.
+Comments:
+•The dot operator signiﬁes an element-by-element operation. The dot
+can be used for multiplication .*, division ./, or exponentiation .^of
+elements of vectors that are the same size. Omitting the dot before an
+arithmetic operator means MATLAB performs the matrix version of the
+operation.
+•On Line 21 we tried to perform a matrix multiplication of a 2 2 matrix
+with a 14 matrix. This results in an error because you can only multiply
+two matrices if the number of columns in the ﬁrst equals the number of
+rows in the second.
+•On Line 24 we get a similar error if we try to perform an element-by-
+element multiplication, as this does not make any sense for matrices of
+diﬀerent sizes.
+Table 2: Element-by-element arithmetic operations
+command description
+.* Element-by-element multiplication
+./ Element-by-element division
+.^ Element-by-element exponentiation
+The dot operator
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit01/dot-
+operator.shtml)
+1.4variables and arrays 11
+Read MATLAB error messages!
+??? Error using ==> mtimes
+Inner matrix dimensions must agree.
+This error message example usually indicates you tried to perform a matrix
+operation when you intended an element-by-element operation. You should
+check your code for a missing dot operator.
+You can access individual elements, entire rows and columns, and subsets of
+matrices using the notation matrix_name(row,column) . Listing 1.12 demon-
+strates how to access elements in a matrix. Square brackets [ ]
+are used when creating
+vectors, arrays and
+matrices, and round
+brackets ( )when
+accessing elements in
+them.Listing 1.12: Accessing elements of matrices
+1>> w = [1 2 3 4; 5 6 7 8; 9 10 11 12]
+2w =
+31 2 3 4
+45 6 7 8
+59 10 11 12
+7>> size(w)
+8ans =
+93 4
+11>> w(1,1)
+12ans =
+131
+15>> w(3,1)
+16ans =
+179
+19>> w(3,:)
+20ans =
+219 10 11 12
+23>> w(2,4) = 13
+24w =
+251 2 3 4
+265 6 7 13
+279 10 11 12
+29>> v = w(1:2,2:3)
+30v =
+312 3
+326 7
+34>> z = w([2,3],[2,4])
+35z =
+366 13
+3710 12
+12 basic concepts
+Comments:
+•On Line 7 the sizecommand returns the number of rows and columns
+in the matrix.
+•On Lines 11, 15 and 19, when accessing an individual element in a matrix,
+the ﬁrst number after the round bracket refers to the row number (row
+index), and second number refers to the column number (column index).
+•On Line 19 the colon operator is used to denote all of the columns, i.e.
+all the columns in the third row are selected. The colon operator can also
+be used as a row index to denote all rows.
+•Line 23 demonstrates accessing a single element in the matrix wto change
+its value.
+•On Line 29 a new matrix vis created as a sub-matrix of w.
+•Finally, on Line 34 a new matrix zis created as a sub-matrix of w. Square
+brackets are used within the round brackets to enclose the list of row and
+column numbers.
+Indexing arrays
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit01/indexing-
+arrays.shtml)
+Self Test Exercise: Indexing arrays
+1.†The following matrix is deﬁned:
+M=2
+66666646 9 12 15 18 21
+4 4 4 4 4 4
+2 1 0 -1-2-3
+-6-4-2 0 2 43
+7777775
+Evaluate the following expressions without using MATLAB . Check your
+answers with MATLAB .
+a)A = M([1,3], [2,4])
+b)B = M(:, [1,4:6])
+c)C = M([2,3], :)
+†Question adapted from Gilat, A. (2008). MATLAB : An Introduction With Applications . John
+Wiley & Sons, Inc., 3rd edition. Copyright ©2008 John Wiley & Sons, Inc. and reprinted
+with permission of John Wiley & Sons, Inc.
+1.5solving systems of linear equations 13
+1.5 solving systems of linear equations
+Solving systems of linear equations is one of the most common computations
+in science and engineering, and is easily handled by MATLAB . Consider the
+following set of linear equations.
+5x=3y-2z+10
+8y+4z=3x+20
+2x+4y-9z=9
+This set of equations can be re-arranged so that all the unknown quantities
+are on the left-hand side and the known quantities are on the right-hand side.
+5x-3y+2z=10
+-3x+8y+4z=20
+2x+4y-9z=9
+This is now of the form AX=B, whereAis a matrix of the coeﬃcients of the
+unknowns,
+A=2
+66645-3 2
+-3 8 4
+2 4 -93
+7775
+xis the vector of unknowns,
+X=2
+6664x
+y
+z3
+7775
+andBis a vector containing the constants.
+B=2
+666410
+20
+93
+7775
+Listing 1.13 shows the code used to solve the system of linear equations in
+MATLAB . The rules of matrix algebra apply i.e. the result of multiplying a
+NNmatrix by aN1vector, is aN1vector.
+14 basic concepts
+Listing 1.13: Solving a system of linear equations
+1>> A = [5 -3 2; -3 8 4; 2 4 -9];
+2>> B = [10; 20; 9;];
+3>> X = A\B
+4X =
+53.4442
+63.1982
+71.1868
+Using a semi-colon at
+the end of a command
+prevents the results
+being displayed in the
+Command Window.Comments:
+•On Line 1 the matrix, A, of coeﬃcients of the unknowns is entered.
+•On Line 2 the vector, B, containing the constants is entered.
+•On Line 3 the vector, X, containing the unknowns, is calculated by using
+the matrix left divide operator to divide AbyB.
+Listing 1.14 demonstrates how to check the solution obtained in Listing 1.13.
+Listing 1.14: Checking the solution of a system of linear equations
+1>> C = A *X
+2C =
+310.0000
+420.0000
+59.0000
+Not all systems of linear equations have a unique solution. If there are fewer
+equations than variables, the problem is under-speciﬁed. If there are more
+equations than variables, it is over-speciﬁed.
+The left division or backslash operator ( n)
+InMATLAB the left division or backslash operator ( n) is used to solve
+equations of the form AX=Bi.e.X = A\B . Gaussian elimination is used to
+perform this operation.
+1.5solving systems of linear equations 15
+Exercise 2: Variables and arrays
+1. Create the variables to represent the following matrices:
+A=h
+12 17 3 4i
+B=2
+66645 8 3
+1 2 3
+2 4 63
+7775C=2
+666422
+17
+43
+7775
+a)Assign to the variable x1the value of the second column of matrix
+A.
+b) Assign to the variable x2the third column of matrix B.
+c) Assign to the variable x3the third row of matrix B.
+d)Assign to the variable x4the ﬁrst three values of matrix Aas the
+ﬁrst row, and all the values in matrix Bas the second, third and
+fourth rows.
+2.If matrix Ais deﬁned using the MATLAB code
+A = [1 3 2; 2 1 1; 3 2 3] , which command will produce the
+following matrix?
+B=2
+43 2
+2 13
+5
+3. Create variables to represent the following matrices:
+A=2
+66641 2 3
+2 2 2
+-1 2 13
+7775B=2
+66641 0 0
+1 1 0
+1 1 13
+7775C=2
+66641 1
+2 1
+1 23
+7775
+a)Try performing the following operations: A+B,A*B,A+C,B*A,B-A,
+A*C,C-B,C*A. What are the results? What error messages are
+generated? Why?
+b) What is the diﬀerence between A*BandA.*B?
+4.Solve the following systems of linear equations. Remember to verify your
+solutions.
+a)
+-2x+y=3
+x+y=10
+16 basic concepts
+Exercise 2: Variables and arrays (continued)
+4.continued
+b)
+5x+3y-z=10
+3x+2y+z=4
+4x-y+3z=12
+c)
+x1-2x2-x3+3x4=10
+2x1+3x2+x4=8
+x1-4x3-2x4=3
+-x2+3x3+x4= -7
+5.Create a vector tthat ranges from 1 to 10 in steps of 1, and a vector
+thetathat ranges from 0 to and contains 32 elements. Now compute
+the following:
+x=2sin()
+y=t-1
+t+1
+z=sin(2)
+2
+6.A discharge factor is a ratio which compares the mass ﬂow rate at the
+end of a channel or nozzle to an ideal channel or nozzle. The discharge
+factor for ﬂow through an open channel of parabolic cross-section is:
+K=1:2
+xp
+16x2+1+1
+4xlnp
+16x2+1+4x-2
+3
+;
+wherexis the ratio of the maximum water depth to breadth of the
+channel at the top of the water. Determine the discharge factors for xin
+the range 0.45 to 0.90 in steps of 0.05.
+7.Points on a circle
+All points with coordinates x=rcos()andy=rsin(), whereris
+a constant, lie on a circle with radius r, i.e. they satisfy the equation
+x2+y2=r2. Create a column vector for with the values 0,=4,=2,
+3=4,, and5=4. Taker=2and compute the column vectors xand
+y. Now check that xandyindeed satisfy the equation of a circle, by
+computing the radius r=p
+(x2+y2).
+1.5solving systems of linear equations 17
+Exercise 2: Variables and arrays (continued)
+8.Geometric series
+The sum of a geometric series 1+r+r2+r3+:::+rnapproaches the
+limit1
+1-rforr<1asn!1. Taker=0:5and compute sums of series
+0 to 10, 0 to 50, and 0 to 100. Calculate the aforementioned limit and
+compare with your summations. Do the summation using the built-in
+sumfunction.
+Exercise 2 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit01/Ex2-
+Solutions.shtml)
+Additional Exercises
+You should now attempt questions from Chapter C.1.
+
+2
+PLOTTING
+MATLAB is very powerful for producing both 2 dand 3 dplots. Plots can be
+created and manipulated interactively or by commands. MATLAB oﬀers a
+number of diﬀerent formats for exporting plots, including EPS (Encapsulated
+PostScript), PDF (Portable Document Format) and JPEG (Joint Photographic
+Experts Group), so you can easily include MATLAB plots in your reports.
+2.1 simple 2d plotting
+The simplest and most commonly used plotting command is plot(x,y) , where
+xandyare simply vectors containing the xandycoordinates of the data to
+be plotted. Listing 2.1 demonstrates the commands used to create a plot of
+the function, f(x) =e-x
+10sin(x), which is shown in Figure 3.
+Listing 2.1: A simple plot
+1>> x = 0:0.1:20;
+2>> y = exp( -x/10).*sin(x);
+3>> plot(x,y), grid on, xlabel('x'), ...
+4ylabel('f(x) = e^{ -x/10} sin(x)'), title('A simple plot')
+Comments:
+•The vectors containing the xandydata must be the same length.
+•The plot command can be used to plot multiple sets of data on the same
+axes, i.e. plot(x1,y1,x2,y2) .
+•The dot-dot-dot ...(ellipsis) notation is used to indicate that Lines 3
+and 4 are one long line. The ellipsis notation just allows the line to be
+broken to make it more readable. Each comma-separated command could
+also have been typed on a separate line.
+When MATLAB executes a plotting command, a new Figure Window opens
+with the plot in it. The following list gives the most common commands for
+changing plot properties.
+•grid on displays the grid!
+19
+20 plotting
+Figure 3: Plot of f(x) =e-x
+10sin(x)
+•xlabel('My x -axis label') ,ylabel('My y -axis label') ,andtitle('My title')
+can be used to label the corresponding parts of the plot. You must enclose
+your labels with single quotes which denotes a string of text.
+•legend('Data1','Data2') is used to place a legend and label the
+data-sets when you have multiple data-sets on one plot.
+•You can specify line style and colour within the plotcommand e.g.
+plot(x1,y1,'b -',x2,y2,'r --').Thiscommandwouldmaketheﬁrst
+data-set a solid blue line, and the second data-set a dashed red line.
+Tables 3–4 gives some of the most common line styles and colours.
+Table 3: Line styles in plots
+string specifier line style
+- Solid line (default)
+-- Dashed line
+: Dotted line
+-. Dash-dot line
+2.1simple 2d plotting 21
+Table 4: Colours in plots
+string specifier line colour
+r Red
+g Green
+b Blue (default)
+w White
+k Black
+Plot properties can also be manipulated interactively (without having to
+issue commands) by clicking on the Show Plot Tools icon in the Figure Window
+toolbar, shown in Figure 4. Properties such as the axis limits, gridlines, line
+style, colour and thickness, text font type and size, and legend etc... can all be
+adjusted be clicking on the appropriate parts of the plot.
+Figure 4: Show Plot Tools toolbar icon in Figure Window
+Producing good plots
+Whether you manipulate your plots via commands or interactively, here is
+some useful advice for producing good plots in MATLAB .
+•Give your plot an informative title
+e.g.title('Stress vs. strain of steel')
+•Label your axes and remember to include units where appropriate
+e.g.xlabel('Strain'), ylabel('Stress (MPa)')
+•Use line colours and styles carefully so that multiple data-sets can be
+easily distinguished e.g. plot(x1,y1,'b -',x2,y2,'r --'), grid on
+•Remember to insert a legend when you are plotting multiple data-sets
+on one plot e.g. legend('Carbon steel','Stainless steel')
+Creating a simple plot
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit02/simple-
+plot.shtml)
+22 plotting
+MATLAB has many built-in plot types, and a great way of getting a quick
+overview of all the diﬀerent plot types is to select a variable in your Workspace
+Browser, click on the disclosure triangle next to the plottoolbar icon and select
+More plots... , as shown in Figure 5a. This will launch the Plot Catalog shown
+in Figure 5b.
+(a) Accessing the Plot Catalog
+(b) ThePlot Catalog
+Figure 5: The Plot Catalog
+Plotting experimental data
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit02/plot-exp-
+data.shtml)
+2.1simple 2d plotting 23
+Importing data from external sources
+You can import data from other programs into MATLAB using the Copy
+!Pastemethod, or using the Import Data Wizard , found at File!Import
+Data..., for Microsoft Excel data, Comma-separated value ﬁles and more. There
+are also functions, xlsread andxlswrite .
+2.1.1Multiple plots in one Figure Window
+Thesubplot command can be used to display a number of diﬀerent plots in
+a single Figure Window, as shown in Figure 6. The subplot command takes
+three arguments that determine the number and location of plots in the Figure
+Window. For example, subplot(2,2,1) speciﬁes that the Figure Window will
+be divided into 2 rows and 2 columns of plots, and selects the ﬁrst subplot to
+plot into. Listing 2.2 shows an example of usage of the subplot command.
+Listing 2.2: Using the subplot command
+1>> x = linspace(0,2 *pi,50);
+2>> subplot(2,2,1), plot(x,sin(x)), xlabel('x'), ylabel('sin(x)');
+3>> subplot(2,2,2), plot(x,cos(x)), xlabel('x'), ylabel('cos(x)');
+4>> subplot(2,2,3), plot(x,sin(2 *x)), xlabel('x'), ylabel('sin(2x)');
+5>> subplot(2,2,4), plot(x,cos(2 *x)), xlabel('x'), ylabel('cos(2x)');
+Figure 6: Example of subplots
+24 plotting
+Exercise 3: Simple 2 dplotting
+Please save all the plots you produce using the File!Saveoption in the Figure
+Window. This should save a ﬁle with the MATLAB default Figure format
+which uses a .ﬁgﬁle extension.
+1.Plot the following functions (you will need to decide on appropriate
+ranges forx):
+•y=1
+x, with a blue dashed line.
+•y=sin(x)cos(x), with a red dotted line.
+•y=2x2-3x+1, with red cross markers.
+Turn the grid on in all your plots, and remember to label axes and use
+a title.
+2. Given the following function:
+s=acos() +q
+b2- (asin() -c)2
+Plotsas a function of angle whena=1,b=1:5,c=0:3, and
+066360.
+3.Plot the following parametric functions (you will need to use the
+axis equal command after your plotcommand to force MATLAB to
+make the x-axis and y-axis the same length):
+a) A circle of radius 5 (revisit Ex2 Q7)
+b)Leminscate (-=466=4)
+x=cos()p
+2cos(2)
+y=sin()p
+2cos(2)
+c)Logarithmic Spiral (0666;k=0:1)
+x=ekcos()
+y=eksin()
+Exercise 3 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit02/Ex3-
+Solutions.shtml)
+2.2curve-fitting 25
+2.2 curve-fitting
+MATLAB provides a number of powerful options for ﬁtting curves and adding
+trend-lines to data. The Basic Fitting Graphical User Interface (GUI) can
+be selected from Figure Windows by selecting Basic ﬁtting from the Tools
+menu, and oﬀers common curve-ﬁtting options for 2 dplots. More advanced
+functionality, including 3 dﬁts, can be accessed from the Curve Fitting Toolbox
+using tools such as cftool(for curve ﬁtting) and sftool(for surface ﬁtting)∗.
+Basic Curve-ﬁtting
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit02/basic-curve-
+ﬁtting.shtml)
+An alternative to the Basic Fitting GUI are the functions polyfit and
+polyval which can be used to do basic curve-ﬁtting programmatically. List-
+ing 2.3 demonstrates how polyfit can be used to ﬁt a polynomial to a
+data-set.
+Listing 2.3: Syntax of polyfit command
+1coeff = polyfit(xdata,ydata,n);
+Comments:
+•coeffis a vector containing the coeﬃcients for the polynomial of best ﬁt,
+xdataandydataare vectors containing the independent and dependent
+variables, and ndenotes the degree of the polynomial to be ﬁtted.
+After using polyfit you can use the polyval function to evaluate the poly-
+nomial of best ﬁt, given by the set of coeﬃcients coeff, at speciﬁc values of
+your data. This creates a vector of points of the ﬁtted data, y_fit. Listing 2.4
+and Figure 7 demonstrate the use of both the polyfit andpolyval functions.
+The data used for ﬁtting can be downloaded (linear_ﬁt_data.mat) and upon
+double-clicking the .matﬁle, the data will be loaded into MATLAB and
+assigned to the variables xandy. This data is best ﬁtted using a linear or
+straight-line ﬁt.
+Listing 2.4: Using polyfit andpolyval for curve-ﬁtting
+1>> coeff = polyfit(x,y,1);
+2>> y_fit = polyval(coeff,x);
+3>> plot(x,y,'r+',x,y_fit), grid on, xlabel('x -data'), ...
+4ylabel('y -data'), title('Basic curve -fitting'), ...
+5legend('Original data','Line of best fit','Location','SouthEast')
+∗Only basic curve-ﬁtting will be covered in this course.
+26 plotting
+0 10 20 30 40 50 60 70 80 90 100ï100ï50050100150200250300350
+xïdatayïdataBasic curve ïfitting
+  
+Original dataLine of best fit
+Figure 7: Using polyfit andpolyval for curve-ﬁtting
+Comments:
+•'r+'plots the xandydata using red crosses.
+•You can insert a legend from the Command Window using the legend
+command, and specifying the text in the legend using strings.
+2.3 3d plotting using plot3 and surf
+MATLAB is hugely powerful and versatile at visualising data in 3 d. There
+are a number of built-in functions for producing diﬀerent types of 3 dplots e.g.
+points, lines, surfaces and volumes.
+The 2 dplotfunction becomes plot3(x,y,z) for plotting points and lines
+in 3dspace. Listing 2.5 and Figure 8 demonstrate using plot3to plot the
+points on a helix in 3 dspace.
+Listing 2.5: Using plot3to plot points on a helix
+1>> t = 0:pi/50:10 *pi;
+2>> plot3(sin(t),cos(t),t,'r.'), grid on, ...
+3xlabel('x'), ylabel('y'), zlabel('z'), title('3D helix')
+2.33d plotting using plot3 and surf 27
+ï1ï0.500.51
+ï1ï0.500.5105101520253035
+x3D helix
+yz
+Figure 8: Using plot3to plot points on a helix
+Forplottingsurfacesandcontourstwocommonlyusedfunctionsare surf(x,y,z)
+andmesh(x,y,z) wherex,y, andzare coordinates of points on a surface.
+Before you use either of these functions you must use the meshgrid function
+to deﬁne a grid of points which the surface will be plotted onto. Listing 2.6
+demonstrates the typical use of meshgrid . In this example, assume z=f(x;y)
+wherexis a vector of values (1;2;3;4 )andyis a vector of values (5;6;7 ).
+meshgrid takes the vectors xandyand returns two matrices, in this case
+calledxxandyy, which contain the coordinates of the grid that the surface
+zwill be plotted onto. Figure 9 shows the coordinates of the points in the
+matrices returned by the meshgrid function.
+Listing 2.6: Using meshgrid
+1>> x = [1 2 3 4];
+2>> y = [5 6 7];
+3>> [xx, yy] = meshgrid(x,y)
+4xx =
+51 2 3 4
+61 2 3 4
+71 2 3 4
+8yy =
+95 5 5 5
+106 6 6 6
+117 7 7 7
+28 plotting
+(1,7)(4,7)(2,7)(3,7)(1,6)(4,6)(2,6)(3,6)(1,5)(4,5)(2,5)(3,5)
+Figure 9: Operation of meshgrid function
+Comments:
+•xxis an array consisting of rows of the vector x.
+•yyis an array consisting of columns of vector y.
+•xxandyyare then used in the calculation of z, and the plotting of the
+surface.
+Listing 2.7 and Figures 10–11 demonstrate using meshgrid in combination
+with the surface plotting functions surf(creates a colour-ﬁlled surface) and
+mesh(creates a colored mesh) to plot the function:
+z=csin
+2ap
+x2+y2
+;
+wherea=3,c=0:5,-16x61, and -16y61.
+Listing 2.7: Plotting a surface
+1>> x = linspace( -1,1,50);
+2>> y = x;
+3>> a = 3;
+4>> c = 0.5;
+5>> [xx, yy] = meshgrid(x,y);
+6>> z = c *sin(2*pi*a*sqrt(xx.^2+yy.^2));
+7>> surf(xx,yy,z), colorbar, xlabel('x'), ylabel('y'), zlabel('z'), ...
+8>> title('f(x,y)=csin(2\pia\surd(x^2+y^2))')
+9>> figure;
+10>> mesh(xx,yy,z), colorbar, xlabel('x'), ylabel('y'), zlabel('z'), ...
+11>> title('f(x,y)=csin(2\pia\surd(x^2+y^2))')
+2.33d plotting using plot3 and surf 29
+ï0.4ï0.3ï0.2ï0.100.10.20.30.4
+ï1ï0.500.51
+ï1ï0.500.51ï0.500.5
+xf(x,y)=csin(2 /a3(x2+y2))
+yz
+Figure 10: Surface plot (using surf) of the function z=csin(2ap
+x2+y2)
+ï0.4ï0.3ï0.2ï0.100.10.20.30.4
+ï1ï0.500.51
+ï1ï0.500.51ï0.500.5
+xf(x,y)=csin(2 /a3(x2+y2))
+yz
+Figure 11: Surface plot (using mesh) of the function z=csin(2ap
+x2+y2)
+30 plotting
+Exercise 4: 3 dplotting
+1. Plot the following 3 dcurves using the plot3function:
+a)Spherical helix
+x=sint
+2c
+cos(t)
+y=sint
+2c
+sin(t)
+z=cost
+2c
+wherec=5and06t610.
+b)Sine wave on a sphere
+x=cos(t)q
+b2-c2cos2(at)
+y=sin(t)q
+b2-c2cos2(at)
+z=ccos(at)
+wherea=10,b=1,c=0:3, and06t62.
+2. Plot the following surfaces using the surffunction:
+a)Sine surface
+x=sin(u)
+y=sin()
+z=sin(u+)
+where06u62, and0662.
+b)Spring
+x=[1-r1cos()]cos(u)
+y=[1-r1cos()]sin(u)
+z=r2
+sin() +tu
+
+wherer1=r2=0:5,t=1:5,06u610, and06610.
+c)Elliptic torus
+x=[c+cos()]cos(u)
+y=[c+cos()]sin(u)
+z=sin()cos()
+wherec=0:5,-6u6, and066.
+2.33d plotting using plot3 and surf 31
+Exercise 4: 3 dplotting (continued)
+•Use theshading interp command after surfto change the shading
+type.
+•Add acolorbar to the plots.
+Exercise 4 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit02/Ex4-
+Solutions.shtml)
+Additional Exercises
+You should now attempt questions from Chapter C.2.
+
+3
+SCRIPTS AND FUNCTIONS
+3.1 script files
+Ascriptﬁle is a text ﬁle that contains a series of MATLAB commands that
+you would type at the command prompt. A scriptﬁle is one type of m-ﬁle ( .m
+ﬁle extension), the other type being a function ﬁle which will be examined in
+Section 3.2. Script ﬁles are useful when you have to repeat a set of commands,
+often only changing the value of one variable every time. By writing a script
+ﬁle you are saving your work for later use. Script ﬁles work on variables in the
+current workspace, and results obtained from running a script are left in the
+current workspace.
+New script ﬁles can be created by clicking on the New M-File icon in the
+MATLAB Window toolbar, shown in Figure 12. This launches the MATLAB
+Editor with a blank M-File.
+Figure 12: New M-File toolbar icon in MATLAB Window
+Listing 3.1 presents the commands from Listing 2.7 in the form of a script
+ﬁle. The script ﬁle has been saved as my_surf.m , and can be run by either
+typingmy_surf at the command prompt, or clicking the Save and run icon
+in the Editor Window toolbar, as shown in Figure 13. Copy and paste the
+example into a new script ﬁle, and run it to see the results for yourself.
+Figure 13: Save and run toolbar icon in Editor Window
+33
+34 scripts and functions
+Listing 3.1: my_surf.m - Script to plot a surface
+1% my_surf.m
+2% Script to plot a surface
+3%
+4% Craig Warren, 08/07/2010
+6% Variable dictionary
+7% x,y Vectors of ranges used to plot function z
+8% a,c Coefficients used in function z
+9% xx,yy Matrices generated by meshgrid to define points on grid
+10% z Definition of function to plot
+12clear all; % Clear all variables from workspace
+13clc; % Clear command window
+15x = linspace( -1,1,50); % Create vector x
+16y = x; % Create vector y
+17a = 3;
+18c = 0.5;
+19[xx,yy] = meshgrid(x,y); % Generate xx & yy arrays for plotting
+20z = c*sin(2*pi*a*sqrt(xx.^2+yy.^2)); % Calculate z (function to plot)
+21surf(xx,yy,z), xlabel('x'), ylabel('y'), zlabel('z'), ...
+22title('f(x,y)=csin(2\pia\surd(x^2+y^2))') % Plots filled -in surface
+Comments:
+•It is extremely useful, for both yourself and others, to put comments in
+your script ﬁles. A comment is always preceded with a percent sign ( %)
+which tells MATLAB not to execute the rest of the line as a command.
+•Script ﬁle names MUST NOT contain spaces (replace a space with the
+underscore), start with a number, be names of built-in functions, or be
+variable names.
+•It is a good idea to use the clear all andclccommands as the
+ﬁrst commands in your script to clear any existing variables from the
+MATLAB workspace and clear up the Command Window before you
+begin.
+3.1script files 35
+Writing good scripts
+Here are some useful tips that you should follow to make your script ﬁles easy
+to follow and easy to understand by others, or even yourself after a few weeks!a
+•Script ﬁles should have a header section that identiﬁes:
+–What the program does
+–Who the author is
+–When the program was written or last revised
+–The variable dictionary i.e. a list of all variables their meanings and
+units
+•Use plenty of white space to make your program easy to read.
+•Use plenty of comments! In particular deﬁne all variables and their units
+in the variable dictionary.
+•Use meaningful names for variables. Don’t be afraid of being verbose e.g.
+usesteel_area in preference to sa.
+•Remember to use the clear all andclccommands at the start of your
+script.
+aAdapted from Patzer (2003).
+Creating a simple script
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit03/simple-
+script.shtml)
+Theinputfunction
+Theinputfunction is used to request user input and assign it to a vari-
+able. For example x = input('Enter a number: '); will display the text
+Enter a number: in the Command Window and then wait until the user
+enters something. Whatever is entered will be assigned to the variable x.
+36 scripts and functions
+Thedispfunction
+Thedispfunction can be used display strings of text to the Command Window
+e.g.disp('I am a string of text') . You can also display numbers by
+converting them to strings e.g. disp(num2str(10)) . Thenum2str function
+simply converts the number 10 to a string that can be displayed by the
+dispfunction. You can also combine the display of text and numbers e.g.
+disp(['Factorial ' num2str(x) 'is ' num2str(y)]) . Notice the use of
+spaces to denote the separate elements of the string, and square brackets around
+the string to concatenate it together.
+3.1script files 37
+Exercise 5: Scripts
+Write your own script ﬁles to solve the following problems:
+1.The absolute pressure at the bottom of a liquid store tank that is vented
+to the atmosphere is given by:
+Pabs,bottom =gh+Poutside;
+where:
+Pabs,bottom =the absolute pressure at the bottom of the storage tank ( Pa)
+=liquid density ( kg=m3)
+g=acceleration due to gravity ( m=s2)
+h=height of the liquid ( m)
+Poutside =outside atmospheric pressure ( Pa)
+FindPabs,bottom in SI units if=1000kg=m3,g=32:2ft=s2,h=7yd,
+andPoutside =1atm.
+Here are some tips to help you get started:
+•Remember your header section and variable dictionary.
+•Useinputfunctions to gather information from the user.
+•Convert all units to SI before performing the calculation. Use the
+following conversion factors:
+ft_to_m = 0.3048
+yd_to_m = 0.9144
+atm_to_Pa = 1.013E5
+•CalculatePabs,bottom
+[Answers:164121Pa ]
+Example adapted from Patzer (2003)
+38 scripts and functions
+Exercise 5: Scripts (continued)
+2.A pipeline at an oil reﬁnery is carrying oil to a large storage tank. The
+pipe has a 20 inch internal diameter. The oil is ﬂowing at 5 ft=sand its
+density is 57 lb=ft3. What is the mass ﬂow rate of oil in SI units? What
+is the mass and volume of oil, in SI units, that ﬂows in a 24 hour period?
+The ﬂow rate of oil is given by:
+˙M=A;
+where:
+˙M=mass ﬂow rate of oil ( kg=s)
+=liquid density ( kg=m3)
+=ﬂow speed (m=s)
+A=cross-sectional area of pipe ( m2)
+[Answers:282kg=s ,24362580kg ,26688m3]
+Example adapted from Moore (2009)
+3. The current in a resistor/inductor circuit is given by:
+I(t) =0
+jZjh
+cos(!t-) -e-tR
+Lcos()i
+;
+where:
+!=2f;
+Z= (R+j!L);
+=tan-1!L
+R
+;
+and where:
+0=voltage (V)
+!=angular frequency ( rads=s)
+R=resistance (
+)
+L=inductance (H)
+Find and plot I(t)if0=230V,f=50Hz,R=500
+, andL=650mH.
+•You’ll need to explore diﬀerent values of tto ﬁnd one that best plots
+the behaviour of the current.
+Exercise 5 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit03/Ex5-
+Solutions.shtml)
+3.2functions 39
+Theabsfunction
+Theabsfunction can be used to calculate the absolute value or magnitude of
+a number.
+3.2 functions
+Another type of m-ﬁle ( .mﬁle extension) is a function ﬁle. Functions are similar
+to scripts, except that the variables in a function are only available to the
+function itself i.e. are local to the function. This is in contrast with script ﬁles,
+where any variables you deﬁne exist in the Workspace (are global) and can
+be used by other scripts and commands. You have used many of the built-in
+functions in MATLAB e.g.size,plot,surfetc..., and as you become more
+familiar with MATLAB you will learn to write your own functions to perform
+speciﬁc tasks.
+A function ﬁle always begins with a function deﬁnition line. This speciﬁes
+the input and output variables that the function will use, and deﬁnes a name
+for the function. Listing 3.2 presents the syntax of a function deﬁnition line,
+and Table 5 gives some examples.
+Listing 3.2: Syntax of a function deﬁnition
+1function [outputVariables] = functionName (inputVariables)
+2% Comments describing function and variables
+3commands
+Comments:
+•The ﬁrst word, function , is mandatory, and tells MATLAB this m-ﬁle
+in a function ﬁle.
+•On the lefthand side of the equals sign is a list of the output variables
+that the function will return. You will notice when there is more than
+one output variable, that they are enclosed in squarebrackets.
+•On the righthand side of the equals sign is the name of the function. You
+must save your function ﬁle with the same name that you use here. The name used to save
+a function ﬁle must
+match the function
+name.•Lastly, within the roundbrackets after the function name, is a comma
+separated list of the input variables.
+•It is good practice to put some comments after the function deﬁnition
+line to explain what task the function performs and how you should use
+the input and output variables. This is in addition to comments you
+would usually include at the top of a script ﬁle.
+40 scripts and functions
+Table 5: Function deﬁnitions, ﬁlenames, input and output variables
+function definition filename input variables output variables notes
+function [rho, H, F] = motion(x, y, t) motion.m x, y, t rho, H, F
+function [theta] = angleTH(x, y) angleTH.m x, y theta
+function theta = THETA(x, y) THETA.m x, y thetaIf there is only one
+output variable the
+square brackets can
+be omitted
+function [] = circle(r) circle.m r None
+function circle(r) circle.m r NoneIf there are no
+output variables the
+square brackets and
+the equals sign
+can be omitted
+3.2functions 41
+Functions are executed at the command prompt by typing their function
+deﬁnition line without the function command. Listing 3.3 demonstrates how
+you would execute the motionfunction from Table 5.
+Listing 3.3: Executing a function
+1>> [rho, H, F] = motion(x, y, t)
+Comments:
+•Input variables x, y, t must be deﬁned in the workspace before you
+execute the function. This is because variables deﬁned within a function
+ﬁle are local to the function, i.e. do not exist in the workspace.
+•When you execute the function the names for the input and output
+variables do not have to match those used in the function ﬁle.
+42 scripts and functions
+Listings 3.4 presents an example of a simple function that multiplies two
+numbers, xandy, together to calculate an area. Listing 3.5 demonstrates how
+to execute this function in the command window.
+Listing 3.4: A simple function
+1function area = calculateArea(x, y)
+2% Function to calculate an area given two lengths (x, y)
+3area = x *y;
+Listing 3.5: Execution of a simple function
+1>> x = 5; y = 10;
+2>> area = calculateArea(x, y)
+3area =
+450
+The same function could also be executed using variables with diﬀerent
+names, as shown in Listing 3.6.
+Listing 3.6: Execution of a simple function
+1>> length1 = 25; length = 100;
+2>> myArea = calculateArea(length1, length2)
+3myArea =
+4 2500
+Creating a function
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit03/simple-
+function.shtml)
+3.2functions 43
+Exercise 6: Functions
+Write your own functions to solve the following problems:
+1.Produce a conversion table for Celsius and Fahrenheit temperatures. The
+input to the function should be two numbers: TlowerandTupperwhich
+deﬁne the lower and upper range, in Celsius, for the table. The output of
+the function should be a two column matrix with the ﬁrst column showing
+the temperature in Celsius, from TlowerandTupperwith an increment of
+1C, and the second column showing the corresponding temperature in
+Fahrenheit.
+Here are some tips to help you get started:
+•Start with a function deﬁnition line. What are your input and output
+variables?
+•Create a column vector to hold the range
+Celsius = [T_lower:T_upper]'
+•Calculate the corresponding values in Fahrenheit using
+Fahrenheit = 9/5 *Celsius + 32
+•Create a matrix to hold the table using
+temp_table = [Celsius Fahrenheit]
+Test your function for Tlower=0CandTupper =25C.
+2. The angles of cosines of a vector in 3 dspace are given by:
+cos(j) =aj
+jaj;forj=1;2;3
+Giventhemagnitude, jaj,andanglesofcosines, j,calculatetheCartesian
+components, aj, of the vector.
+Exercise 6 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit03/Ex6-
+Solutions.shtml)
+Additional Exercises
+You should now attempt questions from Chapter C.3.
+
+4
+DECISION MAKING
+All the problems you have solved so far have been problems with a straight-
+linelogic pattern i.e. you followed a sequence of steps (deﬁning variables,
+performing calculations, displaying results) that ﬂowed directly from one step
+to another. Decision making is an important concept in programming and
+allows you to control which parts of your code should execute depending on
+certain conditions. This ﬂow of control in your program can be performed
+by branching with ifandelsestatements, which will be discussed in this
+chapter, or looping, which will be discussed in Chapter 5.
+4.1 relational and logical operations
+Relational and logical operators are used in branching and looping to help
+make decisions. The result of using a relational or logical operator will always
+be either true, given by a 1, or false, given by a 0. Tables 6–7 list the most
+common relational and logical operators in MATLAB .
+Table 6: Relational operators
+operator mathematical symbol matlab symbol
+Equal = ==
+Not equal 6= =
+Less than < <
+Greater than > >
+Less than or equal 6 <=
+Greater than or equal > >=
+Table 7: Logical operators
+operator mathematical symbol matlab symbol
+And AND &
+Or OR j
+Not NOT 
+45
+46 decision making
+Listings 4.1 presents a simple example of using relational operators.
+Listing 4.1: Simple relational operators
+1>> x = 5;
+2>> y = 10;
+3>> x<y
+4ans =
+51
+6>> x>y
+7ans =
+80
+Comments:
+•Lines 3 and 6 are called logical expression because the result can only be
+either true, represented by 1, or false, represented by 0.
+Listings 4.2–4.3 present more examples of using relational and logical operators.
+Listing 4.2: Relational operators
+1>> x = [1 5 3 7];
+2>> y = [0 2 8 7];
+3>> k = x<y
+4k =
+50 0 1 0
+6>> k = x<=y
+7k =
+80 0 1 1
+9>> k = x>y
+10k =
+111 1 0 0
+12>> k = x>=y
+13k =
+141 1 0 1
+15>> k = x==y
+16k =
+170 0 0 1
+18>> k = x~=y
+19k =
+201 1 1 0
+Listing 4.3: Logical operators
+1>> x = [1 5 3 7];
+2>> y = [0 2 8 7];
+3>> k = (x>y) & (x>4)
+4k =
+50 1 0 0
+6>> k = (x>y) | (x>4)
+7k =
+81 1 0 1
+4.1relational and logical operations 47
+9>> k = ~((x>y) | (x>4))
+10k =
+110 0 1 0
+Comments:
+•The relational and logical operators are used to compare, element-by-
+element, the vectors xandy.
+•The result of each comparison is a logical vector i.e. konly contains 1’s
+and 0’s (corresponding to true or false).
+Single and double equals signs
+The diﬀerence between =and==is often misunderstood. A single equals sign
+is used to assign a value to a variable e.g. x=5. A double equals sign is used to
+test whether a variable is equal to given value e.g. my_test=(x==5) means
+test ifxis equal to 5, and if so assign the value 1(true) to my_test .
+Self Test Exercise: Relational operators and logical
+1.†Evaluate the following expressions without using MATLAB . Check your
+answer with MATLAB .
+a)14>15=3
+b)y=8=2<53+1>9
+c)y=8=(2<5 )3+ (1>9 )
+d)2+43=60=4-1
+2.†Given:a=4,b=7. Evaluate the following expressions without using MAT-
+LAB. Check your answer with MATLAB .
+a)y=a+b>=ab
+b)y=a+ (b>=a)b
+c)y=b-a<a<a=b
+3.†Given:v=[4 -2-1 5 0 1 -3 8 2],andw=[0 2 1 -1 0 -2 4 3 2] .
+Evaluate the following expressions without using MATLAB . Check your
+answer with MATLAB .
+a)v<=w
+†Question adapted from Gilat, A. (2008). MATLAB : An Introduction With Applications . John
+Wiley & Sons, Inc., 3rd edition. Copyright ©2008 John Wiley & Sons, Inc. and reprinted
+with permission of John Wiley & Sons, Inc.
+48 decision making
+b)w=v
+c)v<w +v
+d)(v<w ) +v
+4.2 the if-else statement
+Theif,else, andelseifstatements in MATLAB provide methods of
+controlling which parts of your code should execute based on whether certain
+conditions are true or false. The syntax of the simplest form of an ifstatement
+is given in Listing 4.4.
+Listing 4.4: Syntax of an ifstatement
+1iflogical_expression
+2 statements
+3end
+Comments:
+•Line 1 contains the ifcommand, followed by an expression which must
+return true or false.
+•Line 2 contains the body of the ifstatement which can be a command or
+series of commands that will be executed if the logical expression returns
+true.
+•Line 3 contains the endcommand which must always be used to close
+theifstatement.
+•If the logical expression returns true MATLAB will execute the state-
+ments enclosed between ifandend. If the logical expression returns
+falseMATLAB will skip the statements enclosed between ifandend
+and proceed with any following code.
+Listing 4.5 presents a very simple example of using an ifstatement to test if
+a user has entered a number greater than 10.
+4.2the if-else statement 49
+Listing 4.5: basic_if.m - Script to show simple if statement
+1% basic_if.m
+2% Script to show simple if statement
+3%
+4% Craig Warren, 08/07/2010
+6% Variable dictionary
+7% x Variable to hold entered number
+9clear all; % Clear all variables from workspace
+10clc; % Clear command window
+12x = input('Enter a number: '); % Get a number from the user
+13if x>10 % Test if x is greater than
+14disp('Your number is greater than 10')
+15end
+Comments:
+•On Line 12 the inputcommand is used, which prompts the user for input
+with the request Enter a number: and assigns the number entered to
+the variable x.
+•OnLine13an ifstatementisusedwiththelogicalexpression x>10.Ifthis
+expression is true then the text Your number is greater than 10 is
+displayed, otherwise if the expression is false nothing is executed.
+Theelseandelseifcommands can be used to apply further conditions
+to theifstatement. Listing 4.6 presents the syntax of these commands.
+Listing 4.6: Syntax of an ifstatement with elseandelseif
+1iflogical_expression
+2 statements
+3elseif logical_expression
+4 statements
+5else
+6 statements
+7end
+Comments:
+•On Line 3 the logical expression associated with the elseifcommand
+will only be evaluated if the preceding logical expression associated with
+theifcommand returns false.
+•Notice that the elsecommand on Line 5 has no associated logical
+expression. The statements following the elsecommand will only be
+50 decision making
+executed if all the logical expressions for the preceding elseifandif
+commands return false.
+Listing 4.7 presents a simple of example of decision making using the if,else,
+andelseiffunctions. Copy and paste the example into a new script ﬁle, and
+run it to see the results for yourself.
+Listing 4.7: number_test.m - Script to test sign and magnitude of numbers
+1% number_test.m
+2% Script to test sign and magnitude of numbers
+3%
+4% Craig Warren, 08/07/2010
+6% Variable dictionary
+7% x Variable to hold entered number
+9clear all; % Clear all variables from workspace
+10clc; % Clear command window
+12x = input('Enter a number: '); % Get a number from the user
+13if x<0 % Test if x is negative
+14disp('Your number is a negative number')
+15elseif x<100 % Otherwise test if x is less than 100
+16disp('Your number is between 0 and 99')
+17else % Otherwise x must be 100 or greater
+18disp('Your number is 100 or greater')
+19end
+Comments:
+•On Line 12 the inputcommand is used, which prompts the user for input
+with the request Enter a number: and assigns the number entered to
+the variable x.
+•On Lines 14, 16, and 18 the dispcommand is used, which simply displays
+text to the Command Window.
+4.2the if-else statement 51
+The if-else statement
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit04/if-else-
+statement.shtml)
+The following example is solved in the screencast:
+Water level in a water tower†
+The tank in a water tower has the geometry shown in Figure 14 (the lower
+part is a cylinder and the upper part is an inverted frustum cone). Inside the
+tank there is a ﬂoat that indicates the level of the water. Write a user-deﬁned
+function that determines the volume of water in the tank from the position
+(height) of the ﬂoat. The volume for the cylindrical section of the tank is given
+by:
+V=12:52h
+The volume for the cylindrical and conical sections of the tank is given by:
+V=12:5219+1
+3(h-19)(12:52+12:5rh+rh2);
+whererh=12:5+10:5
+14(h-19)
+[h=8m,V=3927m3;h=25:7m,V=14115m3]
+†Question adapted from Gilat, A. (2008). MATLAB : An Introduction With Applications . John
+Wiley & Sons, Inc., 3rd edition. Copyright ©2008 John Wiley & Sons, Inc. and reprinted
+with permission of John Wiley & Sons, Inc.
+12.5 mhrh14 m19 m23 m
+Figure 14: Water level in a water tower
+52 decision making
+Self Test Exercise: The if-else statement
+Evaluate the following expressions without using MATLAB .
+1. Which of the following shows a correct if,elsestatement?
+a) .
+1a = input('a? ')
+2If a < 0
+3disp('a is negative')
+4ELSEIF a == 0
+5disp('a is equal to zero')
+6Else
+7disp('a is positive')
+8END
+b) .
+1a = input('a? ')
+2if a < 0
+3disp('a is negative')
+4elseif a = 0
+5disp('a is equal to zero')
+6else
+7disp('a is positive')
+8end
+c) .
+1a = input('a? ')
+2if a < 0
+3disp('a is negative')
+4elseif a == 0
+5disp('a is equal to zero')
+6else
+7disp('a is positive')
+8end
+d) .
+1a = input('a? ')
+2if a < 0
+3disp('a is negative')
+4else if a = 0
+5disp('a is equal to zero')
+6else
+7disp('a is positive')
+8end
+4.2the if-else statement 53
+2.†What will the following code print?
+1a = 10;
+2if a ~= 0
+3disp('a is not equal to zero')
+4end
+3.†What will the following code print?
+1a = 10;
+2if a > 0
+3disp('a is positive')
+4else
+5disp('a is not positive')
+6end
+4.†What will the following code print?
+1a = 5;
+2b = 3;
+3c = 2;
+4if a < b *c
+5disp('Hello world')
+6else
+7disp('Goodbye world')
+8end
+5.†Forwhatvaluesofthevariablewillthefollowingcodeprint Hello world ?
+1if a >= 0 & a < 7
+2disp('Hello world')
+3else
+4disp('Goodbye world')
+5end
+6.†Forwhatvaluesofthevariablewillthefollowingcodeprint Hello world ?
+1if a < 7 | a >= 3
+2disp('Hello world')
+3else
+4disp('Goodbye world')
+5end
+†Questions from Morrell, D., Programming with M-ﬁles: If-Statement Drill Exercises , Connex-
+ions, http://cnx.org/content/m13432/1.4/, [Last assessed: Nov 2011]
+54 decision making
+Exercise 7: Decision making
+Write your own script ﬁles to solve the following problems:
+1.Write a script ﬁle that asks the user for the input of a number and
+returns the natural logarithm of the number if the number is positive,
+and displays an error message otherwise.
+2.The cost per kilometre for a rental car is £0.50 for the ﬁrst 100 kilometres,
+£0.30 for the next 200 kilometres and £0.20 for all kilometres in excess
+of 300 kilometres. Write a function that determines the total cost for a
+given number of kilometres.
+3.Write a function to evaluate f(x;y)for any two user speciﬁed values x
+andy. The function f(x;y)is deﬁned as:
+f(x;y) =8
+>>>>>><
+>>>>>>:x+y x >0andy>0
+x+y2x>0andy<0
+x2+y x<0 andy>0
+x2+y2x<0andy<0
+4.The energy loss due to ﬂuid ﬂow through a pipe can be calculated using
+the following equations:
+hL=fL
+DV2
+2
+; V =Q
+A; A =D2
+4; Re =DV
+;
+where:
+hL=energy loss per mass of ﬂuid ﬂowing ( J=kg)
+f=friction factor (dimensionless)
+L=pipe length (m)
+D=pipe diameter ( m)
+V=average ﬂuid velocity ( m=s)
+Q=volumetric ﬂow rate ( m3=s)
+A=pipe cross-sectional area ( m2)
+Re=Reynolds number (dimensionless)
+=ﬂuid density ( kg=m3)
+=ﬂuid viscosity ( kg=ms)
+4.2the if-else statement 55
+Exercise 7: Decision making (continued)
+4.(continued) The friction factor, f, is calculated as:
+f=8
+<
+:64
+RewhenRe62000
+
+-2:01ln-5:0452
+Reln 5:8506
+Re0:8981-2whenRe>2000
+Write a function that calculates the energy loss per mass of ﬂowing
+ﬂuid for a ﬂuid ﬂow in a pipe, given the pipe diameter, pipe length, ﬂuid
+volumetric ﬂow rate, ﬂuid density, and ﬂuid viscosity (all in SI units). Test
+your function with: D=0:2m,L=10m,Q=1m3=s,=1000kg=m3
+and=0:001kg=ms .
+[Answer:47:0948J=kg ]
+Exercise 7 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit04/Ex7-
+Solutions.shtml)
+Additional Exercises
+You should now attempt questions from Chapter C.4.
+Advanced Topic
+If you are interested, read about the switchstatement in Appendix A.
+
+5
+LOOPS
+Loops are another way of altering the ﬂow of control in your program, and
+provide methods for repeatedly executing commands. You might want to
+repeat the same commands, changing the value of a variable each time, for a
+ﬁxed number of iterations. Alternatively, you might want to repeat the same
+commands, changing the value of a variable each time, continually until a
+certain condition is reached. Two of the most common types of loops, forand
+while, will be examined in this chapter.
+5.1 for loops
+Aforloop is used to repeat a command, or set of commands, a ﬁxed number
+of times. Listing 5.1 shows the syntax of a forloop.
+Listing 5.1: Syntax of a forloop
+1for variable = f:s:t
+2 statements
+3end
+Comments:
+•Line 1 contains the forcommand, followed by the loop counter variable
+which is deﬁned by an expression. fis the value of the loop counter on
+the ﬁrst iteration of the loop, sis the step size or increment, and tis
+the value of the loop counter on the ﬁnal iteration of the loop. As an
+example if the loop counter is deﬁned by the expression n = 0:5:15 ,
+which means n = [0 5 10 15] , on the ﬁrst iteration of the loop n = 0,Refer to Chapter 1 if
+you need a refresher on
+rangeson the second iteration n = 5, on the third iteration n = 10, and on the
+forth, and ﬁnal, iteration n = 15.
+•Line 2 contains the body of loop which can be a command or series of
+commands that will be executed on each iteration of the loop.
+•Line 3 contains the endcommand which must always be used at the end
+of a loop to close it.
+57
+58 loops
+Indenting for readability
+It is good practice to indent the body of loops for readability in your script
+ﬁles.MATLAB will usually do this for you, but if not, highlight your code
+and choose Smart Indent from the Textmenu in the Editor Window toolbar.
+Listing 5.2 gives an example of a simple forloop which displays the value
+of the variable x.
+Listing 5.2: Simple example of a forloop
+1>> for x=1:1:9
+2x
+3end
+4x =
+51
+6x =
+72
+8x =
+93
+10x =
+114
+12x =
+135
+14x =
+156
+16x =
+177
+18x =
+198
+20x =
+219
+Comments:
+•In Line 1 the loop counter variable, in this case x, is deﬁned to start at 1
+and count up in steps of 1 until 9.
+•In Line 2 the body of the loop prints the value of the loop counter variable
+x.
+•When the loop is executed, initially the value of 1 is assigned to x, and
+then the body of the loop is executed. The value of xis then incremented
+by 1, the body of the loop is executed again, and so on until xis 9.
+Whereupon, the body of the loop is executed for a ﬁnal time and then
+the loop terminates.
+•Lines 4–21 contain the results of running the forloop.
+5.1for loops 59
+The for loop
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit05/for-loop.shtml)
+Self Test Exercise: for loops
+Evaluate the following expressions without using MATLAB . Check your an-
+swers with MATLAB .
+1. How many times will this code print Hello World ?
+1for a=0:50
+2disp('Hello World')
+3end
+2. How many times will this code print Guten Tag Welt ?
+1for a= -1:-1:-50
+2disp('Guten Tag Welt')
+3end
+3. How many times will this code print Bonjour Monde ?
+1for a= -1:1:50
+2disp('Bonjour Monde')
+3end
+4. How many times will this code print Hola Mundo ?
+1for a=10:10:50
+2for b=0:0.1:1
+3 disp('Hola Mundo')
+4end
+5end
+Listing 5.3 demonstrates an example of using a forloop to take the sum of
+a geometric series (the same example posed in Exercise 2, Question 8).
+Listing 5.3: for_loop_sum.m - Script to sum a geometric series using a forloop
+1% for_loop_sum.m
+2% Script to sum a geometric series using a for loop
+3%
+4% Craig Warren, 01/09/2011
+6% Variable dictionary
+7% n Number of terms to sum
+8% my_sum Sum of geometric series
+9% r Constant (set to 0.5 for this example)
+10% m Loop counter
+12clear all; % Clear all variables from workspace
+13clc; % Clear command window
+60 loops
+15n = input('Enter the number of terms to sum: ');
+16my_sum = 0;
+17r = 0.5;
+18for m = 0:n
+19my_sum = my_sum + r^m;
+20end
+21format long % Sets display format to 15 digits
+22my_sum
+Comments:
+•Line 15 contains the inputcommand, which is used to get the number
+of terms to be summed from the user.
+•On Line 16 a variable my_sumis created (and set to zero) to hold the
+sum of the geometric series. It is necessary to create any variables outside
+of loops before using them within loops.
+•Lines 18–20 contain the forloop. The loop counter mcounts in steps of
+one from zero until the number of terms speciﬁed by the user n.
+•On Line 19 (the body of the loop) the new term in the sum r^mis
+added to the previous value of my_sumand this becomes the new value
+ofmy_sum.
+•Lines 21–22 display the result of the summation. The formatcommand
+is used to set the display to 15 digits instead of the default 4 digits so
+that the result of taking more terms in the summation can be seen.
+5.2 while loops
+Awhileloop is similar to forloop in that it is used to repeat a command,
+or set of commands. Listing 5.4 shows the syntax of a whileloop. The key
+diﬀerence between a forloop and a whileloop is that the whileloop will
+continue to execute until a speciﬁed condition becomes false.
+Listing 5.4: Syntax of a whileloop
+1while condition is true
+2 statements
+3end
+5.2while loops 61
+Comments:
+•Line 1 contains the whilecommand, followed by a condition e.g. x>10.
+This means as long as the condition, x>10, remains true the loop will
+continually repeat.
+•Line 2 contains the body of loop which can be a command or series of
+commands that will be executed on each iteration of the loop.
+•Line 3 contains the endcommand which must always be used at the end
+of a loop to close it.
+Listing 5.5 gives an example of a simple whileloop which displays the value
+of the variable x.
+Listing 5.5: Simple example of a whileloop
+1>> x=1;
+2>> while x<10
+3x
+4x=x+1;
+5end
+6x =
+71
+8x =
+92
+10x =
+113
+12x =
+134
+14x =
+155
+16x =
+176
+18x =
+197
+20x =
+218
+22x =
+239
+Comments:
+•Line 1 assigns the value of 1 to the variable x. Notice this is outside of
+thewhileloop. If you don’t do this you will get an error because you
+are testing whether x<10butxhas never been deﬁned. Remember to deﬁne
+variables you use in
+loops before you start
+the loops themselves.•In Line 2 the condition, x<10, is speciﬁed. In this case the loop will
+continue to repeat as long as xis less than 10. As soon as xis equal to
+10 execution of the loop is stopped.
+62 loops
+•Lines 3–4 contain the body of the loop, in this case the value of the loop
+counter variable xis printed. Then the value of xis incremented by 1.
+The value of xmust be explicitly incremented otherwise xwill always
+be equal to 1, the condition x<10will always be true, and the loop will
+therefore execute continuously.
+•Lines 6–23 contain the results of running the whileloop.
+Breaking out of a loop
+If you end up stuck in an inﬁnitely repeating loop use CTRL + C to force
+MATLAB to break out of the loop. However, under certain conditions you
+may want your code to break out of a loop before it is ﬁnished. To do this
+you can use the breakcommand. Statements in your loop after the break
+command will not be executed.
+The while loop
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit05/while-
+loop.shtml)
+Self Test Exercise: while loops
+Evaluate the following expressions without using MATLAB . Check your an-
+swers with MATLAB .
+1. How many times will this code print Hello World ?
+1n = 10;
+2while n > 0
+3disp('Hello World')
+4n = n -1;
+5end
+2. How many times will this code print Hello World ?
+1n = 1;
+2while n > 0
+3disp('Hello World')
+4n = n + 1;
+5end
+3. What values will this code print?
+1a = 1
+2while a < 100
+3a = a*2
+4end
+5.2while loops 63
+4. What values will this code print?
+1a = 1;
+2n = 1;
+3while a < 100
+4a = a*n
+5n = n + 1;
+6end
+Listing 5.6 demonstrates an example of using a whileloop to take the sum
+of a geometric series (the same example posed in Exercise 2, Question 8).
+Compare Listings 5.3 and 5.6.
+Listing 5.6: while_loop_sum.m - Script to sum a geometric series using a whileloop
+1% while_loop_sum.m
+2% Script to sum a geometric series using a while loop
+3%
+4% Craig Warren, 01/09/2011
+6% Variable dictionary
+7% n Number of terms to sum
+8% my_sum Sum of geometric series
+9% r Constant (set to 0.5 for this example)
+10% m Loop counter
+12clear all; % Clear all variables from workspace
+13clc; % Clear command window
+15n = input('Enter the number of terms to sum: ');
+16my_sum = 0;
+17r = 0.5;
+18m = 0;
+19while m <= n
+20my_sum = my_sum + r^m;
+21m = m + 1;
+22end
+23format long % Sets display format to 15 digits
+24my_sum
+Comments:
+•Line 18 contains a variable m(deﬁned outside of the loop) which is used
+as a loop counter.
+•Lines 19–22 contain the whileloop. The condition for the loop to execute
+is that the value of the loop counter mmust be less than or equal to the
+number of terms to be summed n. When this condition becomes false the
+loop will terminate.
+64 loops
+•On Line 20 the summation is performed, and on Line 21 the loop counter
+is incremented.
+Which loop to use: fororwhile?
+Well it depends on the problem! Several of the code listings in this chapter
+have demonstrated that the same problem can be solved using either a foror
+whileloop.
+5.2while loops 65
+Exercise 8: Loops
+Write your own scripts to perform the following tasks:
+1. a) A forloop that multiplies all even numbers from 2 to 10.
+b) Awhileloop that multiplies all even numbers from 2 to 10.
+2. a)Aforloop that assigns the values 10, 20, 30, 40, and 50 to a vector.
+b)Awhileloop that assigns the values 10, 20, 30, 40, and 50 to a
+vector.
+c) Is there a simpler way to do this avoiding loops?
+3. Given the vector x=[1 8 3 9 0 1] use aforloop to:
+a) Add up the values of all elements in x.
+b)Compute the cumulative sum, i.e 1;9;12;21;21;22 , of the elements
+inx.
+You can check your results using the built-in functions sumandcumsum.
+4. The factorial of a non-negative integer is deﬁned as:
+n!=n(n-1)(n-2):::1;
+wheren!=1whenn=0. For example, 5!=54321which is 120.
+Use aforloop to compute and print factorials. You should prompt
+the user for a non-negative integer and check it is indeed non-negative.
+There is a built-in function called factorial , therefore you should use
+a diﬀerent name for your script to avoid any confusion.
+5.Use awhileloop to determine and display the number of terms that it
+takes for the series,
+SN=NX
+n=11
+n2;
+to converge to within 0.01% of its exact value, which is S1=2
+6.
+Exercise 8 Solutions
+(http://www.eng.ed.ac.uk/teaching/courses/matlab/unit05/Ex8-
+Solutions.shtml)
+66 loops
+Additional Exercises
+You should now attempt questions from Chapter C.5.
+Advanced Topic
+If you are interested, read about vectorisation in Appendix B.
+A
+ADVANCED TOPIC: THE SWITCH STATEMENT
+Theswitchstatement in MATLAB is similar to the if,else, andelseif
+statements, and provides a method of executing diﬀerent bits of code dependent
+on which caseis true. Typically you would use a switchstatement in prefer-
+ence toif,else, andelseifstatements if you have speciﬁc cases (values of
+a variable) to test. Listing A.1 presents the syntax of the switchstatement.
+Listing A.1: Syntax of a switch statement
+1switch switch_expression
+2case case_expression1
+3 statements
+4case case_expression2
+5 statements
+6case case_expression3
+7 statements
+8...
+9end
+Comments:
+•Line 1 contains the switchcommand followed by the expression to be
+compared to the various cases.
+•Lines 2–7 contain the diﬀerent cases and their corresponding statements
+to be executed.
+•If the switch expression matches one of the case expressions then the state-
+ments underneath that casewill be executed and the switchstatement
+will end.
+Listing A.2 presents a simple example of the usage of a switchstatement.
+MATLAB has a built-in function called computer that returns a string of
+text corresponding to the operating system that you are running. By analysing
+this string you can print out some information about the operating system.
+Copy and paste the example into a new script ﬁle, and run it to see the results
+for yourself.
+67
+68 advanced topic: the switch statement
+Listing A.2: computer_test.m - Script to test type of computer MATLAB is running
+on
+1% computer_test.m
+2% Script to test type of computer MATLAB is running on
+3%
+4% Craig Warren, 08/07/2010
+6% Variable dictionary
+7% myComputer Variable to hold information about computer
+9clear all; % Clear all variables from workspace
+10clc; % Clear command window
+12myComputer = computer; % Assign result of built -in computer
+13 % function to myComputer variable
+14switch myComputer
+15case 'PCWIN'
+16 disp('This computer is running Microsoft Windows, 32 -bit');
+17case 'PCWIN64'
+18 disp('This computer is running Microsoft Windows, 64 -bit');
+19case 'GLNX86'
+20 disp('This computer is running Linux, 32 -bit');
+21case 'GLNXA64'
+22 disp('This computer is running Linux, 64 -bit');
+23case 'MACI'
+24 disp('This computer is running Mac OS X, Intel, 32 -bit');
+25case 'MACI64'
+26 disp('This computer is running Mac OS X, Intel, 64 -bit');
+27case 'SOL64'
+28 disp('This computer is running Sun Solaris, 64 -bit');
+29end
+B
+ADVANCED TOPIC: VECTORISATION
+To make your MATLAB code run faster it is important to vectorise, where
+possible, the algorithms that you use. Where loops, especially nested loops,
+are being used, it is often possible to substitute a vector or matrix equivalent
+which will run much faster.
+Listing B.1 presents a simple example of a forloop being used to calculate
+a series of voltages across diﬀerent resistors, with a diﬀerent current ﬂowing in
+each resistor.
+Listing B.1: Simple forloop to vectorise
+1I=[2.35 2.67 2.78 3.34 2.10]; % Vector of currents
+2R=[50 75 100 125 300]; % Vector of resistances
+3for n=1:5
+4V(n)=I(n) *R(n); % Calculate voltage
+5end
+Vectorise your loops to
+make your code run
+faster!Listing B.2 presents a vectorised solution to the same problem, and indeed you
+may well have gone straight to the vectorised solution without considering use
+of a loop.
+Listing B.2: Vectorised forloop
+1I=[2.35 2.67 2.78 3.34 2.10]; % Vector of currents
+2R=[50 75 100 125 300]; % Vector of resistances
+3V=I.*R; % Calculate voltage
+Listings B.3–B.4 present a more advanced example of vectorisation. A matrix
+of random numbers called datais generated and two nested forloops are
+used to iterate through every element in the matrix. An ifstatement is used
+to check to see if each element is less than 0.1, and if so that element is set to
+zero. Copy and paste the example into a new script ﬁle, and run it to see the
+results for yourself.
+Listing B.3: Nested loops
+1data=rand(8000,8000); % Generate some random data
+2tic
+3for i=1:size(data,1)
+4for j=1:size(data,2)
+5 if data(i,j)<0.1 % Is data sample is less than 0.1?
+6 data(i,j)=0; % Set data sample to zero
+7 end
+8end
+69
+70 advanced topic: vectorisation
+9end
+10toc
+11Elapsed time is 6.876476 seconds.
+Comments:
+•On Line 1 the randfunction is used to generate a matrix, 8000 8000,
+of uniformly distributed random numbers in the interval [0;1].
+•On Line 2 and Line 10 the ticandtoccommands are used to time how
+long the code took to execute. Line 11 lists the result.
+The code in Listing B.3 can be vectorised to produce the code given in
+Listing B.4.
+Listing B.4: Vectorisation of nested loops
+1data=rand(8000,8000);
+2tic
+3data(data<0.1)=0;
+4toc
+5Elapsed time is 0.927503 seconds.
+Comments:
+•On Line 3 the nested forloops have been replaced with a single line of
+vectorised code. data<0.1 returns a matrix of 1’s and 0’s corresponding
+to values of dataless than 0.1. The values of these elements are then set
+to 0.
+•Line 5 lists the time taken to execute the vectorised code. A diﬀerence
+of approximately 5 seconds may not seem like much of a speed increase,
+but in complex MATLAB scripts with lots of loops performing many
+iterations it is can be signiﬁcant.
+Listings B.3–B.4 are an extreme example of vectorisation, but clearly demon-
+strate that MATLAB can execute vectorised code much faster than conven-
+tional loops.
+C
+ADDITIONAL EXERCISES
+The aim of this chapter is to provide more realistic problems that can be solved
+using MATLAB . The questions are adapted from Gilat, A. (2008). MATLAB :
+An Introduction With Applications . John Wiley & Sons, Inc., 3rd edition.
+Copyright ©2008 John Wiley & Sons, Inc. and reprinted with permission of
+John Wiley & Sons, Inc.
+c.1 basic concepts
+1.Variables
+An object with an initial temperature of T0that is placed at time t=0
+inside a chamber that has a constant temperature of Ts, will experience
+a temperature change according to the equation:
+T=Ts+ (T0-Ts)e-kt;
+whereTis the temperature of the object at time t, andkis a constant. A
+soda can at a temperature of 49C (was left in the car) is placed inside
+a refrigerator where the temperature is 3C. Determine, to the nearest
+degree, the temperature of the can after three hours. Assume k=0:45.
+First deﬁne all the variables and then calculate the temperature using
+oneMATLAB command.
+2.Variables
+Radioactive decay is modeled with the exponential function f(t) =
+f(0)ekt, wheretis time,f(0)is the amount of material at t=0,f(t)is
+the amount of material at time t, andkis a constant. Gallium-67, which
+has a half-life of 3.261 days, is used for tracing cancer. If 100 mg are
+present att=0, determine the amount that is left after 7 days. You
+should ﬁrst determine the constant kand then calculate f(7).
+3.Variables
+The magnitude Mof an earthquake on the Richter scale is given by:
+M=2
+3log10E
+E0
+;
+71
+72 additional exercises
+whereEis the energy release by the earthquake, and E0=104:4J is a
+constant (the energy of a small reference earthquake). Determine how
+many more times energy is released from an earthquake that registers
+7.1 on the Richter scale than an earthquake that registers 6.9.
+4.Variables
+The temperature dependence of vapor pressure pcan be estimated by
+the Antoine equation:
+ln(p) =A-B
+C+T;
+wherelnis the natural logarithm, pis in mm Hg, Tis in Kelvin, and A,B,
+andCare material constants. For toluene ( C6H5CH3) in the temperature
+range from 280 to 410 K the material constants are: A=16:0137,B=
+3096:52, andC= -53:67. Calculate the vapour pressure of toluene at
+315 and 405 K.
+5.Adding vectors
+Three forces are applied to a bracket as shown in Figure 15. Determine
+the total (equivalent) force applied to the bracket.
+xy
+F1 = 400 NF2 = 500 NF3 = 700 N20˚30˚143˚
+Figure 15: Forces on a bracket
+C.1basic concepts 73
+Addition of forces in 2 dspace
+A force is a vector (physical quantity that has magnitude and direction).
+In a Cartesian coordinate system a 2 dvector Fcan be written as:
+F=Fxi+Fyj=Fcos()i+Fsin()j=F(cos()i+sin()j);
+whereFis the magnitude of the force, and is its angle relative to the x
+axis,FxandFyare the components of Fin the directions of the xandy
+axis, respectively, and iandjare unit vectors in these directions. If Fx
+andFyare known, then Fandcan be determined by:
+F=q
+Fx2+Fy2andtan() =Fx
+Fy
+6.Element-by-element calculations
+The coeﬃcient of friction can be determined in an experiment by
+measuring the force Frequired to move a mass mas shown in Figure 16.
+WhenFis measured and mis known, the coeﬃcient of friction can be
+mFfriction
+Figure 16: Friction
+calculated by:
+=F
+mg;
+whereg=9:81m=s2. Results from measuring Fin six tests are given in
+Table 8. Determine the coeﬃcient of friction in each test, and the average
+from all tests.
+Table 8: Friction experiment results
+test no. 1 2 3 4 5 6
+mass (kg) 2 4 5 10 20 50
+force (n) 12.5 23.5 30 61 117 294
+74 additional exercises
+7.Solving linear equations
+The electrical circuit shown in Figure 17 consists of resistors and voltage
+sources. Determine the current in each resistor using the mesh current
++V1–+V2–
++V3–R1
+R2R3R4
+R7R5R6
+R8i1
+i3
+i4i2
+Figure 17: Network of voltage sources and resistors
+method which is based on Kirchhoﬀ’s voltage law.
+V1=20V V2=12V V3=40V
+R1=18
+ R2=10
+ R3=16
+ R4=6
+R5=15
+ R6=8
+ R7=12
+ R8=14
+
+C.1basic concepts 75
+Kirchhoﬀ’s voltage law
+Kirchhoﬀ’s voltage law states that the sum of the voltage around a closed
+circuit is zero. In the mesh current method a current is assigned to each
+mesh (i1;i2;i3;i4). Then, Kirchhoﬀ’s voltage law is applied for each
+mesh, resulting in a system of linear equations for the currents (four
+equations in this case). The solution of the equations gives the values of
+the mesh currents. The current in a resistor that belongs to two meshes
+is the sum of the currents in the corresponding meshes. It is convenient
+to assume that all the currents are in the same direction (clockwise in
+this case). In the equation for each mesh, the voltage source is positive if
+the current ﬂows to the cathode (negative electrode), and the voltage of
+the resistor is negative for current in the direction of the mesh current.
+76 additional exercises
+c.2 plotting
+8.2D plotting
+In a typical tension test a dog-bone shaped specimen, as shown in
+Figure 18, is pulled in a machine. During the test, the force Fneeded
+FFL0
+Figure 18: Tension test specimen
+to pull the specimen and the length Lof a gauge section are measured.
+This data is used for plotting a stress-strain diagram of the material.
+Two deﬁnitions, engineering and true, exist for stress and strain. The
+engineering stress eand straineare deﬁned by:
+e=F
+A0ande=L-L0
+L0;
+whereL0andA0are the initial gauge length and the initial cross-sectional
+area of the specimen, respectively. The true stress tand straintare
+deﬁned by:
+t=F
+A0L
+L0andt=lnL
+L0
+In Table 9 are measurements of force and gauge length from a tension test
+with an aluminium specimen. The specimen has a round cross section
+with a radius of 6.4 mm (before the test). The initial gauge length is
+L0=25 mm. Use the data to calculate and plot the engineering and
+true stress-strain curves, both on the same plot, of the material.
+Table 9: Results of a tension test on an aluminium specimen
+force (n) 0 13345 26689 40479 42703 43592 44482 44927
+length (mm) 25 25.037 25.073 25.113 25.122 25.125 25.132 25.144
+force (n) 45372 46276 47908 49035 50265 53213 56161
+length (mm) 25.164 25.208 25.409 25.646 26.084 27.398 29.250
+C.2plotting 77
+9.2D plotting
+A resistor,R=4 
+, and an inductor, L=1:3 H, are connected in a
+circuit to a voltage source as shown in Figure 19a. When the voltage
++V(t)–RLi(t)
+(a) Circuit layout
+Time (s)Voltage (V)0.5120 (b) Voltage input
+Figure 19: RLcircuit
+source applies a rectangular pulse with an amplitude of V=12Vand a
+duration of0:5s, as shown in Figure 19b, the current i(t)in the circuit
+as a function of time is given by:
+i(t) =V
+R
+1-e-Rt
+L
+for06t60:5s
+i(t) =e-Rt
+LV
+R
+e0:5R
+L-1
+for0:56ts
+Make a plot of the current as a function of time for 06t62s.
+78 additional exercises
+10.2D plotting
+The vibrations of a helicopter due to the periodic force applied by the
+rotation of the rotor can be modelled by a frictionless spring-mass-damper
+system subjected to an external periodic force as shown in Figure 20.
+The position x(t)of the mass is given by the equation:
+mF(t)ckx
+Figure 20: Modelling helicopter rotor vibrations with spring-mass-damper system
+x(t) =2f0
+!n2-!2sin!n-!
+2t
+sin!n-!
+2t
+;
+whereF(t) =F0sin(!t), andf0=F0
+m,!is the frequency of the applied
+force, and!nis the natural frequency of the helicopter. When the
+value of!is close to the value of !nthe vibration consists of fast
+oscillation with slowly changing amplitude called beat. UseF0
+m=12N=kg,
+!n=10 rad=s , and!=12 rad=s to plotx(t)as a function of t for
+06t610s.
+11.2D plotting
+The ideal gas equation states thatPV
+RT=n, wherePis the pressure, V
+is the volume, Tis the temperature, R=0:08206 (Latm )=(moleK )is
+the gas constant, and nis the number of moles. For one mole ( n=1)
+the quantityPV
+RTis a constant equal to 1 at all pressures. Real gases,
+especially at high pressures, deviate from this behaviour. Their response
+can be modelled with the van der Waals equation:
+P=nRT
+V-nb-n2a
+V2;
+whereaandbare material constants. Consider 1 mole ( n=1) of nitrogen
+gas atT=300 K(a=1:39 L2atm=mole2, andb=0:0391 L=mole ).
+Use the van der Waals equation to calculate Pas a function of Vfor
+0:086V66L, using increments of 0:02L. At each value of Vcalculate
+the value ofPV
+RTand make a plot ofPV
+RTversusP. Does the response of
+nitrogen agree with the ideal gas equation?
+C.2plotting 79
+12.2D plotting
+A simply supported beam that is subjected to a constant distributed load
+wover two-thirds of its length is shown in Figure 21. The deﬂection y,
+xyw2L/3L/3
+Figure 21: A simply supported beam
+as a function of x, is given by the equations:
+y=-wx
+24LEI
+Lx3-16
+9L2x2+64
+81L4
+for06x62
+3L;
+y=-wL
+54EI
+2x3-6Lx2+40
+9L2x-4
+9L3
+for2
+3L6x6L;
+whereEis the elastic modulus, Iis the moment of inertia, and Lis
+the length of the beam. For the beam shown in Figure 21, L=20 m,
+E=200109Pa(steel),I=34810-6m4, andw=5103N=m.
+Make a plot of the deﬂection of the beam yas a function of x.
+13.3D plotting
+An anti-symmetric cross-ply composite laminate has two layers where
+ﬁbres are aligned perpendicular to one another. A laminate of this type
+will deform into a saddle shape due to residual thermal stresses as
+described by the equation:
+w=k(x2-y2);
+wherexandyarethein-planecoordinates, wistheout-of-planedeﬂection„
+andkis the curvature (a complicated function of material properties
+and geometry). Make a 3 dsurface plot showing the deﬂection of a 100
+100 mm square plate ( -506x650,-506y650) assuming
+k=0:254mm-1.
+80 additional exercises
+14.3D plotting
+The van der Waals equation gives a relationship between the pressure
+P(atm), volumeV(L), and temperature T(K)for a real gas:
+P=nRT
+V-nb-n2a
+V2;
+wherenis the number of moles, R=0:08206 (L atm )=(mole K )is
+the gas constant, and a(L2atm=mole2)andb(L=mole )are material
+constants. Consider 1.5 moles of nitrogen ( a=1:39L2atm=mole2, and
+b=0:0391L=mole ). Make a 3 dsurface plot that shows the variation of
+pressure (dependent variable, zaxis) with volume (independent variable,
+xaxis) and temperature (independent variable, yaxis). The domains for
+volume and temperature are: 0:36V61:2Land2736T6473K.
+15.3D plotting
+The normal stress xxat point (y;z) in the cross section of a rectangular
+beam, due to the applied force Fat point (yF;zF) is given by:
+xx=F
+A+FzFz
+Iyy+FyFy
+Izz;
+whereIzzandIyyare the area moments of inertia deﬁned by:
+Izz=1
+12bh3andIyy=1
+12hb3
+Determine and make a 3 dsurface plot of the normal stress in the cross-
+xyzFyFzFbh
+Figure 22: Cross section of a rectangular beam
+sectional area shown in Figure 22, given that: h=40mm,b=30mm,
+yF= -15mm,zF= -10mm, andF= -250000N . Plot the coordinates
+C.2plotting 81
+yandzin the horizontal plane, and the normal stress in the vertical
+direction.
+16.3D plotting
+A defect in a crystal lattice where a row of atoms is missing is called an
+edge dislocation, as shown in Figure 23. The stress ﬁeld around an edge
+xyEdge dislocationPlot domain
+Figure 23: Edge dislocation
+dislocation is given by:
+xx=-Gby(3x2+y2)
+2(1-)(x2+y2)2;
+yy=Gby(x2-y2)
+2(1-)(x2+y2)2;
+xy=Gbx(x2-y2)
+2(1-)(x2+y2)2;
+whereGis the shear modulus, bis the Burgers vector, and is Poisson’s
+ratio. Make 3 dsurface plots of the stress components (each in a separate
+ﬁgure window) due to an edge dislocation in aluminium for which G=
+27:7109Pa,b=0:28610-9m, and=0:334. Plot the stresses in the
+domain -510-96x6510-9mand-510-96y6-110-9m.
+Plot the coordinates xandyin the horizontal plane, and the stresses in
+the vertical direction.
+17.3D plotting
+Molecules of a gas in a container are moving around at diﬀerent speeds.
+Maxwell’s speed distribution law gives the probability distribution P(v)
+as a function of temperature and speed:
+P() =4M
+2RT3
+2
+v2e-Mv2
+2RT;
+82 additional exercises
+whereMis the molar mass of the gas in kg=mol,R=8:31 J=mol K
+is the gas constant, Tis the temperature in K, andvis the molecules
+speed inm=s. Make a 3 dsurface plot of P(v)as a function of vand
+Tfor06v61000 m=s and706T6320 Kfor oxygen (molar mass
+M=0:032kg=mol ).
+18.3D plotting
+AnRLCcircuit with an alternating voltage source is shown in Figure 24.
+The source voltage vsis given byvs=vmsin(!dt)where!d=2fdis
++Vs = vmsin(wdt)–RCL
+Figure 24: An RLCcircuit with an alternating voltage source
+whichfdis the driving frequency. The amplitude of the current Iin the
+circuit is given by:
+I=vmr
+R2+
+!dL-1
+!dC2;
+whereRandCare the resistance of the resistor and the capacitance of
+the capacitor, respectively. For the circuit in Figure 24 C=1510-6F,
+L=24010-3H, andvm=24V.
+a)Make a 3 dsurface plot of the current I(zaxis) as a function of
+!d(xaxis) for606f6110Hz, and a function of R(yaxis) for
+106R640
+.
+b)Rotate the plot into the x-zplane. Estimate the natural frequency
+of the circuit (the frequency at which Iis maximum). Compare the
+estimate with the calculated value of 1=(2p
+LC).
+C.3scripts and functions 83
+c.3 scripts and functions
+19.Scripts
+A cylindrical silo with radius rhas a spherical cap roof with radius R, as
+shown in Figure 25. The height of the cylindrical portion is H. Write a
+script ﬁle that determines the height Hfor given values or r,R, and the
+volumeV. In addition the script should also calculate the surface area of
+the silo. The volume of the cylinder is given by:
+R
+rH
+rhθR
+Figure 25: Silo
+Vcyl=r2H;
+and the volume of the spherical cap is given by:
+Vcap=1
+3h2(3R-h);
+whereh=R-Rcos()andis calculated from sin() =r
+R. The height
+Hof the cylindrical part can be expressed by:
+H=V-Vcap
+r2
+The surface area of the silo is obtained by adding the surface areas of
+the cylindrical part and the spherical cap:
+S=Scyl+Scap=2rH +2Rh
+84 additional exercises
+Calculate the height and surface area of a silo with r=10m,R=15m
+andV=3500m3.
+20.Scripts
+Radioactive decay of radioactive materials can be modelled by the equa-
+tionA=A0ekt, whereAis the population at time t,A0is the amount
+att=0, andkis the decay constant ( k60). Technetium-99 is a radioiso-
+tope that is used in the imaging of the brain. Its half-life time is 6 hours.
+Write a script to calculate the relative amount of Technetium-99 ( A=A0)
+in a patient body for 24 hours after receiving a dose. After determining
+the value ofk, deﬁne a vector t=0:2:24 and then calculate and plot the
+corresponding values of A=A0.
+21.Scripts
+The variation of vapour pressure P(in units of mm Hg) of benzene with
+temperatures (inC) in the range 8C6T680Ccan be modelled with
+the Antoine equation: Constants for the
+Antoine equation taken
+from the Dortmund
+Data Base.log10P=A-B
+C+T
+For benzene, the values of the constants are as follows: A=6:87987,
+B=1196:76,C=219:161. Write a script that calculates the vapour
+pressure for various temperatures. The script should create a vector of
+temperatures from T=8CtoT=42Cin increments of 2 degrees,
+and display a two-column table of PandTwhere the ﬁrst column is
+temperatures inC, and the second column is the corresponding pressures
+in mm Hg. The script should also plot PagainstTand use a logarithmic
+axis forP.
+22.Scripts
+The temperature dependance of the heat capacity Cpof many gases can
+be described in terms of a cubic equation:
+Cp=a+bT+cT2+dT3
+The following table gives the coeﬃcients of the cubic equation for four
+gases.Cpis inJoules= (g mol )(C)andTis inC. Write a script to
+calculate the heat capacity for each gas at temperatures ranging between
+200 and 400Cat 20Cincrements. To present the results, create an 11 5
+matrix where the ﬁrst column is the temperature, and second to ﬁfth
+columns are the heat capacities of SO2,SO3,O2, andN2, respectively.
+C.3scripts and functions 85
+Table 10: Coeﬃcients for the cubic equation for the heat capacity of gases
+gasa b c d
+SO238:91 3:90410-2-3:20510-58:60610-9
+SO348:50 9:18810-2-8:54010-532:4010-9
+O229:10 1:15810-2-0:607610-51:31110-9
+N229:00 0:22010-2-0:572310-5-2:87110-9
+23.Functions
+Create a function ﬁle that calculates the trajectory of a projectile. The
+inputs to the function should be the initial velocity and the angle at
+which the projectile is ﬁred. The outputs from the function should be the
+maximum height and distance. In addition, the function should generate
+a plot of the trajectory. Use the function to calculate the trajectory of a
+projectile that is ﬁred at a velocity of 230m=s at an angle of 39.
+xy
+dmaxv0θhmax
+Figure 26: Motion of a projectile
+86 additional exercises
+The motion of a projectile
+The motion of a projectile can be analysed by considering the horizontal
+and vertical components. The initial velocity v0can be resolved into
+horizontal and vertical components:
+v0x=v0cos()andv0y=v0sin()
+In the vertical direction the velocity and position of the projectile are
+given by:
+vy=v0y-gtandy=v0yt-1
+2gt2
+The time it takes the projectile to reach the highest point ( vy=0) and
+the corresponding height are given by:
+thmax=v0y
+gandhmax=v2
+0y
+2g
+The total ﬂying time is twice the time it takes the projectile to reach the
+highest point, ttot=2thmax. In the horizontal direction the velocity is
+constant, and the position of the projectile is given by:
+x=v0xt
+24.Functions
+Write a user-deﬁned function, with two input and output arguments,
+that determines the height in metres and mass kilograms of person
+from their height in inches and mass in pounds. For the function name
+and arguments use [m,kg] = STtoSI(in,lb) . Use the function in the
+Command Window to determine in SI units the height and mass of a
+5 ft. 11 in. person who weighs 181 lb.
+25.Functions
+Whennresistors are connected in parallel, their equivalent resistance
+Reqcan be determined from:
+1
+Req=1
+R1+1
+R2+:::+1
+Rn
+Write a user-deﬁned function that calculates Req. For the function name
+and arguments use REQ = req(R) . The input to function should be a
+vector in which each element is a resistor value, and the output from the
+function isReq. Use the function to calculate the equivalent resistance
+C.3scripts and functions 87
+when the following resistors are connected in parallel: 50
+,75
+,300
+,
+60
+,500
+,180
+, and200
+.
+26.Functions
+A 2dstate of stress at a point in a loaded material is deﬁned by three
+components of stresses xx,yy, andxy. The maximum and minimum
+σyyσxxτxy
+Figure 27: A 2 dstate of stress at a point in a loaded material
+normal stresses (principal stresses) at the point, maxandmin, are
+calculated from the stress components by:
+max
+min=xx+yy
+2sxx-yy
+22
++2xy
+Write a user-deﬁned function that determines the principal stresses
+from the stress components. For the function name and arguments
+use[Smax,Smin] = princstress(Sxx,Syy,Sxy) . Use the function
+to determine the principal stresses for the following states of stress:
+xx= -190MPa ,yy=145MPa ,xy=110MPa .
+88 additional exercises
+27.Functions
+In a low-pass RC ﬁlter (a ﬁlter that passes signals with low frequencies),
+the ratio of the magnitude of the voltages is given by:
+RV=Vo
+Vi=1p
+1+ (!RC)2;
+where!is the frequency of the input signal. Write a user-deﬁned function
+RCVoVi
+Figure 28: A low-pass ﬁlter
+that calculates the magnitude ratio. For the function name and arguments
+useRV = lowpass(R,C,w) . The input arguments are: Rthe size of the
+resistor in
+(ohms),Cthe size of the capacitor in F(Farads), and wthe
+frequency of the input signal in rad=s. Write the function such that w
+can be a vector.
+Write a script ﬁle that uses your lowpass function to generate a plot of
+RVas a function of !for10-26!6106rad=s. The plot should have
+a logarithmic scale on the x-axis ( !). When the script ﬁle is executed it
+should prompt the user to enter values of RandC. Run the script ﬁle
+withR=1200
+andC=8F.
+C.4decision making 89
+c.4 decision making
+28.Relational & Logical operators
+The following were the daily maximum temperatures (C) in Washington
+DC during the month of April 2002: 14, 23, 23, 12, 10, 9, 13, 23, 23, 19,
+21, 17, 23, 28, 29, 33, 34, 32, 33, 27, 15, 21, 13, 18, 17, 19, 18, 23, 17, 21.
+Write a script, and use relational and logical operators to determine the
+following:
+a) The number of days the temperature was above 24C.
+b)The number of days the temperature was between 18Cand27C.
+90 additional exercises
+c.5 loops
+29.forloops and ifstatements
+The concentration of a drug in the body Cpcan be modelled by the
+equation:
+Cp=DG
+Vdka
+(ka-ke) 
+e-ket-e-kat
+;
+whereDGis the dosage administered ( mg),Vdis the volume of distribu-
+tion (L),kais the absorption rate constant ( h-1),keis the elimination
+rate constant ( h-1), andtis the time (h) since the drug was administered.
+For a certain drug, the following quantities are given: DG=150 mg,
+Vd=50L,ka=1:6h-1, andke=0:4h-1. A ﬁrst dose is administered
+att=0, and subsequently four more doses are administered at intervals
+of four hours (i.e. at t=4;8;12;16 ). Write a script to calculate and plot
+Cpversustfor 24 hours.
+30.whileloops
+The ﬂight of a model rocket of mass 0.05 kg can be modelled as follows.
+During the ﬁrst 0.15 s the rocket is propelled up by the rocket engine with
+a force of 16 N. The rocket then ﬂies up slowing down under the force
+of gravity. After it reaches the apex, the rocket starts to fall back down.
+When its down velocity reaches 20 m/s a parachute opens (assumed to
+open instantly) and the rocket continues to move down at a constant
+speed of 20 m/s until it hits the ground. Write a script that calculates
+and plots the speed and altitude of the rocket as a function of time during
+the ﬂight.
+Figure 29: Flight of a model rocket
+C.5loops 91
+Flight of a model rocket
+The rocket is assumed to be a particle that moves along a straight line in
+the vertical plane. For motion with constant acceleration along a straight
+line, the velocity and position as a function of time are given by:
+v(t) =v0+atands(t) =s0+v0t+1
+2at;
+wherev0ands0are the initial velocity and position, respectively. The
+ﬂight of the rocket can be divided into three segments and you should
+calculate each segment using a separate whileloop in your script.
+Segment 1 - The ﬁrst 0.15 s when the rocket engine is on
+During this period, the rocket moves up with a constant acceleration. The
+acceleration is determined by drawing a free body and a mass acceleration
+diagram. From Newton’s second law, summing the forces in the vertical
+direction gives an equation for the acceleration:
+a=FE-mg
+m
+The velocity and height as a function of time are:
+v(t) =0+atandh(t) =0+0+1
+2at2;
+where the initial velocity and initial position are both zero. In your script
+thiswhileloop starts at t=0and continues looping as long as t60:15s.
+Thetime,velocityandheightattheendofthissegmentare t1,v1,andh1.
+Segment 2 - The motion from when the engines stops until the parachute
+opens
+In this segment the rocket moves with a constant deceleration g. The
+speed and height of the rocket as a function of time are given by:
+v(t) =v1-g(t-t1)andh(t) =h1+v1(t-t1) -1
+2g(t-t1)2
+In your script this whileloop should continue looping until the velocity
+of the rocket is -20m=s(negative since the rocket is falling). The time
+and height at the end of this segment are t2andh2.
+92 additional exercises
+Flight of a model rocket (continued)
+Segment 3 - The motion from when the parachute opens until the rocket
+hits the ground
+Inthissegmenttherocketmoveswithconstantvelocity(zeroacceleration).
+The height as a function of time is given by:
+h(t) =h2+vchute(t-t2);
+wherevchuteis the constant velocity after the parachute opens. In your
+script this whileloop should continue looping as long as the height is
+greater than zero.
+BIBLIOGRAPHY
+Gilat, A. (2008). MATLAB: An Introduction With Applications . John Wiley
+and Sons, Inc., 3rd edition.
+Magrab, E., Azarm, S., Balachandran, B., Duncan, J., Herold, K., and Walsh, G.
+(2005).An Engineer’s guide to MATLAB: With applications from mechanical,
+aerospace, electrical, and civil engi . Pearson Prentice Hall, 2nd edition.
+Moore, H. (2009). MATLAB for Engineers . Prentice Hall.
+Patzer, J. (2003). Introduction to engineering computing. http://www.pitt.
+edu/~patzer/index.htm [Last accessed: July 2010].
+Pratap, R. (2006). Getting Started with MATLAB 7 - A Quick Introduction
+for Scientists and Engineers . Oxford University Press.
+93

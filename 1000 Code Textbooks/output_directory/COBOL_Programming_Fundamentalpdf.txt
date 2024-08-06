@@ -1,0 +1,4940 @@
+IBMSolution & Service Company (China)
+2004/11 ©2004IBM CorporationCOBOLProgramming
+Fundamental
+ISSC SH
+Walker JIA
+Version 1.0
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 2Training Schedule
+Day 1
+Introduction to COBOL
+COBOL Basics 1Moring
+After
+noonExercise 1
+COBOL Basics 2Day 2
+Introduction to 
+Sequential 
+Files
+Processing 
+Sequential 
+FilesDay 3 Day 4
+Simple iteration 
+with the 
+PERFORM 
+verb
+Arithmetic and 
+Edited 
+PicturesConditions
+Tables and the 
+PERFORM .
+.. VARYING
+Exercise 2Exercise 3 Exercise 3 
+(Cont.)
+Designing 
+Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 3Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 4§COBOL design goals. 
+§Structure of COBOL programs. 
+§The four divisions. 
+§IDENTIFICATION DIVISION, DATA DIVISION, PROCEDURE 
+DIVISION. 
+§Sections, paragraphs, sentences and statements. 
+§Example COBOL programs. Introduction to COBOL
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 5§COBOL is an acronym which stands for
+Common Business Oriented Language .
+§The name indicates the target area of COBOL applications.
+–COBOL is used for developing business, typically file-oriented, 
+applications.
+–It is not designed for writing systems programs.  You would not 
+develop an operating system or a compiler using COBOL.
+§COBOL is one of the oldest computer languages in use (it 
+was developed around the end of the 1950s).  As a result it 
+has some idiosyncracieswhich programmers may find 
+irritating.Introduction to COBOL
+COBOL
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 6§One of the design goals was to make the language as English-
+like as possible. As a consequence
+–the COBOL reserved word list is quite extensive and contains 
+hundreds of entries.
+–COBOL uses structural concepts normally associated with English 
+prose such as section, paragraph, sentence and so on. 
+As a result COBOL programs tend to be verbose.
+§Some implementations require the program text to adhere to 
+certain, archaic, formatting restrictions.
+§Although modern COBOL has introduced many of the 
+constructs required to write well structured programs it also still 
+retains elements which, if used, make it difficult, and in some 
+cases impossible, to write good programs. Introduction to COBOL
+COBOLidiosyncracies
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 7Introduction to COBOL
+Structure of COBOL programs
+ProgramProgramProgram
+Paragraph(s)Paragraph(s)
+Sentence(s)Sentence(s)
+Statement(s)Statement(s)DivisionsDivisions
+Section(s)Section(s)
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 8§DIVISIONS are used to identify the principal 
+components of the program text. There are four 
+DIVISIONS in all. 
+–IDENTIFICATION DIVISION.
+–ENVIRONMENT DIVISION.
+–DATA DIVISION.
+–PROCEDURE DIVISION.
+§Although some of the divisions may be omitted the 
+sequence in which the DIVISIONS are specified is fixed 
+and must follow the pattern shown above.Introduction to COBOL
+The Four Divisions
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 9§The IDENTIFICATION DIVISION is used to supply information 
+about the program to the programmer and to the compiler.  
+§The ENVIRONMENT DIVISION describes to the compiler the 
+environment in which the program will run. 
+§As the name suggests, the DATA DIVISION is used to provide the 
+descriptions of most of the data to be processed by the program.
+§The PROCEDURE DIVISION contains the description of the 
+algorithm which will manipulate the data previously described. Like 
+other languages COBOL provides a means for specifying 
+sequence, selection and iteration constructs.Introduction to COBOL
+Functions of the four divisions
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 10Introduction to COBOL
+COBOLProgram Text Structure 
+Data Descriptions
+Algorithm DescriptionIDENTIFICATION DIVISION.IDENTIFICATION DIVISION.
+DATA DIVISION.DATA DIVISION.
+PROCEDURE DIVISION.PROCEDURE DIVISION.Program Details
+NOTE
+The keyword 
+DIVISION and a 
+‘full-stop ’is used 
+in every case.NNOTEOTE
+The keyword 
+DIVISION and a 
+‘full-stop ’is used 
+in every case.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 11§The purpose of theIDENTIFICATION DIVISION is to provide 
+information about the program to the programmer and to the
+compiler .  
+§Most of the entries in the IDENTIFICATION DIVISION are directed 
+at the programmer and are treated by the compiler as comments .
+§An exception to this is the PROGRAM-ID clause.  Every COBOL 
+program must have a PROGRAM-ID.   It is used to enable the 
+compiler to identify the program.
+§There are several other informational paragraphs in the 
+IDENTIFICATION DIVISION but we will ignore them for the 
+moment.Introduction to COBOL
+IDENTIFICATION DIVISION
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 12§The IDENTIFICATION DIVISION has the following structure
+IDENTIFICATION DIVISION .
+PROGRAM-ID . ProgName.
+[AUTHOR. YourName.]
+§The keywords IDENTIFICATION DIVISION represent the division 
+header and signal the commencement of the program text.
+§The paragraph name PROGRAM-ID is a keyword. It must be 
+specified immediately after the division header.
+§The program name can be up to 8characters long.Introduction to COBOL
+The IDENTIFICATION DIVISION Syntax
+IDENTIFICATION DIVISION.
+PROGRAM-ID. BMJA01.
+AUTHOR. Michael Coughlan.IDENTIFICATION DIVISION.
+PROGRAM-ID. BMJA01.
+AUTHOR. Michael Coughlan.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 13Introduction to COBOL
+The DATA DIVISION
+§The DATA DIVISION is used to describe most of the data that a 
+program processes.
+§The DATA DIVISION is divided into two main sections;
+–FILE SECTION.
+–WORKING-STORAGE SECTION.
+§The FILE SECTION is used to describe most of the data that is 
+sent to, or comes from, the computer’s peripherals. 
+§The WORKING-STORAGE SECTION is used to describe the 
+general variables used in the program.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 14Introduction to COBOL
+DATA DIVISION Syntax
+§The DATA DIVISION has the following structure
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  Sequence-Program.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01  Num1           PIC 9  VALUE ZEROS.
+01  Num2           PIC 9  VALUE ZEROS.
+01  Result         PIC 99 VALUE ZEROS.IDENTIFICATION DIVISION.
+PROGRAM-ID.  Sequence-Program.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01  Num1           PIC 9  VALUE ZEROS.
+01  Num2           PIC 9  VALUE ZEROS.
+01  Result         PIC 99 VALUE ZEROS.
+
+
+
+
+
+
+entries. WS   . SECTION STORAGE- WORKINGentries. Section File   . SECTION FILE. DIVISION DATA
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 15Introduction to COBOL
+The PROCEDURE DIVISION
+§The PROCEDURE DIVISION is where all the data described 
+in the DATA DIVISION is processed and produced.  It is here 
+that the programmer describes his algorithm.
+§The PROCEDURE DIVISION is hierarchical in structure and 
+consists of Sections, Paragraphs, Sentences and Statements.
+§Only the Section is optional.  There must be at least one
+paragraph, sentence and statement in the PROCEDURE 
+DIVISION.
+§In the PROCEDURE DIVISION paragraph and section names 
+are chosen by the programmer.  The names used should 
+reflect the processing being done in the paragraph or section.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 16Introduction to COBOL
+Sections
+§A section is a block of code made up of one or more paragraphs .  
+§A section begins with the section name and ends where the next 
+section name is encountered or where the program text ends.
+§A section name consists of a name devised by the programmer 
+or defined by the language followed by the word SECTION 
+followed by a full stop.
+FILE SECTION.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 17Introduction to COBOL
+Paragraphs
+§Each section consists of one or more paragraphs.  
+§A paragraph is a block of code made up of one or more 
+sentences .
+§A paragraph begins with the paragraph name and ends with 
+the next paragraph or section name or the end of the 
+program text.
+§The paragraph name consists of a name devised by the 
+programmer or defined by the language followed by a full 
+stop.  
+PrintFinalTotals.
+PROGRAM-ID.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18Introduction to COBOL
+Sentences and Statements
+§A paragraph consists of one or more sentences.
+§A sentence consists of one or more statements and is terminated by a full 
+stop.
+MOVE .21 TO VatRate
+COMPUTE VatAmount= ProductCost* VatRate.
+DISPLAY "Enter name " WITH NO ADVANCING
+ACCEPT  StudentName
+DISPLAY "Name entered was " StudentName.
+§A statement consists of a COBOL verb and an operand or operands.
+SUBTRACT Tax FROM GrossPayGIVING NetPay
+READ StudentFile
+AT END SET EndOfFileTO TRUE
+END-READ.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 19Introduction to COBOL
+A Full COBOL program
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  SAMPLE1.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01  Num1           PIC 9  VALUE ZEROS.
+01  Num2           PIC 9  VALUE ZEROS.
+01  Result         PIC 99 VALUE ZEROS.
+PROCEDURE DIVISION.
+CalculateResult.
+ACCEPT Num1.
+ACCEPT Num2.
+MULTIPLY Num1 BY Num2 GIVING Result.
+DISPLAY "Result is = ", Result.
+STOP RUN.IDENTIFICATION DIVISION.
+PROGRAM-ID.  SAMPLE1.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01  Num1           PIC 9  VALUE ZEROS.
+01  Num2           PIC 9  VALUE ZEROS.
+01  Result         PIC 99 VALUE ZEROS.
+PROCEDURE DIVISION.
+CalculateResult.
+ACCEPT Num1.
+ACCEPT Num2.
+MULTIPLY Num1 BY Num2 GIVING Result.
+DISPLAY "Result is = ", Result.
+STOP RUN.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 20Introduction to COBOL
+The minimum COBOL program
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  SAMPLE2.
+PROCEDURE DIVISION.
+DisplayPrompt.
+DISPLAY "I did it".
+STOP RUN.IDENTIFICATION DIVISION.
+PROGRAM-ID.  SAMPLE2.
+PROCEDURE DIVISION.
+DisplayPrompt.
+DISPLAY "I did it".
+STOP RUN.
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 21Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 22COBOL Basics 1
+Overview
+§The COBOL coding rules. 
+§Name construction. 
+§Describing Data. 
+§Data names/variables.
+§Cobol Data Types and data description. 
+§The PICTURE clause. 
+§The VALUE clause. 
+§Literals and Figurative Constants. 
+§Editing, compiling, linking and running COBOL programs 
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 23§Almost all COBOL compilers treat a  line of COBOL code as if it contained 
+two distinct areas. These are known as;
+Area A and Area B
+§When a COBOL compiler recognizes these two areas, all division, section, 
+paragraph names,  FD entries and 01 level numbers must start in Area A .  All 
+other sentences must start in Area B .
+§Area A is four characters wide and is followed by Area B.COBOL Basics 1
+COBOL coding rules
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  Program.
+* This is a comment. It starts
+* with an asterisk in column 1IDENTIFICATION DIVISION.
+PROGRAM-ID.  Program.
+* This is a comment. It starts
+* with an asterisk in column 1
+*：Identification Area （7thbyte）
+A：AreaA（8th～11thbyte）
+B：Area B（12th～72th byte）
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 24§All user defined names, such as data names, paragraph names, 
+section names and mnemonic names, must adhere to the following 
+rules;
+–They must contain at least one character and not more than 30 
+characters.
+–They must contain at least one alphabetic character and they must 
+not begin or end with a hyphen.
+–They must be contructedfrom the characters A to Z, the number 0 to 
+9 and the hyphen. e.g.  TotalPay, Gross-Pay, 
+PrintReportHeadings, Customer10-Rec
+§All data-names should describe the data they contain.
+§All paragraph and section names should describe the function of 
+the paragraph or section.COBOL Basics 1
+Name Construction
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 25There are basically three kinds of data used in COBOL programs;
+1. Variables.
+2. Literals.
+3. Figurative Constants.
+Unlike other programming languages, COBOL does not support 
+user defined constants.COBOL Basics 1
+Describing DATA
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 26§A variable is a named location in memory into which a program can put 
+data and from which it can retrieve data.
+§A data-name or identifier is the name used to identify the area of memory 
+reserved for the variable.
+§Variables must be described in terms of their type and size.
+§Every variable used in a COBOL program must have a description in the 
+DATA DIVISION. COBOL Basics 1
+Data-Names / Variables
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 27StudentNameMOVE "JOHN" TO StudentName.
+DISPLAY "My name is ", StudentName.01 01 StudentNameStudentName PIC X(6) VALUE SPACESPIC X(6) VALUE SPACES ..COBOL Basics 1
+Using Variables
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 28JO H NStudentNameMOVE "JOHN" TO MOVE "JOHN" TO StudentNameStudentName ..
+DISPLAY "My name is ", StudentName.01 StudentNamePIC X(6) VALUE SPACES .COBOL Basics 1
+Using Variables
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 29StudentNameMOVE "JOHN" TO StudentName.
+DISPLAY "My name is ", DISPLAY "My name is ", StudentNameStudentName ..01 StudentNamePIC X(6) VALUE SPACES .
+My name is JOHN
+J    O   H    NJ    O   H    NCOBOL Basics 1
+Using Variables
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 30§COBOL is not a “typed”language and the distinction between some of 
+the data types available in the language is a little blurred.
+§For the time being we will focus on just two data types,
+–numeric
+–text or string
+§Data type is important because it determines the operations which are 
+valid on the type.
+§COBOL is not as rigorous in the application of typing rules as other 
+languages.
+For example, some COBOL “numeric”data items may, from time to time, 
+have values which are not“numeric”!COBOL Basics 1
+COBOL Data Types
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 31§In “typed”languages simply specifying the type of a data item provides 
+quite a lot of information about it.
+§The type usually determines the range of values the data item can store.
+For instance a CARDINAL item can store values between 0..65,535 and an 
+INTEGER between -32,768..32,767
+§From the type of the item the compiler can establish how much memory to 
+set aside for storing its values.
+§If the type is “REAL”the number of decimal places is allowed to vary 
+dynamically with each calculation but the amount of the memory used to 
+store a real number is fixed.COBOL Basics 1
+Quick Review of “Data Typing”
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 32§Because COBOL is not typed it employs a different mechanism for 
+describing the characteristics of the data items in the program.
+§COBOL uses what could be described as a “ declaration by 
+example ”strategy.
+§In effect, the programmer provides the system with an example, or 
+template, or PICTURE of what the data item looks like.
+§From the “picture”the system derives the information necessary to 
+allocate it.COBOL Basics 1
+COBOL data description
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 33§To create the required ‘picture’the programmer uses a set of symbols.
+§The following symbols are used frequently in picture clauses;
+9 (the digit nine) is used to indicate the occurrence of a digitat the corresponding 
+position in the picture.
+X (the character X) is used to indicate the occurrence of anycharacter from the 
+character set at the corresponding position in the picture
+V (the character V) is used to indicate position of the decimal point in a numeric 
+value! It is often referred to as the “ assumed decimal point ”character.
+S (the character S) indicates the presence of a sign and can only appear at the 
+beginning of a picture.COBOL Basics 1
+COBOL ‘PICTURE’Clause symbols
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 34§Some examples
+PICTURE 999 a three digit (+iveonly) integer
+PICTURE S999 a three digit (+ive/-ive) integer
+PICTURE XXXX a four character text item or string
+PICTURE 99V99 a +ive‘real’in the range 0 to 99.99
+PICTURE S9V9 a +ive/-ive‘real’in the range ?
+§If you wish you can use the abbreviation PIC.
+§Numeric values can have a maximum of 18 (eighteen) digits (i.e. 9’s).
+§The limit on string values is usually system-dependent.COBOL Basics 1
+COBOL ‘PICTURE’Clauses
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 35§Recurring symbols can be specified using a ‘repeat’factor inside round 
+brackets
+PIC 9(6)is equivalent to PICTURE 999999
+PIC 9(6)V99 is equivalent to PIC 999999V99
+PICTURE X(10) is equivalent to PIC XXXXXXXXXX
+PIC S9(4)V9(4) is equivalent to PIC S9999V9999
+PIC 9(18) is equivalent to PIC 999999999999999999COBOL Basics 1
+Abbreviating recurring symbols
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 36DATA DIVISION.
+WORKING-STORAGE SECTION.
+01  Num1           PIC 999 VALUE ZEROS.
+01  VatRate PIC V99 VALUE .18.
+01  StudentName PIC X(10)VALUE SPACES.§In COBOL a variable declaration consists of a line containing the following 
+items;
+1.A level number.  
+2.A data-name or identifier.
+3.A PICTURE clause.
+§We can give a starting value to variables by means of an extension to the 
+picture clause called the value clause .
+Num1    VatRate StudentNameNum1    VatRate StudentName
+000000.18.18DDATAATACOBOL Basics 1
+Declaring DATA in COBOL
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 37§String/Alphanumeric literals are enclosed in quotes and may consists of 
+alphanumeric characters
+e.g. "Michael Ryan",   "-123",   "123.45"
+§Numeric literals may consist of numerals, the decimal point and the plus or 
+minus sign.  Numeric literals are not enclosed in quotes.
+e.g.   123,   123.45,  -256,   +2987COBOL Basics 1
+COBOL Literals
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 38§COBOL provides its own, special constants called Figurative Constants.
+SPACE or SPACES = ¨
+ZERO or ZEROS or ZEROS = 0
+QUOTE or QUOTES = "
+HIGH-VALUE or HIGH-VALUES = Max Value
+LOW-VALUE or LOW-VALUES = Min Value
+ALL literal = Fill With LiteralSPACE or SPACESSPACE or SPACES = ¨
+ZERO or ZEROS or ZEROSZERO or ZEROS or ZEROS = 0
+QUOTE or QUOTESQUOTE or QUOTES = "
+HIGHHIGH --VALUE or HIGHVALUE or HIGH --VALUESVALUES = Max Value
+LOWLOW --VALUE or LOWVALUE or LOW --VALUESVALUES = Min Value
+ALL ALL literalliteral = Fill With LiteralCOBOL Basics 1
+Figurative Constants
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 3901  GrossPay PIC 9(5)V99 VALUE 13.5.     
+MOVE TO GrossPay.01  GrossPay PIC 9(5)V99 VALUE 13.5.     
+MOVE TO GrossPay.ZERO
+ZEROS
+ZEROES
+StudentNamePIC X(10) VALUE "MIKE".
+MOVE ALL "-" TO StudentName.StudentNamePIC X(10) VALUE "MIKE".
+MOVE ALL "-" TO StudentName.
+StudentName
+M I K E M I K E ¨¨¨¨¨¨¨¨¨¨¨¨GrossPay
+0 0 0 1350
+ñ
+lCOBOL Basics 1
+Figurative Constants -Examples
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 4001  GrossPayPIC 9(5)V99 VALUE 13.5.     
+MOVE TO GrossPay.01  GrossPayPIC 9(5)V99 VALUE 13.5.     
+MOVE TO GrossPay.ZERO
+ZEROS
+ZEROES
+01  StudentNamePIC X(10) VALUE "MIKE".      
+MOVE ALL "-" TO StudentName.01  StudentNamePIC X(10) VALUE "MIKE".      
+MOVE ALL "-" TO StudentName.
+StudentName
+--------------------GrossPay
+0 0 0 0 0 0 0
+ñ
+lCOBOL Basics 1
+Figurative Constants -Examples
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 41COBOL Basics 1
+Editing, Compiling, Running
+
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 42COBOL Basics 1
+Editing, Compiling, Running
+//EV6098A JOB (F9500B,WD01X),'EV6098',NOTIFY=EV6098,           
+//             MSGLEVEL=(1,1),                                  
+//             CLASS=M,MSGCLASS=R,USER=WD01UJ1,PASSWORD=MON10JUN
+//*********************************************************************
+//*  UIBMCL: COMPILE AND LINKEDIT A COBOL PROGRAM               
+//*                                                             
+//UIBMCL  PROC WSPC=500,NAME=TEMPNAME                           
+//*                                                             
+//*            COMPILE THE COBOL PROGRAM                        
+//*                                                             
+//COB     EXEC PGM=IGYCRCTL,                                    
+//         PARM='APOST,LIB,NOSEQ,RENT,TRUNC(BIN),LANG(UE)‘
+//STEPLIB  DD  DSN=SYS1.IGY.SIGYCOMP,DISP=SHR                 
+//SYSIN    DD  DSN=WD01I.DS.COBOL&SRC(&NAME),DISP=SHR         
+//SYSLIB   DD  DSN=WD01I.DS.COPY&COPY,DISP=SHR <=== BLK 3120  
+//         DD  DSN=MQM.SCSQCOBC,DISP=SHR                      
+//SYSLIN   DD  DSN= WD01I.DS.UT.OBJ&SRC(&NAME) ,DISP=SHR        
+//OUTDEF OUTPUT PRMODE=SOSI2,CHARS=(KN10,KNJE)                
+//SYSPRINT DD  SYSOUT=*,OUTPUT=*.OUTDEF                       
+//SYSUDUMP DD  SYSOUT=*                                       
+//SYSUT1   DD  SPACE=(800,(&WSPC,&WSPC),,,ROUND),UNIT=3390    
+//SYSUT2   DD  SPACE=(800,(&WSPC,&WSPC),,,ROUND),UNIT=3390    
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 43COBOL Basics 1
+Editing, Compiling, Running
+//* 
+//*            LINKEDIT IF THE  COMPILE                      
+//*            RETURN CODES ARE 4 OR LESS                    
+//*                                                          
+//LKED    EXEC PGM=HEWL,PARM='XREF',COND=(4,LT,COB) 
+//SYSLIB   DD  DSN=SYS1.SCEELKED,DISP=SHR                    
+//         DD  DSN=DSNCFD.SDSNEXIT,DISP=SHR                  
+//         DD  DSN=DSNCFD.DSNLOAD,DISP=SHR                   
+//OBJECT   DD  DSN=WD01I.DS.UT.OBJ&SRC,DISP=SHR              
+//CSQSTUB  DD  DSN=MQM.SCSQLOAD,DISP=SHR                     
+//CEEUOPT  DD  DSN=WD01I.DS.LOAD00,DISP=SHR                  
+//SYSLMOD  DD  DSN= WD01I.DS.UT.LOAD&SRC(&NAME) ,DISP=SHR      
+//SYSLIN   DD  DSN= WD01I.DS.UT.OBJ&SRC(&NAME) ,DISP=SHR       
+//         DD  DSN=WD01I.CSL1.PARMLIB(DSNELI),DISP=SHR       
+//         DD  DSN=WD01I.DS.PARAM00(CEEUOPT),DISP=SHR        
+//OUTDEF OUTPUT PRMODE=SOSI2,CHARS=(KN10,KNJE) 
+//SYSPRINT DD  SYSOUT=*,OUTPUT=*.OUTDEF                    
+//SYSUDUMP DD  SYSOUT=*                                    
+//SYSUT1   DD  SPACE=(4096,(500,500)),UNIT=3390 
+//      PEND
+//*
+//COMP   EXEC UIBMCL,SRC=00,COPY=00,NAME=BUAC25  
+//COB.SYSIN  DD  DSN= WD01I.EV6098.COBOL00(BUAC25)
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 44COBOL Basics 1
+Editing, Compiling, Running
+//EV6098G2 JOB (F9500B,WD01X),CFD,TIME=1440,                    
+//             REGION=8M,CLASS=M,MSGCLASS=R,MSGLEVEL=(1,1),     
+//       NOTIFY=EV6098,USER=WD01UJ1,PASSWORD=MON10JUN           
+//JOBLIB   DD  DSN= WD01I.DS.UT.LOAD00 ,DISP=SHR                  
+//         DD  DSN=DSNCFD.DSNLOAD,DISP=SHR 
+//********************************************************************
+//SCR     EXEC DSNDCR
+DSN=WD01I.DS.PCDERR.CHK.REPORT 
+//*-------------------------------------------------------------------
+//*     BUAC25 DUW25 CREATE                                     ***  
+//*-------------------------------------------------------------------
+//STEP160  EXEC  PGM= BUAC25,COND=(4,LT)                                 
+//IDUW13   DD  DSN=&&DUW13T,DISP=(OLD,DELETE)                   
+//UAC250   DD  DSN=WD01I.DS.PCDERR.CHK.REPORT,DISP=(,CATLG),    
+//             UNIT=3390,VOL=SER=EGF001,SPACE=(CYL,(15,15),RLSE) ,                                
+//             DCB=(RECFM=FBA,LRECL=133,BLKSIZE=0)              
+//OFSW16   DD  SYSOUT=* 
+//SYSPRINT DD  SYSOUT=*    
+//SYSUDUMP DD  SYSOUT=*    
+//SYSABOUT DD  SYSOUT=*    
+//SYSOUT   DD  SYSOUT=*    
+/* 
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 45
+EXERCISE 1
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 46Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 47COBOL Basics 2
+Overview
+Level Numbers. 
+Group and elementary data items. 
+Group item PICTURE clauses. 
+The MOVE. MOVEingnumeric items. 
+DISPLAY and ACCEPT. 
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 48H E N N E S S Y R M 9 2 3 0 1 6 5 L M 5 1 0 5 5 0 FStudentDetailsWORKING-STORAGE SECTION.
+01StudentDetails PIC X(26).WORKING-STORAGE SECTION.
+01StudentDetails PIC X(26).COBOL Basics 2
+Group Items/Records
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 49H  E N  N  E  S  S  Y R M  9  2  3   0  1  6   5  L  M  5  1  0   5  5  0   FStudentDetails
+StudentName StudentId CourseCodeGrant    GenderWORKING-STORAGE SECTION.
+01StudentDetails.
+02StudentName PIC X(10).
+02StudentId PIC 9(7).
+02CourseCode PIC X(4).
+02Grant PIC 9(4).
+02Gender PIC X.WORKING-STORAGE SECTION.
+01StudentDetails.
+0202StudentNameStudentName PIC X(10).PIC X(10).
+0202StudentIdStudentId PIC 9(7).PIC 9(7).
+0202CourseCodeCourseCode PIC X(4).PIC X(4).
+0202GrantGrant PIC 9(4).PIC 9(4).
+0202GenderGender PIC X.PIC X.COBOL Basics 2
+Group Items/Records
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 50H  E N  N  E  S  S  Y R M  9  2  3   0  1  6   5  L  M  5  1  0   5  5  0   FStudentDetails
+Surname InitialsWORKING-STORAGE SECTION.
+01StudentDetails.
+02StudentName.
+03 Surname PIC X(8).
+03 Initials PIC XX.
+02StudentId PIC 9(7).
+02CourseCode PIC X(4).
+02Grant PIC 9(4).
+02Gender PIC X.WORKING-STORAGE SECTION.
+01StudentDetails.
+0202StudentNameStudentName ..
+03 Surname03 Surname PIC X(8).PIC X(8).
+03 Initials03 Initials PIC XX.PIC XX.
+0202StudentIdStudentId PIC 9(7).PIC 9(7).
+0202CourseCodeCourseCode PIC X(4).PIC X(4).
+0202GrantGrant PIC 9(4).PIC 9(4).
+0202GenderGender PIC X.PIC X.
+StudentName StudentId CourseCodeGrant    GenderCOBOL Basics 2
+Group Items/Records
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 51§In COBOL, level numbers are used to decompose a structure into it’s 
+constituent parts. 
+§In this hierarchical structure the higher the level number, the lower the item 
+is in the hierarchy. At the lowest level the data is completely atomic.
+§The level numbers 01through 49are general level numbers but there are 
+also special level numbers such as 66, 77and 88.
+§In a hierarchical data description what is important is the relationship of the 
+level numbers to one another, not the actual level numbers used.COBOL Basics 2
+LEVEL Numbers express DATA hierarchy
+01StudentDetails.
+02StudentName.
+03 Surname PIC X(8).
+03 Initials PIC XX.
+02StudentId PIC 9(7).
+02CourseCode PIC X(4).
+02Grant PIC 9(4).
+02Gender PIC X.01StudentDetails.
+02StudentName.
+03 Surname PIC X(8).
+03 Initials PIC XX.
+02StudentId PIC 9(7).
+02CourseCode PIC X(4).
+02Grant PIC 9(4).
+02Gender PIC X.01StudentDetails.
+05StudentName.
+10 Surname PIC X(8).
+10 Initials PIC XX.
+05StudentId PIC 9(7).
+05CourseCode PIC X(4).
+05Grant PIC 9(4).
+05Gender PIC X.01StudentDetails.
+05StudentName.
+10 Surname PIC X(8).
+10 Initials PIC XX.
+05StudentId PIC 9(7).
+05CourseCode PIC X(4).
+05Grant PIC 9(4).
+05Gender PIC X.=
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 52§In COBOL the term “ group item ”is used to describe a data item which has 
+been further subdivided.
+–A Group item is declared using a level number and a data name.  It cannot have a picture 
+clause.
+–Where a group item is the highest item in a data hierarchy it isreferred to as a record and 
+uses the level number 01.
+§The term “ elementary item ”is used to describe data items which are atomic; 
+that is, not further subdivided.
+§An elementary item declaration consists of; 
+1.a level number, 
+2.a data name 
+3.picture clause.
+An elementary item must have a picture clause.
+§Every group or elementary item declaration must be followed by a full stop.COBOL Basics 2
+Group and elementary items
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 53§Picture clauses are NOT specified for  ‘group’data items because the 
+sizea group item is the sum of the sizes of its subordinate, elementary 
+items and its type is always assumed to be PIC X .
+§The type of a group items is always assumed to be PIC X because 
+group items may have several different data items and types 
+subordinate to them.
+§An X picture is the only one which could support such collections.COBOL Basics 2
+PICTUREsfor Group Items
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 54§In “strongly typed”languages like Modula-2, Pascal or ADA the 
+assignment operation is simple because assignment is only allowed 
+between data items with compatible types.
+§The simplicity of assignment in these languages is achieved at the “cost”
+of having a large number of data types.
+§In COBOL there are basically only three data types,
+Alphabetic (PIC A)
+Alphanumeric (PIC X)
+Numeric  (PIC 9)
+§But this simplicity is achieved only at the cost of having a very complex 
+assignment statement.
+§In COBOL assignment is achieved using the MOVE verb. COBOL Basics 2
+Assignment in COBOL
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 55§TheMOVE copies data from the source identifier or literal to one or 
+more destination identifiers.
+§The source and destination identifiers can be group or elementary 
+data items.
+§When the destination item is alphanumeric or alphabetic (PIC X or 
+A) data is copied into the destination area from left toright with 
+space filling or truncation on the right.
+§When data is MOVEdinto an item the contents of the item are 
+completely replaced .  If the source data is too small to fill the 
+destination item entirely the remaining area is zero orspace filled .COBOL Basics 2
+The MOVE Verb
+{ }
+...  TO  MOVE IdentifierLiteralIdentifier
+
+
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 56MOVE “RYAN”TO Surname.
+MOVE “FITZPATRICK”TO Surname.MOVE “RYAN”TO Surname.
+MOVE “FITZPATRICK”TO Surname.
+01 SurnamePIC X(8).
+CO UGHL ANCOBOL Basics 2
+MOVEingData
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 57R YAN        MOVE “RYAN”TO Surname.
+MOVE “FITZPATRICK”TO Surname.MOVE MOVE ““RYANRYAN””TO Surname.TO Surname.
+MOVE “FITZPATRICK”TO Surname.
+01 SurnamePIC X(8).COBOL Basics 2
+MOVEingData
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 58MOVE “RYAN”TO Surname.
+MOVE “FITZPATRICK”TO Surname.MOVE “RYAN”TO Surname.
+MOVE MOVE ““FITZPATRICKFITZPATRICK ””TO Surname.TO Surname.
+01 SurnamePIC X(8).
+FITZ P A T R I C KCOBOL Basics 2
+MOVEingData
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 59§When the destination item is numeric, or edited numeric, then data is 
+aligned along the decimal point with zero filling or truncation as necessary.
+§When the decimal point is not explicitly specified in either thesource or 
+destination items, the item is treated as if it had an assumed decimal point 
+immediately after its rightmost character.COBOL Basics 2
+MOVEingto a numeric item
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 60ñ
+lMOVE ZEROS TO GrossPay.
+MOVE 12.4 TO GrossPay.
+MOVE 123.456 TO GrossPay.
+MOVE 12345.757 TO GrossPay.ñ
+l
+ñ
+l
+ñ
+lGrossPay
+GrossPay
+GrossPay
+GrossPayCOBOL Basics 2
+MOVEingto a numeric item
+01 GrossPay PIC 9(4)V99.
+00 0 0 00
+00 1 24   0
+01234   5     6
+12 345 7 5 7
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 61MOVE 1234 TO CountyPop.
+MOVE 12.4 TO CountyPop.
+MOVE 154 TO Price.
+MOVE 3552.75 TO Price.01 CountyPop PIC 999.
+01 Price PIC 999V99.
+PriceCountyPopCOBOL Basics 2
+MOVEingto a numeric item
+CountyPopñ
+l
+Priceñ
+l
+ñ
+l
+ñ
+l35 5 27 51 5 40001 241234
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 62Certain combinations of sending and receiving data types are not
+permitted (even by COBOL).
+COBOL Basics 2
+Legal MOVEs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 63§From time to time it may be useful to display messages and data 
+values on the screen.
+§A simple DISPLAY statement can be used to achieve this.
+§A single DISPLAY can be used to display several data items or 
+literals or any combination of these.
+§The WITH NO ADVANCING clause suppresses  the carriage 
+return/line feed.[ ][ ]
+ADVANCING NO WITH UPON... LiteralIdentifier  LiteralIdentifier DISPLAY
+ Name- Mnemonic                   
+
+
+
+
+
+
+COBOL Basics 2
+The DISPLAY Verb
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 6401 CurrentDate PIC 9(6).
+* YYMMDD
+01 DayOfYear PIC 9(5).
+* YYDDD
+01 Day0fWeek PIC 9.
+* D (1=Monday)
+01 CurrentTime PIC 9(8).
+* HHMMSSsss = S/10001 01 CurrentDateCurrentDate PIC 9(6).PIC 9(6).
+* YYMMDD
+01 01 DayOfYearDayOfYear PIC 9(5).PIC 9(5).
+* YYDDD
+01 Day0fWeek01 Day0fWeek PIC 9.PIC 9.
+* D (1=Monday)
+01 01 CurrentTimeCurrentTime PIC 9(8).PIC 9(8).
+* HHMMSSsss = S/100[ ]
+
+
+
+
+
+
+TIMEWEEK-OF- DAYDAYDATE
+ FROM Identifier ACCEPT  2. Format name- Mnemonic FROM Identifier ACCEPT  1. Format COBOL Basics 2
+The ACCEPT verb
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 65PROCEDURE DIVISION.
+Begin.
+DISPLAY "Enter student details using template below".
+DISPLAY "NNNNNNNNNNSSSSSSSCCCCGGGGS                ".
+ACCEPT  StudentDetails.
+ACCEPT  CurrentDateFROM DATE.
+ACCEPT  DayOfYearFROM DAY.
+ACCEPT  CurrentTimeFROM TIME.
+DISPLAY "Name is ", Initials SPACE Surname.
+DISPLAY "Date is " CurrentDaySPACE CurrentMonthSPACE CurrentYear.
+DISPLAY "Today is day " YearDay" of the year".
+DISPLAY "The time is " CurrentHour":" CurrentMinute.
+STOP RUN.PROCEDURE DIVISION.
+Begin.
+DISPLAY "Enter student details using template below".
+DISPLAY "NNNNNNNNNNSSSSSSSCCCCGGGGS                ".
+ACCEPT  StudentDetails.
+ACCEPT  CurrentDateFROM DATE.
+ACCEPT  DayOfYearFROM DAY.
+ACCEPT  CurrentTimeFROM TIME.
+DISPLAY "Name is ", Initials SPACE Surname.
+DISPLAY "Date is " CurrentDaySPACE CurrentMonthSPACE CurrentYear.
+DISPLAY "Today is day " YearDay" of the year".
+DISPLAY "The time is " CurrentHour":" CurrentMinute.
+STOP RUN.IDENTIFICATION DIVISION.
+PROGRAM-ID.  AcceptAndDisplay.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 StudentDetails.
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  StudentId PIC 9(7).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.
+01 CurrentDate.
+02  CurrentYear PIC 99.
+02  CurrentMonth PIC 99.
+02  CurrentDay PIC 99.
+01 DayOfYear.
+02  FILLER          PIC 99.
+02  YearDay PIC 9(3).
+01 CurrentTime.
+02  CurrentHour PIC 99.
+02  CurrentMinutePIC 99.
+02  FILLER          PIC 9(4).IDENTIFICATION DIVISION.
+PROGRAM-ID.  AcceptAndDisplay.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 StudentDetails.
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  StudentId PIC 9(7).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.
+01 CurrentDate.
+02  CurrentYear PIC 99.
+02  CurrentMonth PIC 99.
+02  CurrentDay PIC 99.
+01 DayOfYear.
+02  FILLER          PIC 99.
+02  YearDay PIC 9(3).
+01 CurrentTime.
+02  CurrentHour PIC 99.
+02  CurrentMinutePIC 99.
+02  FILLER          PIC 9(4).Enter student details using template below
+NNNNNNNNNNSSSSSSSCCCCGGGGS
+COUGHLANMS9476532LM511245M
+Name is MS COUGHLAN
+Date is 24 01 94
+Today is day 024 of the year
+The time is 22:23Enter student details using template below
+NNNNNNNNNNSSSSSSSCCCCGGGGS
+COUGHLANMS9476532LM511245M
+Name is MS COUGHLAN
+Date is 24 01 94
+Today is day 024 of the year
+The time is 22:23COBOL Basics 2
+Run of Accept and Display program
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 66Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 67§Files, records, fields. 
+§The record buffer concept. 
+§The SELECT and ASSIGN clause. 
+§OPEN, CLOSE, READ and WRITE verbs. Introduction to Sequential Files
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 68§COBOL is generally used in situations where the volume of 
+data to be processed is large. 
+§These systems are sometimes referred to as “ data intensive ”
+systems.
+§Generally, large volumes of data arise notbecause the data is 
+inherently voluminous but because the same items of 
+information have been recorded about a great many instances
+of the same object.Introduction to Sequential Files
+COBOL's forte
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 69§We use the term FIELD to describe an item of information we are 
+recording about an object
+(e.g. StudentName, DateOfBirth, CourseCode). 
+§We use the term RECORD to describe the collection of fields which 
+record information about an object 
+(e.g. a StudentRecordis a collection of fields recording information about 
+a student).
+§We use the term FILE to describe a collection of one or more 
+occurrences (instances) of a record type (template).
+§It is important to distinguish between the record occurrence (i.e. the 
+values of a record) and the record type (i.e. the structure of the record). 
+Every record in a file has a different value but the same structure .Introduction to Sequential Files
+Files, Records, Fields
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 70StudIdStudNameDateOfBirth
+9723456 COUGHLAN   10091961
+9724567 RYAN       31121976
+9534118 COFFEY     23061964
+9423458 O'BRIEN    03111979
+9312876 SMITH      12121976StudIdStudIdStudNameStudName DateOfBirthDateOfBirth
+9723456 COUGHLAN   10091961
+9724567 RYAN       31121976
+9534118 COFFEY     23061964
+9423458 O'BRIEN    03111979
+9312876 SMITH      12121976STUDENTS.DATSTUDENTS.DAT
+DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudId PIC 9(7).
+02  StudName PIC X(8).
+02  DateOfBirthPIC X(8).DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudId PIC 9(7).
+02  StudName PIC X(8).
+02  DateOfBirthPIC X(8).occurrencesoccurrences
+Record Type Record Type 
+(Template)(Template)
+(Structure)(Structure)Introduction to Sequential Files
+Files, Records, Fields
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 71§Files are repositories of data that reside on backing storage (hard disk 
+or magnetic tape).
+§A file may consist of hundreds of thousands or even millions of 
+records.
+§Suppose we want to keep information about all the TV license holders 
+in the country.  Suppose each record is about 150 characters/bytes 
+long.  If we estimate the number of licenses at 1 million this gives us a 
+size for the file of 150 X 1,000,000 = 150 megabytes .
+§If we want to process a file of this size we cannot do it by loading the 
+whole file into the computer’s memory at once.
+§Files are processed by reading them into the computer’s memory one 
+record at a time.Introduction to Sequential Files
+How files are processed
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 72§To process a file records are read from the file into the computer’s 
+memory one record at a time .
+§The computer uses the programmers description of the record (i.e. 
+the record template) to set aside sufficient memory to store one 
+instance of the record.
+§Memory allocated for storing a record is usually called a “ record 
+buffer ”
+§The record buffer is the only connection between the program and 
+the records in the file.Introduction to Sequential Files
+Record Buffers
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 73IDENTIFICATION DIVISION.
+etc.
+ENVIRONMENT DIVISION.
+etc.
+DATA DIVISION.
+FILE SECTION.ProgramProgram
+RecordBufferRecordBuffer
+DeclarationDeclarationSTUDENTS.DATDISKRecord InstanceIntroduction to Sequential Files
+Record Buffers
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 74§If your program processes more than one file you will have to 
+describe a record buffer for each file.
+§To process all the records in an INPUT file each record instance 
+must be copied (read) from the file into the record buffer when 
+required.
+§To create an OUTPUT file containing data records each record 
+must be placed in the record buffer and then transferred (written) to 
+the file.
+§To transfer a record from an input file to an output file we will have 
+to
+read the record into the input record buffer
+transfer it to the output record buffer
+write the data to the output file from the output record bufferIntroduction to Sequential Files
+Implications of ‘Buffers’
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 7501StudentDetails.
+§Student Id. 02StudentId PIC 9(7).
+§Student Name. 02StudentName.
+Surname 03 SurnamePIC X(8).
+Initials 03 InitialsPIC XX.
+§Date of Birth 02DateOfBirth.
+Year of Birth 03YOBirth PIC 99.
+Month of Birth 03MOBirth PIC 99.
+Day of Birth 03DOBirth PIC 99.
+§Course Code 02CourseCodePIC X(4).
+§Value of grant 02Grant PIC 9(4).
+§Gender 02Gender PIC X.01StudentDetails.
+§Student Id. 02StudentId PIC 9(7).
+§Student Name. 02StudentName.
+Surname 03 SurnamePIC X(8).
+Initials 03 InitialsPIC XX.
+§Date of Birth 02DateOfBirth.
+Year of Birth 03YOBirth PIC 99.
+Month of Birth 03MOBirth PIC 99.
+Day of Birth 03DOBirth PIC 99.
+§Course Code 02CourseCodePIC X(4).
+§Value of grant 02Grant PIC 9(4).
+§Gender 02Gender PIC X.Student Details.Student Details.Introduction to Sequential Files
+Creating a Student Record
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 76§The record type/template/buffer of every file used in a program 
+must be described in the FILE SECTION by means of an FD (file 
+description) entry.
+§The FD entry consists of the letters FD and an internal file name.DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.Introduction to Sequential Files
+Describing the record buffer in COBOL
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 77STUDENTS.DAT
+§The internal file name used in the FD entry is connected to an external file (on 
+disk or tape) by means of the Select and Assign clause.DISKIntroduction to Sequential Files
+The Select and Assign Clause
+//STEP160  EXEC  PGM=BUAC25,COND=(4,LT) 
+//STUDENTS  DD  DSN= STUDENTS.DAT,DISP=SHR
+*****//STEP160  EXEC  PGM= BUAC25 ,COND=(4,LT) 
+//STUDENTS  DD  DSN= STUDENTS.DAT,DISP=SHR
+*****ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT StudentFile
+ASSIGN TO “STUDENTS”.
+DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+********ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT StudentFile
+ASSIGN TO “STUDENTS”.
+DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+********
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 78§LINE SEQUENTIAL means each record is followed by the 
+carriage return and line feed characters.
+§RECORD SEQUENTIAL means that the file consists of a 
+stream of bytes.  Only the fact that we know the size of 
+each record allows us to retrieve them. Introduction to Sequential Files
+Select and Assign Syntax
+]. SEQUENTIAL RECORDLINE IS ON ORGANIZATI[        e leReferenc ExternalFi TO ASSIGN FileName  SELECT
+
+
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 79§OPEN
+Before your program can access the data in an input file or place data in an 
+output file you must make the file available to the program by OPEN ingit.
+§READ
+The READ copies a record occurrence/instance from the file and places itin 
+the record buffer.
+§WRITE 
+The WRITE copies the record it finds in the record buffer to the file.
+§CLOSE
+You must ensure that (before terminating) your program closes all the files it 
+has opened. Failure to do so may result in data notbeing written to the file or 
+users being prevented from accessing the file.Introduction to Sequential Files
+COBOL file handling Verbs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 80§When you open a file you have to indicate to the system 
+what how you want to use it (e.g. INPUT, OUTPUT, 
+EXTEND) so that the system can manage the file correctly.
+§Opening a file does not transfer any data to the record 
+buffer, it simply provides access.Introduction to Sequential Files
+OPEN and CLOSE verb syntax
+... leName InternalFi  OPEN
+
+
+
+
+EXTENDOUTPUTINPUT
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 81§Once the system has opened a file and made it available to the program 
+it is the programmers responsibility to process it correctly.
+§Remember, the file record buffer is our only connection with thefile and 
+it is only able to store a single record at a time.
+§To process all the records in the file we have to transfer them,one 
+record at a time, from the file to the buffer.
+§COBOL provides the READ verb for this purpose.Introduction to Sequential Files
+The READ verb 
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 82§The InternalFilenamespecified must be a file that has been 
+OPEN edfor INPUT.
+§The NEXT RECORD clause is optional and generally not used.
+§Using INTO Identifier clause causes the data to be read into the
+record buffer and then copied from there to the specified 
+Identifier in one operation.
+–When this option is used there will be two copies of the data.  It is 
+the equivalent of a READ followed by a MOVE. Introduction to Sequential Files
+READ verb syntax
+[]
+[ ]
+READ- ENDlock StatementB END AT               Identifier INTO              RECORD NEXT lename InternalFi READ
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 83PERFORM UNTIL StudentRecord= HIGH-VALUES
+READ StudentRecords
+AT END MOVE HIGH-VALUES TO StudentRecord
+END-READ
+END-PERFORM.FFrraannkk CCuurrttaaiinn 99333344556677 LLMM005511StudentID StudentName Course.StudentRecord
+FFrraannkk CCuurrttaaiinn 99333344556677 LLMM005511
+Thomas Healy 9383715 LM068
+Tony O‘Brian 9347292 LM051
+Billy Downes 9378811 LM021
+EOFIntroduction to Sequential Files
+How the READ works
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 84TThhoommaass HHeeaallyy 99338833771155 LLMM006688StudentID StudentName Course.StudentRecord
+Frank Curtain 9334567 LM051
+TThhoommaass HHeeaallyy 99338833771155 LLMM006688
+Tony O‘Brian 9347292 LM051
+Billy Downes 9378811 LM021
+EOF
+PERFORM UNTIL StudentRecord= HIGH-VALUES
+READ StudentRecords
+AT END MOVE HIGH-VALUES TO StudentRecord
+END-READ
+END-PERFORM.Introduction to Sequential Files
+How the READ works
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 85TToonnyy OO‘‘BBrriiaann 99334477229922 LLMM005511StudentID StudentName Course.StudentRecord
+Frank Curtain 9334567 LM051
+Thomas Healy 9383715 LM068
+TToonnyy OO‘‘BBrriiaann 99334477229922 LLMM005511
+Billy Downes 9378811 LM021
+EOF
+PERFORM UNTIL StudentRecord= HIGH-VALUES
+READ StudentRecords
+AT END MOVE HIGH-VALUES TO StudentRecord
+END-READ
+END-PERFORM.Introduction to Sequential Files
+How the READ works
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 86BBiillllyy DDoowwnneess 99337788881111 LLMM002211StudentID StudentName Course.StudentRecord
+Frank Curtain 9334567 LM051
+Thomas Healy 9383715 LM068
+Tony O‘Brian 9347292 LM051
+BBiillllyy DDoowwnneess 99337788881111 LLMM002211
+EOF
+PERFORM UNTIL StudentRecord= HIGH-VALUES
+READ StudentRecords
+AT END MOVE HIGH-VALUES TO StudentRecord
+END-READ
+END-PERFORM.Introduction to Sequential Files
+How the READ works
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 87JJJJJJJJJJJJJJJ JJJJJJJ JJJJJStudentID StudentName Course.StudentRecord
+Frank Curtain 9334567 LM051
+Thomas Healy 9383715 LM068
+Tony O‘Brian 9347292 LM051
+Billy Downes 9378811 LM021
+EOFHIGH-VALUES
+PERFORM UNTIL StudentRecord= HIGH-VALUES
+READ StudentRecords
+AT END MOVE HIGH-VALUES TO StudentRecord
+END-READ
+END-PERFORM.Introduction to Sequential Files
+How the READ works
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 88§To WRITE data to a file move the data to the record 
+buffer (declared in the FD entry) and then WRITE 
+the contents of record buffer to the file.[ ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PAGEme MnemonicNaAdvanceNum
+ADVANCINGWRITE
+LINESLINE 
+AFTERBEFORE              Identifier FROM RecordName Introduction to Sequential Files
+WRITE Syntax
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 89FFrraannkk CCuurrttaaiinn 99333344556677 LLMM005511StudentID StudentName Course.StudentRecord
+FFrraannkk CCuurrttaaiinn 99333344556677 LLMM005511
+EOFOPEN OUTPUT StudentFile.
+MOVE "9334567Frank Curtain  LM051" TO StudentDetails.
+WRITE StudentDetails.
+MOVE "9383715Thomas Healy   LM068" TO StudentDetails.
+WRITE StudentDetails.
+CLOSE StudentFile.
+STOP RUN.OPEN OUTPUT StudentFile.
+MOVE "9334567Frank Curtain  LM051" TO StudentDetails.
+WRITE StudentDetails.
+MOVE "9383715Thomas Healy   LM068" TO StudentDetails.
+WRITE StudentDetails.
+CLOSE StudentFile.
+STOP RUN.
+Students.DatIntroduction to Sequential Files
+How the WRITE works
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 90TThhoommaass HHeeaallyy 99338833771155 LLMM006688StudentID StudentName Course.StudentRecord
+Frank Curtain 9334567 LM051
+TThhoommaass HHeeaallyy 99338833771155 LLMM006688
+EOFOPEN OUTPUT StudentFile.
+MOVE "9334567Frank Curtain  LM051" TO StudentDetails.
+WRITE StudentDetails.
+MOVE "9383715Thomas Healy   LM068" TO StudentDetails.
+WRITE StudentDetails.
+CLOSE StudentFile.
+STOP RUN.OPEN OUTPUT StudentFile.
+MOVE "9334567Frank Curtain  LM051" TO StudentDetails.
+WRITE StudentDetails.
+MOVE "9383715Thomas Healy   LM068" TO StudentDetails.
+WRITE StudentDetails.
+CLOSE StudentFile.
+STOP RUN.
+Students.DatIntroduction to Sequential Files
+How the WRITE works
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 91IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqWrite.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT Student ASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD Student.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.
+PROCEDURE DIVISION.
+Begin.
+OPEN OUTPUT Student.
+DISPLAY "Enter student details using template below.  Enter no data to end.".
+PERFORM GetStudentDetails.
+PERFORM UNTIL StudentDetails= SPACES
+WRITE StudentDetails
+PERFORM GetStudentDetails
+END-PERFORM.
+CLOSE Student.
+STOP RUN.
+GetStudentDetails.
+DISPLAY "NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS".
+ACCEPT  StudentDetails.IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqWrite.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT Student ASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD Student.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.
+PROCEDURE DIVISION.
+Begin.
+OPEN OUTPUT Student.
+DISPLAY "Enter student details using template below.  Enter no data to end.".
+PERFORM GetStudentDetails.
+PERFORM UNTIL StudentDetails= SPACES
+WRITE StudentDetails
+PERFORM GetStudentDetails
+END-PERFORM.
+CLOSE Student.
+STOP RUN.
+GetStudentDetails.
+DISPLAY "NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS".
+ACCEPT  StudentDetails.Introduction to Sequential Files
+Sample Code
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 92IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqRead.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT Student ASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD Student.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.
+PROCEDURE DIVISION.
+Begin.
+OPEN INPUT Student
+READ Student
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+PERFORM UNTIL StudentDetails= HIGH-VALUES
+DISPLAY StudentIdSPACE StudentNameSPACE CourseCode
+READ Student
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+END-PERFORM
+CLOSE Student
+STOP RUN.IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqRead.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT Student ASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD Student.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.
+PROCEDURE DIVISION.
+Begin.
+OPEN INPUT Student
+READ Student
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+PERFORM UNTIL StudentDetails= HIGH-VALUES
+DISPLAY StudentIdSPACE StudentNameSPACE CourseCode
+READ Student
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+END-PERFORM
+CLOSE Student
+STOP RUN.Introduction to Sequential Files
+Sample Code
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 93Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 94§File organization and access methods. 
+§Ordered and unordered Sequential Files. 
+§Processing unordered files. 
+§Processing ordered files. Processing Sequential Files
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 95PROCEDURE DIVISION.
+Begin.
+OPEN OUTPUT StudentFile
+DISPLAY "Enter student details using template below.  Press CR to end.". 
+PERFORM GetStudentDetails
+PERFORM UNTIL StudentDetails= SPACES
+WRITE StudentDetails
+PERFORM GetStudentDetails
+END-PERFORM
+CLOSE StudentFile
+STOP RUN.
+GetStudentDetails.
+DISPLAY "NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS".
+ACCEPT  StudentDetails.  PROCEDURE DIVISION.
+Begin.
+OPEN OUTPUT StudentFile
+DISPLAY "Enter student details using template below.  Press CR to end.". 
+PERFORM GetStudentDetails
+PERFORM UNTIL StudentDetails= SPACES
+WRITE StudentDetails
+PERFORM GetStudentDetails
+END-PERFORM
+CLOSE StudentFile
+STOP RUN.
+GetStudentDetails.
+DISPLAY "NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS".
+ACCEPT  StudentDetails.  Enter student details using template below.  Press CR to end.
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+9456789COUGHLANMS580812LM510598M
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+9367892RYAN    TG521210LM601222F
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+9368934WILSON  HR520323LM610786M
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+CarriageReturnEnter student details using template below.  Press CR to end.
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+9456789COUGHLANMS580812LM510598M
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+9367892RYAN    TG521210LM601222F
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+9368934WILSON  HR520323LM610786M
+NNNNNNNSSSSSSSSIIYYMMDDCCCCGGGGS
+CarriageReturn$ SET SOURCEFORMAT"FREE"
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqWrite.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT StudentFileASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.$ SET SOURCEFORMAT"FREE"
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqWrite.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT StudentFileASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.Processing Sequential Files
+Run of SeqWrite
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 96PROCEDURE DIVISION.
+Begin.
+OPEN INPUT StudentFile
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+PERFORM UNTIL StudentDetails= HIGH-VALUES
+DISPLAY StudentIdSPACE StudentNameSPACE CourseCode
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+END-PERFORM
+CLOSE StudentFile
+STOP RUN.PROCEDURE DIVISION.
+Begin.
+OPEN INPUT StudentFile
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+PERFORM UNTIL StudentDetails= HIGH-VALUES
+DISPLAY StudentIdSPACE StudentNameSPACE CourseCode
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+END-PERFORM
+CLOSE StudentFile
+STOP RUN.$ SET SOURCEFORMAT"FREE"
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqRead.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT StudentFileASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.$ SET SOURCEFORMAT"FREE"
+IDENTIFICATION DIVISION.
+PROGRAM-ID.  SeqRead.
+AUTHOR.  Michael Coughlan.
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+SELECT StudentFileASSIGN TO STUDENTS
+ORGANIZATION IS LINE SEQUENTIAL.
+DATA DIVISION.
+FILE SECTION.
+FD StudentFile.
+01 StudentDetails.
+02  StudentId PIC 9(7).
+02  StudentName.
+03 Surname      PIC X(8).
+03 Initials     PIC XX.
+02  DateOfBirth.
+03 YOBirth PIC 9(2).
+03 MOBirth PIC 9(2).
+03 DOBirth PIC 9(2).
+02  CourseCode PIC X(4).
+02  Grant           PIC 9(4).
+02  Gender          PIC X.9456789 COUGHLANMS LM51
+9367892 RYAN    TG LM60
+9368934 WILSON  HR LM619456789 COUGHLANMS LM51
+9367892 RYAN    TG LM60
+9368934 WILSON  HR LM61Processing Sequential Files
+RUN OF SeqRead
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 97§Two important characteristics of files are
+–– DATA ORGANIZATIONDATA ORGANIZATION
+–– METHOD OF ACCESSMETHOD OF ACCESS
+§Data organization refers to the way the records of the file are organized on 
+the backing storage device.
+COBOL recognizes three main file organizations;
+Sequential -Records organized serially. 
+Relative -Relative record number based organization.
+Indexed -Index based organization.
+§The method of access refers to the way in which records are accessed.  
+– A file with an organization of Indexed or Relative may 
+still have its records accessed sequentially.  
+– But records in a file with an organization of Sequential can notbe accessed 
+directly.Processing Sequential Files
+Organization and Access
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 98§The simplest COBOL file organization is Sequential .
+§In a Sequential file the records are arranged serially ,one after 
+another, like cards in a dealing shoe.  
+§In a Sequential file the only way to access any particular record is 
+to;  
+Start at the first record and read all the succeeding records until you 
+find the one you want or reach the end of the file.
+§Sequential files may be 
+OrderedOrdered
+or
+UnorderedUnordered (these should be called Serial files)
+§The ordering of the records in a file has a significant impact on the 
+way in which it is processed and the processing that can be done
+on it.Processing Sequential Files
+Sequential Organization
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 99RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordGRecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordGUnordered File
+In an ordered file the records are sequenced on some field in the record.Processing Sequential Files
+Ordered and Unordered Files
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 100RecordF
+RecordP
+RecordWRecordF
+RecordP
+RecordWTransaction
+File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordGRecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordGUnordered 
+File PROGRAM
+PROGRAMFILE SECTION.
+PROCEDURE DIVISION.
+OPEN EXTEND UF.
+OPEN INPUT TF.
+READ TF.
+MOVE TFRecTO UFRec.
+WRITE UFRec.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN EXTEND UF.
+OPEN INPUT TF.
+READ TF.
+MOVE TFRecTO UFRec.
+WRITE UFRec.TFRecTFRec
+UFRecUFRecProcessing Sequential Files
+Adding records to unordered files
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 101RecordF
+RecordP
+RecordWRecordFRecordF
+RecordP
+RecordWTransaction
+File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordG
+RecordFRecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordG
+RecordFRecordFUnordered 
+FilePROGRAM
+PROGRAMFILE SECTION.
+PROCEDURE DIVISION.
+OPEN EXTEND UF.
+OPEN INPUT TF.
+READ TF.
+MOVE TFRecTO UFRec.
+WRITE UFRec.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN EXTEND UF.
+OPEN INPUT TF.
+READ TF.
+MOVE TFRecTO UFRec.
+WRITE UFRec.RecordFRecordF
+RecordFRecordFProcessing Sequential Files
+Adding records to unordered files
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 102RecordF
+RecordP
+RecordWRecordFRecordF
+RecordPRecordP
+RecordWRecordWTransaction
+File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordG
+RecordF
+RecordP
+RecordWRecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordK
+RecordG
+RecordFRecordF
+RecordPRecordP
+RecordWRecordWUnordered 
+File
+RESULTRESULTProcessing Sequential Files
+Adding records to unordered files
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 103§It is easy to add records to an unordered Sequential file.
+§But it is not really possible to delete records from an unordered 
+Sequential file.
+§And it is not feasible to update records in an unordered Sequential fileProcessing Sequential Files
+Problems with Unordered Sequential Files
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 104§Records in a Sequential file can not be deleted or updated “in situ”.  
+§The only way to delete Sequential file records is to create a new file 
+which does not contain them.
+§The only way to update records in a Sequential File is to createa new 
+file which contains the updated records.
+§Because both these operations rely on record matching they do not 
+work for unordered Sequential files.
+§Why?Processing Sequential Files
+Problems with Unordered Sequential Files
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 105RecordB
+RecordM
+RecordKRecordBRecordB
+RecordM
+RecordKTransaction File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordKRecordMRecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordKUnordered FileNew File
+Delete UFDelete UF
+Record?Record?RecordMRecordMRecordM
+NONOProcessing Sequential Files
+Deleting records from unordered files?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 106RecordB
+RecordM
+RecordKRecordBRecordB
+RecordM
+RecordKTransaction File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordKRecordM
+RecordHRecordH
+RecordB
+RecordN
+RecordA
+RecordKUnordered FileNew File
+Delete UFDelete UF
+Record?Record?RecordM
+RecordHRecordM
+RecordHRecordH NONOProcessing Sequential Files
+Deleting records from unordered files?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 107RecordB
+RecordM
+RecordKRecordBRecordB
+RecordM
+RecordKTransaction File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordKRecordM
+RecordH
+RecordBRecordB
+RecordN
+RecordA
+RecordKUnordered FileNew File
+Delete UFDelete UF
+Record?Record?RecordM
+RecordHRecordM
+RecordH YESYESProcessing Sequential Files
+Deleting records from unordered files?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 108RecordB
+RecordM
+RecordKRecordB
+RecordMRecordM
+RecordKTransaction File
+RecordM
+RecordH
+RecordB
+RecordN
+RecordA
+RecordKRecordM
+RecordH
+RecordB
+RecordNRecordN
+RecordA
+RecordKUnordered FileNew File
+Delete UFDelete UF
+Record?Record?RecordM
+RecordH
+RecordNRecordM
+RecordH
+RecordNRecordNNONO
+But wait...
+We should have deleted RecordM.  
+Too late.  It’s already been written to 
+the new file. Processing Sequential Files
+Deleting records from unordered files?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 109RecordB
+RecordK
+RecordMRecordB
+RecordK
+RecordMTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKeyNOT = OFKey
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKeyNOT = OFKey
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.TFRecTFRec
+OFRecOFRec
+NFRecNFRecProcessing Sequential Files
+Deleting records from an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 110RecordB
+RecordK
+RecordMRecordBRecordB
+RecordK
+RecordMTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordARecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordARecordARecordAFILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFRecNOT = OFRec
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFRecNOT = OFRec
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.RecordBRecordB
+RecordARecordA
+RecordARecordA
+Problem !!
+How can we recognize 
+which record we want 
+to delete?
+By its Key FieldProcessing Sequential Files
+Deleting records from an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 111RecordB
+RecordK
+RecordMRecordB
+RecordK
+RecordMTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordBRecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKeyNOT = OFKey
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKeyNOT = OFKey
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.RecordBRecordB
+RecordBRecordB
+RecordARecordARecordARecordAProcessing Sequential Files
+Deleting records from an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 112RecordB
+RecordK
+RecordMRecordB
+RecordKRecordK
+RecordMTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordGRecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordA
+RecordGRecordA
+RecordGRecordGFILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKeyNOT = OFKey
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKeyNOT = OFKey
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+ELSE
+READ TF
+READ OF
+END-IF.RecordKRecordK
+RecordGRecordG
+RecordGRecordGProcessing Sequential Files
+Deleting records from an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 113RecordB
+RecordK
+RecordMRecordBRecordB
+RecordKRecordK
+RecordMRecordMTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordARecordA
+RecordBRecordB
+RecordGRecordG
+RecordHRecordH
+RecordKRecordK
+RecordMRecordM
+RecordNRecordNOrdered FileNew File
+RESULTRESULTRecordA
+RecordG
+RecordH
+RecordNRecordARecordA
+RecordGRecordG
+RecordHRecordH
+RecordNRecordNProcessing Sequential Files
+Deleting records from an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 114RecordB
+RecordH
+RecordKRecordB
+RecordH
+RecordKTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.TFRecTFRec
+OFRecOFRec
+NFRecNFRecProcessing Sequential Files
+Updating records in an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 115RecordB
+RecordH
+RecordKRecordBRecordB
+RecordH
+RecordKTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordARecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordARecordARecordA FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordBRecordB
+RecordARecordA
+RecordARecordAProcessing Sequential Files
+Updating records in an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 116RecordB
+RecordH
+RecordKRecordB
+RecordH
+RecordKTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordBRecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordA
+RecordB+RecordA
+RecordBRecordB++FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordBRecordB
+RecordBRecordB
+RecordBRecordB++Processing Sequential Files
+Updating records in an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 117RecordB
+RecordH
+RecordKRecordB
+RecordHRecordH
+RecordKTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordGRecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordA
+RecordB+
+RecordGRecordA
+RecordB+
+RecordGRecordGFILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey= OFKey
+Update OFRecwith TFRec
+MOVE OFRec+ TO NFRec
+WRITE NFRec
+READ TF
+READ OF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordHRecordH
+RecordGRecordG
+RecordGRecordGProcessing Sequential Files
+Updating records in an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 118RecordC
+RecordF
+RecordPRecordC
+RecordF
+RecordPTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.TFRecTFRec
+OFRecOFRec
+NFRecNFRecProcessing Sequential Files
+Inserting records into an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 119RecordC
+RecordF
+RecordPRecordCRecordC
+RecordF
+RecordPTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordARecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordARecordARecordA FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordCRecordC
+RecordARecordA
+RecordARecordAProcessing Sequential Files
+Inserting records into an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 120RecordC
+RecordF
+RecordPRecordC
+RecordF
+RecordPTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordBRecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordA
+RecordBRecordA
+RecordBRecordBFILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordCRecordC
+RecordBRecordB
+RecordBRecordBProcessing Sequential Files
+Inserting records into an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 121RecordC
+RecordF
+RecordPRecordC
+RecordF
+RecordPTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordGRecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordA
+RecordB
+RecordCRecordA
+RecordB
+RecordCRecordCFILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordCRecordC
+RecordGRecordG
+RecordCRecordCProcessing Sequential Files
+Inserting records into an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 122RecordC
+RecordF
+RecordPRecordC
+RecordFRecordF
+RecordPTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordA
+RecordB
+RecordC
+RecordFRecordA
+RecordB
+RecordC
+RecordFRecordFFILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordFRecordF
+RecordGRecordG
+RecordFRecordFProcessing Sequential Files
+Inserting records into an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 123RecordC
+RecordF
+RecordPRecordC
+RecordF
+RecordPRecordPTransaction File
+RecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNRecordA
+RecordB
+RecordG
+RecordH
+RecordK
+RecordM
+RecordNOrdered FileNew File PROGRAM
+RecordA
+RecordB
+RecordC
+RecordF
+RecordGRecordA
+RecordB
+RecordC
+RecordF
+RecordGRecordGFILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.FILE SECTION.
+PROCEDURE DIVISION.
+OPEN INPUT TF.
+OPEN INPUT OF
+OPEN OUTPUT NF.
+READ TF.
+READ OF.
+IF TFKey< OFKey
+MOVE TFRecTO NFRec
+WRITE NFRec
+READ TF
+ELSE
+MOVE OFRecTO NFRec
+WRITE NFRec
+READ OF
+END-IF.RecordPRecordP
+RecordGRecordG
+RecordGRecordGProcessing Sequential Files
+Inserting records into an ordered file
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 124
+EXERCISE 2
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 125Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 126§Non-Iteration PERFORM. 
+§GO TO and PERFORM....THRU. 
+§In line and out of line PERFORM. 
+§PERFORM n TIMES. 
+§PERFORM .... UNTIL. 
+§Using the PERFORM...UNTIL in processing files. Simple iteration with the PERFORM verb
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 127§Iteration is an important programming construct.  We use iteration when 
+we need to repeat the same instructions over and over again.
+§Most programming languages have several iteration keywords (e.g.
+WHILE, FOR, REPEAT) which facilitate the creation different ‘types’of 
+iteration structure.
+§COBOL only has oneiteration construct;  PERFORM .
+§But the PERFORM has several variations.  
+§Each variation is equivalent to one of the iteration ‘types’available in 
+other languages. 
+§This lecture concentrates on three of the PERFORM formats.  The 
+PERFORM..VARYING, the COBOL equivalent of the FOR , will be 
+introduced later.Simple iteration with the PERFORM verb
+The PERFORM Verb
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 128§A Paragraph is a block of code to which we have given a name.
+§A Paragraph Name is a programmer defined name formed using the 
+standard rules for programmer defined names (A-Z, 0-9, -).
+§A Paragraph Name is ALWAYS terminated with a ‘full-stop’.
+§Any number of statements and sentences may be included in a 
+paragraph, and the last one (at least) must be terminated with a‘full-
+stop’.
+§The scope of a paragraph is delimited by the occurrence of another 
+paragraph name or the end of the program text.Simple iteration with the PERFORM verb
+Paragraphs :-Revisited
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 129ProcessRecord.
+DISPLAY StudentRecord
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentRecord
+END-READ.
+ProduceOutput.
+DISPLAY “Here is a message”.
+NOTE
+The scope of ‘ProcessRecord’is delimited 
+by the occurrence the paragraph name 
+‘ProduceOutput’.NOTENOTE
+The scope of ‘ProcessRecord’is delimited 
+by the occurrence the paragraph name 
+‘ProduceOutput’.Simple iteration with the PERFORM verb
+Paragraph Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 130§This is the only type of PERFORM that is notan iteration construct. 
+§It instructs the computer to transfer control to an out-of-line block of 
+code.  
+§When the end of the block is reached, control reverts to the 
+statement (not the sentence) immediately following the 
+PERFORM.
+§1stProc and EndProcare the names of Paragraphs or Sections. 
+§The PERFORM..THRU instructs the computer to treat the 
+Paragraphs or Sections from 1stProc TO EndProcas a single 
+block of code.                     EndProc THROUGHTHRU 1stProc PERFORM
+
+
+
+
+
+
+
+
+
+Simple iteration with the PERFORM verb
+Format 1 Syntax
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 131PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".PROCEDURE DIVISION.
+TopLevelTopLevel ..
+DISPLAY "In DISPLAY "In TopLevelTopLevel . Starting to run program". Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".Run of PerformFormat1
+In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.Simple iteration with the PERFORM verb
+Format 1 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 132PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".PROCEDURE DIVISION.
+TopLevelTopLevel ..
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM PERFORM OneLevelDownOneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".Run of PerformFormat1
+In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.Simple iteration with the PERFORM verb
+Format 1 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 133PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDownOneLevelDown ..
+DISPLAY ">>>> Now in DISPLAY ">>>> Now in OneLevelDownOneLevelDown ""
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".Run of PerformFormat1
+In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.Simple iteration with the PERFORM verb
+Format 1 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 134PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDownOneLevelDown ..
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM PERFORM TwoLevelsDownTwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".Run of PerformFormat1
+In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.Simple iteration with the PERFORM verb
+Format 1 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 135PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDownTwoLevelsDown ..
+DISPLAY ">>>>>>>> Now in DISPLAY ">>>>>>>> Now in TwoLevelsDownTwoLevelsDown ."."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".Run of PerformFormat1
+In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.Simple iteration with the PERFORM verb
+Format 1 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 136PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDownOneLevelDown ..
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in DISPLAY ">>>> Back in OneLevelDownOneLevelDown ".".Run of PerformFormat1
+In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.Simple iteration with the PERFORM verb
+Format 1 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 137PROCEDURE DIVISION.
+TopLevel.
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in TopLevel.".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".PROCEDURE DIVISION.
+TopLevelTopLevel ..
+DISPLAY "In TopLevel. Starting to run program"
+PERFORM OneLevelDown
+DISPLAY "Back in DISPLAY "Back in TopLevelTopLevel ."..".
+STOP RUN.
+TwoLevelsDown.
+DISPLAY ">>>>>>>> Now in TwoLevelsDown."
+OneLevelDown.
+DISPLAY ">>>> Now in OneLevelDown"
+PERFORM TwoLevelsDown
+DISPLAY ">>>> Back in OneLevelDown".Run of PerformFormat1
+In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.In TopLevel. Starting to run program
+>>>> Now in OneLevelDown
+>>>>>>>> Now in TwoLevelsDown.
+>>>> Back in OneLevelDown
+Back in TopLevel.Simple iteration with the PERFORM verb
+Format 1 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 138PROCEDURE DIVISION.
+Begin.
+PERFORM SumSales
+STOP RUN.
+SumSales.
+Statements
+Statements
+IF NoErrorFound
+Statements
+Statements
+IF NoErrorFound
+Statements
+Statements
+Statements
+END-IF
+END-IF.PROCEDURE DIVISION.
+Begin.
+PERFORM SumSales
+STOP RUN.
+SumSales.
+Statements
+Statements
+IF NoErrorFound
+Statements
+Statements
+IF NoErrorFound
+Statements
+Statements
+Statements
+END-IF
+END-IF.Simple iteration with the PERFORM verb
+Why use the PERFORM Thru?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 139PROCEDURE DIVISION
+Begin.
+PERFORM SumSalesTHRU SumSalesExit
+STOP RUN.
+SumSales.
+Statements
+Statements
+IF ErrorFoundGO TO SumSalesExit
+END-IF
+Statements
+Statements
+Statements
+IF ErrorFoundGO TO SumSalesExit
+END-IF
+Statements
+SumSalesExit.
+EXIT.PROCEDURE DIVISION
+Begin.
+PERFORM SumSalesTHRU SumSalesExit
+STOP RUN.
+SumSales.
+Statements
+Statements
+IF ErrorFoundGO TO SumSalesExit
+END-IF
+Statements
+Statements
+Statements
+IF ErrorFoundGO TO SumSalesExit
+END-IF
+Statements
+SumSalesExit.
+EXIT.Simple iteration with the PERFORM verb
+Go To and PERFORM THRU
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 140PROCEDURE DIVISION.
+Begin.
+DisplayName.PROCEDURE DIVISION.
+Begin.
+DisplayName.Statements
+PERFORM   DisplayName4 TIMES
+Statements
+STOP RUN.
+DISPLAY “Tom Ryan”.[ ]
+                   PERFORM- END lock StatementB                      TIMESt RepeatCoun                      EndProc THROUGHTHRU 1stProc PERFORM
+
+
+
+
+
+
+
+
+
+Simple iteration with the PERFORM verb
+Format 2 -Syntax
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 141IDENTIFICATION DIVISION.
+PROGRAM-ID.  PerformExample2.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 NumofTimes PIC 9 VALUE 5.
+PROCEDURE DIVISION.
+Begin.
+DISPLAY "Starting to run program"
+PERFORM 3 TIMES
+DISPLAY ">>>>This is an in line Perform"
+END-PERFORM
+DISPLAY "Finished in line Perform"
+PERFORM OutOfLineEGNumOfTimesTIMES
+DISPLAY "Back in Begin. About to Stop".
+STOP RUN.
+OutOfLineEG.
+DISPLAY ">>>> This is an out of line Perform".IDENTIFICATION DIVISION.
+PROGRAM-ID.  PerformExample2.
+AUTHOR.  Michael Coughlan.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 NumofTimes PIC 9 VALUE 5.
+PROCEDURE DIVISION.
+Begin.
+DISPLAY "Starting to run program"
+PERFORM 3 TIMES
+DISPLAY ">>>>This is an in line Perform"
+END-PERFORM
+DISPLAY "Finished in line Perform"
+PERFORM OutOfLineEGNumOfTimesTIMES
+DISPLAY "Back in Begin. About to Stop".
+STOP RUN.
+OutOfLineEG.
+DISPLAY ">>>> This is an out of line Perform".Starting to run program
+>>>>This is an in line Perform
+>>>>This is an in line Perform
+>>>>This is an in line Perform
+Finished in line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+Back in Begin. About to StopStarting to run program
+>>>>This is an in line Perform
+>>>>This is an in line Perform
+>>>>This is an in line Perform
+Finished in line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+>>>> This is an out of line Perform
+Back in Begin. About to StopRun of PerformExample2Simple iteration with the PERFORM verb
+Format 2 Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 142§This format is used where the WHILE or  REPEAT constructs 
+are used in other languages.
+§If the WITH TEST BEFORE phrase is used the PERFORM 
+behaves like a WHILE loop and the condition is tested before
+the loop body is entered.
+§If the WITH TEST AFTER phrase is used thePERFORM 
+behaves like a REPEAT loop and the condition is tested after
+the loop body is entered.
+§The WITH TEST BEFORE phrase is the default and so  is 
+rarely explicitly stated. [ ]
+          
+          
+PERFORM- END lock StatementB                      Condition UNTIL                      AFTERBEFORE TEST WITH EndProc THROUGHTHRU 1stProc PERFORM 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Simple iteration with the PERFORM verb
+Format 3-Syntax
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 143testLoop Body
+False
+TruePERFORM WITH
+TEST AFTER =
+REPEAT ... UNTILPERFORM WITH
+TEST AFTER =
+REPEAT ... UNTIL
+Next StatementtestLoop Body
+False
+TruePERFORM WITH
+TEST BEFORE =
+WHILE ... DOPERFORM WITH
+TEST BEFORE =
+WHILE ... DO
+Next StatementSimple iteration with the PERFORM verb
+Format 3-Sample
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 144§In general terms, the WHILE loop is an ideal construct for 
+processing sequences of data items whose length is not 
+predefined.
+§Such sequences of values are often called “streams”.
+§Because the ‘length’of the stream is unknown we have to be 
+careful how we manage the detection of the end of the stream.
+§A useful way for solving this problem uses a strategy known as 
+“read ahead”.Simple iteration with the PERFORM verb
+Sequential File Processing
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 145§With the “read ahead”strategy we always try to stay one data item 
+ahead of the processing.
+§The general format of the “read ahead”algorithm is as follows;
+Attempt to READ first data item
+WHILE NOT EndOfStream
+Process data item
+Attempt to READ next data item
+ENDWHILE
+§Use this to process any stream of data.Simple iteration with the PERFORM verb
+The READ Ahead
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 146§Algorithm Template
+READ READ StudentRecordsStudentRecords
+AT END MOVE HIGHAT END MOVE HIGH --VALUES TO VALUES TO StudentRecordStudentRecord
+ENDEND--READREAD
+PERFORM UNTIL PERFORM UNTIL StudentRecordStudentRecord = HIGH= HIGH--VALUESVALUES
+DISPLAY DISPLAY StudentRecordStudentRecord
+READ READ StudentRecordsStudentRecords
+AT END MOVE HIGHAT END MOVE HIGH --VALUES TO VALUES TO StudentRecordStudentRecord
+ENDEND--READREAD
+ENDEND--PERFORMPERFORM
+§This is an example of an algorithm which is capable of processing any 
+sequential file; ordered or unordered! Simple iteration with the PERFORM verb
+Reading a Sequential File
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 147PROCEDURE DIVISION.
+Begin.
+OPEN INPUT StudentFile
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+PERFORM UNTIL StudentDetails= HIGH-VALUES
+DISPLAY StudentIdSPACE StudentNameSPACE CourseCode
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+END-PERFORM
+CLOSE StudentFile
+STOP RUN.PROCEDURE DIVISION.
+Begin.
+OPEN INPUT StudentFile
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+PERFORM UNTIL StudentDetails= HIGH-VALUES
+DISPLAY StudentIdSPACE StudentNameSPACE CourseCode
+READ StudentFile
+AT END MOVE HIGH-VALUES TO StudentDetails
+END-READ
+END-PERFORM
+CLOSE StudentFile
+STOP RUN.9456789 COUGHLANMS LM51
+9367892 RYAN    TG LM60
+9368934 WILSON  HR LM619456789 COUGHLANMS LM51
+9367892 RYAN    TG LM60
+9368934 WILSON  HR LM61RUN OF SeqReadSimple iteration with the PERFORM verb
+Sample
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 148Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 149§ROUNDED option. 
+§ON SIZE ERROR option. 
+§ADD, SUBTRACT, MULTIPLY, DIVIDE and COMPUTE. 
+§Edited PICTURE clauses. 
+§Simple Insertion. 
+§Special Insertion. 
+§Fixed Insertion. 
+§Floating Insertion. 
+§Suppression and Replacement. Arithmetic and Edited Pictures
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 150§Most COBOL arithmetic verbs conform to the template above.   For
+example;
+ADD Takings TO CashTotal.
+ADD Males TO Females GIVING TotalStudents.  
+SUBTRACT Tax FROM GrossPay.
+SUBTRACT Tax FROM GrossPayGIVING NetPay.
+DIVIDE Total BY Members GIVING MemberAverage.
+DIVIDE Members INTO Total GIVING MemberAverage.
+MULTIPLY 10 BY Magnitude.
+MULTIPLY Members BY Subs GIVING TotalSubs.
+§The exceptions are the COMPUTE and the DIVIDE with REMAINDER.Arithmetic and Edited Pictures
+Arithmetic Verb Template
+[ ]
+[ ]
+                  VERB- END lock StatementB  ERROR SIZE ON                            ROUNDED   Identifier GIVING   Identifier Identifier 
+INTOBYFROMTO
+ LiteralIdentifier VERB
+
+
+
+
+
+
+
+
+
+
+KK
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 151Receiving Field Actual ResultTruncated ResultRounded Result
+PIC 9(3)V9. 123.2 5
+PIC 9(3). 123.25123.2 123.3
+123 123
+uThe ROUNDED option takes effect when, after decimal point 
+alignment, the result calculated must be truncated on the right 
+hand side.  
+uThe option adds 1 to the receiving item when the leftmost 
+truncated digit has an absolute value of 5 or greater.Arithmetic and Edited Pictures
+The ROUNDED option
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 152uA size error condition exists when, after decimal point alignment, the 
+result is truncated on either the left or the right hand side.
+uIf an arithmetic statement has a rounded phrase then a size error only 
+occurs if there is truncation on the left hand side (most significant 
+digits).Receiving Field Actual Result SIZE ERROR
+PIC 9(3)V9. 245.9 6
+PIC 9(3)V9. 1245.9
+PIC 9(3). 124
+PIC 9(3). 1246
+PIC 9(3)V9 Not Rounded 124.4 5 
+PIC 9(3)V9 Rounded 124.4 5
+PIC 9(3)V9 Rounded 3124.4 5Yes
+Yes
+No
+Yes
+Yes
+No
+YesArithmetic and Edited Pictures
+The ON SIZE ERROR option
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 153ADD   Cash  TO  Total.
+Before 3             1000
+After
+ADD   Cash,  20  TO   Total,   Wage.
+Before 3                     1000      100
+After
+ADD   Cash,  Total GIVING Result.
+Before 3       1000                0015
+After
+ADD Males TO Females GIVING  TotalStudents.
+Before 1500          0625                           1234
+AfterADD   Cash  TO  Total.
+BeforeBefore 3             1000
+AfterAfter
+ADD   Cash,  20  TO   Total,   Wage.
+Before Before 3                     1000      100
+AfterAfter
+ADD   Cash,  Total GIVING Result.
+BeforeBefore 3       1000                0015
+AfterAfter
+ADD Males TO Females GIVING  TotalStudents.
+Before Before 1500          0625                           1234
+AfterAfter 1500     0625 2125                         3             1003
+3 1023    123
+3       1000 1003Arithmetic and Edited Pictures
+ADD Examples
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 154SUBTRACT  Tax  FROM GrossPay, Total.
+Before  120                 4000        9120 
+After
+SUBTRACT  Tax, 80 FROM Total.
+Before 100                   480
+After
+SUBTRACT  Tax   FROM GrossPayGIVING NetPay.
+Before 750                 1000                      0012
+AfterSUBTRACT  Tax  FROM GrossPay, Total.
+Before  Before  120                 4000        9120 
+AfterAfter
+SUBTRACT  Tax, 80 FROM Total.
+Before Before 100                   480
+AfterAfter
+SUBTRACT  Tax   FROM GrossPayGIVING NetPay.
+BeforeBefore 750                 1000                      0012
+AfterAfter120 3880     9000
+100 300
+750          1000  0250Arithmetic and Edited Pictures
+SUBTRACT Examples
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 155MULTIPLY   Subs BY Members GIVING TotalSubs
+ON SIZE ERROR DISPLAY "TotalSubstoo small"
+END-MULTIPLY.
+Subs     Members   TotalSubs
+Before 15.50       100        0123.45
+After
+MULTIPLY 10 BY Magnitude,  Size.
+Before 355          125
+After
+DIVIDE  Total   BY  Members GIVING Average  ROUNDED.
+Before 9234.55          100                     1234.56
+AfterMULTIPLY   Subs BY Members GIVING TotalSubs
+ON SIZE ERROR DISPLAY "TotalSubstoo small"
+END-MULTIPLY.
+Subs     Subs     Members   Members   TotalSubsTotalSubs
+BeforeBefore 15.50       100        0123.45
+AfterAfter
+MULTIPLY 10 BY Magnitude,  Size.
+BeforeBefore 355          125
+AfterAfter
+DIVIDE  Total   BY  Members GIVING Average  ROUNDED.
+BeforeBefore 9234.55          100                     1234.56
+AfterAfter 9234.55    100 92.35                 3550        1250Arithmetic and Edited Pictures
+MULTIPLY and DIVIDE Examples
+15.50   100   1550.00
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 156DIVIDE 201 BY 10 GIVING Quotient  REMAINDER Remain.
+Before 209       424
+AfterDIVIDE 201 BY 10 GIVING Quotient  REMAINDER Remain.
+Before Before 209       424
+AfterAfter{ }
+{ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DIVIDE- END lock  StatementB ERROR SIZE ON NOTERROR SIZE ON                Identifier REMAINDER  ] ROUNDED [ Identifier GIVING  BY  DIVIDE                                DIVIDE- END lock  StatementB ERROR SIZE ON NOTERROR SIZE ON                Identifier REMAINDER  ] ROUNDED [ Identifier GIVING  INTO  DIVIDE
+LiteralIdentifier
+LiteralIdentifierLiteralIdentifier
+LiteralIdentifierArithmetic and Edited Pictures
+The Divide Exception
+020                              001
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 157Compute IrishPrice= SterlingPrice/ Rate  *  100.
+Before 1000.50            156.25          87    
+AfterCompute IrishPrice= SterlingPrice/ Rate  *  100.
+Before Before 1000.50            156.25          87    
+AfterAfter 179.59  156.25     87Precedence Rules.
+1. **=POWER NN
+2. *= MULTIPLY x
+/=DIVIDE ÷
+3. +=ADD +
+-=SUBTRACT -Precedence Rules.Precedence Rules.
+1.1. ****=POWER NN
+2.2. **= MULTIPLY x
+//=DIVIDE ÷
+3.3. ++=ADD +
+--=SUBTRACT -{ }
+
+
+
+
+
+COMPUTE- END lock StatementB  ERROR SIZE ON NOTERROR SIZE ON                     Expression Arithmetic = ... ] ROUNDED [ Identifier COMPUTEArithmetic and Edited Pictures
+The COMPUTE
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 158§Edited Pictures are PICTURE clauses which format data intended for output to 
+screen or printer.
+§To enable the data items to be formatted in a particular style COBOL provides 
+additional picture symbols supplementing the basic 9, X, A, Vand Ssymbols.
+§The additional symbols are referred to as “Edit Symbols”and PICTURE 
+clauses which include edit symbols are called “Edited Pictures”.
+§The term edit is used because the edit symbols have the effect of changing, or 
+editing, the data inserted into the edited item.
+§Edited items can not be used as operands in a computation but they may be 
+used as the result or destination of a computation (i.e. to the right of the word 
+GIVING).Arithmetic and Edited Pictures
+Edited Pictures
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 159§COBOL provides two basic types of editing
+Insertion Editing - which modifies a value by 
+including additional items.
+Suppression and Replacement Editing -
+which suppresses and replaces leading zeros.
+§Each type has sub-categories
+lInsertion editing
+®Simple Insertion
+®Special Insertion
+®Fixed Insertion
+®Floating Insertion
+lSuppression and Replacement
+®Zero suppression and replacement with spaces
+®Zero suppression and replacement with asterisksArithmetic and Edited Pictures
+Editing Types
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 160,  B  0   / Simple Insertion
+. Special Insertion
++ -CR DB $ Fixed Insertion
++ -S Floating Insertion
+Z* Suppression and Replacement ,  B  0   / Simple Insertion
+. Special Insertion
++ -CR DB $ Fixed Insertion
++ -S Floating Insertion
+Z* Suppression and Replacement Edit Symbol        Editing TypeEdit Symbol        Editing TypeArithmetic and Edited Pictures
+Editing Symbols
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 161Sending Receiving
+Picture        Data           Picture                Result
+PIC 999999 123456 PIC 999,999
+PIC 9(6) 000078 PIC 9(3),9(3)
+PIC 9(6) 000078 PIC ZZZ,ZZZ
+PIC 9(6) 000178 PIC ***,***
+PIC 9(6) 002178 PIC ***,***
+PIC 9(6) 120183 PIC 99B99B99
+PIC 9(6) 120183 PIC 99/99/99
+PIC 9(6) 001245PIC 990099Sending Sending ReceivingReceiving
+Picture        Data           Picture                ResultPicture        Data           Picture                Result
+PIC 999999 123456 PIC 999 ,999
+PIC 9(6) 000078 PIC 9(3) ,9(3)
+PIC 9(6) 000078 PIC ZZZ ,ZZZ
+PIC 9(6) 000178 PIC *** ,***
+PIC 9(6) 002178 PIC *** ,***
+PIC 9(6) 120183 PIC 99 B99B99
+PIC 9(6) 120183 PIC 99 /99/99
+PIC 9(6) 001245PIC 99 0099123,456
+000,078
+     78
+****178
+**2,178
+12 01 83
+12/01/83
+120045Arithmetic and Edited Pictures
+Simple Insertion
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 162Sending Receiving
+Picture        Data           Picture                Result
+PIC 999V99 12345 PIC 999.99
+PIC 999V99 02345 PIC 999.9
+PIC 999V99 51234 PIC 99.99
+PIC 999 456 PIC 999.99Sending Sending ReceivingReceiving
+Picture        Data           Picture                ResultPicture        Data           Picture                Result
+PIC 999V99 12345 PIC 999 .99
+PIC 999V99 0234 5 PIC 999 .9
+PIC 999V99 51234 PIC 99 .99
+PIC 999 456 PIC 999 .99123.45
+023.4
+12.34
+456.00Arithmetic and Edited Pictures
+Special Insertion
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 163Sending Receiving
+Picture        Data           Picture                Result
+PIC S999 -123 PIC -999
+PIC S999 -123 PIC  999-
+PIC S999 +123 PIC -999
+PIC S9(5) +12345 PIC +9(5)
+PIC S9(3) -123 PIC +9(3)
+PIC S9(3) -123 PIC 999+ Sending Sending ReceivingReceiving
+Picture        Data           Picture                ResultPicture        Data           Picture                Result
+PIC S999 -123 PIC -999
+PIC S999 -123 PIC  999 -
+PIC S999 +123 PIC -999
+PIC S9(5) +12345 PIC +9(5)
+PIC S9(3) -123 PIC +9(3)
+PIC S9(3) -123 PIC 999 + -123
+123-
+ 123
++12345
+-123
+123-Arithmetic and Edited Pictures
+Fixed Insertion -Plus and Minus
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 164Sending Receiving
+Picture        Data           Picture                Result
+PIC S9(4) +1234 PIC 9(4)CR
+PIC S9(4) -1234 PIC 9(4)CR
+PIC S9(4) +1234 PIC 9(4)DB
+PIC S9(4) -1234 PIC 9(4)DB
+PIC 9(4) 1234 PIC $99999
+PIC 9(4) 0000 PIC $ZZZZZSending Sending ReceivingReceiving
+Picture        Data           Picture                ResultPicture        Data           Picture                Result
+PIC S9(4) +1234 PIC 9(4) CR
+PIC S9(4) -1234 PIC 9(4) CR
+PIC S9(4) +1234 PIC 9(4) DB
+PIC S9(4) -1234 PIC 9(4) DB
+PIC 9(4) 1234 PIC $99999
+PIC 9(4) 0000 PIC $ZZZZZ1234  
+1234CR
+1223  
+1234DB
+$01234
+$     Arithmetic and Edited Pictures
+Fixed Insertion -Credit, Debit, $
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 165Sending Receiving
+Picture        Data           Picture                   Result
+PIC 9(4) 0000 PIC $$,$$9.99
+PIC 9(4) 0080 PIC $$,$$9.00
+PIC 9(4) 0128 PIC $$,$$9.99
+PIC 9(5) 57397 PIC $$,$$9
+PIC S9(4) -0005 PIC ++++9
+PIC S9(4) +0080 PIC ++++9
+PIC S9(4) -0080 PIC ----9
+PIC S9(5) +71234 PIC ----9Sending Sending ReceivingReceiving
+Picture        Data           Picture                   ResuPicture        Data           Picture                   Resu ltlt
+PIC 9(4) 0000 PIC $$,$$ 9.99
+PIC 9(4) 0080 PIC $$,$$ 9.00
+PIC 9(4) 0128 PIC $$,$$ 9.99
+PIC 9(5) 57397 PIC $$,$$ 9
+PIC S9(4) -0005 PIC ++++ 9
+PIC S9(4) +0080 PIC ++++ 9
+PIC S9(4) -0080 PIC ---- 9
+PIC S9(5) +71234 PIC ---- 9$0.00
+$80.00
+$128.00
+$7,397
+-5
++80
+-80
+ž1234Arithmetic and Edited Pictures
+Floating Insertion
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 166Sending Receiving
+Picture        Data           Picture              Result
+PIC 9(5) 12345 PIC ZZ,999
+PIC 9(5) 01234 PIC ZZ,999
+PIC 9(5) 00123 PIC ZZ,999
+PIC 9(5) 00012 PIC ZZ,999
+PIC 9(5) 05678 PIC **,**9
+PIC 9(5) 00567 PIC **,**9
+PIC 9(5) 00000 PIC **,***Sending Sending ReceivingReceiving
+Picture        Data           Picture              ResultPicture        Data           Picture              Result
+PIC 9(5) 12345 PIC ZZ,999
+PIC 9(5) 01234 PIC ZZ,999
+PIC 9(5) 00123 PIC ZZ,999
+PIC 9(5) 00012 PIC ZZ,999
+PIC 9(5) 05678 PIC **,**9
+PIC 9(5) 00567 PIC **,**9
+PIC 9(5) 00000 PIC **,***12,345
+ 1,234
+   123
+   012
+*5,678
+***567
+******Arithmetic and Edited Pictures
+Suppression and Replacement
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 167
+EXERCISE 3
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 168Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 169§IF..THEN...ELSE. 
+§Relation conditions. 
+§Class conditions. 
+§Sign conditions. 
+§Complex conditions. 
+§Implied Subjects. 
+§Nested IFsand the END-IF. 
+§Condition names and level 88's. 
+§The SET verb. Conditions
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 170§Simple Conditions
+–Relation Conditions
+–Class Conditions
+–Sign Conditions
+§Complex Conditions
+§Condition Names§Simple Conditions
+–Relation Conditions
+–Class Conditions
+–Sign Conditions
+§Complex Conditions
+§Condition NamesCCONDITION ONDITION TTYPESYPES[ ]
+IF- END SENTENCE NEXTlock StatementB  ELSE                        SENTENCE NEXTlock StatementB THEN Condition  
+
+
+IFConditions
+IF Syntax
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 171[]
+[]
+[]
+[]
+[]
+[]
+
+
+
+
+
+
+
+
+
+
+Expression ArithmeticLiteralIdentifier
+Expression ArithmeticLiteralIdentifier
+ 
+<=TO EQUAL OR  THAN LESS>=TO EQUAL OR  THAN GREATER= NOTTO EQUAL NOT< NOTTHAN LESS NOT> NOTTHAN GREATER NOT
+ IS Conditions
+Relation Conditions
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 172§Although COBOL data items are not ‘typed’they do fall 
+into some broad categories, or classes, such a numeric 
+or alphanumeric, etc.
+§A Class Condition determines whether the value of data 
+item is a member of one these classes.
+
+
+
+
+
+dClassName UserDefineUPPER- ALPHABETICLOWER- ALPHABETICALPHABETICNUMERIC
+ ] NOT[ IS IdentifierConditions
+Class Conditions
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 173§The sign condition determines whether or not the value of an 
+arithmetic expression is less than, greater than or equal to 
+zero.
+§Sign conditions are just another way of writing some of the 
+Relational conditions.
+
+ZERONEGATIVEPOSITIVE
+ ] NOT[ IS ArithExpConditions
+Sign Conditions
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 174§Programs often require conditions which are more complex 
+than single value testing or determining a data class.
+§Like all other programming languages COBOL allows simple 
+conditions to be combined using ORand AND to form 
+composite conditions.
+§Like other conditions, a complex condition evaluates to true 
+or false.
+§A complex condition is an expression which is evaluated from 
+left to right unless the order of evaluation is changed by the 
+precedence rules or bracketing.Conditions
+Complex conditions
+K Condition ORAND 
+
+
+
+Condition
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 175uJust like arithmetic expressions, complex conditions are evaluated using 
+precedence rules and the order of evaluation may be changed by bracketing.
+uExamples
+IF  (Row > 0 )AND (Row < 26 )THEN
+DISPLAY “On Screen”
+END-IF
+IF (VarA> VarC )OR(VarC= VarD )OR  ( VarANOT = VarF )
+DISPLAY “Done”
+END-IFPrecedence Rules.
+1. NOT =**
+2. AND= * or /
+3. OR =+ or -Precedence Rules.Precedence Rules.
+1.1. NOTNOT =**
+2.2. ANDAND =* or /
+3.3. OROR =+ or -Conditions
+Complex conditions have precedence rules too
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 176§When a data item is involved in a relation condition with each of a number of 
+other items it can be tedious to have to repeat the data item for each 
+condition.  For example, 
+IF TotalAmt> 10000 AND TotalAmt< 50000 THEN
+IF Grade = “A” OR Grade = “B+” ORGRADE = “B”THEN
+IF VarA> VarB AND VarA> VarC AND VarA> VarD
+DISPLAY “VarAis the Greatest”
+END-IF
+§In these situations COBOL provides an abbreviation mechanism called 
+implied subjects . 
+§The statements above may be re-written using implied subjects as;
+IF TotalAmt> 10000 AND < 50000 THEN
+IF Grade=“A” OR“B+” OR“B”THEN
+IF VarA> VarB AND VarC AND VarD
+DISPLAY “VarAis the Greatest”
+END-IFImplied Subjects
+TotalAmt
+Grade = 
+VarA>Implied SubjectsImplied Subjects
+TotalAmt
+Grade = 
+VarA>Conditions
+Implied Subjects
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 177IF ( VarA< 10 ) AND ( VarBNOT > VarC) THEN
+IF VarG= 14 THEN 
+DISPLAY “First”
+ELSE
+DISPLAY “Second”
+END-IF
+ELSE
+DISPLAY “Third”
+END-IFIF ( VarA< 10 ) AND ( VarBNOT > VarC) THEN
+IF VarG= 14 THEN 
+DISPLAY “First”
+ELSE
+DISPLAY “Second”
+END-IF
+ELSE
+DISPLAY “Third”
+END-IF
+VarAVarBVarCVarG DISPLAY
+3         4         15        14
+3         4         15        15
+3         4           3        14
+13        4          15       14VarAVarA VarBVarB VarCVarC VarGVarG DISPLAYDISPLAY
+3         4         15        14
+3         4         15        15
+3         4           3        14
+13        4          15       14T       T                 T     First
+T       T                 F     Second
+T       F                       Third
+F       T                       ThirdConditions
+Nested IFs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 178§Wherever a condition can occur, such as in an IF statement or an 
+EVALUATE or a PERFORM..UNTIL,  a CONDITION NAME (Level 
+88) may be used.
+§A Condition Name is essentially a BOOLEAN variable which is either 
+TRUE or FALSE .
+§Example.
+IF StudentRecord= HIGH-VALUES THEN Action
+The statement above may be replaced by the one below. The condition 
+name EndOfStudentFilemay be used instead of the condition 
+StudentRecord= HIGH-VALUES.
+IF EndOfStudentFileTHEN Action444444444 3 444444444 2 1
+Falseor  TRUEeither  is Condition Action THEN VarB THAN GREATER VarA  IFConditions
+Condition Names
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 179§Condition Names are defined in the DATA DIVISION using the special 
+level number 88.
+§They are always associated with a data item and are defined 
+immediately after the definition of the data item.
+§A condition name takes the value TRUE or FALSE depending on the 
+value in its associated data item.
+§A Condition Name may be associated with ANY data item whether it is 
+a group or an elementary item.
+§The VALUE clause is used to identify the values which make the 
+Condition Name TRUE.K  HighValue THRUTHROUGH  LowValueLiteral
+ VALUESVALUE ame ConditionN 88
+
+
+
+
+
+Conditions
+Defining Condition Names
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18001CityCode PIC 9 VALUE 5.
+88Dublin VALUE 1.
+88Limerick VALUE 2.
+88Cork VALUE 3.
+88Galway VALUE 4.
+88Sligo VALUE 5.
+88 Waterford VALUE 6.
+88 UniversityCity VALUE 1 THRU 4.01CityCode PIC 9 VALUE 5.
+88Dublin VALUE 1.
+88Limerick VALUE 2.
+88Cork VALUE 3.
+88Galway VALUE 4.
+88Sligo VALUE 5.
+88 Waterford VALUE 6.
+88 UniversityCity VALUE 1 THRU 4.
+IF Limerick 
+DISPLAY "Hey, we're home."
+END-IF
+IF UniversityCity
+PERFORM CalcRentSurcharge
+END-IFIF Limerick 
+DISPLAY "Hey, we're home."
+END-IF
+IF UniversityCity
+PERFORM CalcRentSurcharge
+END-IFDublin FALSE 
+Limerick FALSE
+Cork FALSE
+Galway FALSE
+Sligo TRUE
+Waterford FALSE
+UniversityCity FALSECity CodeCity Code
+55Conditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18101CityCode PIC 9 VALUE 5.
+88Dublin VALUE 1.
+88Limerick VALUE 2.
+88Cork VALUE 3.
+88Galway VALUE 4.
+88Sligo VALUE 5.
+88 Waterford VALUE 6.
+88 UniversityCity VALUE 1 THRU 4.01CityCode PIC 9 VALUE 5.
+88Dublin VALUE 1.
+88Limerick VALUE 2.
+88Cork VALUE 3.
+88Galway VALUE 4.
+88Sligo VALUE 5.
+88 Waterford VALUE 6.
+88 UniversityCity VALUE 1 THRU 4.
+IF Limerick 
+DISPLAY "Hey, we're home."
+END-IF
+IF UniversityCity
+PERFORM CalcRentSurcharge
+END-IFIF Limerick 
+DISPLAY "Hey, we're home."
+END-IF
+IF UniversityCity
+PERFORM CalcRentSurcharge
+END-IFDublin FALSE 
+LimerickTRUE
+Cork FALSE
+Galway FALSE
+Sligo FALSE
+Waterford FALSE
+UniversityCity TRUECity CodeCity Code
+22Conditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18201CityCode PIC 9 VALUE 5.
+88Dublin VALUE 1.
+88Limerick VALUE 2.
+88Cork VALUE 3.
+88Galway VALUE 4.
+88Sligo VALUE 5.
+88 Waterford VALUE 6.
+88 UniversityCity VALUE 1 THRU 4.01CityCode PIC 9 VALUE 5.
+88Dublin VALUE 1.
+88Limerick VALUE 2.
+88Cork VALUE 3.
+88Galway VALUE 4.
+88Sligo VALUE 5.
+88 Waterford VALUE 6.
+88 UniversityCity VALUE 1 THRU 4.
+IF Limerick 
+DISPLAY "Hey, we're home."
+END-IF
+IF UniversityCity
+PERFORM CalcRentSurcharge
+END-IFIF Limerick 
+DISPLAY "Hey, we're home."
+END-IF
+IF UniversityCity
+PERFORM CalcRentSurcharge
+END-IFDublin FALSE 
+Limerick FALSE
+Cork FALSE
+Galway FALSE
+Sligo FALSE
+Waterford TRUE
+UniversityCity FALSECity CodeCity Code
+66Conditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18301InputChar PIC X.
+88Vowel VALUE"A","E","I","O","U".
+88Consonant VALUE"B" THRU "D", "F","G","H"
+"J" THRU "N", "P" THRU "T"
+"V" THRU "Z".
+88 Digit VALUE "0" THRU "9".
+88 LowerCase VALUE"a" THRU "z".
+88ValidChar VALUE"A" THRU "Z","0" THRU "9".01InputChar PIC X.
+88Vowel VALUE"A","E","I","O","U".
+88Consonant VALUE"B" THRU "D", "F","G","H"
+"J" THRU "N", "P" THRU "T"
+"V" THRU "Z".
+88 Digit VALUE "0" THRU "9".
+88 LowerCase VALUE"a" THRU "z".
+88ValidChar VALUE"A" THRU "Z","0" THRU "9".
+IF ValidChar
+DISPLAY "Input OK."
+END-IF
+IF LowerCase
+DISPLAY "Not Upper Case"
+END-IF
+IF Vowel
+Display "Vowel entered."
+END-IFIF ValidChar
+DISPLAY "Input OK."
+END-IF
+IF LowerCase
+DISPLAY "Not Upper Case"
+END-IF
+IF Vowel
+Display "Vowel entered."
+END-IFVowel TRUE
+Consonant FALSE
+Digit FALSE
+LowerCase FALSE
+ValidChar TRUE   Input CharInput Char
+EEConditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18401InputChar PIC X.
+88Vowel VALUE"A","E","I","O","U".
+88Consonant VALUE"B" THRU "D", "F","G","H"
+"J" THRU "N", "P" THRU "T"
+"V" THRU "Z".
+88 Digit VALUE "0" THRU "9".
+88 LowerCase VALUE"a" THRU "z".
+88ValidChar VALUE"A" THRU "Z","0" THRU "9".01InputChar PIC X.
+88Vowel VALUE"A","E","I","O","U".
+88Consonant VALUE"B" THRU "D", "F","G","H"
+"J" THRU "N", "P" THRU "T"
+"V" THRU "Z".
+88 Digit VALUE "0" THRU "9".
+88 LowerCase VALUE"a" THRU "z".
+88ValidChar VALUE"A" THRU "Z","0" THRU "9".
+IF ValidChar
+DISPLAY "Input OK."
+END-IF
+IF LowerCase
+DISPLAY "Not Upper Case"
+END-IF
+IF Vowel
+Display "Vowel entered."
+END-IFIF ValidChar
+DISPLAY "Input OK."
+END-IF
+IF LowerCase
+DISPLAY "Not Upper Case"
+END-IF
+IF Vowel
+Display "Vowel entered."
+END-IFVowel FALSE
+Consonant FALSE
+Digit TRUE
+LowerCase FALSE
+ValidChar TRUE   Input CharInput Char
+44Conditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18501InputChar PIC X.
+88Vowel VALUE"A","E","I","O","U".
+88Consonant VALUE"B" THRU "D", "F","G","H"
+"J" THRU "N", "P" THRU "T"
+"V" THRU "Z".
+88 Digit VALUE "0" THRU "9".
+88 LowerCase VALUE"a" THRU "z".
+88ValidChar VALUE"A" THRU "Z","0" THRU "9".01InputChar PIC X.
+88Vowel VALUE"A","E","I","O","U".
+88Consonant VALUE"B" THRU "D", "F","G","H"
+"J" THRU "N", "P" THRU "T"
+"V" THRU "Z".
+88 Digit VALUE "0" THRU "9".
+88 LowerCase VALUE"a" THRU "z".
+88ValidChar VALUE"A" THRU "Z","0" THRU "9".
+IF ValidChar
+DISPLAY "Input OK."
+END-IF
+IF LowerCase
+DISPLAY "Not Upper Case"
+END-IF
+IF Vowel
+Display "Vowel entered."
+END-IFIF ValidChar
+DISPLAY "Input OK."
+END-IF
+IF LowerCase
+DISPLAY "Not Upper Case"
+END-IF
+IF Vowel
+Display "Vowel entered."
+END-IFVowel FALSE
+Consonant FALSE
+Digit FALSE
+LowerCase TRUE
+ValidChar FALSE   Input CharInput Char
+ggConditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18601EndOfFileFlagPIC 9 VALUE 0.
+88EndOfFile VALUE 1.01EndOfFileFlagPIC 9 VALUE 0.
+88EndOfFile VALUE 1.
+READ InFile
+AT END MOVE 1 TO EndOfFileFlag
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END MOVE 1 TO EndOfFileFlag
+END-READ
+END-PERFORMREAD InFile
+AT END MOVE 1 TO EndOfFileFlag
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END MOVE 1 TO EndOfFileFlag
+END-READ
+END-PERFORMEndOfFileEndOfFileFlagEndOfFileFlag
+00Conditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18701EndOfFileFlagPIC 9 VALUE 0.
+88EndOfFile VALUE 1.01EndOfFileFlagPIC 9 VALUE 0.
+88EndOfFile VALUE 1.
+READ InFile
+AT END MOVE 1 TO EndOfFileFlag
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END MOVE 1 TO EndOfFileFlag
+END-READ
+END-PERFORMREAD InFile
+AT END MOVE 1 TO EndOfFileFlag
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END MOVE 1 TO AT END MOVE 1 TO EndOfFileFlagEndOfFileFlag
+END-READ
+END-PERFORMEndOfFileFlagEndOfFileFlag
+11
+EndOfFileConditions
+Example
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18801FILLER PIC 9 VALUE 0.
+88EndOfFileVALUE 1.
+88 NotEndOfFileVALUE 0.01FILLER PIC 9 VALUE 0.
+88EndOfFileVALUE 1.
+88 NotEndOfFileVALUE 0.
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+END-PERFORM
+Set NotEndOfFileTO TRUE.READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+END-PERFORM
+Set NotEndOfFileTO TRUE.EndOfFile 1
+NotEndOfFile0FILLERFILLER
+00Conditions
+Using the SET verb
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 18901FILLER PIC 9 VALUE 0.
+88EndOfFileVALUE 1.
+88 NotEndOfFileVALUE 0.01FILLER PIC 9 VALUE 0.
+88EndOfFileVALUE 1.
+88 NotEndOfFileVALUE 0.
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+END-PERFORM
+Set NotEndOfFileTO TRUE.READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END SET AT END SET EndOfFileEndOfFile TO TRUETO TRUE
+END-READ
+END-PERFORM
+Set NotEndOfFileTO TRUE.EndOfFile 1
+NotEndOfFile0FILLERFILLER
+11Conditions
+Using the SET verb
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 19001FILLER PIC 9 VALUE 0.
+88EndOfFileVALUE 1.
+88 NotEndOfFileVALUE 0.01FILLER PIC 9 VALUE 0.
+88EndOfFileVALUE 1.
+88 NotEndOfFileVALUE 0.
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+END-PERFORM
+Set NotEndOfFileTO TRUE.READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfFile
+Statements
+READ InFile
+AT END SET EndOfFileTO TRUE
+END-READ
+END-PERFORM
+Set NotEndOfFileTO TRUE.EndOfFile 1
+NotEndOfFile0FILLERFILLER
+00Conditions
+Using the SET verb
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 191[]
+[ ]
+EVALUATE- END lock StatementB OTHER WHEN            lock StatementB   
+ssion ArithExpreLiteralIdentifier
+ THROUGHTHRU 
+ssion ArithExpreLiteralIdentifier
+ NOTFALSETRUEConditionANY
+ WHEN           
+FALSETRUEssion ArithExpresion CondExpresLiteralIdentifier
+ 
+K KK
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EVALUATEConditions
+The Evaluate
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 192EVALUATE  TRUEPosition
+WHEN L-Arrow   2 THRU 10PERFORM MoveLeft
+WHEN R-Arrow   1 THRU  9PERFORM MoveRight
+WHEN L-Arrow       1 MOVE 10 TO Position
+WHEN R-Arrow      10 MOVE  1 TO Position
+WHEN DeleteKey 1PERFORM CantDelete WHEN Character    
+ANYPERFORM InsertChar WHEN OTHER PERFORM DisplayErrorMessage
+END-EVALUATEW   I   L   L   I   A   M   S   W   I   L   L   I   A   M   S   1   2   3   4   5   6   7   8   9  10Conditions
+The Evaluate
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 193EVALUATE Gender       TRUE                   TRUE
+WHEN "M" Age<20 ANY MOVE  5 TO Bonus
+WHEN "F" Age<20 ANY MOVE 10 TO Bonus
+WHEN "M" Age>19 AND <41 Service<10 MOVE 12 TO Bonus
+WHEN "F" Age>19 AND <41 Service<10 MOVE 13 TO Bonus
+WHEN "M" Age>40 Service<10 MOVE 20 TO Bonus
+WHEN "F" Age>40 Service<10 MOVE 15 TO Bonus
+: : : : :   
+: : : : :
+WHEN "F" ANY Service>20 MOVE 25 TO Bonus
+END-EVALUATE.GenderGender M   F    M     F     M    F     M     F   
+Age Age <20 <2020-40 20-4040>  40>  20-40 20-40etc
+ServiceService Any Any<10   <10<10<1010-20 10-20etc
+% Bonus% Bonus 5   10   12    13    20   15    14    23 Conditions
+Decision Table Implementation
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 194Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 195§Introduction to tables. 
+§Declaring tables. 
+§Processing tables using the PERFORM..VARYING. Tables and the PERFORM ... VARYING
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 196The program to 
+calculate the total 
+taxes paid for the 
+country is easy to 
+write.
+BUT.
+What do we do if we 
+want to calculate the 
+taxes paid in each 
+county ?TaxTotal
+Variable = Named location in memory
+PROCEDURE DIVISION.
+Begin.
+OPEN INPUT TaxFile
+READ TaxFile
+AT END SET EndOfTaxFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfTaxFile
+ADD TaxPaidTO TaxTotal
+READ TaxFile
+AT END SET EndOfTaxFileTO TRUE
+END-READ
+END-PERFORM.
+DISPLAY "Total taxes are ", TaxTotal
+CLOSE TaxFile
+STOP RUN.PAYENum CountyNum TaxPaidTables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 197PROCEDURE DIVISION.
+Begin.
+OPEN INPUT TaxFile
+READ TaxFile
+AT END SET EndOfTaxFileTO TRUE
+END-READ
+PERFORM SumCountyTaxesUNTIL EndOfTaxFile
+DISPLAY "County 1 total is ", County1TaxTotal
+:   :   : 24 Statements  :   :   ::   :   : 24 Statements  :   :   :
+DISPLAY "County 26 total is ", County26TaxTotal
+CLOSE TaxFile
+STOP RUN.
+SumCountyTaxes.
+IF CountyNum= 1 ADD TaxPaidTO County1TaxTotal
+END-IF
+:   :   : 24 Statements  :   :   ::   :   : 24 Statements  :   :   :
+IF CountyNum= 26 ADD TaxPaidTO County26TaxTotal
+END-IF
+READ TaxFile
+AT END SET EndOfTaxFileTO TRUE
+END-READ58 StatementsCounty1
+TaxTotalCounty2
+TaxTotalCounty3
+TaxTotalCounty4
+TaxTotalCounty5
+TaxTotalTables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 19810
+1       2      3      4       5      61       2      3      4       5      6
+MOVE 10 TO CountyTax(5)MOVE 10 TO CountyTax(5)
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyNumCountyTax(CountyNum ))
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyNumCountyTax(CountyNum + 2)+ 2)A table is a contiguous sequence of memory locations 
+calledelements, which all have thesame name, and are 
+uniquely identified by that name and by their positionin 
+the sequence.  A table is a contiguous sequence of memory locations 
+called elementselements , , which all have the same namesame name , and are 
+uniquely identified by that name and by their positionposition in 
+the sequence.  
+CountyTaxTables and the PERFORM ... VARYING
+Tables/Arrays
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 199551       2      3      4       5      61       2      3      4       5      6
+MOVE 10 TO CountyTax(5)MOVE 10 TO CountyTax(5)
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyTax( CountyNumCountyNum ))
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyNumCountyTax(CountyNum + 2)+ 2)A table is a contiguous sequence of memory locations 
+calledelements, which all have thesame name, and are 
+uniquely identified by that name and by their positionin 
+the sequence.A table is a contiguous sequence of memory locations 
+called elementselements , , which all have the same namesame name , and are 
+uniquely identified by that name and by their positionposition in 
+the sequence.
+1010
+55                                                              2CountyTaxTables and the PERFORM ... VARYING
+Tables/Arrays
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 2005555
+1       2      3      4       5      61       2      3      4       5      6
+MOVE 10 TO CountyTax(5)MOVE 10 TO CountyTax(5)
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyNumCountyTax(CountyNum ))
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyTax( CountyNumCountyNum + 2+ 2))1010
+55                                                              255CountyTaxA table is a contiguous sequence of memory locations 
+calledelements, which all have thesame name, and are 
+uniquely identified by that name and by their positionin 
+the sequence.A table is a contiguous sequence of memory locations 
+called elementselements , , which all have the same namesame name , and are 
+uniquely identified by that name and by their positionposition in 
+the sequence.Tables and the PERFORM ... VARYING
+Tables/Arrays
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 2015555 5555
+1       2      3      4       5      61       2      3      4       5      6
+MOVE 10 TO CountyTax(MOVE 10 TO CountyTax( 55))
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyTax( CountyNumCountyNum ))
+ADD ADD TaxPaidTaxPaid TO TO CountyTax(CountyTax( CountyNumCountyNum + 2+ 2))A table is a contiguous sequence of memory locations 
+calledelements, which all have thesame name, and are 
+uniquely identified by that name and by their positionin 
+the sequence. The position index is called a subscript.A table is a contiguous sequence of memory locations 
+called elementselements , , which all have the same namesame name , and are 
+uniquely identified by that name and by their positionposition in 
+the sequence. The position index is called a subscript.
+1010
+SubscriptCountyTaxTables and the PERFORM ... VARYING
+Tables/Arrays
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 202PROCEDURE DIVISION.
+Begin.
+OPEN INPUT TaxFile
+READ TaxFile
+AT END SET EndOfTaxFileTO TRUE
+END-READ
+PERFORM UNTIL EndOfTaxFile
+ADD TaxPaidTO CountyTax(CountyNum)
+READ TaxFile
+AT END SET EndOfTaxFileTO TRUE
+END-READ
+END-PERFORM.
+PERFORM VARYING IdxFROM 1 BY 1 
+UNTIL IdxGREATER THAN 26
+DISPLAY "County ", CountyNum
+" tax total is " CountyTax(Idx)
+END-PERFORM
+CLOSE TaxFile
+STOP RUN.Subscript
+9 Statements1       2      3      4       5      61       2      3      4       5      6CountyTaxTables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 203TaxRecord.
+PAYENum CountyName TaxPaid
+1       2      3      4       5      61       2      3      4       5      6CountyTax
+IF CountyName= "CARLOW"
+ADD TaxPaidTO CountyTax(1)
+END-IF
+IF CountyName= "CAVAN"
+ADD TaxPaidTO CountyTax(2)
+END-IF
+:    :    :     :     ::    :    :     :     :
+:    :    :     :     ::    :    :     :     :
+24 TIMES24 TIMESA-89432  CLARE        7894.55Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 204PERFORM VARYING IdxFROM 1 BY 1
+UNTIL County(Idx) = CountyName
+END-PERFORM
+ADD TaxPaidTO CountyTax(Idx)1       2      3      4       5      61       2      3      4       5      6CountyTaxA-89432  CLARE 7894.55TaxRecord.
+PAYENum CountyName TaxPaid Idx
+1       2      3      4       5      61       2      3      4       5      6CORKCORK CAVANCAVAN DONEGALDONEGAL CARLOWCARLOW CLARECLARE DUBLINDUBLINCounty11
+500.50     125.75    1000.00    745.55    345.23     123.45500.50     125.75    1000.00    745.55    345.23     123.45Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 205PERFORM VARYING IdxFROM 1 BY 1
+UNTIL County(Idx) = CountyName
+END-PERFORM
+ADD TaxPaidTO CountyTax(Idx)1       2      3      4       5      61       2      3      4       5      6CountyTaxA-89432 CLARE 7894.55TaxRecord.
+PAYENum CountyName TaxPaid Idx
+1       2      3      4       5      61       2      3      4       5      6CORKCORK CAVANCAVAN DONEGALDONEGAL CARLOWCARLOW CLARECLARE DUBLINDUBLINCounty22
+500.50     125.75    1000.00    745.55    345.23     123.45500.50     125.75    1000.00    745.55    345.23     123.45Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 206PERFORM VARYING IdxFROM 1 BY 1
+UNTIL County(Idx) = CountyName
+END-PERFORM
+ADD TaxPaidTO CountyTax(Idx)1       2      3      4       5      61       2      3      4       5      6CountyTaxA-89432  CLARE 7894.55TaxRecord.
+PAYENum CountyName TaxPaid Idx
+1       2      3      4       5      61       2      3      4       5      6CORKCORK CAVANCAVAN DONEGALDONEGAL CARLOWCARLOW CLARECLARE DUBLINDUBLINCounty33
+500.50     125.75    1000.00    745.55    345.23     123.45500.50     125.75    1000.00    745.55    345.23     123.45Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 207PERFORM VARYING IdxFROM 1 BY 1
+UNTIL County(Idx) = CountyName
+END-PERFORM
+ADD TaxPaidTO CountyTax(Idx)1       2      3      4       5      61       2      3      4       5      6CountyTaxA-89432  CLARE 7894.55TaxRecord.
+PAYENum CountyName TaxPaid Idx
+1       2      3      4       5      61       2      3      4       5      6CORKCORK CAVANCAVAN DONEGALDONEGAL CARLOWCARLOW CLARECLARE DUBLINDUBLINCounty33
+500.50     125.75    500.50     125.75    8894.558894.55 745.55    345.23     123.45745.55    345.23     123.45Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 2081       2      3      4       5      61       2      3      4       5      6TaxTotals
+CountyTax
+000000 000000 000000 000000 000000 000000
+01  01  TaxTotalsTaxTotals ..
+02  02  CountyTaxCountyTax PIC 9(10)V99 PIC 9(10)V99 
+OCCURS 26 TIMES.OCCURS 26 TIMES.
+oror
+02  02  CountyTaxCountyTax OCCURS 26 TIMES OCCURS 26 TIMES 
+PIC 9(10)V99.PIC 9(10)V99.
+e.g. e.g. 
+MOVE ZEROS TO MOVE ZEROS TO TaxTotalsTaxTotals ..
+MOVE 20 TO CountyTax(5).MOVE 20 TO CountyTax(5).Tables and the PERFORM ... VARYING
+Declaring Tables
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 2091       2      3      1       2      3      4     4     5      65      625TaxTotals
+000000 000000
+CountyTax PayerCount
+CountyTaxDetails01  TaxTotals.
+02  CountyTaxDetailsOCCURS 26 TIMES.
+03  CountyTax PIC 9(10)V99.
+03  PayerCountPIC 9(7).
+e.g.  MOVE 25 TO PayerCount(2).
+MOVE 67 TO  CountyTax(5).
+MOVE ZEROS TO CountyTaxDetails(3). 67Tables and the PERFORM ... VARYING
+Group Items as Elements
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 210[ ]
+          
+          
+PERFORM- END lock StatementB                       
+Condition2 UNTIL  Literal6 Identifier BY                      45
+ FROM IndexName34 Identifier AFTER
+                     Condition1 UNTIL  Literal3 Identifier BY                      22
+ FROM IndexName1Identifer1 VARYING                      AFTERBEFORE TEST WITH EndProc THROUGHTHRU 1stProc PERFORM
+K
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LiteralIndexNameIdentifierLiteralIndexNameIdentifierTables and the PERFORM ... VARYING
+PERFORM..VARYING Syntax
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 211PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.
+Idx1 = 3
+Loop BodyTrueMove 1 to Idx1Move 1 to Idx1
+Next Statement
+Inc Idx1FalseIdx1
+11Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 212PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.
+Idx1
+11
+Loop BodyTrueMove 1 to Idx1
+Next Statement
+Inc Idx1FalseIdx1 = 3Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 21311Idx1
+11
+Loop BodyLoop BodyTrueMove 1 to Idx1
+Next Statement
+Inc Idx1FalseIdx1 = 3PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 21411Idx1
+22
+Loop BodyTrueMove 1 to Idx1
+Next Statement
+Inc Idx1Inc Idx1FalseIdx1 = 3PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 21511Idx1
+22
+Loop BodyTrueMove 1 to Idx1
+Next Statement
+Inc Idx1FalseIdx1 = 3PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 21611
+22Idx1
+22
+Loop BodyLoop BodyTrueMove 1 to Idx1
+Next Statement
+Inc Idx1FalseIdx1 = 3PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 21711
+22Idx1
+33
+Loop BodyTrueMove 1 to Idx1
+Next Statement
+Inc Idx1Inc Idx1FalseIdx1 = 3PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 21811
+22Idx1
+33
+Loop BodyTrueMove 1 to Idx1
+Next Statement
+Inc Idx1FalseIdx1 = 3
+Exit value = 3Exit value = 3PERFORM VARYING Idx1 FROM 1 BY 1 UNTIL 
+Idx1 EQUAL TO 3
+DISPLAY Idx1
+END-PERFORM.Tables and the PERFORM ... VARYING
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 219Table of contents
+Introduction to COBOL
+COBOL Basics 1
+COBOL Basics 2
+Introduction to Sequential Files
+Processing Sequential Files
+Simple iteration with the PERFORM verb
+Arithmetic and Edited Pictures
+Conditions
+Tables and the PERFORM ... VARYING
+Designing Programs
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 220§Why we use COBOL. 
+§The problem of program maintenance. 
+§How Cobol programs should be written. 
+§Efficiency vsClarity. 
+§Producing a good design. 
+§Introduction to design notations. 
+§Guidelines for writing Cobol programs. Designing Programs
+Overview
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 221§COBOL is an acronym standing for Common Business Oriented 
+Language.
+§COBOL programs are (mostly) written for the vertical market.
+§COBOL programs tend to be long lived.
+§Because of this longevity ease of program maintenance is an 
+important consideration.
+§Why is program maintenance important?Designing Programs
+COBOL
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 222Maintenance Costs are only as low as this because many systems become so 
+unmaintainableearly in their lives that they have to be SCRAPPED !!
+:-B. Boehm
+Maintenance
+67%Testing
+15% Coding
+7%
+Analysis
+and
+Design 9%
+Zelkowitz
+ACM 1978
+p202Designing Programs
+Cost of a system over its entire life
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 223§Program maintenance is an umbrella term that covers;
+1.Changing the program to fix bugs that appear in the system.
+2.Changing the program to reflect changes in the environment.
+3.Changing the program to reflect changes in the users perception of the 
+requirements.
+4.Changing the program to include extensions to the user requirements (i.e. 
+new requirements).
+§What do these all have in common?
+CHANGING THE PROGRAM. Designing Programs
+Program Maintenance
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 224§You should write your programs with the expectation that they 
+will have to be changed.
+§This means that you should;
+® write programs that are easy to read .
+® write programs that are easy to understand .
+® write programs that are easy to change .
+§You should write your programs as you would like them written if
+you had to maintain them.   Designing Programs
+How should write your programs?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 225§Many programmers are overly concerned about making their 
+programs as efficient as possible (in terms of the speed of execution 
+or the amount of memory used).
+§But the proper concern of a programmer, and particularly a COBOL
+programmer, is notthis kind of efficiency, it is clarity . 
+§As a rule 70% of the work of the program will be done in 10% of the 
+code.
+§It is therefore a pointless exercise to try to optimize the whole 
+program, especially if this has to be done at the expense of clarity.
+§Write your program as clearly as possible and then, if its too slow, 
+identify the 10% of the code where the work is being done and 
+optimize it.Designing Programs
+Efficiency vsClarity
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 226§We shouldn’t design our programs, when we want to create programs that 
+do not work.
+§We shouldn’t design when we want to produce programs that do notsolve 
+the problem specified.
+§When we want to create programs that;
+get the wrong inputs,
+or perform the wrong transformations on them
+or produce the wrong outputs
+then we shouldn’t bother to design our programs.
+§But if we want to create programs that work , we cannot avoid design.
+§The only question is; 
+will it be a good design or a bad designDesigning Programs
+When shouldn’t we design our programs?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 227§The first step to producing a good design is to design consciously.
+§Subconscious design means that design is done while constructing
+the program.  This never leads to good results.
+§Conscious design starts by separating the design task from the task 
+of program construction .
+§Design, consists of devising a solution to the problem specified.
+§Construction, consists of taking the design and encoding the solution 
+using a particular programming language.Designing Programs
+Producing a Good Design
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 228§Separating program design from program construction makes both tasks 
+easier.
+§Designing before construction, allows us to plan our solution to the 
+problem -instead of stumbling from one incorrect solution to another.
+§Good program structure results from planingand design.  It is unlikely to 
+result from ad hoc tinkering.
+§Designing helps us to get an overview of the problem and to think about 
+the solution without getting bogged down by the details of  construction.
+§It helps us to iron out problems with the specification and to discover any 
+bugs in our solution before we commit it to code (see next slide).
+§Design allows us to develop portable solutions Designing Programs
+Why separate design from construction?
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 229
+In ProductionIn Production
+x82x82
+In In 
+ConstructionConstruction
+x20x20
+11
+In Design
+Figures from IBM in Santa Clara.Designing Programs
+Relative cost of fixing a bug
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 230§A number of notations have been suggested to assist the programmer with 
+the  task of program design.
+§Some notations are textual and others graphical.
+§Some notations can actually assist in the design process.   
+§While others merely articulate the design.Designing Programs
+Design Notations
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 231
+Designing Programs
+Flowcharts as design tools
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 232
+Designing Programs
+Structured Flowcharts as design tools
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 233For each transaction record do the following
+IF the record is a receipt then
+add 1 to the ReceiptsCount
+add the Amount to the Balance
+otherwise
+add 1 to the PaymentsCount
+subtract the Amount from the Balance
+EndIF
+add 1 to the RecordCount
+Write the Balance to the CustomerFile
+When the file has been processed 
+Output the ReceiptsCount
+the PaymentsCount
+and the RecordCountFor each transaction record do the following
+IF the record is a receipt then
+add 1 to the ReceiptsCount
+add the Amount to the Balance
+otherwise
+add 1 to the PaymentsCount
+subtract the Amount from the Balance
+EndIF
+add 1 to the RecordCount
+Write the Balance to the CustomerFile
+When the file has been processed 
+Output the ReceiptsCount
+the PaymentsCount
+and the RecordCountDesigning Programs
+Structured English
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 234
+Designing Programs
+The Jackson Method
+ISSC Shanghai, AMS, GCG
+COBOLProgramming Fundamental ©2004IBM Corporation 235UpdateCustomerBalance OpenFiles
+ProcessRecords
+                                RecordType ?ProcessReceipt
+          
+ProcessPayment
+WriteNewBalance
+PrintTotals
+CloseFilesÅì
+íï
+îïì
+íïï
+îï
+ïì
+íï
+ï
+ï
+ïï
+îï
+ï
+ï
+ï
+ïDesigning Programs
+Warnier-Orr Diagrams
+IBMSolution & Service Company (China)
+2004/11 ©2004IBM CorporationAny Existing Process Could Be Improved!Any Existing Process Could Be Improved!
+Thank you very much!

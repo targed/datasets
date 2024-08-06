@@ -1,0 +1,4355 @@
+The RInferno
+PatrickBurns1
+30th April 2011
+1This documen tresides inthetutorial section ofhttp://www.burns-stat.com. More
+elemen tary material onRmayalsobefound there. S+isaregistered trademark of
+TIBCO SoftwareInc. Theauthor thanks D.Alighieri foruseful commen ts.
+Contents
+Contents 1
+ListofFigures 6
+ListofTables 7
+1Falling intotheFloating PointTrap 9
+2Growing Objects 12
+3Failing toVectorize 17
+3.1 Subscripting ..............................20
+3.2 Vectorized if..............................21
+3.3 Vectorization impossible .......................22
+4Over-Vectorizing 24
+5NotWriting Functions 27
+5.1 Abstraction ..............................27
+5.2 Simplicit y...............................32
+5.3 Consistency ..............................33
+6Doing Global Assignmen ts 35
+7Tripping onObjectOrien tation 38
+7.1 S3metho ds..............................38
+7.1.1 generic functions .......................39
+7.1.2 metho ds............................39
+7.1.3 inheritance ..........................40
+7.2 S4metho ds..............................40
+7.2.1 multiple dispatc h.......................40
+7.2.2 S4structure ..........................41
+7.2.3 discussion ...........................42
+7.3 Namespaces ..............................42
+1
+CONTENTS CONTENTS
+8Believing ItDoesasIntended 44
+8.1 Ghosts .................................46
+8.1.1 dierences with S+......................46
+8.1.2 packagefunctionalit y.....................46
+8.1.3 precedence ..........................47
+8.1.4 equalit yofmissing values ..................48
+8.1.5 testing NULL .........................48
+8.1.6 mem bership ..........................49
+8.1.7 multiple tests .........................49
+8.1.8 coercion ............................50
+8.1.9 comparison under coercion .................51
+8.1.10 paren theses intherightplaces ...............51
+8.1.11 excluding named items ....................51
+8.1.12 excluding missing values ...................52
+8.1.13 negativ enothing issomething ................52
+8.1.14 butzero canbenothing ...................53
+8.1.15 something plus nothing isnothing .............53
+8.1.16 sum ofnothing iszero ....................54
+8.1.17 themetho dsshue ......................54
+8.1.18 rstmatc honly ........................55
+8.1.19 rstmatc honly (reprise) ..................55
+8.1.20 partial matc hing canpartially confuse ...........56
+8.1.21 nopartial matc hassignmen ts................58
+8.1.22 catversus print........................58
+8.1.23 backslashes ..........................59
+8.1.24 internationalization ......................59
+8.1.25 paths inWindo ws......................60
+8.1.26 quotes .............................60
+8.1.27 backquotes ..........................61
+8.1.28 disapp earing attributes ...................62
+8.1.29 disapp earing attributes (reprise) ..............62
+8.1.30 when space matters .....................62
+8.1.31 multiple comparisons .....................63
+8.1.32 name masking ........................63
+8.1.33 more sorting than sort ....................63
+8.1.34 sort.list notforlists .....................64
+8.1.35 searc hlistshue .......................64
+8.1.36 source versus attac horload .................64
+8.1.37 string notthename .....................65
+8.1.38 getacomp onent.......................65
+8.1.39 string notthename (encore) ................65
+8.1.40 string notthename (yetagain) ...............65
+8.1.41 string notthename (still) ..................66
+8.1.42 name nottheargumen t...................66
+8.1.43 unexp ected else........................67
+8.1.44 dropping dimensions .....................67
+2
+CONTENTS CONTENTS
+8.1.45 drop data frames .......................68
+8.1.46 losing rownames .......................68
+8.1.47 apply function returning avector ..............69
+8.1.48 empt ycells intapply .....................69
+8.1.49 arithmetic that mixes matrices andvectors ........70
+8.1.50 single subscript ofadata frame orarray..........71
+8.1.51 non-n umeric argumen t....................71
+8.1.52 round rounds toeven....................71
+8.1.53 creating empt ylists .....................71
+8.1.54 listsubscripting ........................72
+8.1.55 NULL ordelete ........................73
+8.1.56 disapp earing comp onents..................73
+8.1.57 combining lists ........................74
+8.1.58 disapp earing loop.......................74
+8.1.59 limited iteration .......................74
+8.1.60 toomuchiteration ......................75
+8.1.61 wrong iterate .........................75
+8.1.62 wrong iterate (encore) ....................75
+8.1.63 wrong iterate (yetagain) ..................76
+8.1.64 iterate issacrosanct .....................76
+8.1.65 wrong sequence ........................76
+8.1.66 empt ystring .........................76
+8.1.67 NAthestring .........................77
+8.1.68 capitalization .........................78
+8.1.69 scoping ............................78
+8.1.70 scoping (encore) .......................78
+8.2 Chimeras ...............................80
+8.2.1 numeric tofactor tonumeric ................82
+8.2.2 catfactor ...........................82
+8.2.3 numeric tofactor acciden tally ................82
+8.2.4 dropping factor levels....................83
+8.2.5 combining levels.......................83
+8.2.6 donotsubscript with factors ................84
+8.2.7 nogoforfactors inifelse ...................84
+8.2.8 nocforfactors ........................84
+8.2.9 ordering inordered ......................85
+8.2.10 labelsandexcluded levels..................85
+8.2.11 ismissing missing ormissing? ................86
+8.2.12 data frame tocharacter ...................87
+8.2.13 nonexisten tvalue insubscript ................88
+8.2.14 missing value insubscript ..................88
+8.2.15 allmissing subscripts .....................89
+8.2.16 missing value inif......................90
+8.2.17 andandandand .......................90
+8.2.18 equal andequalequal .....................90
+8.2.19 is.integer ...........................91
+3
+CONTENTS CONTENTS
+8.2.20 is.numeric, as.numeric with integers ............91
+8.2.21 is.matrix ............................92
+8.2.22 max versus pmax .......................92
+8.2.23 all.equal returns asurprising value .............93
+8.2.24 all.equal isnotidentical ...................93
+8.2.25 identical really really means identical ............93
+8.2.26 =isnotasynon ymof<-..................94
+8.2.27 complex arithmetic ......................94
+8.2.28 complex isnotnumeric ...................94
+8.2.29 nonstandard evaluation ...................95
+8.2.30 help forfor..........................95
+8.2.31 subset .............................96
+8.2.32 =vs==insubset ......................96
+8.2.33 single sample switc h.....................96
+8.2.34 changing names ofpieces ..................97
+8.2.35 apuzzle ............................97
+8.2.36 another puzzle ........................98
+8.2.37 data frames vsmatrices ...................98
+8.2.38 apply notfordata frames ..................98
+8.2.39 data frames vsmatrices (reprise) ..............98
+8.2.40 names ofdata frames andmatrices .............99
+8.2.41 conicting column names ..................99
+8.2.42 cbind favorsmatrices .....................100
+8.2.43 data frame equal numberofrows..............100
+8.2.44 matrices indata frames ...................100
+8.3 Devils .................................101
+8.3.1 read.table ...........................101
+8.3.2 read atable ..........................101
+8.3.3 themissing, thewhole missing andnothing butthemissing 102
+8.3.4 misquoting ..........................102
+8.3.5 thymine isTRUE,female isFALSE ............102
+8.3.6 whitespace iswhite ......................104
+8.3.7 extraneous elds .......................104
+8.3.8 llandextraneous elds ...................104
+8.3.9 reading messy les ......................105
+8.3.10 imperfection ofwriting then reading ............105
+8.3.11 non-v ectorized function inintegrate ............105
+8.3.12 non-v ectorized function inouter ..............106
+8.3.13 ignoring errors ........................106
+8.3.14 acciden tally global ......................107
+8.3.15 handling .............................107
+8.3.16 laziness ............................108
+8.3.17 lapply laziness ........................108
+8.3.18 invisibilit ycloak .......................109
+8.3.19 evaluation ofdefault argumen ts...............109
+8.3.20 sapply simplication .....................110
+4
+CONTENTS CONTENTS
+8.3.21 one-dimensional arrays....................110
+8.3.22 byisfordata frames .....................110
+8.3.23 straybackquote ........................111
+8.3.24 arraydimension calculation .................111
+8.3.25 replacing pieces ofamatrix .................111
+8.3.26 reserv edwords ........................112
+8.3.27 return isafunction ......................112
+8.3.28 return isafunction (still) ..................113
+8.3.29 BATCH failure ........................113
+8.3.30 corrupted .RData .......................113
+8.3.31 syntaxerrors .........................113
+8.3.32 general confusion .......................114
+9Unhelpfully Seeking Help 115
+9.1 Read thedocumen tation .......................115
+9.2 Chec ktheFAQ............................116
+9.3 Update ................................116
+9.4 Read theposting guide ........................117
+9.5 Select thebestlist ..........................117
+9.6 Useadescriptiv esubjectline ....................118
+9.7 Clearly state yourquestion .....................118
+9.8 Giveaminimal example .......................120
+9.9 Wait..................................121
+Index 123
+5
+ListofFigures
+2.1 ThegiantsbySandro Botticelli. ...................14
+3.1 Thehypocrites bySandro Botticelli. ................19
+4.1 Thepanderers andseducers andtheatterers bySandro Botticelli. 25
+5.1 Stackofenvironmen tsthrough time. ................32
+6.1 Thesowersofdiscord bySandro Botticelli. ............36
+7.1 TheSimoniacs bySandro Botticelli. ................41
+8.1 Thefalsiers: alchemists bySandro Botticelli. ...........47
+8.2 Thetreac herous tokinandthetreac herous tocountrybySandro
+Botticelli. ...............................81
+8.3 The treac herous tocountryandthetreac herous toguests and
+hosts bySandro Botticelli. ......................103
+9.1 Thethiev esbySandro Botticelli. ..................116
+9.2 Thethiev esbySandro Botticelli. ..................119
+6
+ListofTables
+2.1 Time inseconds ofmetho dstocreate asequence. .........12
+3.1 Summary ofsubscripting with8[8..................20
+4.1 Theapply family offunctions. ....................24
+5.1 Simple objects. ............................29
+5.2 Some notsosimple objects. .....................29
+8.1 Afewofthemost importan tbackslashed characters. .......59
+8.2 Functions todowith quotes. ....................61
+7
+Preface
+Abstract: Ifyouareusing Randyouthink you're inhell, thisisamap for
+you.
+wandered through
+http://www.r- project.org.
+Tostate thegoodIfound there, I'llalsosaywhat elseIsaw.
+Having abandoned thetrue way,Ifellintoadeep sleep andawokeinadeep
+dark wood.Isetouttoescap ethewood,butmypath wasblockedbyalion.
+AsIedtolowerground, agure appeared before me. \Havemercy onme,
+whatev eryouare," Icried, \whether shade orliving human."
+\Not aman, though once Iwas.Myparen tswerefrom Lombardy .Iwas
+bornsubJulio andlivedinRome inanageoffalse andlying gods."
+\Are youVirgil, thefountainhead ofsuchavolume?"
+\Ithink itwise youfollowme.I'lllead youthrough aneternal place where
+youshall hear despairing cries andseethose ancien tsouls inpain asthey griev e
+their second death."
+After ajourney ,wearriv edatanarchway.Inscrib edonit:\Through me
+thewayintothesuering city,through methewayamong thelost." Through
+thearchwaywewent.
+Nowsighing and wailsresounded through thestarless air,sothat Itoo
+began weeping. Unfamiliar tongues, horrendous accen ts,cries ofrage|all of
+these whirled inthat dark andtimeless air.
+8
+Circle 1
+Falling intotheFloating
+PointTrap
+Once wehadcrossed theAcheron, wearriv edintherst Circle, home ofthe
+virtuous pagans. These arepeople who liveinignorance oftheFloating Point
+Gods.These pagans expect
+.1==.3/3
+tobetrue.
+Thevirtuous pagans willalsoexpect
+seq(0,1,by=.1)==.3
+tohaveexactly onevalue that istrue.
+But youshould notexpectsomething like:
+unique(c(.3, .4-.1,.5-.2,.6-.3,.7-.4))
+tohavelength one.
+Iwrote myrst program inthelatestone age. The task wastoprogram
+thequadratic equation. Late stone agemeans themedium ofexpression was
+punc hcards. There isnobackspace onapunc hcard machine|once theholes
+arethere, there's nolling them backinagain. Soatypoattheendofaline
+means that youhavetothrowthecard outandstart thelinealloveragain. A
+procedure with whichIbecame alltoofamiliar.
+Joyensued attheendofthelong ordeal ofacquiring apackofproperly
+punc hedcards. Short-liv edjoy.The next step wastoputthestackofcards
+intoanin-bask etmonitored bythecomputer operator. Some hours later the
+(large) paperoutput from thejobwould beinapigeonhole. There wasofcourse
+anerror intheprogram. After another struggle with thepunc hcard machine
+(relativ elybrief thistime), thecard deckwasbackinthein-bask et.
+9
+CIRCLE 1.FALLING INTO THE FLOATING POINT TRAP
+Itdidn't takemanyiterations before Irealized that itonly evertold me
+abouttherst error itcame to.Finally onthethird day,theoutput featured
+nomessages abouterrors. There wasanansw er|a wrongansw er.Itwasa
+simple quadratic equation, andtheansw erwasclearly 2and3.The program
+saiditwas1.999997 and3.000001. Allthose hours ofmisery anditcan't even
+gettherightansw er.
+Icanwrite anRfunction forthequadratic formulasomewhat quicker.
+>quadratic.formula
+function (a,b,c)
+f
+rad<-b^2-4*a*c
+if(is.complex(ra d)||all(rad >=0))f
+rad<-sqrt(rad)
+gelsef
+rad<-sqrt(as.complex( rad))
+g
+cbind(-b -rad,-b+rad)/(2*a)
+g
+>quadratic.formula (1,-5,6)
+[,1][,2]
+[1,] 23
+>quadratic.formula (1,c(-5,1),6)
+[,1] [,2]
+[1,]2.0+0.000000i 3.0+0.000000i
+[2,]-0.5-2.397916i -0.5+2.397916i
+Itismore general than that oldprogram, andmore tothepointitgets the
+rightansw erof2and3.Except that itdoesn't. Rmerely printssothat most
+numerical error isinvisible. Wecanseehowwrong itactually isbysubtracting
+therightansw er:
+>quadratic.formula (1,-5,6)-c(2,3)
+[,1][,2]
+[1,] 00
+Wellokay,itgetstherightansw erinthiscase. Butthere iserror ifwechange
+theproblem alittle:
+>quadratic.formula (1/3,-5/3,6/3)
+[,1][,2]
+[1,] 23
+>print(quadratic.f ormula(1/3,-5/3,6/3),digits=16) [,1] [,2]
+[1,]1.999999999999999 3.00000000000000 1
+>quadratic.formula (1/3,-5/3,6/3)-c(2,3)
+[,1] [,2]
+[1,]-8.881784e-16 1.332268e-15
+10
+CIRCLE 1.FALLING INTO THE FLOATING POINT TRAP
+That Rprintsansw ersnicely isablessing. And acurse. Risgoodenough at
+hiding numerical error that itiseasy toforget that itisthere. Don't forget.
+Whenev eroating pointoperations aredone|ev ensimple ones, youshould
+assume that there willbenumerical error. Ifbychance there isnoerror, regard
+that asahapp yacciden t|not yourdue. Youcanusetheall.equal function
+instead of8==8totestequalit yofoating pointnumbers.
+Ifyouhaveacase where thenumbersarelogically integer butthey have
+beencomputed, then useround tomakesure they really areintegers.
+Donotconfuse numerical error with anerror. Anerror iswhen acom-
+putation iswrongly performed. Numerical error iswhen there isvisible noise
+resulting from thenite represen tation ofnumbers.Itisnumerical error|not
+anerror|when one-third isrepresen tedas33%.
+We'veseen another aspectofvirtuous pagan beliefs|what isprintedisall
+that there is.
+>7/13-3/31
+[1]0.4416873
+Rprints|b ydefault|a handy abbreviation, notallthat itknowsaboutnum-
+bers:
+>print(7/13 -3/31,digits=16)
+[1]0.4416873449131 513
+Manysummary functions areevenmore restrictiv einwhat they print:
+>summary(7/13 -3/31)
+Min.1stQu.Median Mean3rdQu.Max.
+0.4417 0.4417 0.4417 0.4417 0.4417 0.4417
+Numerical error from nite arithmetic cannotonly fuzztheansw er,itcanfuzz
+thequestion. Inmathematics therank ofamatrix issome specic integer. In
+computing, therank ofamatrix isavague concept. Since eigen values need not
+beclearly zero orclearly nonzero, therank need notbeadenite number.
+Wedescended totheedge oftherst Circle where Minos stands guard,
+gnashing histeeth. The numberoftimes hewraps histailaround himself
+marks thelevelofthesinner before him.
+11
+Circle 2
+Growing Objects
+Wemade ourwayintothesecond Circle, here livethegluttons.
+Let's lookatthree waysofdoing thesame task ofcreating asequence of
+numbers.Metho d1istogrowtheobject:
+vec<-numeric(0)
+for(iin1:n)vec<-c(vec,i)
+Metho d2creates anobjectofthenal length andthen changes thevalues in
+theobjectbysubscripting:
+vec<-numeric(n)
+for(iin1:n)vec[i]<-i
+Metho d3directly creates thenal object:
+vec<-1:n
+Table 2.1showsthetiming inseconds onaparticular (old) machine ofthese
+three metho dsforaselection ofvalues ofn.Therelationships forvarying nare
+allroughly linear onalog-log scale, butthetimings aredrastically dieren t.
+Youmaywonder whygrowing objects issoslow.Itisthecomputational
+equiv alentofsuburbanization. When anew sizeisrequired, there willnotbe
+Table 2.1:Time inseconds ofmetho dstocreate asequence.
+n grow subscript colon operator
+1000 0.01 0.01 .00006
+10,000 0.59 0.09 .0004
+100,000 133.68 0.79 .005
+1,000,000 18,718 8.10 .097
+12
+CIRCLE 2.GROWING OBJECTS
+enough roomwhere theobjectis;soitneeds tomovetoamore openspace.
+Then that space willbetoosmall, anditwillneed tomoveagain. Ittakesalot
+oftime tomovehouse. Just asinphysical suburbanization, growing objects can
+spoilalloftheavailable space. Youendupwith lotsofsmall pieces ofavailable
+memory ,butnolarge pieces. This iscalled fragmen tingmemory .
+Amore common|and probably more dangerous|means ofbeing aglutton
+iswithrbind .Forexample:
+my.df<-data.frame(a=ch aracter(0),b=numeric(0))
+for(iin1:n)f
+my.df<-rbind(my.df, data.frame(a=sa mple(letters,1),
+b=runif(1)))
+g
+Probably themain reason thisismore common isbecause itismore likelythat
+eachiteration willhaveadieren tnumberofobserv ations. That is,thecodeis
+more likelytolooklike:
+my.df<-data.frame(a=ch aracter(0),b=numeric(0))
+for(iin1:n)f
+this.N<-rpois(1, 10)
+my.df<-rbind(my.df, data.frame(a=sa mple(letters,
+this.N, replace=TRUE), b=runif(this.N)))
+g
+Often areasonable upperbound onthesizeofthenal objectisknown.Ifso,
+then create theobjectwith that sizeandthen remo vetheextra values atthe
+end. Ifthenal sizeisamystery ,then youcanstillfollowthesame scheme,
+butallowforperiodicgrowthoftheobject.
+current.N <-10*n
+my.df<-data.frame(a=ch aracter(current.N),
+b=numeric(curre nt.N))
+count<-0
+for(iin1:n)f
+this.N<-rpois(1, 10)
+if(count +this.N>current.N)f
+old.df<-my.df
+current.N <-round(1.5 *(current.N +this.N))
+my.df<-data.frame(a=char acter(current.N),
+b=numeric(current .N))
+my.df[1:count,] <-old.df[1:count, ]
+g
+my.df[count +1:this.N,] <-data.frame(a=sam ple(letters,
+this.N, replace=TRUE), b=runif(this.N))
+count<-count+this.N
+g
+my.df<-my.df[1:count,]
+13
+CIRCLE 2.GROWING OBJECTS
+Figure 2.1:ThegiantsbySandro Botticelli.
+Often there isasimpler approac htothewhole problem|build alistofpieces
+andthen scrunc hthem together inonego.
+my.list <-vector('list', n)
+for(iin1:n)f
+this.N<-rpois(1, 10)
+my.list[[i]] <-data.frame(a=samp le(letters,this.N
+replace=TRUE), b=runif(this.N))
+g
+my.df<-do.call('rbind' ,my.list)
+There arewaysofcleverlyhiding that youaregrowing anobject. Here isan
+example:
+hit<-NA
+for(iin1:one.zillion) f
+if(runif(1) <0.3)hit[i]<-TRUE
+g
+Eachtime thecondition istrue,hitisgrown.
+Eliminating thegrowthofobjects canbeoneoftheeasiest andmost dra-
+matic waysofspeeding upRcode.
+14
+CIRCLE 2.GROWING OBJECTS
+Ifyouusetoomuchmemory ,Rwillcomplain. Thekeyissue isthat Rholds
+allthedata inRAM. This isalimitation ifyouhavehugedatasets. Theup-side
+isexibilit y|in particular, Rimposesnorules onwhat data arelike.
+Youcangetamessage, alltoofamiliar tosome people, like:
+Error:cannotallocate vectorofsize79.8Mb.
+This isoften misin terpreted along thelines of:\Ihavexxxgigab ytesofmemory ,
+whycan't Revenallocate80megab ytes?" Itisbecause Rhasalready allocated
+alotofmemory successfully .Theerror message isabouthowmuchmemory R
+wasgoing after atthepointwhere itfailed.
+The user who hasseen thismessage logically asks, \What canIdoabout
+it?" There aresome easy answ ers:
+1.Don't beaglutton byusing badprogramming constructs.
+2.Getabigger computer.
+3.Reduce theproblem size.
+Ifyou'veobeyedtherst answ erandcan't followthesecond orthird, then
+youralternativ esareharder. One istorestart theRsession, butthisisoften
+ineectiv e.
+Another ofthose hard alternativ esistoexplore where inyourcodethe
+memory isgrowing. One metho d(onatleast oneplatform) istoinsert lines
+like:
+cat('point 1mem',memory.size(), memory.size(max=T RUE),'nn')
+throughout yourcode.This showsthememory that Rcurren tlyhasandthe
+maxim umamoun tRhashadinthecurren tsession.
+However,probably amore ecien tandinformativ eprocedure would beto
+useRprof with memory proling. Rprof alsoproles time use.
+Another wayofreducing memory useistostore yourdata inadatabase and
+only extract portions ofthedata intoRasneeded. While thistakessome time
+tosetup,itcanbecome quite anatural waytowork.
+A\database" solution that only uses Ristosave(asinthesave function)
+objects inindividual les, then usethelesoneatatime. Soyourcodeusing
+theobjects migh tlooksomething like:
+for(iin1:n)f
+objname <-paste('obj.', i,sep='')
+load(paste(objna me,'.rda', sep=''))
+theobj<-get(objname)
+rm(list=objname)
+#usetheobj
+g
+15
+CIRCLE 2.GROWING OBJECTS
+Aretomorro w'sbigger computers going tosolvetheproblem? Forsome people,
+yes|their data willstaythesame sizeandcomputers willgetbigenough to
+hold itcomfortably .Forother people itwillonly getworse|more powerful
+computers means extraordinarily larger datasets. Ifyouarelikelytobeinthis
+latter group, youmigh twanttogetused toworking with databases now.
+Ifyouhaveoneofthose giantcomputers, youmayhavethecapacit yto
+attempt tocreate something larger than Rcanhandle. See:
+?'Memory-limits'
+forthelimits that areimposed.
+16
+Circle 3
+Failing toVectorize
+Wearriv eatthethird Circle, lled with cold, unending rain. Here stands
+Cerb erus barking outofhisthree throats. Within theCircle weretheblas-
+phemous wearing golden, dazzling cloaks that inside werealloflead|w eighing
+them downforallofeternit y.This iswhere Virgil saidtome,\Remem beryour
+science|the more perfect athing, themore itspain orpleasure."
+Here issome sample code:
+lsum<-0
+for(iin1:length(x))f
+lsum<-lsum+log(x[i])
+g
+No.No.No.
+This isspeaking Rwith aCaccen t|a strong accen t.Wecandothesame
+thing muchsimpler:
+lsum<-sum(log(x))
+This isnotonly nicer foryourcarpal tunnel, itiscomputationally muchfaster.
+(Asanadded bonusitavoidsthebugintheloopwhenxhaslength zero.)
+The command aboveworks because ofvectorization. Thelogfunction is
+vectorized inthetraditional sense|it doesthesame operation onavector of
+values asitwould dooneachsingle value. That is,thecommand:
+log(c(23, 67.1))
+hasthesame result asthecommand:
+c(log(23), log(67.1))
+Thesumfunction isvectorized inaquite dieren tsense|it takesavector and
+produces something based onthewhole vector. Thecommand sum(x) isequiv-
+alentto:
+17
+CIRCLE 3.FAILING TOVECTORIZE
+x[1]+x[2]+...+x[length(x)]
+Theprod function issimilar tosum,butdoesproducts rather than sums. Prod-
+ucts canoften overoworundero w(asuburb ofCircle 1)|taking logs and
+doing sums isgenerally amore stable computation.
+Youoften getvectorization forfree. Taketheexample ofquadratic.formula
+inCircle 1(page 9).Since thearithmetic operators arevectorized, theresult of
+thisfunction isavector ifanyoralloftheinputs are.Theonly slightproblem
+isthat there aretwoansw ersperinput, sothecalltocbind isused tokeep
+trackofthepairs ofansw ers.
+Inbinary operations suchas:
+c(1,4)+1:10
+recycling automatically happ ensalong with thevectorization.
+Here issome codethat combines boththisCircle andCircle 2(page 12):
+ans<-NULL
+for(iin1:507980)f
+if(x[i] <0)ans<-c(ans,y[i])
+g
+This canbedone simply with:
+ans<-y[x<0]
+Adoubleforloopisoften theresult ofafunction that hasbeendirectly trans-
+lated from another language. Translations that areessen tially verbatim are
+unlik elytobethebestthing todo.Better istorethink what ishapp ening with
+Rinmind. Using direct translations from another language maywellleaveyou
+longing forthat other language. Making goodtranslations maywellleaveyou
+marv elling atR'sstrengths. (The catchisthat youneed toknowthestrengths
+inorder tomakethegoodtranslations.)
+Ifyouaretranslating codeintoRthat hasadoubleforloop,think.
+Ifyourfunction isnotvectorized, then youcanpossibly usetheVectorize
+function tomakeavectorized version. Butthisisvectorization from anexternal
+pointofview|it isnotthesame aswriting inheren tlyvectorized code.The
+Vectorize function performs aloopusing theoriginal function.
+Some functions takeafunction asanargumen tanddemand thatthefunction
+bevectorized|these includeouter andintegrate .
+There isanother form ofvectorization:
+>max(2,100,-4,3,230,5)
+[1]230
+>range(2, 100,-4,3,230,5,c(4,-456,9))
+[1]-456230
+18
+CIRCLE 3.FAILING TOVECTORIZE
+Figure 3.1:Thehypocrites bySandro Botticelli.
+This form ofvectorization istotreat thecollection ofargumen tsasthevector.
+This isNOT aform ofvectorization youshould expect,itisessen tially foreign to
+R|min,max,range ,sumandprod arerareexceptions. Inparticular, mean does
+notadhere tothisform ofvectorization, andunfortunately doesnotgenerate
+anerror from trying it:
+>mean(2, -100,-4,3,-230,5)
+[1]2
+Butyougetthecorrect answ erifyouaddthree (particular) keystrok es:
+>mean(c(2, -100,-4,3,-230,5))
+[1]-54
+One reason forvectorization isforcomputational speed. Inavector operation
+there isalwaysaloop.Iftheloopisdone inCcode,then itwillbemuchfaster
+than ifitisdone inRcode.Insome cases, thiscanbeveryimportan t.In
+other cases, itisn't|a loopinRcodenowisasfastasthesame loopinCon
+acomputer from afewyearsago.
+Another reason tovectorize isforclarit y.Thecommand:
+volume<-width*depth*height
+19
+3.1. SUBSCRIPTING CIRCLE 3.FAILING TOVECTORIZE
+Table 3.1:Summary ofsubscripting with8[8.
+subscript eect
+positiv enumeric vector selects items with those indices
+negativ enumeric vector selects allbutthose indices
+character vector selects items with those names (ordimnames)
+logical vector selects theTRUE (andNA)items
+missing selects all
+clearly expresses therelation betweenthevariables. This same clarit yispresen t
+whether there isoneitem oramillion. Transparen tcodeisanimportan tform of
+eciency .Computer time ischeap, human time (and frustration) isexpensiv e.
+This factisenshrined inthemaxim ofUweLigges.
+Uwe0sMaxim Computers arecheap, andthinking hurts.
+Afairly common question from new users is:\HowdoIassign names toa
+group ofsimilar objects?" Yes,youcandothat, butyouprobably don't want
+to|b etter istovectorize yourthinking. Putallofthesimilar objects intoone
+list.Subsequen tanalysis andmanipulation isthen going tobemuchsmoother.
+3.1 Subscripting
+Subscripting inRisextremely powerful, andisoften akeypart ofeectiv e
+vectorization. Table 3.1summarizes subscripting.
+Thedimensions ofarraysanddata frames aresubscripted indep enden tly.
+Arrays(including matrices) canbesubscripted with amatrix ofpositiv e
+numbers.Thesubscripting matrix hasasmanycolumns asthere aredimensions
+inthearray|so twocolumns foramatrix. Theresult isavector (not anarray)
+containing theselected items.
+Lists aresubscripted justlike(other) vectors. However,there aretwoforms
+ofsubscripting that areparticular tolists:8$8and8[[8.These arealmost the
+same, thedierence isthat8$8expectsaname rather than acharacter string.
+>mylist<-list(aaa=1:5, bbb=letters)
+>mylist$aaa
+[1]12345
+>mylist[['aaa']]
+[1]12345
+>subv<-'aaa';mylist[[subv]]
+[1]12345
+Youshouldn't betoosurprised that Ijustliedtoyou.Subscripting with8[[8
+canbedone onatomic vectors aswellaslists. Itcanbethesafer option when
+20
+3.2. VECTORIZED IF CIRCLE 3.FAILING TOVECTORIZE
+asingle item isdemanded. Ifyouareusing8[[8andyouwantmore than one
+item, youaregoing tobedisapp ointed.
+We'vealready seen (inthelsum example) that subscripting canbeasymp-
+tomofnotvectorizing.
+Asanexample ofhowsubscripting canbeavectorization tool,consider
+thefollowing problem: Wehaveamatrixamat andwewanttoproduce anew
+matrix with halfasmanyrowswhere eachrowofthenewmatrix istheproduct
+oftwoconsecutiv erowsofamat .
+Itisquite simple tocreate alooptodothis:
+bmat<-matrix(NA, nrow(amat)/2, ncol(amat))
+for(iin1:nrow(bmat)) bmat[i,] <-amat[2*i-1,] *amat[2*i,]
+Note that wehaveavoided Circle 2(page 12)bypreallo catingbmat .
+Later iterations donotdependonearlier ones, sothere ishopethat wecan
+eliminate theloop.Subscripting isthekeytotheelimination:
+>bmat2<-amat[seq(1, nrow(amat), by=2),] *
++amat[seq(2, nrow(amat), by=2),]
+>all.equal(bmat, bmat2)
+[1]TRUE
+3.2 Vectorized if
+Here issome code:
+if(x<1)y<--1elsey<-1
+This looksperfectly logical. And ifxhaslength one, then itdoesasexpected.
+However,ifxhaslength greater than one,then awarning isissued (often ignored
+bytheuser), andtheresult isnotwhat ismost likelyintended. Codethat fullls
+thecommon expectation is:
+y<-ifelse(x <1,-1,1)
+Another approac h|assuming xisneverexactly 1|is:
+y<-sign(x-1)
+This provides acouple oflessons:
+1.Thecondition inifisoneofthefewplaces inRwhere avector (oflength
+greater than 1)isnotwelcome (the8:8operator isanother).
+2.ifelse iswhat youwantinsuchasituation (though, asinthiscase, there
+areoften more direct approac hes).
+21
+3.3. VEC IMPOSSIBLE CIRCLE 3.FAILING TOVECTORIZE
+Recall that inCircle 2(page 12)wesaw:
+hit<-NA
+for(iin1:one.zillion) f
+if(runif(1) <0.3)hit[i]<-TRUE
+g
+One alternativ etomakethisoperation ecien tis:
+ifelse(runif(one. zillion)<0.3,TRUE,NA)
+Ifthere isamistak ebetweenifandifelse ,itisalmost alwaystrying touse
+ifwhenifelse isappropriate. Butingen uityknowsnobounds, soitisalso
+possible totrytouseifelse whenifisappropriate. Forexample:
+ifelse(x, character(0), '')
+The result ofifelse isALWAYSthelength ofitsrst (formal) argumen t.
+Assuming thatxisoflength 1,thewaytogettheintended behavioris:
+if(x)character(0) else''
+Some more caution iswarran tedwithifelse :theresult getsnotonly itslength
+from therst argumen t,butalsoitsattributes. Ifyouwould liketheansw er
+tohaveattributes oftheother twoargumen ts,youneed todomore work. In
+Circle 8.2.7 we'llseeaparticular instance ofthiswith factors.
+3.3 Vectorization impossible
+Some things arenotpossible tovectorize. Forinstance, ifthepresen titeration
+depends onresults from theprevious iteration, then vectorization isusually not
+possible. (But some cases arecovered byfilter ,cumsum ,etc.)
+Ifyouneed tousealoop,then makeitlean:
+Putasmuchoutside ofloopsaspossible. One example: ifthesame ora
+similar sequence iscreated ineachiteration, then create thesequence rst
+andreuse it.Creating asequence isquite fast, butappreciable time can
+accum ulate ifitisdone thousands ormillions oftimes.
+Makethenumberofiterations assmall aspossible. Ifyouhavethechoice
+ofiterating overtheelemen tsofafactor oriterating overthelevelsofthe
+factor, then iterating overthelevelsisgoing tobebetter (almost surely).
+The following bitofcodegets thesum ofeachcolumn ofamatrix (assuming
+thenumberofcolumns ispositiv e):
+sumxcol <-numeric(ncol(x))
+for(iin1:ncol(x)) sumxcol[i] <-sum(x[,i])
+22
+3.3. VEC IMPOSSIBLE CIRCLE 3.FAILING TOVECTORIZE
+Amore common approac htothiswould be:
+sumxcol <-apply(x, 2,sum)
+Since thisisaquite common operation, there isaspecial function fordoing this
+that doesnotinvolvealoopinRcode:
+sumxcol <-colSums(x)
+There arealsorowSums ,colMeans androwMeans .
+Another approac his:
+sumxcol <-rep(1,nrow(x)) %*%x
+That is,using matrix multiplication. With alittle ingen uityalotofproblems
+canbecast intoamatrix multiplication form. This isgenerally quite ecien t
+relativ etoalternativ es.
+23
+Circle 4
+Over-Vectorizing
+Weskirted past Plutus, theerce wolfwith aswollen face, downintothefourth
+Circle. Here wefound thelustful.
+Itisagoodthing towanttovectorize when there isnoeectiv ewaytodo
+so.Itisabadthing toattempt itanyway.
+Acommon reex istouseafunction intheapply family .This isnotvector-
+ization, itisloop-hiding. Theapply function hasaforloopinitsdenition.
+Thelapply function buries theloop,butexecution times tend toberoughly
+equal toanexplicitforloop.(Confusion overthisisunderstandable, asthere
+isasignican tdierence inexecution speedwith atleast some versions ofS+.)
+Table 4.1summarizes theuses oftheapply family offunctions.
+Base yourdecision ofusing anapply function onUwe'sMaxim (page 20).
+The issue isofhuman time rather than silicon chiptime. Human time canbe
+wasted bytaking longer towrite thecode,and(often muchmore importan tly)
+bytaking more time tounderstand subsequen tlywhat itdoes.
+Acommand applying acomplicated function isunlik elytopass thetest.
+Table 4.1:Theapply family offunctions.
+function input output commen t
+apply matrix orarray vector orarrayorlist
+lapply listorvector list
+sapply listorvector vector ormatrix orlist simplify
+vapply listorvector vector ormatrix orlist safer simplify
+tapply data, categories arrayorlist ragged
+mapply listsand/or vectors vector ormatrix orlist multiple
+rapply list vector orlist recursiv e
+eapply environmen t list
+dendrapply dendogram dendogram
+rollapply data similar toinput packagezoo
+24
+CIRCLE 4.OVER-VECTORIZING
+Figure 4.1:Thepanderers andseducers andtheatterers bySandro Botticelli.
+Useanexplicitforloopwhen eachiteration isanon-trivial task. Butasimple
+loopcanbemore clearly andcompactly expressed using anapply function.
+There isatleast oneexception tothisrule. WewillseeinCircle 8.1.56 that
+iftheresult willbealistandsome ofthecomp onentscanbeNULL ,then afor
+loopistrouble (bigtrouble) andlapply givestheexpected answ er.
+Thetapply function applies afunction toeachbitofapartition ofthedata.
+Alternativ estotapply arebyfordata frames, andaggregate fortime series
+anddata frames. Ifyouhaveasubstan tialamoun tofdata andspeedisanissue,
+thendata.table maybeagoodsolution.
+Another approac htoover-vectorizing istousetoomuchmemory inthepro-
+cess. Theouter function isawonderful mechanism tovectorize some problems.
+Itisalsosubjecttousing alotofmemory intheprocess.
+Supp osethat wewanttondallofthesetsofthree positiv eintegers that
+sum to6,where theorder matters. (This isrelated topartitions innumber
+theory .)Wecanuseouter andwhich :
+the.seq <-1:4
+which(outer(outer (the.seq,the.seq, '+'),the.seq, '+')==6,
+arr.ind=TRUE)
+This command isnicely vectorized, andareasonable solution tothisparticular
+25
+CIRCLE 4.OVER-VECTORIZING
+problem. However,with larger problems thiscould easily eatallmemory ona
+machine.
+Supp osewehaveadata frame andwewanttochange themissing values to
+zero. Then wecandothat inaperfectly vectorized manner:
+x[is.na(x)] <-0
+Butifxislarge, then thismaytakealotofmemory .If|as iscommon|the
+numberofrowsismuchlarger than thenumberofcolumns, then amore memory
+ecien tmetho dis:
+for(iin1:ncol(x)) x[is.na(x[,i]), i]<-0
+Note that \large" isarelativ eterm; itisusefully relativ etotheamoun tof
+available memory onyourmachine. Also note that memory eciency canalso
+betime eciency iftheinecien tapproac hcauses swapping.
+One more commen t:ifyoureally wanttochangeNAsto0,perhaps you
+should rethink what youaredoing|the newdata arectional.
+Itisnotunusual forthere tobeatradeo betweenspace andtime.
+Bewarethedangers ofpremature optimization ofyourcode.Yourrstduty
+istocreate clear, correct code.Only consider optimizing yourcodewhen:
+Yourcodeisdebugged andstable.
+Optimization islikelytomakeasignican timpact. Spending anhour or
+twotosaveamillisecond amonthisnotbestpractice.
+26
+Circle 5
+NotWriting Functions
+Wecame upontheRiverStyx,more aswamp really .Ittooksome convinc-
+ing,butPhlegy aseventually rowedusacross inhisboat. Here wefound the
+treasoners.
+5.1 Abstraction
+Akeyreason that Risagoodthing isbecause itisalanguage. The powerof
+language isabstraction. Thewaytomakeabstractions inRistowrite functions.
+Supp osewewanttorepeattheintegers 1through 3twice. That's asimple
+command:
+c(1:3,1:3)
+Nowsupp osewewantthese numbersrepeated sixtimes, ormaybesixtytimes.
+Writing afunction that abstracts thisoperation begins tomakesense. Infact,
+that abstraction hasalready beendone forus:
+rep(1:3, 6)
+Therepfunction performs ourdesired task andanumberofsimilar tasks.
+Let's doanewtask. Wehavetwovectors; wewanttoproduce asingle vector
+consisting oftherstvector repeated tothelength ofthesecond andthen the
+second vector repeated tothelength oftherst. Avector being repeated toa
+shorter length means tojustusetherstpart ofthevector. This isquite easily
+abstracted intoafunction that usesrep:
+repeat.xy <-function(x, y)
+f
+c(rep(x, length=length(y) ),rep(y,length=length(x)) )
+g
+Therepeat.xy function cannowbeused inthesame wayasifitcame with R.
+27
+5.1. ABSTRA CTION CIRCLE 5.NOT WRITING FUNCTIONS
+repeat.xy(1:4, 6:16)
+The ease ofwriting afunction likethismeans that itisquite natural tomove
+gradually from justusing Rtoprogramming inR.
+Inaddition toabstraction, functions crystallize knowledge. Thatisappro x-
+imately 3.1415926535897 932384626433832795028841971693993751058209749445
+923078 isknowledge.
+Thefunction:
+circle.area <-function(r) pi*r^2
+isbothknowledge and abstraction|it givesyouthe(appro ximate) area for
+whatev ercircles youlike.
+This isnottheplace forafulldiscussion onthestructure oftheRlanguage,
+butacommen tonadetail ofthetwofunctions that we'vejustcreated isin
+order. Thestatemen tinthebodyofrepeat.xy issurrounded bycurly braces
+while thestatemen tinthebodyofcircle.area isnot. Thebodyofafunction
+needs tobeasingle expression. Curly braces turn anumberofexpressions into
+asingle (com bined) expression. When there isonly asingle command inthe
+bodyofafunction, then thecurly braces areoptional. Curly braces arealso
+useful with loops,switch andif.
+Ideally eachfunction performs aclearly specied taskwith easily understo od
+inputs andreturn value. Verycommon novicebehavioristowrite onefunction
+that doeseverything. Almost alwaysabetter approac histowrite anumberof
+smaller functions, andthen afunction that doeseverything byusing thesmaller
+functions. Breaking thetask intosteps often hasthebenet ofmaking itmore
+clear what really should bedone. Itisalsomucheasier todebug when things
+gowrong.1Thesmall functions aremuchmore likelytobeofgeneral use.
+Anice piece ofabstraction inRfunctions isdefault values forargumen ts.
+Forexample, thena.rm argumen ttosdhasadefault value ofFALSE .Ifthat
+isokayinaparticular instance, then youdon't havetospecifyna.rm inyour
+call. Ifyouwanttoremo vemissing values, then youshould includena.rm=TRUE
+asanargumen tinyourcall. Ifyoucreate yourowncopyofafunction justto
+change thedefault valueofanargumen t,then you're probably notappreciating
+theabstraction that thefunction givesyou.
+Functions return avalue. The return value ofafunction isalmost always
+thereason forthefunction's existence. The lastitem inafunction denition
+isreturned. Most functions merely rely onthismechanism, butthereturn
+function forces what toreturn.
+The other thing that afunction candoistohaveoneormore sideeects.
+Asideeect issome change tothesystem other than returning avalue. The
+philosoph yofRistoconcen trate sideeects intoafewfunctions (suchasprint ,
+plot andrm)where itisclear that asideeect istobeexpected.
+1Notice \when" not\if".
+28
+5.1. ABSTRA CTION CIRCLE 5.NOT WRITING FUNCTIONS
+Table 5.1:Simple objects.
+object type examples
+logical atomic TRUEFALSENA
+numeric atomic 02.2piNAInf-InfNaN
+complex atomic 3.2+4.5i NAInfNaN
+character atomic 'helloworld'''NA
+list recursiv elist(1:3, b='hello', C=list(3, c(TRUE, NA)))
+NULL NULL
+function function(x, y)x+2*y
+formula y~x
+Table 5.2:Some notsosimple objects.
+object primary attributes commen t
+data frame listclassrow.names ageneralized matrix
+matrix vector dimdimnames special case ofarray
+array vector dimdimnames usually atomic, notalways
+factor integer levelsclass trickylittle devils
+The things that Rfunctions talk aboutareobjects. Risrichinobjects.
+Table 5.1showssome importan ttypesofobjects.
+You'll notice that eachoftheatomic typeshaveapossible valueNA,asin
+\Not Available" andcalled \missing value". When some people rst gettoR,
+they spendalotoftime trying togetridofNAs.People probably didthesame
+sort ofthing when zero wasrst invented.NAisawonderful thing tohave
+available toyou.Itisseldom pleasan twhen yourdata havemissing values, but
+lifeismuchbetter withNAthan without.
+Rwasdesigned with theideathat nothing isimportan t.Let's trythat again:
+\nothing" isimportan t.Vectors canhavelength zero. This isanother stupid
+thing that turns outtobeincredibly useful|that is,notsostupid after all.
+We'renotsoused todealing with things that aren't there, sosometimes there
+areproblems|w e'llseeexamples inCircle 8,Circle 8.1.15 forinstance.
+Alotofthewealth ofobjects hastodowith attributes. Manyattributes
+change howtheobjectisthough tabout(bothbyRand bytheuser). An
+attribute that iscommon tomost objects isnames .The attribute that drives
+objectorien tation isclass .Table 5.2lists afewofthemost importan ttypes
+ofobjects that dependonattributes. Formulas, that werelisted inthesimple
+table, haveclass"formula" andsomigh tmore properlybeinthenot-so-simple
+list.
+Acommon noviceproblem istothink that adata frame isamatrix. They
+lookthesame. They arenotthat same. See,forinstance, Circle 8.2.37 .
+Theword\vector" hasanumberofmeanings inR:
+1.anatomic object(asopposed toalist). This isperhaps themost common
+29
+5.1. ABSTRA CTION CIRCLE 5.NOT WRITING FUNCTIONS
+usage.
+2.anobjectwith noattributes (except possiblynames ).This isthedenition
+implied byis.vector andas.vector .
+3.anobjectthat canhaveanarbitrary length (includes lists).
+Clearly denitions 1and 3arecontradictory ,butwhichmeaning isimplied
+should beclear from thecontext. When thediscussion isofvectors asopposed
+tomatrices, itisdenition 2that isimplied.
+Theword\list" hasatechnical meaning inR|this isanobjectofarbitrary
+length that canhavecomp onentsofdieren ttypes,including lists. Sometimes
+thewordisused inanon-tec hnical sense, asin\searc hlist" or\argumen tlist".
+Notallfunctions arecreated equal. They canbeconvenien tlyputintothree
+types.
+There areanon ymous functions asin:
+apply(x, 2,function(z) mean(z[z >0]))
+Thefunction givenasthethird argumen ttoapply issotransien tthat wedon't
+evengiveitaname.
+There arefunctions that areuseful only foroneparticular project. These
+areyourone-o functions.
+Finally there arefunctions that arepersisten tlyvaluable. Some ofthese
+could wellbeone-o functions that youhaverewritten tobemore abstract.
+Youwillmost likelywantaleorpackagecontaining yourpersisten tlyuseful
+functions.
+Intheexample ofananon ymous function wesawthat afunction canbean
+argumen ttoanother function. InR,functions areobjects justasvectors or
+matrices areobjects. Youareallowedtothink offunctions asdata.
+Awhole newlevelofabstraction isafunction that returns afunction. The
+empirical cumulativ edistribution function isanexample:
+>mycumfun <-ecdf(rnorm(10))
+>mycumfun(0)
+[1]0.4
+Once youwrite afunction that returns afunction, youwillbeforev erimmune
+tothisCircle.
+InCircle 2(page 12)webriey metdo.call .Some people arequite confused
+bydo.call .That isbothunnecessary andunfortunate|it isactually quite
+simple andisverypowerful. Normally afunction iscalled byfollowing the
+name ofthefunction with anargumen tlist:
+sample(x=10, size=5)
+30
+5.1. ABSTRA CTION CIRCLE 5.NOT WRITING FUNCTIONS
+Thedo.call function allowsyoutoprovide theargumen tsasanactual list:
+do.call("sample", list(x=10, size=5))
+Simple.
+Attimes itisuseful tohaveanimage ofwhat happ enswhen youcalla
+function. Anenvironmen tiscreated bythefunction call, andanenvironmen t
+iscreated foreachfunction that iscalled bythat function. Sothere isastack
+ofenvironmen tsthat growsandshrinks asthecomputation proceeds.
+Let's dene some functions:
+ftop<-function(x)
+f
+#time1
+x1<-f1(x)
+#time5
+ans.top <-f2(x1)
+#time9
+ans.top
+g
+f1<-function(x)
+f
+#time2
+ans1<-f1.1(x)
+#time4
+ans1
+g
+f2<-function(x)
+f
+#time6
+ans2<-f2.1(x)
+#time8
+ans2
+g
+And nowlet's doacall:
+#time0
+ftop(myx)
+#time10
+Figure 5.1showshowthestackofenvironmen tsforthiscallchanges through
+time. Note that there isanxintheenvironmen tsforftop ,f1andf2.Thex
+inftop iswhat wecallmyx(orpossibly acopyofit)asisthexinf1.Butthe
+xinf2issomething dieren t.
+When wediscuss debugging, we'llbelooking atthisstackataspecic point
+intime. Forinstance, ifanerror occurred inf2.1 ,then wewould belooking at
+thestate ofthestacksomewhere near time 7.
+31
+5.2. SIMPLICITY CIRCLE 5.NOT WRITING FUNCTIONS
+Figure 5.1:Stackofenvironmen tsthrough time.
+TimeEnvironment
+0 2 4 6 8 101 2 3
+ftopf1 f2f1.1 f2.1
+Risalanguage richinobjects. That isapart ofitsstrength. Some of
+those objects areelemen tsofthelanguage itself|calls, expressions andsoon.
+This allowsaverypowerful form ofabstraction often called computing onthe
+language. While messing with language elemen tsseems extraordinarily esoteric
+toalmost allnewusers, alotofpeople moderate that view.
+5.2 Simplicit y
+Makeyourfunctions assimple aspossible. Simple hasmanyadvantages:
+Simple functions arelikelytobehuman ecien t:they willbeeasy to
+understand andtomodify.
+Simple functions arelikelytobecomputer ecien t.
+Simple functions arelesslikelytobebuggy ,andbugs willbeeasier tox.
+(Perhaps ironically) simple functions maybemore general|thinking about
+theheart ofthematter often broadens theapplication.
+Ifyoursolution seems overlycomplex forthetask, itprobably is.There may
+besimple problems forwhichRdoesnothaveasimple solution, butthey are
+rare.
+Here areafewpossibilities forsimplifying:
+Don't usealistwhen anatomic vector willdo.
+32
+5.3. CONSISTENCY CIRCLE 5.NOT WRITING FUNCTIONS
+Don't useadata frame when amatrix willdo.
+Don't trytouseanatomic vector when alistisneeded.
+Don't trytouseamatrix when adata frame isneeded.
+Prop erlyformatting yourfunctions when youwrite them should bestandard
+practice. Here \prop er"includes inden ting based onthelogical structure, and
+putting spaces betweenoperators. Circle 8.1.30 showsthatthere isaparticularly
+goodreason toputspaces around logical operators.
+Asemicolon canbeused tomark theseparation oftwoRcommands that
+areplaced onthesame line. Some people liketoputsemicolons attheendof
+alllines. This highly anno ysmanyseasoned Rusers. Suchareaction seems to
+bemore visceral than logical, butthere issome logic toit:
+Thesuperuous semicolons create some (imperceptible) ineciency .
+The superuous semicolons givethefalse impression that they aredoing
+something.
+Onereason toseek simplicit yisspeed. TheRprof function isaveryconvenien t
+means ofexploring whichfunctions areusing themost time inyourfunction
+calls. (The nameRprof refers totime proling.)
+5.3 Consistency
+Consistency isgood.Consistency reduces theworkthat yourusers need to
+expend. Consistency reduces bugs.
+One form ofconsistency istheorder andnames offunction argumen ts.Sur-
+prising yourusers isnotagoodidea|ev eniftheuniverseofyourusers isof
+size1.
+Arather nice piece ofconsistency isalwaysgiving thecorrect answ er.In
+order forthat tohapp entheinputs need tobesuitable. Toinsure that, the
+function needs tocheckinputs, andpossibly intermediate results. Thetoolsfor
+thisjobincludeif,stop andstopifnot .
+Sometimes anoccurrence issuspicious butnotnecessarily wrong. Inthis
+case awarning isappropriate. Awarning produces amessage butdoesnot
+interrupt thecomputation.
+There isaproblem with warnings. Noonereads them. People havetoread
+error messages because nofoodpellet falls intothetrayafter they push the
+button. With awarning themachine merely beeps atthem butthey stillget
+their foodpellet. Nevermind that itmigh tbepoison.
+Theappropriate reaction toawarning message is:
+1.Figure outwhat thewarning issaying.
+33
+5.3. CONSISTENCY CIRCLE 5.NOT WRITING FUNCTIONS
+2.Figure outwhythewarning istriggered.
+3.Figure outtheeect ontheresults ofthecomputation (viadeduction or
+experimen tation).
+4.Giventheresult ofstep 3,decide whether ornottheresults willbeerro-
+neous.
+Youwantthere tobeaminimal amoun tofwarning messages inorder toincrease
+theprobabilit ythat themessages that arethere willberead. Ifyouhavea
+complex function where alarge numberofsuspicious situations ispossible, you
+migh tconsider providing theabilit ytoturn osome warning messages. Without
+suchasystem theuser maybeexpecting anumberofwarning messages and
+hence miss messages that areunexp ected andimportan t.
+ThesuppressWarning sfunction allowsyoutosuppress warnings from spe-
+ciccommands:
+>log(c(3, -1))
+[1]1.098612 NaN
+Warning message:
+Inlog(c(3, -1)):NaNsproduced
+>suppressWarnings( log(c(3,-1)))
+[1]1.098612 NaN
+Wewantourfunctions tobecorrect. Notallfunctions arecorrect. Theresults
+from specic calls canbeputinto4categories:
+1.Correct.
+2.Anerror occurs that isclearly identied.
+3.Anobscure error occurs.
+4.Anincorrect value isreturned.
+Welikecategory 1.Category 2istherightbehavioriftheinputs donotmake
+sense, butnotiftheinputs aresensible. Category 3isanunpleasan tplace for
+yourusers, andpossibly foryouiftheusers haveaccess toyou.Category 4is
+byfartheworstplace tobe|the user hasnoreason tobelievethat anything is
+wrong. Steer clear ofcategory 4.
+Youshould consisten tlywrite ahelp leforeachofyourpersisten tfunctions.
+Ifyouhaveahard time explaining theinputs and/or outputs ofthefunction,
+then youshould change thefunction. Writing agoodhelp leisanexcellen t
+wayofdebugging thefunction. Theprompt function willproduce atemplate
+foryourhelp le.
+Anexample isworth athousand words, soinclude examples inyourhelp
+les. Goodexamples aregold, butanyexample ismuchbetter than none. Using
+data from thedatasets packageallowsyourusers toruntheexamples easily .
+34
+Circle 6
+Doing Global Assignmen ts
+Heretics imprisoned inaming tombsinhabit Circle 6.
+Aglobal assignmen tcanbeperformed with8<<-8:
+>x<-1
+>y<-2
+>fun
+function ()f
+x<-101
+y<<-102
+g
+>fun()
+>x
+[1]1
+>y
+[1]102
+This islifebeside avolcano.
+Ifyouthink youneed8<<-8,think again. Ifonreection youstillthink you
+need8<<-8,think again. Only when yourbossturns redwith anger overyou
+notdoing anything should youtemp orarily giveintothetemptation. There
+havebeenproposals (nomore than half-joking) toeliminate8<<-8from the
+language. That would noteliminate global assignmen ts,merely force youtouse
+theassign function toachievethem.
+What's sowrong aboutglobal assignmen ts?Surprise.
+Surprise inmoviesandnovelsisgood.Surprise incomputer codeisbad.
+Except forafewfunctions that clearly haveside eects, itisexpected in
+Rthat afunction hasnosideeects. Afunction that makesaglobal assign-
+mentviolates thisexpectation. Tousers unfamiliar with thecode(and evento
+thewriter ofthecodeafter afewweeks) there willbeanobjectthat changes
+seemingly bymagic.
+35
+CIRCLE 6.DOING GLOBAL ASSIGNMENTS
+Figure 6.1:Thesowersofdiscord bySandro Botticelli.
+Aparticular case where global assignmen tisuseful (and notsoegregious)
+isinmemoization. This iswhen theresults ofcomputations arestored sothat
+ifthesame computation isdesired later, thevalue canmerely belookedup
+rather than recomputed. The global variable isnotsoworrisome inthiscase
+because itisnotofdirect interest totheuser. There remains theproblem of
+name collisions|if youusethesame variable name toremem bervalues fortwo
+dieren tfunctions, disaster follows.
+InRwecanperform memoization byusing alocally global variable. (\locally
+global" ismean ttobeabithumorous, butitsuccinctly describ eswhat isgoing
+on.) Inthisexample ofcomputing Fibonacci numbers,weareusing the8<<-8
+operator butusing itsafely:
+fibonacci <-local(f
+memo<-c(1,1,rep(NA, 100))
+f<-function(x)f
+if(x==0)return(0)
+if(x<0)return(NA)
+if(x>length(memo))
+stop("'x' toobigforimplementation")
+if(!is.na(memo[x ]))return(memo[x])
+ans<-f(x-2)+f(x-1)
+memo[x] <<-ans
+36
+CIRCLE 6.DOING GLOBAL ASSIGNMENTS
+ans
+g
+g)
+Sowhat isthismumbojumbosaying? Wehaveafunction that isjustimple-
+menting memoization inthenaivewayusing the8<<-8operator. Butweare
+hiding thememo objectintheenvironmen tlocaltothefunction. And whyis
+fibonacci afunction? Thereturn value ofsomething incurly braces iswhat-
+everislast. When dening afunction wedon't generally name theobjectwe
+arereturning, butinthiscase weneed toname thefunction because itisused
+recursiv ely.
+Nowlet's useit:
+>fibonacci(4)
+[1]3
+>head(get('memo', envir=environment (fibonacci)))
+[1]1123NANA
+From computing theFibonacci numberfor4,thethird andfourth elemen tsof
+memo havebeenlled in.These values willnotneed tobecomputed again, a
+mere lookup suces.
+Ralwayspasses byvalue. Itneverpasses byreference.
+There aretwotypesofpeople: those who understand thepreceding para-
+graph andthose who don't.
+Ifyoudon't understand it,then Risrightforyou|it means that Risa
+safeplace (notwithstanding theload ofthings inthisdocumen tsuggesting the
+contrary). Translated intohumansp eakitessen tially saysthat itisdreadfully
+hard tocorrupt data inR.Butingen uityknowsnobounds ...
+Ifyoudounderstand theparagraph inquestion, then you'veprobably al-
+ready caugh tonthat theissue isthat Risheavilyinuenced byfunctional
+programming|side eects areminimized. Youmayalsoworry that thisimplies
+hideous memory ineciency .Well,ofcourse, theparagraph inquestion isalie.
+Ifitwereliterally true, then objects (whic hmaybeverylarge) would always
+becopied when they areargumen tstofunctions. Infact, Rattempts toonly
+copyobjects when itisnecessary ,suchaswhen theobjectischanged inside the
+function. Theparagraph isconceptually true, butnotliterally true.
+37
+Circle 7
+Tripping onObject
+Orien tation
+Wecame uponasinner intheseventhCircle. Hesaid, \Belo wmyhead isthe
+place ofthose who tooktosimon ybefore me|they arestued intothessures
+ofthestone." Indeed, with ames held tothesoles oftheir feet.
+Itturns outthat versions ofS(ofwhichRisadialect) arecolor-co dedby
+thecoverofbookswritten aboutthem. The booksare: thebrownbook,the
+blue book,thewhite bookandthegreen book.
+7.1 S3metho ds
+S3metho dscorresp ondtothewhite book.
+The concept inRofattributes ofanobjectallowsanexceptionally rich
+setofdata objects. S3metho dsmaketheclass attribute thedriverofan
+object-orien tedsystem. Itisanoptional system. Only ifanobjecthasaclass
+attribute doS3metho dsreally come intoeect.
+There aresome functions that aregeneric .Examples includeprint ,plot ,
+summary .These functions lookattheclass attribute oftheir rstargumen t.If
+that argumen tdoeshaveaclass attribute, then thegeneric function looksfora
+metho dofthegeneric function that matc hestheclass oftheargumen t.Ifsucha
+matc hexists, then themetho dfunction isused. Ifthere isnomatc hing metho d
+oriftheargumen tdoesnothaveaclass, then thedefault metho disused.
+Let's getspecic. Thelm(linear model)function returns anobjectofclass
+"lm" .Among themetho dsforprint areprint.lm andprint.default .The
+result ofacalltolmisprintedwithprint.lm .The result of1:10 isprinted
+withprint.default .
+S3metho dsaresimple andpowerful. Objects areprintedandplotted and
+summarized appropriately ,with noeort from theuser. Theuser only needs to
+knowprint ,plot andsummary .
+38
+7.1. S3 CIRCLE 7.TRIPPING ONOBJECT ORIENT ATION
+There isacost tothefreelunch.Thatprint isgeneric means that what
+youseeisnotwhat youget(sometimes). Intheprintingofanobjectyoumay
+seeanumberthat youwant|an R-squared forexample|but don't knowhow
+tograb that number.Ifyourmystery numberisinobj,then there areafew
+waystolookforit:
+print.default(obj )
+print(unclass(obj ))
+str(obj)
+Thersttwoprinttheobjectasifithadnoclass, thelastprintsanoutline of
+thestructure oftheobject. Youcanalsodo:
+names(obj)
+toseewhat comp onentstheobjecthas|this cangiveyouanoverview ofthe
+object.
+7.1.1 generic functions
+Once uponatime anewuserwasappropriately inquisitiv eandwantedtoknow
+howthemedian function worked.So,logically ,thenewuser typesthefunction
+name toseeit:
+>median
+function (x,na.rm=FALSE)
+UseMethod("median ")
+<environment: namespace:stats>
+Thenewuser then asks, \HowcanIndthecodeformedian ?"
+The answ eris,\Youhave found thecodeformedian ."median isageneric
+function asevidenced bytheappearance ofUseMethod .What thenew user
+mean ttoaskwas,\HowcanIndthedefault metho dformedian ?"
+Themost sure-re wayofgetting themetho distousegetS3method :
+getS3method('medi an','default')
+7.1.2 metho ds
+Themethods function lists themetho dsofageneric function. Alternativ ely
+givenaclass itreturns thegeneric functions that havemetho dsfortheclass.
+This statemen tneeds abitofqualication:
+Itislisting what iscurren tlyattac hedinthesession.
+Itislooking atnames|it willlistobjects intheformat ofgeneric.class .
+Itisreasonably smart, butitcanbefooled intolisting anobjectthat is
+notreally ametho d.
+39
+7.2. S4 CIRCLE 7.TRIPPING ONOBJECT ORIENT ATION
+Alistofallmetho dsformedian (inthecurren tsession) isfound with:
+methods(median)
+andmetho dsforthe"factor" class arefound with:
+methods(class='fa ctor')
+7.1.3 inheritance
+Classes caninherit from other classes. Forexample:
+>class(ordered(c(9 0,90,100,110,110)))
+[1]"ordered" "factor"
+Class"ordered" inherits from class"factor" .Ordered factors arefactors, but
+notallfactors areordered. Ifthere isametho dfor"ordered" foraspecic
+generic, then that metho dwillbeused when theargumen tisofclass"ordered" .
+However,ifthere isnotametho dfor"ordered" butthere isonefor"factor" ,
+then themetho dfor"factor" willbeused.
+Inheritance should bebased onsimilarit yofthestructure oftheobjects,
+notsimilarit yoftheconcepts fortheobjects. Matrices anddata frames have
+similar concepts. Matrices areaspecialization ofdata frames (allcolumns ofthe
+same type),soconceptually inheritance makessense. However,matrices and
+data frames havecompletely dieren timplemen tations, soinheritance makes
+nopractical sense. Thepowerofinheritance istheabilit yto(essen tially) reuse
+code.
+7.2 S4metho ds
+S4metho dscorresp ondtothegreen book.
+S3metho dsaresimple andpowerful, andabitadhoc.S4metho dsremo ve
+theadhoc|they aremore strict andmore general. TheS4metho dstechnology
+isastier rope|when youhang yourself with it,itsurely willnotbreak. But
+that isbasically thepointofit|the programmer isrestricted inorder tomake
+theresults more dependable fortheuser. That's theplan anyway,anditoften
+works.
+7.2.1 multiple dispatc h
+One feature ofS4metho dsthat ismissing from S3metho ds(and manyother
+object-orien tedsystems) ismultiple dispatc h.Supp oseyouhaveanobjectof
+class"foo" andanobjectofclass"bar" andwanttoperform functionfunon
+these objects. Theresult of
+fun(foo, bar)
+40
+7.2. S4 CIRCLE 7.TRIPPING ONOBJECT ORIENT ATION
+Figure 7.1:TheSimoniacs bySandro Botticelli.
+mayormaynottobedieren tfrom
+fun(bar, foo)
+Ifthere aremanyclasses ormanyargumen tstothefunction that aresensitiv e
+toclass, there canbebigcomplications. S4metho dsmakethiscomplicated
+situation relativ elysimple.
+WesawthatUseMethod creates anS3generic function. S4generic functions
+arecreated withstandardGeneric .
+7.2.2 S4structure
+S4isquite strict aboutwhat anobjectofaspecic class lookslike.Incontrast
+S3metho dsallowyoutomerely addaclass attribute toanyobject|as long
+asametho ddoesn't runintoanything untoward, there isnopenalt y.Akey
+advantage instrictly regulating thestructure ofobjects inaparticular class is
+that those objects canbeused inCcode(via the.Call function) without a
+copious amoun tofchecking.
+Along with thestrictures onS4objects comes some new vocabulary .The
+pieces (comp onents)oftheobjectarecalled slots.Slots areaccessed bythe8@8
+operator. Soifyouseecodelike:
+41
+7.3. NSPACES CIRCLE 7.TRIPPING ONOBJECT ORIENT ATION
+x@Data
+that isanindication thatxisanS4object.
+Bynowyouwillhavenoticed that S4metho dsaredrivenbytheclass
+attribute just asS3metho dsare. This commonalit yperhaps makesthetwo
+systems appearmore similar than they are.InS3thedecision ofwhat metho d
+touseismade inreal-time when thefunction iscalled. InS4thedecision is
+made when thecodeisloaded intotheRsession|there isatable that charts
+therelationships ofalltheclasses. TheshowMethods function isuseful tosee
+thelayout.
+S4hasinheritance, asdoesS3.But, again, there aresubtle dierences. For
+example, aconcept inS4that doesn't resonate inS3iscontains .IfS4class"B"
+hasalloftheslots that areinclass"A",then class"B"contains class"A".
+7.2.3 discussion
+Will S4evertotally supplan tS3? Highly unlik ely.One reason isbackward
+compatibilit y|there isawhole lotofcodethat depends onS3metho ds.Addi-
+tionally ,S3metho dsareconvenien t.Itisveryeasy tocreate aplot orsummary
+metho dforaspecic computation (asimulation, perhaps) that expedites anal-
+ysis.
+Sobasically S3and S4servedieren tpurp oses. S4isuseful forlarge,
+industrial-strength projects. S3isuseful foradhocprojects.
+Ifyouareplanning onwriting S4(orevenS3)metho ds,then youcande-
+nitely doworsethan getting thebookSoftwar eforData Analysis: Programming
+with RbyJohn Cham bers.Don't misunderstand: thisbookcanbeuseful even
+ifyouarenotusing metho ds.
+Twostylesofobjectorien tation arehardly enough. Luckily,there arethe
+OOP,R.oo andproto packages that provide three more.
+7.3 Namespaces
+Namespaces don't really havemuchtodowith object-orien tation. Tothecasual
+userthey arerelated inthat bothseem likeanunwarran tedcomplication. They
+arealsorelated inthesense that that seeming complexit yisactually simplicit y
+indisguise.
+Supp osethat twopackages haveafunction calledrecode .Youwanttouse
+aparticular oneofthese two.There isnoguaran teethat theoneyouwantwill
+alwaysberstonthesearc hlist.That istheproblem forwhichnamespaces are
+theansw er.
+Tounderstand namespaces, let's consider ananalogy ofafunction that re-
+turns anamed list. There aresome things intheenvironmen tofthefunction
+that yougettosee(the comp onentsthat itreturns), andpossibly some objects
+that youcan't see(the objects created inthefunction butnotreturned). A
+42
+7.3. NSPACES CIRCLE 7.TRIPPING ONOBJECT ORIENT ATION
+namespace exportsoneormore objects sothat they arevisible, butmayhave
+some objects that areprivate.
+Thewaytospecify anobjectfrom aparticular namespace istousethe8::8
+operator:
+>stats::coef
+function (object, ...)
+UseMethod("coef")
+<environment: namespace:stats>
+This operator fails ifthename isnotexported:
+>stats::coef.defau lt
+Error:'coef.default' isnotanexported object
+from'namespace:stats'
+There arewaystogetthenon-exp orted objects, butyouhavetopromise notto
+usethem except toinspecttheobjects. Youcanuse8:::8orthegetAnywhere
+function:
+>stats:::coef.defa ult
+function (object, ...)
+object$coefficien ts
+<environment: namespace:stats>
+>getAnywhere('coef .default')
+Asingleobjectmatching 'coef.default' wasfound
+Itwasfoundinthefollowing places
+registered S3methodforcoeffromnamespace stats
+namespace:stats
+withvalue
+function (object, ...)
+object$coefficien ts
+<environment: namespace:stats>
+There canbeproblems ifyouwanttomodifyafunction that isinanamespace.
+FunctionsassignInNamespace andunlockBinding canbeuseful inthisregard.
+Theexistence ofnamespaces, S3metho ds,andespecially S4metho dsmakes
+Rmore suitable tolarge, complex applications than itwould otherwise be.But
+Risnotthebesttoolforeveryapplication. And itdoesn't trytobe.Oneofthe
+design goals ofRistomakeiteasy tointeract with other softwaretoencourage
+thebesttoolbeing used foreachtask.
+43
+Circle 8
+Believing ItDoesas
+Intended
+InthisCircle wecame across thefraudulen t|eac htrapp edintheir owname.
+This Circle iswider and deeperthan onemigh thope.Reasons forthis
+include:
+Backwards compatibilit y.There isroughly atwo-decade history ofcom-
+patibilit ytoworry about. Ifyouareanewuser, youwillthink that rough
+spotsshould besmoothed outnomatter what. Youwillthink dier-
+entlyifanewversion ofRbreaks yourcodethat hasbeenworking. The
+larger splintershavebeensanded down,butthisstillleavesanumberof
+anno yances toadjust to.
+Risused bothinteractiv elyandprogrammatically .There istension there.
+Afewfunctions makespecial arrangemen tstomakeinteractiv euseeasier.
+These functions tend tocause trouble ifused inside afunction. They can
+alsopromote false expectations.
+Rdoesalot.
+InthisCircle wewillmeet alarge numberofghosts, chimeras anddevils. These
+canoften beexorcised using thebrowser function. Putthecommand:
+browser()
+atstrategic locations inyourfunctions inorder toseethestate ofplayatthose
+points.Aclose alternativ eis:
+recover()
+44
+CIRCLE 8.BELIEVING ITDOES ASINTENDED
+browser allowsyoutolookattheobjects inthefunction inwhichthebrowser
+callisplaced.recover allowsyoutolookatthose objects aswellastheobjects
+inthecaller ofthat function andallother activ efunctions.
+Liberaluseofbrowser ,recover ,catandprint while youarewriting func-
+tions allowsyourexpectations andR'sexpectations toconverge.
+Averyhandy wayofdoing thisiswithtrace .Forexample, ifbrowsing at
+theendofthemyFun function isconvenien t,then youcando:
+trace(myFun, exit=quote(brows er()))
+Youcancustomize thetracing with acommand like:
+trace(myFun, edit=TRUE)
+Ifyourunintoanerror, then debugging istheappropriate action. There areat
+least twoapproac hestodebugging. Therstapproac histolookatthestate of
+playatthepointwhere theerror occurs. Prepare forthisbysetting theerror
+option. Thetwomost likelychoices are:
+options(error=rec over)
+or
+options(error=dum p.frames)
+The dierence isthat withrecover youareautomatically thrownintodebug
+mode,butwithdump.frames youstart debugging byexecuting:
+debugger()
+Ineither case youarepresen tedwith aselection oftheframes (environmen ts)
+ofactiv efunctions toinspect.
+Youcanforce Rtotreat warnings aserrors with thecommand:
+options(warn=2)
+Ifyouwanttosettheerror option inyour.First function, then youneed a
+tricksince noteverything isinplace atthetime that.First isexecuted:
+options(error=exp ression(recover()))
+or
+options(error=exp ression(dump.frames()))
+The second idea fordebugging istostep through afunction asitexecutes. If
+youwanttostep through functionmyfun ,then do:
+debug(myfun)
+andthen execute astatemen tinvolvingmyfun .When youaredone debugging,
+do:
+undebug(myfun)
+Amore sophisticated version ofthissort ofdebugging maybefound inthe
+debug package.
+45
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1 Ghosts
+8.1.1 dierences with S+
+There areanumberofdierences betweenRandS+.
+Thedierences aregivenintheRFAQ(http://cran.r-pro ject.org/faqs.h tml).
+Afew, butnotall,arealsomentioned here.
+8.1.2 packagefunctionalit y
+Supp oseyouhaveseen acommand that youwanttotry,suchas
+fortune('dog')
+Youtryitandgettheerror message:
+Error:couldnotfindfunction "fortune"
+You,ofcourse, think that yourinstallation ofRisbroken.Idon't haveevidence
+that yourinstallation isnotbroken,butmore likelyitisbecause yourcurren t
+Rsession doesnotinclude thepackagewhere thefortune function lives.You
+cantry:
+require(fortune)
+Whereup onyougetthemessage:
+Errorinlibrary(package ,...):
+thereisnopackage called'fortune'
+The problem isthat youneed toinstall thepackageontoyourcomputer. As-
+suming youareconnected totheinternet, youcandothiswith thecommand:
+install.packages( 'fortune')
+After abitofapream ble,youwillget:
+Warning message:
+package 'fortune' isnotavailable
+Nowtheproblem isthatwehavethewrong name forthepackage. Capitalization
+aswellasspelling isimportan t.Thesuccessful incan tation is:
+install.packages( 'fortunes')
+require(fortunes)
+fortune('dog')
+Installing thepackageonly needs tobedone once, attac hing thepackagewith
+therequire function needs tobedone ineveryRsession where youwantthe
+functionalit y.
+Thecommand:
+library()
+showsyoualistofpackages that areinyourstandard location forpackages.
+46
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Figure 8.1:Thefalsiers: alchemists bySandro Botticelli.
+8.1.3 precedence
+Itisasintoassume that codedoeswhat isintended. Thefollowing command
+clearly intends toproduce asequence from onetoonelessthan n:
+1:n-1
+From thepresence oftheexample here, youshould infer that isnotwhat you
+get.
+Here isanother waytomakeasimilar mistak e:
+10^2:6
+Ifyoudo:
+-2.3^4.5
+youwillgetanice, pleasing number.Ifyoudo:
+x<--2.3
+x^4.5
+youwillgetnot-a-n umber,written asNaN.While youmaythink thetwocom-
+mands arethesame, they arenot|op erator precedence hasstruc kagain. Ifthe
+latter operation isreally what youwant,then youneed todo:
+47
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+as.complex(x) ^4.5
+Payatten tion totheprecedence ofoperators. Ifyouareatallunsure, then
+paren theses canforce thecommand todowhat youwant.
+YoucanseeR'sprecedence table bydoing:
+>?Syntax
+8.1.4 equalit yofmissing values
+Thefollowing cannotpossibly worktotestformissing values inx:
+x==NA
+Whynot?
+Here's ahint:
+3==c(3,1,3,NA)
+Instead, do:
+is.na(x)
+8.1.5 testing NULL
+Likewise there isis.null fortesting ifanobjectisNULL .
+>xnull<-NULL
+>xnull==NULL
+logical(0)
+>xnotnull <-42
+>xnotnull ==NULL
+logical(0)
+>is.null(xnull)
+[1]TRUE
+However,itisoften better totestifthelength oftheobjectiszero|NULL isnot
+theonly zero length object.
+>is.null(numeric(0 ))
+[1]FALSE
+48
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.6 mem bership
+Another common wish forthe8==8operator istoindicate whichelemen tsof
+avector areinsome other vector. Ifyouareluckyitwillwork, butgenerally
+doesnot. (Actually youwillbeunluc kyifyouarewriting afunction anditdoes
+work|y ou'll miss thebugyoujustputinyourfunction.)
+>x1<-10:1
+>x1==c(4,6)
+[1]FALSEFALSEFALSEFALSEFALSEFALSETRUEFALSE
+[9]FALSEFALSE
+Thecommand abovefails togivethelocations inx1that areequal to4and6.
+Use8%in%8forsituations likethis:
+>x1%in%c(4,6)
+[1]FALSEFALSEFALSEFALSETRUEFALSETRUEFALSE
+[9]FALSEFALSE
+8.1.7 multiple tests
+Ifyouwanttodomultiple tests, youdon't gettoabbreviate. With thex1from
+justabove:
+>x1==4|6
+[1]TRUETRUETRUETRUETRUETRUETRUETRUETRUE
+[10]TRUE
+>x1==(4|6)
+[1]FALSEFALSEFALSEFALSEFALSEFALSEFALSEFALSE
+[9]FALSETRUE
+Inasecond we'lldiscuss what isreally happ ening inthese twostatemen ts.It
+would beagoodexercise foryoutotrytogure itoutonyourown.
+Butrst, thewaytoactually dotheintended operation is:
+>x1==4|x1==6
+[1]FALSEFALSEFALSEFALSETRUEFALSETRUEFALSE
+[9]FALSEFALSE
+or(better forthemore general case):
+>x1%in%c(4,6)
+[1]FALSEFALSEFALSEFALSETRUEFALSETRUEFALSE
+[9]FALSEFALSE
+Now,what areourbogus attempts doing?
+x1==4|6
+49
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+isevaluated as
+(x1==4)|6
+(otherwise thetwostatemen tswould getthesame answ er).This laststatemen t
+isthesame as:
+6|(x1==4)
+since \or" iscomm utativ e.The8|8operator coerces itsargumen tstobelogical.
+Anynon-zero numbercoerces toTRUE ,and soallelemen tsoftheresulting
+command willbeTRUE since 6iscoerced toTRUE .
+The other statemen thasadieren tresult butfollowsasomewhat similar
+cascade ofcoercions.
+4|6
+isthesame as
+TRUE|TRUE
+whichisTRUE .Sothen Risbeing asked:
+x1==TRUE
+The8==8operator coerces nottological, buttothemost general type,numeric
+inthiscase.TRUE coerced tonumeric is1.
+8.1.8 coercion
+Automatic coercion isagoodthing. However,itcancreate surprises. There is
+anordering ofthemodesforcoercion|most specic toleast specic|as shown
+below.
+>modes<-c('logical', 'numeric', 'complex', 'character')
+>modarr<-array(vector('lis t',16),c(4,4), list(modes,mode s))
+>for(iin1:4)for(jin1:4)f
++modarr[[i, j]]<-c(vector(modes[i ],0),
++vector(modes[j], 0))
++g
+>modarr
+logical numeric complex character
+logical Logical,0 Numeric,0 Complex,0 Character,0
+numeric Numeric,0 Numeric,0 Complex,0 Character,0
+complex Complex,0 Complex,0 Complex,0 Character,0
+character Character,0 Character,0 Character,0 Character,0
+50
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+This example leavesouttheinteger subtypeofnumeric. Integers gobetween
+logical and(general) numeric. Youarehighly unlik elytoneed tocare (oreven
+know)ifanobjectisstored asinteger orthemore general numeric.
+Here isthefulllistofatomic (storage) modesfrom most specic tomost
+general:
+logical
+integer
+numeric
+complex
+character
+Commen t:This example uses amatrix that isalist. Notice theuseof8[[8
+forthematrix. Some people arriv eatsuchamatrix byacciden t|an eventthat
+maylead toconfusion.
+8.1.9 comparison under coercion
+Becareful when doing comparisons where coercion migh tcome intoplay:
+>50<'7'
+[1]TRUE
+8.1.10 paren theses intherightplaces
+Youwanttoputparen theses intherightplaces sothat itisthedesired opera-
+tions that aredone:
+>length(mylist !=1)
+Error:(list)objectcannotbecoerced todouble
+>length(mylist) !=1
+[1]TRUE
+Inthisexample weareluckyenough togetanerror soweknowsomething is
+wrong.
+8.1.11 excluding named items
+Negativ esubscripts allowyoutosaywhichitems youdon't want:
+>xlet<-1:6
+>names(xlet) <-letters[1:6]
+>xlet[-c(3,4)]
+abef
+1256
+51
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Sometimes youwould liketodotheexcluding with names rather than numbers,
+butthisdoesnotwork(naturally enough):
+>xlet[-c('c', 'd')]
+Errorin-c("c", "d"):Invalid argument tounaryoperator
+There isareasonable waytogetthebehaviorthough:
+>xlet[!(names(xlet )%in%c('c','d'))]
+abef
+1256
+Actually paren theses arenotneeded:
+>xlet[!names(xlet) %in%c('c','d')]
+abef
+1256
+Butitseems likemagic tomethat thisworks|I feelmore comfortable with the
+paren theses. Uwe'sMaxim (page 20)comes intothisforme: Ineed tothink
+lesswhen theparen theses arethere.
+The negativ eofacharacter string doesworkinsome circumstances in
+subset ,butnote that there arewarnings coming upaboutusingsubset .
+8.1.12 excluding missing values
+>xna<-c(1,NA,3,2,4,2)
+>xna[xna ==2]
+[1]NA22
+Asyoucansee,ifyouonly wantedthevalues that areforsure2,then youwould
+bedisapp ointed. Ifthat iswhat youwant,then youneed tosayso:
+>xna[!is.na(xna) &xna==2]
+[1]22
+Ormore compactly:
+>xna[which(xna ==2)]
+[1]22
+8.1.13 negativ enothing issomething
+>x2<-1:4
+>x2[-which(x2 ==3)]
+[1]124
+Thecommand abovereturns allofthevalues inx2notequal to3.
+52
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>x2[-which(x2 ==5)]
+numeric(0)
+The hopeisthat theabovecommand returns allofx2since noelemen tsare
+equal to5.Realit ywilldash that hope.Instead itreturns avector oflength
+zero.
+There isasubtle dierence betweenthetwofollowing statemen ts:
+x[]
+x[numeric(0)]
+Subtle dierence intheinput, butnosubtlet yinthedierence intheoutput.
+There areatleast three possible solutions fortheoriginal problem.
+out<-which(x2 ==5)
+if(length(out)) x2[-out] elsex2
+Another solution istouselogical subscripts:
+x2[!(x2 %in%5)]
+Oryoucan, inasense, workbackwards:
+x2[setdiff(seq along(x2), which(x2 ==5))]
+8.1.14 butzero canbenothing
+>x3<-1:3
+>x3[c(0, 4)]<-c(-1,9)
+Warning message: numberofitemstoreplace isnot
+amultiple ofreplacement length
+>x3
+[1]123-1
+This isaninstance where youdon't wanttoignore thewarning message because
+thefourth elemen tdoesnotgetitsintended value.
+8.1.15 something plus nothing isnothing
+>1+NULL
+numeric(0)
+This computation goesthrough without error orwarning. Itworks because the
+recycling rule saysthat thelength oftheresult should be0.Sometimes you
+would prefer tobewarned.
+53
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.16 sum ofnothing iszero
+Some people aresurprised by:
+>sum(numeric(0))
+[1]0
+And perhaps evenmore by:
+>prod(numeric(0))
+[1]1
+Thecounterparts inlogicland are:
+>any(logical(0))
+[1]FALSE
+>all(logical(0))
+[1]TRUE
+Surprising ornot,these arethecorrect answ ers.Wedemand that
+sum(c(1, 3,5,7))
+equals
+sum(c(1, 3))+sum(c(5, 7))
+Soweshould alsodemand that itequals:
+sum(c(1, 3,5,7))+sum(numeric(0))
+Similar behavior occurs with minandmax, although there arewarnings with
+these:
+>min(NULL)
+[1]Inf
+Warning message:
+Inmin(NULL) :nofinitearguments tomin;returning Inf
+>max(NULL)
+[1]-Inf
+Warning message:
+Inmax(NULL) :nofinitearguments tomax;returning -Inf
+8.1.17 themetho dsshue
+While amatrix andadata frame canrepresen tthesame data andmaylook
+thesame, they aredieren t.Inparticular, generic functions cananddogive
+dieren tresults.
+Let's start bymaking some data:
+54
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>mat1<-cbind(1:3, 7:9)
+>df1<-data.frame(1:3, 7:9)
+Now,notice:
+>mean(mat1)
+[1]5
+>mean(df1)
+X1.3X7.9
+28
+>median(mat1)
+[1]5
+>median(df1)
+[1]28
+>sum(mat1)
+[1]30
+>sum(df1)
+[1]30
+Theexample ofmedian with data frames isatroublesome one. AsofRversion
+2.13.0 there isnotadata frame metho dofmedian .Inthisparticular case it
+getsthecorrect answ er,butthat isanacciden t.Inother cases yougetbizarre
+answ ers.
+Unless anduntilthere issuchametho d,youcangetwhat Iimagine you
+expectwith:
+>sapply(df1, median)
+X1.3X7.9
+28
+8.1.18 rstmatc honly
+match only matc hestherstoccurrence:
+>match(1:2, rep(1:4, 2))
+[1]12
+Ifthat isnotwhat youwant,then change what youdo:
+>which(rep(1:4, 2)%in%1:2)
+[1]1256
+8.1.19 rstmatc honly (reprise)
+Ifnames arenotunique, then subscripting with characters willonly giveyou
+therstmatc h:
+55
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>x4<-c(a=1,b=2,a=3)
+>x4["a"]
+a
+1
+Ifthisisnotthebehavioryouwant,then youprobably wanttouse8%in%8:
+>x4[names(x4) %in%'a']
+aa
+13
+8.1.20 partial matc hing canpartially confuse
+Partial matc hing happ ensinfunction calls andsome subscripting.
+Thetwofollowing calls arethesame:
+>mean(c(1:10, 1000),trim=.25)
+[1]6
+>mean(c(1:10, 1000),t=.25)
+[1]6
+Thetrim argumen tistheonly argumen ttomean.default whichstarts with
+\t"soRknowsthat youmean t\trim" when youonly said\t". This ishelpful,
+butsome people wonder ifitistoohelpful byahalf.
+>l1<-list(aa=1:3, ab=2:4, b=3:5,bb=4:6, cc=5:7)
+>l1$c
+[1]567
+>l1[['c']]
+NULL
+>l1[['c', exact=FALSE]]
+[1]567
+>l1$a
+NULL
+>myfun1<-function(x, trim=0, treat=1)f
++treat*mean(x, trim=trim)
++g
+>myfun1(1:4, tr=.5)
+Errorinmyfun1(1:4, tr=.05):
+argument 2matches multiple formalarguments
+The8$8operator alwaysallowspartial matc hing. The8[[8operator, which
+isbasically synon ymous with8$8onlists, doesnotallowpartial matc hing by
+default (inrecen tversions ofR).Anambiguous matc hresults inNULL forlists,
+butresults inanerror infunction calls. Themyfun1 example showswhyan
+error iswarran ted. Forthefulldetails onsubscripting, see:
+?Extract
+56
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Here aretherules forargumen tmatc hing infunction calls, butrstsome vocab-
+ulary: Aformal argument isoneoftheargumen tnames inthedenition ofthe
+function. Themean.default function has4formal argumen ts(x,trim ,na.rm
+and8...8).Atagisthestring used inacalltoindicate whichformal argumen t
+ismean t.Weused \t"asataginacalltomean (and hence tomean.default ).
+There isapartial matc hifallthecharacters ofthetagmatc hthestart ofthe
+formal argumen t.
+Ifatagmatc hesaformal argumen texactly ,then thetwoarebound.
+Unmatc hedtags arepartially matc hedtounmatc hedformal argumen ts.
+Anerror occurs ifanytagpartially matc hesmore than oneformal argu-
+mentnotalready bound.
+(Positional matc hing) Unmatc hedformal argumen tsarebound toun-
+named (notag) argumen tsinthecall, based ontheorder inthecall
+andoftheformal argumen ts.
+If8...8isamong theformal argumen ts,anyformal argumen tsafter
+8...8areonly matc hedexactly .
+If8...8isamong theformal argumen ts,anyunmatc hedargumen tsin
+thecall, tagged ornot,aretakenupbythe8...8formal argumen t.
+Anerror occurs ifanysupplied argumen tsinthecallareunmatc hed.
+Theplace where partial matc hing ismost likelytobiteyouisincalls that takea
+function asanargumen tandyoupass inadditional argumen tsforthefunction.
+Forexample:
+apply(xmat, 2,mean,trim=.2)
+Iftheapply function had anargumen tthat matc hedorpartially matc hed
+\trim", thenapply would getthetrim value, notmean .
+There aretwostrategies ingeneral usetoreduce thepossibilit yofsuch
+collisions:
+The apply family tends tohaveargumen tsthat areinallcapitals, and
+hence unlik elytocollide with argumen tsofother functions that tend to
+beinlowercase.
+Optimization functions tend toputthe8...8(whic hismean ttobegiven
+tothefunction thatisanargumen t)among therstofitsargumen ts.Thus
+additional argumen tstotheoptimizer (asopposed tothefunction being
+optimized) need tobegivenbytheir fullnames.
+Neither scheme iscompletely satisfactory|y oucanstillgetunexp ected colli-
+sions invarious ways.Ifyoudo(and yougure outwhat ishapp ening), then
+youcaninclude alloftheargumen tsinquestion inyourcall.
+57
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.21 nopartial matc hassignmen ts
+One ofthemost pernicious eects ofpartial matc hing inlistsisthat itcanfool
+youwhen making replacemen ts:
+>ll2<-list(aa=1:3, bb=4:6)
+>ll2$b
+[1]456
+>ll2$b<-7:9
+>ll2
+$aa
+[1]123
+$bb
+[1]456
+$b
+[1]789
+This applies todata frames aswell(data frames arelists, after all).
+8.1.22 catversus print
+Ifyouprint avector that doesnothavenames, there isanindication ofthe
+index oftherstelemen toneachline:
+>options(width=20)
+>1:10
+[1]12345
+[6]678910
+Alternativ ely,catjustprintsthecontentsofthevector:
+>cat(1:10)
+12345678910>
+Notice that there isnotanewline after theresults ofcat,youneed toaddthat
+yourself:
+cat(1:10, 'nn')
+There isamore fundamen taldierence betweenprint andcat|catactually
+interprets character strings that itgets:
+>xc<-'blahnnblahntblahnn'
+>print(xc)
+[1]"blahnnblahntblahnn"
+>cat(xc)
+blahnblah blah
+>
+58
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Table 8.1:Afewofthemost importan tbackslashed characters.
+character meaning
+nn backslash
+nn newline
+nt tab
+n" double quote (used when thisisthestring delimiter)
+n' single quote (used when thisisthestring delimiter)
+Strings aretwo-faced. One face iswhat thestring actually says(this iswhat
+catgivesyou). Theother faceisarepresen tation that allowsyoutoseeallof
+thecharacters|ho wthestring isactually built|this iswhatprint givesyou.
+Donotconfuse thetwo.
+Reread thisitem|it isimportan t.Importan tinthesense that ifyoudon't
+understand it,youaregoing towaste afeworders ofmagnitude more time
+fumbling around than itwould taketounderstand.
+8.1.23 backslashes
+Backslashes aretheescap echaracter forR(and forUnix andC).
+Since backslash doesn't mean backslash, there needs tobeawaytomean
+backslash. Quite logically that wayisbackslash-bac kslash:
+>cat('nn')
+n>
+Sometimes thetext requires abackslash after thetexthasbeeninterpreted. In
+theinterpretation eachpairofbackslashes becomes onebackslash. Backslashes
+growinpowersoftwo.
+There aretwoother verycommon characters involving backslash:ntmeans
+tabandnnmeans newline. Table 8.1showsthecharacters using backslash that
+youaremost likelytoencoun ter.Youcanseetheentirelistvia:
+?Quotes
+Note thatnchar (bydefault) givesthenumberoflogical characters, notthe
+numberofkeystrok esneeded tocreate them:
+>nchar('nn')
+[1]1
+8.1.24 internationalization
+Itmaysurprise some people, butnoteveryonewrites with thesame alphab et.
+Toaccoun tforthisRallowsstring encodings toinclude latin1 andUTF-8.
+59
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+There isalsothepossibilit yofusing dieren tlocales. The localecanaect
+theorder inwhichstrings aresorted into.
+Thefreedom ofmultiple string encodings andmultiple locales givesyouthe
+chance tospendhours confusing yourself bymixing them.
+Formore information, do:
+>?Encoding
+>?locales
+8.1.25 paths inWindo ws
+Quite unfortunately Windo wsusesthebackslash toseparate directories inpaths.
+Consider theRcommand:
+attach('C:ntmpnfoo')
+This isconfusing thetwofaces ofstrings. What that string actually contains is:
+C,colon, tab, m,p,formfeed, o,o.Nobackslashes atall.What should really
+besaidis:
+attach('C:nntmpnnfoo')
+However,inall(oratleast virtually all)cases Rallowsyoutouseslashes in
+place ofbackslashes inWindo wspaths|it doesthetranslation under thehood:
+attach('C:/tmp/fo o')
+Ifyoutrytocopyandpaste aWindo wspath intoR,you'll getastring (whic his
+wrong) along with some numberofwarnings aboutunrecognized escap es.One
+approac histopaste intoacommand like:
+scan('', '',n=1)
+8.1.26 quotes
+There arethree typesofquote marks, andacottage industry hasdevelopedin
+creating Rfunctions that include thestring \quote". Table 8.2lists functions
+that concern quoting invarious ways.Thebquote function isgenerally the
+most useful|it issimilar tosubstitute .
+Double-quotes andsingle-quotes|essen tially synon ymous|are used tode-
+limit character strings. Ifthequote that isdelimiting thestring isinside the
+string, then itneeds tobeescap edwith abackslash.
+>'"'
+[1]"n""
+Abackquote (also called \backtick")isused todelimit aname, often aname
+that breaks theusual naming conventions ofobjects.
+60
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Table 8.2:Functions todowith quotes.
+function use
+bquote substitute items within.()
+noquote printstrings without surrounding quotes
+quote language objectofunevaluated argumen t
+Quote alias forquote
+dQuote adddouble leftandrightquotes
+sQuote addsingle leftandrightquotes
+shQuote quote foroperating system shell
+>'3469'
+[1]"3469"
+>834698
+Error:Object"3469"notfound
+>828<-2.5
+>828+828
+[1]5
+8.1.27 backquotes
+Backquotes areused fornames oflistcomp onentsthat arereserv edwords and
+other \illegal" names. Noneed topanic.
+>ll3<-list(A=3, NA=4)
+Error:unexpected '='in"ll3<-list(A=3, NA="
+>ll3<-list(A=3, 'NA'=4)
+>ll3<-list(A=3, 'NA'=4, 'for'=5)
+>ll3
+$A
+[1]3
+$8NA8
+[1]4
+$8for8
+[1]5
+>ll3$'for'
+[1]5
+Although thecomp onentnames areprintedusing backquotes, youcanaccess
+thecomp onentsusing either oftheusual quotes ifyoulike.Theinitial attempt
+tocreate thelistfailsbecause theNAwasexpected tobethedata forthesecond
+(nameless) comp onent.
+61
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.28 disapp earing attributes
+Most coercion functions strip theattributes from theobject. Forexample, the
+result of:
+as.numeric(xmat)
+willnotbeamatrix. Acommand thatdoesthecoercion butkeepstheattributes
+is:
+storage.mode(xmat )<-'numeric'
+8.1.29 disapp earing attributes (reprise)
+>x5<-1
+>attr(x5, 'comment') <-'thisisx5'
+>attributes(x5)
+$comment
+[1]"thisisx5"
+>attributes(x5[1])
+NULL
+Subscripting almost alwaysstrips almost allattributes.
+Ifyouwanttokeepattributes, then onesolution istocreate aclass foryour
+objectandwrite ametho dforthat class forthe8[8function.
+8.1.30 when space matters
+Spaces, ortheir lack,seldom makeadierence inRcommands. Except that
+spaces canmakeitmucheasier forhumans toread (recall Uwe'sMaxim, page
+20).
+There isaninstance where space doesmatter totheRparser. Consider the
+statemen t:
+x<-3
+This could beinterpreted aseither
+x<-3
+or
+x<-3
+This should prompt youtousethespacebar onyourkeyboard. Most importan t
+tomakecodelegible tohumans istoputspaces around the8<-8operator. Un-
+fortunately thatdoesnotsolvetheproblem inthisexample|it isincomparisons
+that thespace isabsolutely required.
+62
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.31 multiple comparisons
+0<x<1
+seems likeareasonable waytotestifxisbetween0and1.Rdoesn't think so.
+Thecommand that Ragrees with is:
+0<x&x<1
+8.1.32 name masking
+BydefaultTandFareassigned toTRUE andFALSE ,respectively.However,they
+canbeused asobjectnames (but inS+they cannotbe).This leads totwo
+suggestions:
+1.Itisextremely goodpractice touseTRUE andFALSE rather thanTandF.
+2.Itisgoodpractice toavoidusingTandFasobjectnames inorder notto
+collide with those that failed tofollowsuggestion 1.
+Itisalso advisable toavoidusing thenames ofcommon functions asobject
+names. Twofavorites arecandt.
+And don't callyourmatrixmatrix ,see:
+fortune('dog')
+Usually masking objects ismerely confusing. However,ifyoumask apopular
+function name with yourownfunction ,itcanverge onsuicidal.
+>c<-function(x) x*100
+>par(mfrow=c(2, 2))
+Errorinc(2,2):unusedargument(s) (2)
+Ifyougetanextraordinarily strange error, itmaybeduetomasking. Evasive
+action after thefactincludes:
+find('c')
+ifyouknowwhichfunction istheproblem. Tondtheproblem, youcantry:
+conflicts(detail= TRUE)
+Another possibilit yforgetting outofjailistostart Rwith--vanilla .
+8.1.33 more sorting than sort
+Theorder function isprobably what youarelooking forwhensort doesn't do
+thesorting that youwant.Uses oforder include:
+sorting therowsofamatrix ordata frame.
+sorting onevector based onvalues ofanother.
+breaking tieswith additional variables.
+63
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.34 sort.list notforlists
+Donotbethinking thatsort.list istosortlists. Yousilly fool.
+Infactsorting doesn't workonlists:
+>sort(as.list(1:20 ))
+Errorinsort.int(x, na.last =na.last, ...):
+'x'mustbeatomic
+>sort.list(as.list (1:20))
+Errorinsort.list(as.li st(1:20)):'x'mustbeatomic
+Haveyoucalled'sort'onalist?
+Ifyouhaveliststhat youwantsorted insome way,you'll probably need towrite
+yourownfunction todoit.
+8.1.35 searc hlistshue
+attach andload areverysimilar inpurp ose,butdieren tineect.attach
+creates anewitem inthesearc hlistwhileload puts itscontentsintotheglobal
+environmen t(the rstplace inthesearc hlist).
+Oftenattach isthebetter approac htokeepgroups ofobjects separate.
+However,ifyouchange directory intoalocation andwanttohavetheexisting
+.RData ,thenload isprobably what youwant.
+Here isascenario (that youdon't want):
+There exists a.RData indirectory project1 .
+Youstart Rinsome other directory andthen change directory toproject1 .
+Theglobal environmen tisfrom theinitial directory .
+Youattac h.RData (fromproject1 ).
+Youdosome work,exitandsavetheworkspace.
+Youhavejustwipedouttheoriginal.RData inproject1 ,losing thedata
+that wasthere.
+8.1.36 source versus attac horload
+Bothattach andload putRobjects ontothesearc hlist.Thesource function
+doesthat aswell,butwhen thestarting pointiscodetocreate objects rather
+than actual objects.
+There areconventions totrytokeepstraigh twhichyoushould do.Files
+ofRcodeareoften theextension \.R".Other extensions forthisinclude \.q",
+\.rt",\.Rscript ".
+Extension forlesofRobjects include \.rda "and\.RData ".
+64
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.37 string notthename
+Ifyouhaveacharacter string that contains thename ofanobjectandyouwant
+theobject, then useget:
+funs<-c('mean', 'median')
+get(funs[2])(data )
+Ifyoufoundas.name andthough tthat would solveyourproblem, youwere
+rightbutyouneed onemore step:
+eval(as.name(funs [2]))(data)
+8.1.38 getacomp onent
+Thegetfunction isextremely powerful, butitisnotclairv oyant.Ifyousay:
+get('myobj$comp')
+itthinks (quite rightly)youareasking foranobjectnamed 'myobj$comp'. If
+youwantthecomp comp onentofmyobj ,youhavetosay:
+get('myobj')$comp
+8.1.39 string notthename (encore)
+Ifyouhaveacharacter string that contains thename ofacomp onentthat you
+wanttoextract from alist,then youcannotusethe8$8operator. Youneed
+touse8[[8:
+>mylist<-list(aaa=1:5, bbb=letters)
+>subv<-'aaa'
+>mylist$subv
+NULL
+>#thenextthreelinesareallthesame
+>mylist$aaa
+[1]12345
+>mylist[['aaa']]
+[1]12345
+>mylist[[subv]]
+[1]12345
+8.1.40 string notthename (yetagain)
+Ifyoucreate acharacter string withpaste andyouwantthat tobethename
+ofanobject, youcannotusethat ontheleftofanassignmen t:
+>paste('x', 1,sep='') <-3:5
+Error:Targetofassignment expands tonon-language object
+65
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Butassign willdothis:
+for(iin1:n)assign(paste('obj ',i,sep='.'), mylist[[i]])
+WARNING: Anoperation likethiscanland youinCircle 3([page 17]failing to
+vectorize|this example isanti-vectorizing) and/or theheresy ofCircle 6(page
+35).
+Aswehavejustseen withget,assigning toaname like'myobj$comp' is
+notgoing togetyouwhere youwanttogo|it willcreate anobjectwith anon-
+standard name rather than modifying thecomp comp onentofmyobj .Create a
+copyoftheobject, change thecomp onentinthecopy,then assign thename to
+thecopy.
+8.1.41 string notthename (still)
+Aformulacaneasily becreated outofacharacter string:
+>myvars<-paste('V', 1:9,sep='')
+>myvars
+[1]"V1""V2""V3""V4""V5""V6""V7""V8""V9"
+>as.formula(paste( 'y~',paste(myvars[c(3 ,5,8)],
++collapse=' +')))
+y~V3+V5+V8
+8.1.42 name nottheargumen t
+Youmaywanttoproduce aplot orother output that states thedataset that
+wasused. Youmigh ttrysomething like:
+myfun<-function(x, ...)
+f
+plot(x, main=x, ...)
+g
+Butthat isgoing toproduce alessthan pleasing main title. Thesubstitute
+function along withdeparse isprobably what youarelooking for.
+myfun2<-function(x, ...)
+f
+plot(x, main=deparse(sub stitute(x)),...)
+g
+66
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.43 unexp ected else
+Error:unexpected 'else'in"else"
+Ifyouaren't expecting 'else' in'else', then where would youexpectit?
+While youmaythink thatRisludicrous forgiving yousuchanerror message,
+Rthinks youareevenmore ludicrous forexpecting what youdidtowork.
+Rtakesinput untilitgets acomplete statemen t,evaluates that statemen t,
+then takesmore input. Here ishowtogetthat error:
+if(any(abs(x) >1))atan(x)
+elseasin(x)
+When Rgets totheendoftherst line, ithasaperfectly complete statemen t
+soitevaluates it.Nowitnds astatemen tstarting with 'else'|this makesno
+sense. Prop erformatting isthekey.Ifitisconvenien t,youcanputthewhole
+statemen tononeline:
+if(any(abs(x) >1))atan(x) elseasin(x)
+Alternativ ely,usecurly braces (and awell-placed 'else'):
+if(any(abs(x) >1))f
+atan(x)
+gelsef
+asin(x)
+g
+8.1.44 dropping dimensions
+>xmat<-array(1:4, c(2,2))
+>xmat[1,] #simplevector, notamatrix
+[1]13
+>xmat[1, ,drop=FALSE] #stillamatrix
+[,1][,2]
+[1,] 13
+Bydefault dimensions ofarraysaredropp edwhen subscripting makesthedi-
+mension length 1.Subscripting withdrop=FALSE overrides thedefault.
+NOTE: Failing tousedrop=FALSE inside functions isamajorsource ofbugs.
+Youonly testthefunction when thesubscript haslength greater than 1.The
+function failsonce ithitsasituation where thesubscript islength 1|somewhere
+downstream amatrix isexpected andthere isasimple vector there instead.
+NOTE: Failing tousedrop=FALSE inside functions isamajorsource ofbugs.
+67
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.45 drop data frames
+Thedrop function hasnoeect onadata frame. Ifyouwantdropping tobe
+done inadata frame, youneed tousethedrop argumen tinsubscripting.
+Dropping indata frames canbesurprising (but itislogical).
+>xdf<-data.frame(a=1: 2,b=c('v', 'w'))
+>xdf[1,] #dataframe
+ab
+11v
+>drop(xdf[1,]) #dataframe
+ab
+11v
+>xdf[1,,drop=TRUE] #list
+$a
+[1]1
+$b
+[1]v
+Levels: vw
+>xdf[,1] #numeric vector
+[1]12
+>xdf[,1,drop=FALSE] #dataframe
+a
+11
+22
+>drop(xdf[, 1,drop=FALSE]) #dataframe
+a
+11
+22
+8.1.46 losing rownames
+Therownames ofadata frame arelostthrough dropping:
+>xdf2<-data.frame(a=1:4, b=42:45,
++row.names=LETTE RS[1:4])
+>xdf2[,1]
+[1]1234
+>as.matrix(xdf2)[, 1]
+ABCD
+1234
+Coercing toamatrix rstwillretain therownames, butpossibly attheexpense
+ofnotgetting therightvalues ifthecolumn typesofthedata frame aremixed.
+>xdf2b<-data.frame(a=1:4 ,b=letters[21:24],
++row.names=LETTE RS[1:4])
+68
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>as.matrix(xdf2b)[ ,1]
+ABCD
+"1""2""3""4"
+>drop(as.matrix(xd f2b[,1,drop=FALSE]))
+ABCD
+1234
+Thenal incan tation, though abitcomplicated, willgiveyoutherightthing.
+8.1.47 apply function returning avector
+Ifyouuseapply with afunction that returns avector, that becomes therst
+dimension oftheresult. This islikelynotwhat younaivelyexpectifyouare
+operating onrows:
+>matrix(15:1, 3)
+[,1][,2][,3][,4][,5]
+[1,]1512963
+[2,]1411852
+[3,]1310741
+>apply(matrix(15:1 ,3),1,sort)
+[,1][,2][,3]
+[1,]321
+[2,]654
+[3,]987
+[4,]121110
+[5,]151413
+Thenaiveexpectation isreally arriv edatwith:
+t(apply(matrix(15 :1,3),1,sort))
+Butnote that notransp oseisrequired ifyouoperate oncolumns|the naive
+expectation holds inthat case.
+8.1.48 empt ycells intapply
+Ifthere arecombinations oflevelsthat donotappear,thentapply givesNAas
+theansw er(orNULL ifsimplify=FALSE ):
+>tapply(9, factor(1, levels=1:2), sum)
+12
+9NA
+>tapply(9, factor(1, levels=1:2), sum,simplify=FALSE)
+$818
+[1]9
+$828
+NULL
+69
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+bycopies thetapply behavior:
+>by(9,factor(1, levels=1:2), sum)
+factor(1, levels=1:2):1
+[1]9
+----------------- -------------------------------------------
+factor(1, levels=1:2):2
+[1]NA
+aggregate drops theempt ycell:
+>aggregate(9, list(factor(1, levels=1:2)), sum)
+Group.1 x
+119
+Youcangetthe\righ t"answ erfortheempt ycellviasplit andsapply :
+>sapply(split(9, factor(1, levels=1:2)), sum)
+12
+90
+This behaviordepends onthedefault value ofdrop=FALSE insplit .
+8.1.49 arithmetic that mixes matrices andvectors
+Todomatrix multiplication betweenamatrix andavector youdo:
+xmat%*%yvec
+or
+yvec%*%xmat
+Rissmart enough toorien tthevector inthewaythat makessense. There is
+noneed tocoercethevector toamatrix.
+Ifyouwanttomultiply eachrowofamatrix bythecorresp onding elemen t
+ofavector, then do:
+xmat*yvec
+or
+yvec*xmat
+This works because oftheorder inwhichtheelemen tsofthematrix arestored
+intheunderlying vector.
+Butwhat todoifyouwanttomultiply eachcolumn bythecorresp onding
+elemen tofavector? Ifyoudo:
+70
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+xmat*yvec
+Rdoesnotcheckthat thelength ofyvec matc hesthenumberofcolumns of
+xmat anddothemultiplication that youwant.Itdoesamultiplication that you
+don't want.There areafewwaystogetyourmultiplication, among them are:
+xmat*rep(yvec, each=nrow(xmat))
+and
+sweep(xmat, 2,yvec,'*')
+Thesweep function isquite general|mak efriends with it.Thescale function
+canbeuseful forrelated problems.
+8.1.50 single subscript ofadata frame orarray
+Becareful ofthenumberofcommas when subscripting data frames andma-
+trices. Itisperfectly acceptable tosubscript with nocommas|this treats the
+objectasitsunderlying vector rather than atwodimensional object. Inthecase
+ofadata frame, theunderlying objectisalistandthesingle subscript refers to
+thecolumns ofthedata frame. Formatrices theunderlying objectisavector
+with length equal tothenumberofrowstimes thenumberofcolumns.
+8.1.51 non-n umeric argumen t
+>median(x)
+Errorinmedian.default( x):neednumeric data
+Ifyougetanerror likethis, itcould wellbebecause xisafactor.
+8.1.52 round rounds toeven
+Theround function rounds toevenifitisrounding oanexact 5.
+Some people aresurprised bythis. I'msurprised that they aresurprised|
+rounding toevenisthesensible thing todo.Ifyouwantafunction that rounds
+up,write ityourself (possibly using theceiling andfloor functions, orby
+slightlyincreasing thesizeofthenumbers).
+Some times there isthesurprise that anexact 5isnotrounded toeven.This
+willbeduetoCircle 1(page 9)|what isapparen tlyanexact 5probably isn't.
+8.1.53 creating empt ylists
+Youcreate anumeric vector oflength 500with:
+numeric(500)
+Soobviously youcreate alistoflength 500with:
+71
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+list(500)
+Right?
+No.Atouchofnesse isneeded:
+vector('list', 500)
+Note that thiscommand hintsatthefactthat lists arevectors insome sense.
+When \vector" isused inthesense ofanobjectthat isnotalist,itisreally
+shorthand for\atomic vector".
+8.1.54 listsubscripting
+my.list <-list('one', rep(2,2))
+There isadierence between
+my.list[[1]]
+and
+my.list[1]
+Therstislikelywhat youwant|the rstcomp onentofthelist.Thesecond is
+alistoflength onewhose comp onentistherstcomp onentoftheoriginal list.
+>my.list[[1]]
+[1]"one"
+>my.list[1]
+[[1]]
+[1]"one"
+>is.list(my.list[[ 1]])
+[1]FALSE
+>is.list(my.list[1 ])
+[1]TRUE
+Here aresome guidelines:
+single bracketsalwaysgiveyoubackthesame typeofobject{alistin
+thiscase.
+double bracketsneed notgiveyouthesame typeofobject.
+double bracketsalwaysgiveyouoneitem.
+single bracketscangiveyouanynumberofitems.
+72
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.55 NULL ordelete
+Ifyouhavealistxlandyouwantcomp onentcomp nottobethere anymore,
+youhavesome options. Ifcomp istheindex ofthecomp onentinquestion, then
+themost transparen tapproac his:
+xl<-xl[-comp]
+Inanycase youcando:
+xl[[comp]] <-NULL
+or
+xl[comp] <-NULL
+ThersttwoworkinS+aswell,butthelastonedoesnot|it hasnoeect in
+S+.
+Ifyouwantthecomp onenttostaythere buttobeNULL ,then do:
+xl[comp] <-list(NULL)
+Notice single brackets,notdouble brackets.
+8.1.56 disapp earing comp onents
+Aforloopcandrop comp onentsofalistthat itismodifying.
+>xl.in<-list(A=c(a=3, z=4),B=NULL, C=c(w=8), D=NULL)
+>xl.out<-vector('list', 4);names(xl.out) <-names(xl.in)
+>for(iin1:4)xl.out[[i]] <-names(xl.in[[i]])
+>xl.out#notright
+$A
+[1]"a""z"
+$C
+NULL
+$D
+[1]"w"
+>xl.out2 <-lapply(xl.in, names)
+>xl.out2
+$A
+[1]"a""z"
+$B
+NULL
+$C
+[1]"w"
+$D
+NULL
+73
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Note that theresult from ourforloopisMOST decidedly notwhat wewant.
+Possibly notevenwhat wecould havedreamed wecould get.
+Takecare whenNULL canbesomething that isassigned intoacomp onentof
+alist.Usinglapply canbeagoodalternativ e.
+8.1.57 combining lists
+Some people arepleasan tlysurprised that thecfunction works with lists. Then
+they goontoabuse it.
+>xlis<-list(A=1:4, B=c('a', 'x'))
+>c(xlis, C=6:5)
+$A
+[1]1234
+$B
+[1]"a""x"
+$C1
+[1]6
+$C2
+[1]5
+Probably notwhat wasintended. Try:
+c(xlis, list(C=6:5))
+8.1.58 disapp earing loop
+Consider theloop:
+for(iin1:10)i
+Itisacommon complain tthat thisloopdoesn't work,that itdoesn't doany-
+thing. Actually itworks perfectly well.The problem isthat norealaction is
+involvedintheloop.Youprobably mean tsomething like:
+for(iin1:10)print(i)
+Automatic printingofunassigned objects only happ ensatthetoplevel.
+8.1.59 limited iteration
+One ofmyfavorite tricksistoonly givethetoplimit ofiteration rather than
+thesequence:
+for(iintrials)f...g
+rather than
+for(iin1:trials)f...g
+Then Iwonder whytheresults aresoweird.
+74
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.60 toomuchiteration
+for(iin1:length(x))f...g
+isneifxhasapositiv elength. However,ifitslength iszero, then Rwantsto
+dotwoiterations. Asafer idiom is:
+for(iinseqalong(x))f...g
+orifyouwanttobecompatible with S+:
+for(iinseq(along=x))f...g
+8.1.61 wrong iterate
+Theforiterate canbefrom anyvector. This makeslooping muchmore general
+than inmost other languages, butcanallowsome users tobecome confused:
+nums<-seq(-1, 1,by=.01)
+ans<-NULL
+for(iinnums)ans[i]<-i^2
+This hastwothings wrong with it.Youshould recognize that wehavetried
+(but failed) tovisit Circle 2(page 12)here, andtheindex onansisnotwhat
+theuser isexpecting. Better would be:
+nums<-seq(-1, 1,by=.01)
+ans<-numeric(length(nu ms))
+for(iinseq(along=nums) )ans[i]<-nums[i]^2
+Evenbetter, ofcourse, would betoavoidaloopaltogether. That ispossible in
+thiscase, perhaps notinarealapplication.
+8.1.62 wrong iterate (encore)
+Alooplike:
+for(iin0:9)f
+this.x<-x[i]
+...
+doesnotdoasintended. While Candsome other languages index from 0,R
+indexes from 1.The unfortunate thing inthiscase isthat anindex of0is
+allowedinR,itjustdoesn't dowhat iswanted.
+75
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.63 wrong iterate (yetagain)
+>nam<-c(4,7)
+>vec<-rep(0,length(nam))
+>names(vec) <-nam
+>for(iinnam)vec[i]<-31
+>vec
+47
+00NA31NANA31
+8.1.64 iterate issacrosanct
+Inthefollowing loopthere aretwouses of'i'.
+>for(iin1:3)f
++cat("iis",i,"nn")
++i<-rpois(1, lambda=100)
++cat("end iteration", i,"nn")
++g
+iis1
+enditeration 93
+iis2
+enditeration 91
+iis3
+enditeration 101
+Theithat iscreated inthebodyoftheloopisused during that iteration but
+doesnotchange theithat starts thenext iteration. This isunlik eanumberof
+other languages (including S+).
+This isproofthat Rishard toconfuse, butsuchcodewilldenitely confuse
+humans. Soavoidit.
+8.1.65 wrong sequence
+>seq(0:10)
+[1]1234567891011
+>0:10
+[1]012345678910
+>seq(0,10)
+[1]012345678910
+What wasmean twaseither thesecond orthird command, butmixing them
+together getsyouthewrong result.
+8.1.66 empt ystring
+Donotconfuse
+76
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+character(0)
+with
+""
+Therstisavector oflength zero whose elemen tswould becharacter ifithad
+any.The second isavector oflength one, andtheelemen tthat ithasisthe
+empt ystring.
+The result ofnchar ontherst objectisanumeric vector oflength zero,
+while theresult ofnchar onthesecond objectis0|that is,avector oflength
+onewhose rstandonly elemen tiszero.
+>nchar(character(0 ))
+numeric(0)
+>nchar("")
+[1]0
+8.1.67 NAthestring
+There isamissing value forcharacter data. Innormal printing (with quotes
+around strings) themissing value isprintedasNA; butwhen quotes arenot
+used, itisprintedas<NA>.This istodistinguish itfrom thestring 'NA':
+>cna<-c('missing value'=NA, 'realstring'='NA')
+>cna
+missing valuerealstring
+NA "NA"
+>noquote(cna)
+missing valuerealstring
+<NA> NA
+NAthestring really doeshapp en. ItisNabisco innance, North America
+ingeograph y,andpossibly sodium inchemistry .There arecircumstances|
+particularly when reading data intoR|where NAthestring becomes NAthe
+missing value. Having aname ordimname that isacciden tally amissing value
+canbeanunpleasan texperience.
+Ifyouhavemissing values inacharacter vector, youmaywanttotakesome
+evasiveaction when operating onthevector:
+>people<-c('Alice', NA,'Eve')
+>paste('hello', people)
+[1]"helloAlice""helloNA""helloEve"
+>ifelse(is.na(peop le),people, paste('hello', people))
+[1]"helloAlice"NA "helloEve"
+77
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.1.68 capitalization
+Some people haveahard time with thefactthat Riscase-sensitiv e.Being case-
+sensitiv eisagoodthing. Thecaseofletters REALLy doEs MakE adiFFerencE.
+8.1.69 scoping
+Scoping problems areuncommon inRbecause Ruses scoping rules that are
+intuitiv einalmost allcases. Anissue with scoping ismost likelytoarise when
+moving S+codeintoR.
+Perhaps youwanttoknowwhat \scoping" means. Intheevaluator ifat
+some pointanobjectofacertain name,zsay,isneeded, then weneed toknow
+where tolookforz.Scoping isthesetofrules ofwhere tolook.
+Here isasmall example:
+>z<-'global'
+>myTopFun
+function ()f
+subfun<-function()f
+paste('used:', z)
+g
+z<-'inside myTopFun'
+subfun()
+g
+>myTopFun()
+[1]"used:insidemyTopFun"
+Thezthat isused istheoneinside thefunction. Let's think abitaboutwhat is
+nothapp ening. Atthepointintime thatsubfun isdened, theonlyzaboutis
+theoneintheglobal environmen t.When theobjectisassigned isnotimportan t.
+Wher etheobjectisassigned isimportan t.Also importan tisthestate ofthe
+relevantenvironmen tswhen thefunction isevaluated.
+8.1.70 scoping (encore)
+Themost likelyplace tondascoping problem iswith themodeling functions.
+Let's explore with some examples.
+>scope1
+function ()f
+sub1<-function(form) coef(lm(form))
+xx<-rnorm(12)
+yy<-rnorm(12, xx)
+form1<-yy~xx
+sub1(form1)
+g
+>scope1()
+78
+8.1. GHOSTS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+(Intercept) xx
+-0.07609548 1.33319273
+>scope2
+function ()f
+sub2<-function()f
+form2<-yy~xx
+coef(lm(form2))
+g
+xx<-rnorm(12)
+yy<-rnorm(12, xx)
+sub2()
+g
+>scope2()
+(Intercept) xx
+-0.1544372 0.2896239
+Thescope1 andscope2 functions aresortofdoing thesame thing. Butscope3
+isdieren t|it isstepping outside ofthenatural nesting ofenvironmen ts.
+>sub3
+function ()f
+form3<-yy~xx
+coef(lm(form3))
+g
+>scope3
+function ()f
+xx<-rnorm(12)
+yy<-rnorm(12, xx)
+sub3()
+g
+>scope3()
+Errorineval(expr, envir,enclos) :Object"yy"notfound
+One lesson here isthat theenvironmen tofthecalling function isnot(necessar-
+ily)searc hed. (Intechnical terms that would bedynamic scoperather than the
+lexical scopethat Ruses.)
+There areofcourse solutions tothisproblem. scope4 solvestheproblem by
+saying where tolookforthedata towhichtheformularefers.
+>sub4
+function (data)f
+form4<-yy~xx
+coef(lm(form4, data=data))
+g
+>scope4
+function ()f
+xx<-rnorm(12)
+79
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+yy<-rnorm(12, xx)
+sub4(sys.nframe( ))
+g
+>scope4()
+(Intercept) xx
+0.6303816 1.0930864
+Another possibilit yistochange theenvironmen toftheformula,asscope5 does:
+>sub5
+function (data)f
+form5<-eval(substitute(y y~xx),envir=data)
+coef(lm(form5))
+g
+>scope5
+function ()f
+xx<-rnorm(12)
+yy<-rnorm(12, xx)
+sub5(sys.nframe( ))
+g
+>scope5()
+(Intercept) xx
+0.1889312 1.4208295
+Some caution with solutions iswarran ted|not allmodeling functions followthe
+same scoping rules fortheir argumen ts.
+8.2 Chimeras
+\What brings youintosuchpungen tsauce?"
+There isnoother typeofobjectthat creates asmuchtrouble asfactors.
+Factors areanimplemen tation oftheideaofcategorical data. (The name 'factor'
+migh tcause trouble initself|the term arriv estousviadesigned experimen ts.)
+The core data ofafactor isaninteger vector. Theclass attribute is
+"factor" ,andthere isalevels attribute that isacharacter vector that pro-
+vides theidentityofeachcategory .Youmaybeable toseetrouble coming
+already|a numeric objectthat conceptually isnotatallnumeric.
+ButRtries tosaveyoufrom yourself:
+>is.numeric(factor (1:4))
+[1]FALSE
+Factors canbeavoided insome settings byusing character data instead. Some-
+times thisisareasonable idea.
+80
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Figure 8.2: The treac herous tokinandthetreac herous tocountrybySandro
+Botticelli.
+81
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.1 numeric tofactor tonumeric
+While ingeneral factors donotrefer tonumbers,they maydo.Inwhichcase
+wehaveevenmore roomforconfusion.
+>as.numeric(factor (101:103))
+[1]123
+Ifyouwereexpecting:
+[1]101102103
+shame onyou.
+Ifyourfactor represen tsnumbersandyouwanttorecoverthose numbers
+from thefactor, then youneed amore circuitous route togetthere:
+as.numeric(as.cha racter(factor(101:103)))
+Sligh tlymore ecien t,butharder toremem beris:
+as.numeric(levels (f))[f]
+wherefisthefactor.
+8.2.2 catfactor
+Usingcatonanyfactor willjustgivethecore data:
+>cat(factor(letter s[1:5]))
+12345>
+8.2.3 numeric tofactor acciden tally
+When usingread.table oritsfriends, itisalltoocommon foracolumn ofdata
+that ismean ttobenumeric toberead asafactor. This happ ensifna.strings
+isnotproperlyset,ifthere isabogus entryinthecolumn, andprobably many
+other circumstances.
+This isdynamite.
+Thedata arethough ttobenumeric. They areinfactnumeric (atleast sort
+of),butdecidedly notwith thenumbersthat areintended. Hence youcanend
+upwith data that 'works' butproduces complete garbage.
+When processing thedata, theconstruct:
+as.numeric(as.cha racter(x))
+guards youagainst thisoccurring. Ifxisalready thecorrect numbers,then
+nothing happ ensexcept wasting afewmicroseconds. Ifxisacciden tally a
+factor, then itbecomes thecorrect numbers(atleast mostly|dep ending on
+whyitbecame afactor there maybesome erroneously missing values).
+82
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.4 dropping factor levels
+>ff<-factor(c('AA', 'BA','CA'))
+>ff
+[1]AABACA
+Levels: AABACA
+>ff[1:2]
+[1]AABA
+Levels: AABACA
+Notice that there arestillthree levelseventhough only twoappearinthevector.
+Itisingeneral agoodthing that levelsarenotautomatically dropp ed|the
+factor then hasthepossible levelsitcancontainrather than merely thelevels
+ithapp enstocontain.
+There aretimes when youwantlevelsdropp edthat donotappear.Here are
+twowaysofdoing that:
+>ff[1:2, drop=TRUE]
+[1]AABA
+Levels: AABA
+>factor(ff[1:2])
+[1]AABA
+Levels: AABA
+Iff0isafactor that already haslevelsthat arenotused that youwanttodrop,
+then youcanjustdo:
+f0<-f0[drop=TRUE]
+8.2.5 combining levels
+Bizarre things havebeenknowntohapp enfrom combining levels.Asafeap-
+proac histocreate anewfactor object. Here wechange from individual letters
+toavowel-consonan tclassication:
+>flet<-factor(letters[c( 1:5,1:2)])
+>flet
+[1]abcdeab
+Levels: abcde
+>ftrans<-c(a='vowel', b='consonant', c='consonant',
++d='consonant', e='vowel')
+>fcv<-factor(ftrans[a s.character(flet)])
+>fcv
+[1]vowelconsonant consonant consonant vowelvowelconsonant
+Levels: consonant vowel
+Probably more common istocombine some levels,butleaveothers alone:
+83
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>llet<-levels(flet)
+>names(llet) <-llet
+>llet
+abcde
+"a""b""c""d""e"
+>llet[c('a', 'b')]<-'ab'
+>llet
+abcde
+"ab""ab""c""d""e"
+>fcom<-factor(llet[as.ch aracter(flet)])
+>fcom
+[1]ababcdeabab
+Levels: abcde
+8.2.6 donotsubscript with factors
+>x6<-c(s=4,j=55,f=888)
+>x6[c('s', 'f')]
+sf
+4888
+>x6[factor(c('s', 'f'))]
+js
+554
+8.2.7 nogoforfactors inifelse
+>ifelse(c(TRUE, FALSE,TRUE),factor(letters),
++factor(LETTERS) )
+[1]123
+>ifelse(c(TRUE, FALSE,TRUE),factor(letters), LETTERS)
+[1]"1""B""3"
+(Recall that thelength oftheoutput ofifelse isalwaysthelength ofthe
+rst argumen t.Ifyouwereexpecting therst argumen ttobereplicated, you
+shouldn't have.)
+8.2.8 nocforfactors
+c(myfac1, myfac2)
+justgivesyouthecombined vector ofinteger codes. Certainly ametho dforc
+could bewritten forfactors, butnote itisgoing tobecomplicated|the levels
+ofthefactors need notmatc h.Itwould behorribly messy forverylittle gain.
+This isacase inwhichRisnotbeing overlyhelpful. Better isforyoutodothe
+combination that makessense forthespecic case athand.
+Another reason whythere isnotacfunction forfactors isthatcisused in
+other contexts tosimplify objects:
+84
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>c(matrix(1:4, 2))
+[1]1234
+Theoperation thatcdoesonfactors isconsisten twith this.
+Agenerally goodsolution is:
+c(as.character(my fac1),as.character(myfa c2))
+Ormaybemore likelyfactor oftheaboveexpression. Another possibilit yis:
+unlist(list(myfac 1,myfac2))
+Forexample:
+>unlist(list(facto r(letters[1:3]),factor(LETTERS[7: 8])))
+[1]abcGH
+Levels: abcGH
+This lastsolution doesnotworkforordered factors.
+8.2.9 ordering inordered
+Youneed abitofcare when creating ordered factors:
+>ordered(c(100, 90,110,90,100,110))
+[1]1009011090100110
+Levels: 90<100<110
+>ordered(as.charac ter(c(100,90,110,90,100,110)))
+[1]1009011090100110
+Levels: 100<110<90
+The automatic ordering isdone lexically forcharacters. This makessense in
+general, butnotinthiscase. (Note that theordering maydependonyour
+locale.) Youcanalwaysspecifylevels tohavedirect control.
+Youcanhaveessen tially thissame problem ifyoutrytosortafactor.
+8.2.10 labelsandexcluded levels
+Thenumberoflabelsmustequal thenumberoflevels.Seems likeagoodrule.
+These canbethesame going intothefunction, butneed notbeintheend. The
+issue isvalues that areexcluded.
+>factor(c(1:4,1:3) ,levels=c(1:4,NA ),labels=1:5)
+Errorinfactor(c(1:4, 1:3),levels=c(1:4,NA),...:
+invalid labels; length5shouldbe1or4
+>factor(c(1:4,1:3) ,levels=c(1:4,NA ),labels=1:4)
+85
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+[1]1234123
+Levels: 1234
+>factor(c(1:4,1:3) ,levels=c(1:4,NA ),labels=1:5,
++exclude=NULL)
+[1]1234123
+Levels: 12345
+And ofcourse Iliedtoyou.Thenumberoflabelscanbe1aswellasthenumber
+oflevels:
+>factor(c(1:4,1:3) ,levels=c(1:4,NA ),labels='Blah')
+[1]Blah1Blah2Blah3Blah4Blah1Blah2Blah3
+Levels: Blah1Blah2Blah3Blah4
+8.2.11 ismissing missing ormissing?
+Missing values ofcourse makesense infactors. Itisentirely possible that we
+don't knowthecategory intowhichaparticular item falls.
+>f1<-factor(c('AA', 'BA',NA,'NA'))
+>f1
+[1]AABA<NA>NA
+Levels: AABANA
+>unclass(f1)
+[1]12NA3
+attr(,"levels")
+[1]"AA""BA""NA"
+AswesawinCircle 8.1.67 ,there isadierence betweenamissing valueandthe
+string'NA' .Inf1there isacategory that corresp onds tothestring'NA' .Values
+that aremissing areindicated notbytheusualNA,butby<NA> (todistinguish
+them from'NA' thestring when quotes arenotused).
+Itisalsopossible tohaveacategory that ismissing values. This isachieved
+bychanging theexclude argumen tfrom itsdefault value:
+>f2<-factor(c('AA', 'BA',NA,'NA'),exclude=NULL)
+>f2
+[1]AABA<NA>NA
+Levels: AABANANA
+>unclass(f2)
+[1]1243
+attr(,"levels")
+[1]"AA""BA""NA"NA
+Unlik einf1thecore data off2hasnomissing values.
+Let's nowreally descend intothebellyofthebeast.
+86
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>f3<-f2
+>is.na(f3)[1] <-TRUE
+>f3
+[1]<NA>BA<NA>NA
+Levels: AABANANA
+>unclass(f3)
+[1]NA243
+attr(,"levels")
+[1]"AA""BA""NA"NA
+Here wehavealevelthat ismissing values, wealsohaveamissing value inthe
+core data.1
+Tosummarize, there aretwowaysthat missing values canenterafactor:
+Missing means wedon't knowwhat category theitem falls into.
+Missing isthecategory ofitems that (originally) hadmissing values.
+8.2.12 data frame tocharacter
+>xdf3<-data.frame(a=3:2, b=c('x', 'y'))
+>as.character(xdf3 [1,])
+[1]"3""1"
+This isahidden version ofcoercing afactor tocharacter. One approac htoget
+thecorrect behavioristouseas.matrix :
+>as.character(as.m atrix(xdf3[1,]))
+[1]"3""x"
+I'mnotsure ifitislessupsetting ormore upsetting ifyoutrycoercing more
+than onerowofadata frame tocharacter:
+>as.character(xdf3 )
+[1]"c(3,2)""c(1,2)"
+Ifthecolumns ofthedata frame include factors orcharacters, then converting
+toamatrix willautomatically getyouacharacters:
+>as.matrix(xdf3)
+ab
+[1,]"3""x"
+[2,]"2""y"
+1Theauthor would beintrigued tohear ofanapplication where thismakessense|an item
+forwhichitisunkno wnifitismissing ornot.
+87
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.13 nonexisten tvalue insubscript
+When asubscript contains values that arenotpresen tintheobject, theresults
+varydepending onthecontext:
+>c(b=1)[c('a', 'b')]
+<NA>b
+NA1
+>list(b=1)[c('a', 'b')]
+$<NA>
+NULL
+$b
+[1]1
+>matrix(1:2, 2,1,dimnames=list(NU LL,'b'))[,c('a', 'b')]
+Error:subscript outofbounds
+>matrix(1:2, 1,2,dimnames=list('b ',NULL))[c('a', 'b'),]
+Error:subscript outofbounds
+>data.frame(b=1:2) [,c('a','b')]
+Errorin"[.data.frame"( data.frame(b=1:2),,c("a","b")):
+undefined columns selected
+>data.frame(V1=1, V2=2,row.names='b')[c ('a','b'),]
+V1V2
+NANANA
+b12
+Some people wonder whythenames oftheextraneous items showupasNAand
+notas"a".Anansw eristhat then there would benoindication that"a"was
+notaname intheobject.
+The examples here areforcharacter subscripts, similar behavior holds for
+numeric andlogical subscripts.
+8.2.14 missing value insubscript
+Here aretwovectors that wewilluse:
+>a<-c(rep(1:4, 3),NA,NA)
+>b<-rep(1:2, 7)
+>b[11:12] <-NA
+>a
+[1]123412341234NANA
+>b
+[1]1212121212NANA12
+Wenowwanttocreateanew sothat itislikeaexcept ithas101intheelemen ts
+whereaislessthan 2orgreater than 3,andbequals 1.
+>anew<-a
+88
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>anew[(a <2|a>3)&b==1]<-101
+>anew
+[1]101234101234101234NANA
+There werethree values changed inanew ;let'stryagain butgivedieren tvalues
+tothose three:
+>anew2<-a
+>anew2[(a <2|a>3)&b==1]<-101:103
+Error:NAsarenotallowed insubscripted assignments
+Nowwegetanerror. Since thevalue being assigned intothevector haslength
+greater than 1,theassignmen twith missing values inthesubscripts isambigu-
+ous. Rwisely refuses todoit(frustrating asitmaybe).There isasimple
+solution, however:
+>anew2[which((a <2|a>3)&b==1)]<-101:103
+>anew2
+[1]101234102234103234NANA
+Thewhich function eectiv elytreatsNAasFALSE .
+Butwestillhaveaproblem inbothanew andanew2 .The 12th elemen tof
+ais4(and hence greater than 3)while the12th elemen tofbisNA.Sowedon't
+knowifthe12th elemen tofanew should bechanged ornot. The12th elemen t
+ofanew should beNA:
+>anew[is.na(b) &(a<2|a>3)]<-NA
+>anew
+[1]10123410123410123NANANA
+8.2.15 allmissing subscripts
+>letters[c(2,3)]
+[1]"b""c"
+>letters[c(2,NA)]
+[1]"b"NA
+>letters[c(NA,NA)]
+[1]NANANANANANANANANANANANA
+[13]NANANANANANANANANANANANA
+[25]NANA
+What ishapp ening here isthat bydefaultNAislogical|that isthemost specic
+mode(seeCircle 8.1.8)sothelastcommand issubscripting with logical values
+instead ofnumbers. Logical subscripts areautomatically replicated tobethe
+length oftheobject.
+89
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.16 missing value inif
+if(NA)f#creates error
+Itisarather common error foranifcondition tobeNA.When thisoccurs, it
+iscommon fortheproblem tobenon-ob vious. Debugging iscalled forinthat
+case.
+8.2.17 andandandand
+Analternativ etitle here could havebeen'orororor'.
+There aretwo'and' operators andtwo'or'operators:
+{8&&8and8||8gowithif
+{8&8and8|8gowithifelse
+8&&8and8||8,likeif,expectsingle elemen tinputs. Because they only deal
+with single elemen ts,they candoshortcuts. Iftheansw erisknownwith the
+rst(left) argumen t,then there isnoneed toevaluate thesecond.
+>if(TRUE ||stop()) 4else5
+[1]4
+>if(TRUE &&stop()) 4else5
+Error:
+>if(FALSE ||stop()) 4else5
+Error:
+>if(FALSE &&stop()) 4else5
+[1]5
+This canbeused tomakesure that itissafetoperform atest, asin:
+>if(ncol(x) >6)f...
+Errorinif(ncol(x) >6):argument isoflengthzero
+>if(is.matrix(x) &&ncol(x) >6)f...#okay
+Note that inthelastlinexisexcluded from being adata frame. Ifyouwantto
+allowbothdata frames andmatrices, then testing thelength ofdim(x) would
+beanapproac h.
+8.2.18 equal andequalequal
+Just because8&&8and8&8havesimilar purp oses, don't gothinking that8==8
+and8=8aresimilar. Completely dieren t.
+Fortunately Rkeeps youfrom making thiserror inakeycontext:
+>if(x=7)f...
+Error:unexpected '='in"if(x="
+>if(x==7)f...#okay
+Thedierence is:
+{8==8isalogical operator that tests equalit y.
+{8=8isanassignmen toperator similar to8<-8(but seeCircle 8.2.26 ).
+90
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.19 is.integer
+is.integer isatestofhowthedata arestored, itdoesnottestifthenumbers
+arelogically integers:
+>is.integer(c(4, 0,3))
+[1]FALSE
+Thekeything tosayhere isthat, almost surely ,youdonotcare ifanobjectis
+stored asinteger. Itisimportan tifyouaresending thedata toCorFortran.
+Otherwise youcanbask intheease ofletting Rtakecare ofdetails soyoucan
+think aboutthebigpicture.
+Ifyoureally wantintegers (that is,stored ininteger format), then use\L":
+>is.integer(c(4L, 0L,3L))
+[1]TRUE
+>is.integer(c(4L, 0L,3))
+[1]FALSE
+The8:8operator isoneofthefewplaces inRwhere integers areproduced :
+>is.integer(1:3)
+[1]TRUE
+>is.integer(c(1:3, 4))
+[1]FALSE
+>is.integer(c(1:3, 4:4))
+[1]TRUE
+Givenexperience with other languages, youmayexpect:
+>is.integer( 4.)
+[1]FALSE
+>is.integer( 4)
+[1]FALSE
+therst comand abovetobeFALSE andthesecond tobeTRUE .That is,that
+using adecimal pointsignies that youwantaoating pointnumberasopposed
+toaninteger. AsyouseeRhasafondness foroating pointnumbers.
+Youcancoercetointeger, but(asalways)becareful what youaskfor:
+>as.integer(c(0, 1,-2.99,2.99))
+[1]01-22
+8.2.20 is.numeric, as.numeric with integers
+Aninteger vector testsTRUE withis.numeric .However,as.numeric changes
+itfrom storage modeinteger tostorage modedouble. Ifyoucareaboutitbeing
+integer, then youwanttouseas.integer .
+91
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>is.integer(c(4L, 0L))
+[1]TRUE
+>is.numeric(c(4L, 0L))
+[1]TRUE
+>is.integer(as.num eric(c(4L,0L)))
+[1]FALSE
+8.2.21 is.matrix
+Theis.matrix function cancause surprises, notleast because itcangivedif-
+feren tansw ersinRandS+.
+>is.matrix(1:3)
+[1]FALSE
+>is.matrix(array(1 :3,c(3,1)))
+[1]TRUE
+>is.matrix(array(1 :3,c(3,1,1)))
+[1]FALSE
+>is.matrix(array(1 :3,3))
+[1]FALSE
+>is.matrix(data.fr ame(1:3))
+[1]FALSE#wouldbeTRUEinS+
+>is.matrix(t(1:3))
+[1]TRUE
+The denition of\matrix" thatis.matrix uses isthat itisanarraywith a
+dimattribute oflength 2.Note that thetfunction coerces anon-arra ytobea
+(column) matrix andthen doesthetransp ose.
+Some people wantobjects tobematrices bydefault. Itisn't going tohapp en.
+Risalanguage ofgeneral objects, notamatrix language.
+8.2.22 max versus pmax
+Icare nottotrytocountthenumberoftimes I'vegotthiswrong, nortotally
+thehours I'vespenttracking downtheproblem. And I'monly thinking ofthe
+time after Iknew verywellthedierence betweenmaxandpmax (andminand
+pmin ).
+Recall from Circle 3(page 17)that there aretwosenses ofvectorization.
+maxandpmax areeachvectorized butinopposite senses.
+maxreturns thesingle numberthat isthelargest ofalltheinput.
+pmax returns avector that foreachindex location isthemaxim umacross
+inputs.
+>max(1:5, 6:2)
+[1]6
+92
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>pmax(1:5, 6:2)
+[1]65445
+The'p'inpmax stands for'parallel'.
+8.2.23 all.equal returns asurprising value
+Wemetall.equal inCircle 1(page 9)asanalternativ eto8==8.Numerical
+error causes8==8nottoprovide auseful result inmanycases.
+if(all(x ==y))f#wrongifthereisnumerical error
+if(all.equal(x, y))f#WRONG,notFALSEwhennotequal
+if(isTRUE(all.equ al(x,y))f#right
+8.2.24 all.equal isnotidentical
+The purp oseofall.equal istocompare items that mayhavesome fuzziness
+tothem. Sometimes thefuzziness thatall.equal seescanbesurprising:
+>all.equal(as.nume ric(NA),0/0)
+[1]TRUE
+Theidentical function allowsfornofuzziness atall:
+>identical(as.nume ric(NA),0/0)
+[1]FALSE
+8.2.25 identical really really means identical
+>xi<-1:10
+>yi<-1:10
+>identical(xi, yi[1:10])
+[1]TRUE
+>yi[11]<-11
+>identical(xi, yi[1:10])
+[1]FALSE
+>zi<-1:10
+>zi[11]<-11L
+>identical(xi, zi[1:10])
+[1]TRUE
+xiisstored astypeinteger. Butonceyihasbeengivenonedouble value, itis
+stored asdouble.
+Ashasalready beenstated, youareunlik elytoneed tocare abouthow
+numbersarestored. Ifyouthink youcare without aspecic instance ofwhyit
+matters, youshould probably getoverit.
+Though identical isverystrict aboutwhat objects that itconsiders tobethe
+same, itdoesn't goasfarasinsisting that they share thesame place inmemory .
+That isbasically aforeign concept toR.
+93
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.26 =isnotasynon ymof<-
+The8=8operator canmean thesame thing as8<-8inalotofcircumstances,
+butthere aretimes when itisdieren t.
+Consider thecommand:
+foo(93, a=47)
+versus
+foo(93, a<-47)
+These twocommands maylead toentirely dieren tresults. Youclearly donot
+wanttouse8<-8when youwanttosetanargumen tofafunction.
+Acommon occurrence where youdon't wanttouse8=8where8<-8ismean t
+is:
+system.time(resul t<-my.test.function( 100))
+Ifyouused8=8inthecommand above,Rwould think youweretrying tosetthe
+result argumen tofsystem.time ,whichdoesn't exist. (Ifusingsystem.time
+isnotacommon occurrence foryou,perhaps itshould be.)
+Standard advice istoavoidusing8=8when youmean8<-8eventhough it
+takesanextra keystrok e.However,itislargely amatter oftaste (aslong asyou
+knowthedierences).
+8.2.27 complex arithmetic
+Theprecedence with complex numbersmaywellnotbewhat youexpect.Con-
+sider thecommand:
+>1+3i-3+5i
+[1]-2+8i
+8.2.28 complex isnotnumeric
+>is.numeric(1+3i)
+[1]FALSE
+Complex numbersarenumbers,butthey arenotnumeric inR'ssense. Totest
+fornumbersinthebroader sense, youneed:
+is.numeric(x) ||is.complex(x)
+94
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.29 nonstandard evaluation
+There areafewfunctions that allownames ofobjects aswellasacharacter
+string ofthename. Forexample:
+help(subset)
+works where
+help('subset')
+iswhat really makessense.
+The functions that dothisaremean tforinteractiv euse. The intention of
+allowing names istobehelpful. Suchhelpfulness seems likeamixed blessing.
+Itishard totellwhat thenettime savings isofremo ving twokeystrok esversus
+theperiodicconfusion that itcauses.
+Ifthenamed objectcontains acharacter string ofwhat isreally wanted,
+some ofthese functions giveyouwhat youwantwhile others (often ofnecessit y)
+donot.
+foo<-'subset'
+help(foo) #getshelponsubset
+getAnywhere(foo) #findsfoo,notsubset
+do.call('getAnywh ere',list(foo)) #findssubset
+Apartial listoffunctions that havenon-standard evaluation ofargumen tsare:
+help ,rm,save ,attach ,require ,library ,subset ,replicate .
+Therequire function hasaprogram-safet ymechanism intheform ofthe
+character.only argumen t.
+require(foo) #loadpackage foo
+require(foo, character.only=F ALSE)#loadpackage foo
+require(foo, character.only=T RUE)#loadpackage namedbyfoo
+Thesame istrue oflibrary .
+8.2.30 help forfor
+Thelogical thing todotogethelp forforis:
+?for
+That doesn't work. Using thehelp function breaks inaseemingly dieren tway:
+help(for)
+Instead do(forinstance):
+?'for'
+help('for')
+95
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.31 subset
+Thesubset function ismean ttoprovide convenience ininteractiv euse. It
+often causes incon venience andconfusion when used inside functions. Useusual
+subscripting, notsubset ,when writing functions.
+Patien t:Doc,ithurtswhen Idothis.
+Doctor: Don't dothat.
+Here isanexample ofsubset inaction:
+>xdf5<-data.frame(R=1:2, J=3:4,E=5:6,K=7:8)
+>subset(xdf5, select=J:K)
+JEK
+1357
+2468
+>subset(xdf5, select=-E)
+RJK
+1137
+2248
+Theselect argumen tallowsVER Ynon-standard useofthe8:8and8-8oper-
+ators. This canbeahandy shortcut forinteractiv euse. There isagravedanger
+ofusers expecting suchtrickstoworkinother contexts. Evenininteractiv euse
+there isthedanger ofexpectingJ:Ktopertain toalphab eticorder rather than
+order within thedata frame.
+Note also thatsubset returns adata frame evenifonly onecolumn is
+selected.
+8.2.32 =vs==insubset
+There isabigdierence between:
+subset(Theoph, Subject =1)
+and
+subset(Theoph, Subject ==1)
+Thelatter iswhat isintended, theformer doesnotdoanysubsetting atall.
+8.2.33 single sample switc h
+Thesample function hasahelpful feature that isnotalwayshelpful. Itsrst
+argumen tcanbeeither thepopulation ofitems tosample from, orthenumber
+ofitems inthepopulation. There's therub.
+>sample(c(4.9, 8.6),9,replace=TRUE)
+[1]4.94.98.64.98.64.98.64.98.6
+>sample(c(4.9), 9,replace=TRUE)
+[1]233244341
+96
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Ifthepopulation isnumeric, atleast 1andofsizeone(due, say,toselection
+within afunction), then itgets interpreted asthesizeofthepopulation. Note
+intheexample abovethesizeisrounded downtothenearest integer.
+There isakludgy workaround, whichistomakethepopulation character:
+>as.numeric(sample (as.character(c(4.9)),9,replace=TRUE))
+[1]4.94.94.94.94.94.94.94.94.9
+8.2.34 changing names ofpieces
+Rdoesanextraordinary jobofferreting outreplacemen tstatemen ts.Forex-
+ample, thefollowing actually doeswhat isintended:
+names(mylist$b[[1 ]])<-letters[1:10]
+Itispossible togetitwrong though. Here isanexample:
+>right<-wrong<-c(a=1,b=2)
+>names(wrong[1]) <-'changed'
+>wrong
+ab
+12
+>names(right)[1] <-'changed'
+>right
+changed b
+1 2
+What goeswrong isthat wechange names onsomething that isthen thrown
+away.Sotochange thersttwonames inourridiculous example, wewould do:
+names(mylist$b[[1 ]])[1:2]<-LETTERS[1:2]
+8.2.35 apuzzle
+>class(dfxy)
+[1]"data.frame"
+>length(dfxy)
+[1]8
+>length(as.matrix( dfxy))
+[1]120
+What is
+nrow(dfxy)
+97
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.2.36 another puzzle
+Ifthefollowing isavalidcommand:
+weirdFun()()()
+what doesweirdFun return?
+Writeanexample.
+8.2.37 data frames vsmatrices
+Amatrix andadata frame lookthesame when printed. That isgood|they are
+conceptually verysimilar. However,they areimplemen tedentirely dieren tly.
+Objects that areconceptually similar butimplemen teddieren tlyareagood
+source ofconfusion.
+>x%*%y
+Errorinx%*%y:requires numeric matrix/vector arguments
+Theproblem here isthat whilexlookslikeamatrix, itisactually adata frame.
+Asolution istouseas.matrix ,orpossiblydata.matrix ,
+Intheory theactual implemen tation ofdata frames should notmatter atall
+totheuser. Theory often hassome rough edges.
+8.2.38 apply notfordata frames
+One rough edge isapplying afunction toadata frame. Theapply function
+often doesn't dowhat isdesired because itcoerces thedata frame toamatrix
+before proceeding.
+apply(myDataFrame ,2,class)#notright
+Data frames areactually implemen tedasalistwith eachcomp onentofthelist
+being acolumn ofthedata frame. Thus:
+lapply(myDataFram e,class)
+doeswhat wasattempted above.
+8.2.39 data frames vsmatrices (reprise)
+Consider thecommand:
+array(sample(x), dim(x))
+This permutes theelemen tsofamatrix. Ifxisadata frame, thecommand will
+workbuttheresult willmost assuredly notbewhat youwant.
+Itispossible togetacolumn ofadata frame with acommand like:
+98
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+x$B
+Ifyoutrythiswith amatrix you'll getanerror similar to:
+Errorinx$B:$operator isinvalid foratomicvectors
+Ifyourxmigh tbeeither adata frame oramatrix, itwillbebetter touse:
+x[,'B']
+Ontheother hand, ifyouwanttoruleoutthepossibilit yofamatrix then8$8
+migh tbethebetter choice.
+Operations with data frames canbeslowerthan thesame operation onthe
+corresp onding matrix. Inonereal-w orld case, switc hing from data frames to
+matrices resulted inaboutfour times thespeed.
+Simpler isbetter.
+8.2.40 names ofdata frames andmatrices
+Thenames ofadata frame arenotthesame asthenames ofthecorresp onding
+matrix. Thenames ofadata frame arethecolumn names while thenames ofa
+matrix arethenames oftheindividual elemen ts.
+Items that arecongruen tare:
+rownames
+colnames
+dimnames
+8.2.41 conicting column names
+Here isanexample where expectations arefrustrated:
+>one.col.mat <-cbind(matname=let ters[1:3])
+>one.col.mat
+matname
+[1,]"a"
+[2,]"b"
+[3,]"c"
+>data.frame(x=one. col.mat)
+matname
+1 a
+2 b
+3 c
+>data.frame(x=cbin d(letters[1:3]))
+x
+1a
+2b
+3c
+99
+8.2. CHIMERAS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+When thecalltodata.frame uses atag(name) foranitem, itisexpected that
+thecorresp onding column oftheoutput willhavethat name. However,column
+names that arealready there takeprecedence.
+Notice alsothat thedata frames containafactor column rather than char-
+acter.
+8.2.42 cbind favorsmatrices
+Ifyoucbind twomatrices, yougetamatrix. Ifyoucbind twodata frames, you
+getadata frame. Ifyoucbind twovectors, yougetamatrix:
+>is.matrix(cbind(x =1:10,y=rnorm(10)))
+[1]TRUE
+Ifyouwantadata frame, then usethedata.frame function:
+>dfxy<-data.frame(x=1:10 ,y=rnorm(10))
+8.2.43 data frame equal numberofrows
+Adata frame isimplemen tedasalist. But notjust anylistwilldo|eac h
+comp onentmustrepresen tthesame numberofrows.Ifyouworkhard enough,
+youmigh tbeable toproduce adata frame that breaks therule. More likely
+yourfrustration willbethat Rstops youfrom getting tosuchanabsurd result.
+8.2.44 matrices indata frames
+Let's maketwodata frames:
+>ymat<-array(1:6, c(3,2))
+>xdf6<-data.frame(X=101: 103,Y=ymat)
+>xdf7<-data.frame(X=101: 103)
+>xdf7$Y<-ymat
+>xdf6
+XY.1Y.2
+110114
+210225
+310336
+>xdf7
+XY.1Y.2
+110114
+210225
+310336
+>dim(xdf6)
+[1]33
+>dim(xdf7)
+[1]32
+100
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+They printexactly thesame. Butclearly they arenotthesame since they have
+dieren tdimensions.
+>xdf6[,'Y.1']
+[1]123
+>xdf7[,'Y.1']
+Errorin"[.data.frame"( xdf7,,"Y.1"):
+undefined columns selected
+>xdf6[,'Y']
+Errorin"[.data.frame"( xdf6,,"Y"):
+undefined columns selected
+>xdf7[,'Y']
+[,1][,2]
+[1,] 14
+[2,] 25
+[3,] 36
+xdf6 includes comp onentsY.1andY.2.xdf7 doesnothavesuchcomp onents
+(inspite ofhowitisprinted)|it hasaYcomp onentthat isatwo-column matrix.
+Youwillsurely think that allowing adata frame tohavecomp onentswith
+more than onecolumn isanabomination. That willbeyourthinking unless,
+ofcourse, you'vehadoccasion toseeitbeing useful. The feature isworth the
+possible confusion, butperhaps achange toprintingcould reduce confusion.
+8.3 Devils
+Themost devilish problem isgetting data from aleintoRcorrectly .
+8.3.1 read.table
+Theread.table function isthemost common wayofgetting data intoR.
+Reading itshelp lethree times isgoing tobeveryecien ttime managemen tif
+youeveruseread.table .Inparticular theheader androw.names argumen ts
+controlwhat (ifanything) intheleshould beused ascolumn andrownames.
+Another great time managemen ttoolistoinspecttheresult ofthedata you
+haveread before attempting touseit.
+8.3.2 read atable
+Theread.table function doesnotcreate atable|it creates adata frame. You
+don't become abookjustbecause youread abook.Thetable function returns
+atable.
+The idea ofread.table andrelativ esisthat they read data that areina
+rectangular format.
+101
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.3.3 themissing, thewhole missing andnothing butthe
+missing
+Misreading missing values isanecacious wayofproducing garbage. Missing
+values canbecome non-missing, non-missing values canbecome missing, logi-
+cally numeric columns canbecome factors.
+Thena.strings argumen ttoread.table needs tobesetproperly.An
+example migh tbe:
+na.strings=c('.', '-999')
+8.3.4 misquoting
+Aquite common leformat istohaveacolumn ofnames followedbysome
+numberofcolumns ofdata. Ifthere areanyapostrophes inthose names, then
+youarelikelytogetanerror reading theleunless youhavesetthequote
+argumen ttoread.table .Alikelyvalue forquote is:
+quote=''
+This sounds likeeasy advise, butalmost surely itisnotgoing tobeapparen t
+that quotes aretheproblem. Youmaygetanerror that saysthere wasthe
+wrong numberofitems inaline. When yougetsuchanerror, itisoften a
+goodidea tousecount.fields togetasense ofwhat Rthinks aboutyourle.
+Something along thelines of:
+foo.cf<-count.fields('foo .txt',sep='nt')
+table(foo.cf)
+8.3.5 thymine isTRUE,female isFALSE
+Youarereading inDNA bases identied asA,T,GandC.The columns are
+read asfactors. Except forthecolumn that isallT|that column islogical.
+Similarly ,acolumn forgender that isallFforfemale willbelogical.
+Thesolution istousetheread.table argumen t:
+colClasses='chara cter'
+or
+colClasses='facto r'
+asyoulike.
+Ifthere arecolumns ofother sorts ofdata, then youneed togivecolClasses
+avector ofappropriate typesforthecolumns inthele.
+UsingcolClasses canalsomakethecallmuchmore ecien t.
+102
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Figure 8.3:Thetreac herous tocountryandthetreac herous toguests andhosts
+bySandro Botticelli.
+103
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.3.6 whitespace iswhite
+Whitespace isinvisible, and wehaveapredilection tobelievethat invisible
+means non-existen t.
+>factor(c('A ','A','B'))
+[1]AAB
+Levels: AAB
+Itisextraordinarily easy togetfactors likethiswhen reading indata. Setting
+thestrip.white argumen tofread.table toTRUE canpreventthis.
+8.3.7 extraneous elds
+When alehasbeencreated inaspreadsheet, there aresometimes extraneous
+empt yelds insome ofthelines ofthele. Insuchacase youmigh tgetan
+error similar to:
+>mydat<-read.table('myfi le',header=TRUE, sep='nt')
+Errorinscan(file, what,nmax,sep,dec,quote,skip,:
+line10didnothave55elements
+This, ofcourse, isaperfect instance tousecount.fields toseewhat isgoing
+on.Ifextraneous empt yelds doseem tobetheproblem, then onesolution is:
+>mydat<-read.table('myfi le',header=TRUE, sep='nt',
++fill=TRUE)
+>mydat<-mydat[, 1:53]
+Atthispoint,itiswiser than usual tocarefully inspecttheresults toseethat
+thedata areproperlyread andaligned.
+8.3.8 llandextraneous elds
+When thefill argumen tisTRUE (whic histhedefault forread.csv and
+read.delim butnotforread.table ),there canbetrouble ifthere isavariable
+numberofelds inthele.
+>writeLines(c("A,B ,C,D",
++ "1,a,b,c",
++ "2,d,e,f",
++ "3,a,i,j",
++ "4,a,b,c",
++ "5,d,e,f",
++ "6,g,h,i,j,k,l,m ,n"),
++con=file("test. csv"))
+>read.csv("test.cs v")
+ABCD
+104
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+11abc
+22def
+33aij
+44abc
+55def
+66ghi
+7jklm
+8n
+>read.csv("test.cs v",fill=FALSE)
+Errorinscan(file =file,what=what,...:
+line6didnothave4elements
+The rst 5lines ofthelearecheckedforconsistency ofthenumberofelds.
+Usecount.fields tocheckthewhole le.
+8.3.9 reading messy les
+read.table anditsrelativ esaredesigned forlesthat arearranged inatabular
+form. Notalllesareintabular form. Trying touseread.table orarelativ e
+onalethat isnottabular isfolly|y oucanendupwith mangled data.
+Twofunctions used toread les with amore general layoutarescan and
+readLines .
+8.3.10 imperfection ofwriting then reading
+Donotexpecttowrite data toale(suchaswithwrite.table ),read thedata
+backintoRandhavethat beprecisely thesame astheoriginal. That isdoing
+twotranslations, andthere isoften something lostintranslation.
+Youdohavesome choices togetthebehaviorthat youwant:
+Usesave tostore theobjectanduseattach orload touseit.This works
+with multiple objects.
+Usedput towrite anASCI Irepresen tation oftheobjectandusedget to
+bring itbackintoR.
+Useserialize towrite andunserialize toread itback.(But thehelp
+lewarns that theformat issubjecttochange.)
+8.3.11 non-v ectorized function inintegrate
+Theintegrate function expectsavectorized function. When itgivesanargu-
+mentoflength 127, itexpectstogetanansw erthat isoflength 127. Itshares
+itsdispleasure ifthat isnotwhat itgets:
+>fun1<-function(x) sin(x)+sin(x-1) +sin(x-2) +sin(x-3)
+105
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+>integrate(fun1, 0,2)
+-1.530295 withabsolute error<2.2e-14
+>fun2<-function(x) sum(sin(x -0:3))
+>integrate(fun2, 0,2)
+Errorinintegrate(fun2, 0,2):
+evaluation offunction gavearesultofwronglength
+Inaddition: Warning message:
+longerobjectlength
+isnotamultiple ofshorter objectlengthin:x-0:3
+>fun3<-function(x) rowSums(sin(outer (x,0:3,'-')))
+>integrate(fun3, 0,2)
+-1.530295 withabsolute error<2.2e-14
+fun1 isastraigh tforw ardimplemen tation ofwhat waswanted, butnoteasy
+togeneralize. fun2 isanill-conceiv edattempt atmimic kingfun1 .fun3 is
+aproperimplemen tation ofthefunction usingouter asastep ingetting the
+vectorization correct.
+8.3.12 non-v ectorized function inouter
+Thefunction giventoouter needs tobevectorized (intheusual sense):
+>outer(1:3, 4:1,max)
+Errorindim(robj) <-c(dX,dY):
+dims[product 12]donotmatchthelengthofobject[1]
+>outer(1:3, 4:1,pmax)
+[,1][,2][,3][,4]
+[1,] 4321
+[2,] 4322
+[3,] 4333
+>outer(1:3, 4:1,Vectorize(functi on(x,y)max(x,y)))
+[,1][,2][,3][,4]
+[1,] 4321
+[2,] 4322
+[3,] 4333
+TheVectorize function canbeused totransform afunction (byessen tially
+adding aloop|it contains nomagic totruly vectorize thefunction).
+8.3.13 ignoring errors
+Youhavealoopinwhichsome oftheiterations mayproduce anerror. You
+would liketoignore anyerrors andproceed with theloop.One solution isto
+usetry.
+Thecode:
+106
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+ans<-vector('list', n)
+for(iinseq(length.out= n))f
+ans[[i]] <-rpois(round(rno rm(1,5,10)),10)
+g
+willfailwhen thenumberofPoisson variates requested isnegativ e.This canbe
+modied to:
+ans<-vector('list', n)
+for(iinseq(length.out= n))f
+this.ans <-try(rpois(round (rnorm(1,5,10)),10))
+if(!inherits(th is.ans,'try-error'))f
+ans[[i]] <-this.ans
+g
+g
+Another approac histousetryCatch rather thantry:
+ans<-vector('list', n)
+for(iinseq(length.out= n))f
+ans[[i]] <-tryCatch(rpois( round(rnorm(1,5,10)),10),
+error=function(e )NaN)
+g
+8.3.14 acciden tally global
+Itispossible forfunctions toworkwhere they arecreated, butnottoworkin
+general. Objects within thefunction canbeglobal acciden tally.
+>myfun4<-function(x) x+y
+>myfun4(30)
+[1]132
+>rm(y)
+>myfun4(30)
+Errorinmyfun4(30) :Object"y"notfound
+ThefindGlobals function canhighligh tglobal objects:
+>library(codetools )
+>findGlobals(myfun 4)
+[1]"+""y"
+8.3.15 handling ...
+The8...8construct canbeaslipp erything togethold ofuntilyouknowthe
+trick.One wayistopackageitintoalist:
+107
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+function(x, ...)f
+dots<-list(...)
+if('special.arg' %in%names(dots))f
+#restoffunction
+g
+Another wayistousematch.call :
+function(x, ...)f
+extras<-match.call(expan d.dots=FALSE)$...
+#restoffunction
+g
+Ifyourfunction processes theargumen ts,then youmayneed tousedo.call :
+function(x, ...)f
+#...
+dots<-list(...)
+ans<-do.call('my.othe r.fun',c(list(x=x),
+dots[names(dots) %in%spec]))
+#...
+g
+8.3.16 laziness
+Ruses lazyevaluation. That is,argumen tstofunctions arenotevaluated until
+they arerequired. This cansavebothtime andmemory ifitturns outthe
+argumen tisnotrequired.
+Inextremely rarecircumstances something isnotevaluated that should be.
+Youcanuseforce togetaround thelaziness.
+>xr<-lapply(11:14, function(i) function() i^2)
+>sapply(1:4, function(j) xr[[j]]())
+[1]196196196196
+>xf<-lapply(11:14, function(i)fforce(i); function() i^2g)
+>sapply(1:4, function(j) xf[[j]]())
+[1]121144169196
+Extra credit forunderstanding what ishapp ening inthexrexample.
+8.3.17 lapply laziness
+lapply doesnotevaluate thecalls toitsFUNargumen t.Mostly youdon't care.
+Butitcanhaveaneect ifthefunction isgeneric. Itissafer tosay:
+lapply(xlist, function(x) summary(x))
+than tosay:
+lapply(xlist, summary)
+108
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.3.18 invisibilit ycloak
+Inrarecircumstances thevisibilit yofaresult maynotbeasexpected:
+>myfun6<-function(x) x
+>myfun6(zz <-7)
+>.Last.value
+[1]7
+>a6<-myfun6(zz <-9)
+>a6
+[1]9
+>myfun6(invisible( 11))
+>myfun7<-function(x) 1*x
+>myfun7(invisible( 11))
+[1]11
+8.3.19 evaluation ofdefault argumen ts
+Consider:
+>myfun2<-function(x, y=x)x+y
+>x<-100
+>myfun2(2)
+[1]4
+>myfun2(2, x)
+[1]102
+Some people expecttheresult ofthetwocalls abovetobethesame. They
+arenot. Thedefault value ofanargumen ttoafunction isevaluated inside the
+function, notintheenvironmen tcalling thefunction.
+Thuswriting afunction likethefollowing willnotgetyouwhat youwant.
+>myfun3<-function(x=x, y)x+y
+>myfun3(y=3)
+Errorinmyfun3(y =3):recursive default argument reference
+(The actual error message yougetmaybedieren tinyourversion ofR.)
+Themost popular error tomakeinthisregard istotrytoimitate thedefault
+value ofanargumen t.Something like:
+>myfun5<-function(x, n=xlen)fxlen<-length(x); ...g
+>myfun5(myx, n=xlen-2)
+xlen isdened insidemyfun5 andisnotavailable foryoutousewhen calling
+myfun5 .
+109
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+8.3.20 sapply simplication
+Thesapply function \simplies" theoutput oflapply .Itisn't alwayssosimple.
+That is,thesimplication that yougetmaynotbethesimplication youexpect.
+This uncertain tymakessapply notsosuitable foruseinside functions. The
+vapply function issometimes asafer alternativ e.
+8.3.21 one-dimensional arrays
+Arrayscanbeofanypositiv edimension (modulo memory andvector length
+limits). Inparticular, one-dimensional arraysarepossible. Almost alwaysthese
+lookandactlikeplain vectors. Almost.
+Here isanexample where they don't:
+>df2<-data.frame(x=re p(1,3),y=tapply(1:9,
++factor(rep(c('A', 'B','C'),each=3)), sum))
+>df2
+xy
+A16
+B115
+C124
+>tapply(df2$y, df2$x,length)
+1
+3
+>by(df2$y, df2$x,length)
+INDICES: 1
+[1]1
+>by(as.vector(df2$ y),df2$x,length)
+INDICES: 1
+[1]3
+tapply returns anarray,inparticular itcanreturn aone-dimensional array|
+whichisthecase withdf2$y .Thebyfunction inthiscase when givenaone-
+dimensional arrayproduces thecorrect answ ertoaquestion that wedidn't
+think wewereasking.
+One-dimensional arraysareneither matrices nor(exactly) plain vectors.
+8.3.22 byisfordata frames
+Thebyfunction isessen tially justaprett yversion oftapply fordata frames.
+The\fordata frames" isanimportan trestriction. Iftherstargumen tofyour
+calltobyisnotadata frame, youmaybeinfortrouble.
+>tapply(array(1:24 ,c(2,3,4)), 1:24%%2,length)
+01
+1212
+>by(array(1:24, c(2,3,4)), 1:24%%2,length)
+110
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+Errorintapply(1:2L, list(INDICES =c(1,0,1,0,1,0,1,:
+arguments musthavesamelength
+Inthisexample wehavethegoodfortune ofanerror being triggered, wedidn't
+havethat fortheproblem inCircle 8.3.21 .
+8.3.23 straybackquote
+Astraybackquote inafunction denition canyield theerror message:
+symbolprint-name toolong
+The backquote issometimes (too)close tothetabkeyand/or theescap ekey.
+Itisalsoclose tominimal sizeandhence easy tooverlook.
+8.3.24 arraydimension calculation
+There aretimes when thecreation ofmatrices fails tobetrue totheintention:
+>mf<-matrix(runif((2 -.1)/.1*5),ncol=5)
+Warning message: datalength[94]isnotasub-multiple or
+multiple ofthenumberofrows[19]inmatrix
+Notice that thematrix iscreated|that isawarning notanerror|the matrix
+ismerely created inappropriately .Ifyouignore thewarning, there could be
+consequences downtheline.
+Let's investigate theingredien ts:
+>(2-.1)/.1
+[1]19
+>(2-.1)/.1-19
+[1]-3.552714e-15
+>as.integer((2 -.1)/.1)
+[1]18
+When Rcoerces from aoating pointnumbertoaninteger ittruncates rather
+than rounds.
+The moral ofthestory isthatround canbeahandy function touse. Ina
+sense thisproblem really belongs inCircle 1(page 9),butthesubtlet ymakesit
+dicult tond.
+8.3.25 replacing pieces ofamatrix
+Wehavetwomatrices:
+>m6<-matrix(1:6, 3)
+>m4<-matrix(101:104, 2)
+>m6
+111
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+[,1][,2]
+[1,]14
+[2,]25
+[3,]36
+>m4
+[,1][,2]
+[1,]101103
+[2,]102104
+Our task istocreate anew matrix similar tom6where some oftherowsare
+replaced bytherstrowofm4.Here isthenatural thing todo:
+>m6new<-m6
+>m6new[c(TRUE, FALSE,TRUE),]<-m4[1,]
+>m6new
+[,1][,2]
+[1,]101101
+[2,]25
+[3,]103103
+Wearethinking aboutrowsbeing thenatural wayoflooking attheproblem.
+Theproblem isthat that isn't theRway,despite thecontext.
+One wayofgetting what wewantis:
+>s6<-c(TRUE, FALSE,TRUE)
+>m6new[s6, ]<-rep(m4[1,], each=sum(s6))
+>m6new
+[,1][,2]
+[1,]101103
+[2,]25
+[3,]101103
+8.3.26 reserv edwords
+Risalanguage. Because ofthis, there arereserv edwords that youcannotuse
+asobjectnames. Perhaps youcanimagine theconsequences ifthefollowing
+command actually worked:
+FALSE<-4
+Youcanseethecomplete listofreserv edwords with:
+?Reserved
+8.3.27 return isafunction
+Unlik esome other languages return isafunction that takestheobjectmean t
+tobereturned. Thefollowing construct doesNOT dowhat isintended:
+112
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+return(2/5)*3:9
+Itwillreturn 0.4andignore therest.
+8.3.28 return isafunction (still)
+return isafunction andnotareserv edword.
+>#kids,don'ttrythisathome
+>return<-function(x) 4*x
+>#notice: noerror
+>rm(return)
+8.3.29 BATCH failure
+Fridayafterno onyoustart oabatchjobhapp yintheknowledge that come
+Monda ymorning youwillhavetheresults ofsixty-some hours ofcomputation
+inyourhands. Come Monda ymorning results arenowhere tobefound. The
+jobfelloverafter anhour because ofastraycomma inyourleofcommands.
+Results can't beguaran teed, butitispossible toatleast testforthat stray
+comma anditsmates. Once you'vewritten yourleofcommands, parse the
+le:
+parse(file='batch job.in')
+Ifthere isasyntaxerror inthele,then you'll getanerror andalocation for
+the(rst) error. Ifthere arenosyntaxerrors, then you'll getanexpression (a
+large expression).
+8.3.30 corrupted .RData
+There aretimes when Rwon't start inaparticular location because ofacor-
+rupted.RData le. Ifwhat youhaveinthe.RData isimportan t,thisisbad
+news.
+Sometimes thiscanbecaused byapackagenotbeing attac hedintheR
+session that theledepends on.Whether ornotthisistheproblem, youcan
+trystarting Rinvanilla mode(renaming the.RData lerstisprobably agood
+idea) andthen tryattac hing thele.
+Inprinciple itshould bepossible toseewhat objects a.RData leholds and
+extract aselection ofobjects from it.However,Idon't knowofanytoolstodo
+that.
+8.3.31 syntaxerrors
+Syntaxerrors areoneofthemost common problems, especially fornew users.
+Unfortunately there isnogoodwaytotrackdowntheproblem other than
+113
+8.3. DEVILS CIRCLE 8.BELIEVING ITDOES ASINTENDED
+puzzling overit.The most common problems aremismatc hedparen theses or
+square brackets,andmissing commas.
+Using atext editor that performs syntaxhighligh tingcaneliminate alotof
+theproblems.
+Here isaparticularly nastyerror:
+>lseq<-seq(0,1,1ength=10)
+Error:unexpected inputin"seq(0, 1,1en"
+Hint:theendoftheerror message istheimportan tlocation. Infact, thelast
+letter that itprintsistherstpointatwhichitknew something waswrong.
+8.3.32 general confusion
+Ifyouaregetting results that aretotally atoddswith yourexpectations, look
+where youarestepping:
+Objects maybedieren tthan youexpect. Youcanusestrtodiagnose
+thispossibilit y.(The output ofstrmaynotmakemuchsense immedi-
+ately,butalittle study willrevealwhat itissaying.)
+Functions maybedieren tthan youexpect. Tryusingconflicts to
+diagnose this.
+Prett ymuchtheonly thing leftisyourexpectations.
+Calls tobrowser ,catanddebugger canhelp youeliminate ghosts, chimeras
+anddevils. Butthemost powerful toolisyourskepticism.
+114
+Circle 9
+Unhelpfully Seeking Help
+Here livethethiev es,guarded bythecentaur Cacus. Theinhabitan tsarebitten
+bylizards andsnakes.
+There's aspecial place forthose who|not being contentwith oneofthe8
+Circles we'vealready visited|feel comp elled todrag therestofusintohell.
+The road towriting amail message should include atleast thefollowing
+stops:
+9.1 Read theappropriate documen tation.
+\RTFM" inthejargon. There isalarge amoun tofdocumen tation aboutR,both
+ocial andcontributed, andinvarious formats. Alarge amoun tofdocumen ta-
+tionmeans that itisoften nontrivial tondwhat youarelooking for|esp ecially
+when frustration issetting inandbloodpressure isrising.
+Breathe.
+There arevarious searc hesthat youcando.Rfunctions forsearc hing include
+help.search ,RSiteSearch andapropos .
+Ifyouarelooking forparticular functionalit y,then checktheTaskViews
+(found ontheleft-side menuofCRAN).
+Ifyouhaveanerror, then lookinrather than out|debug theproblem.
+One wayofdebugging istosettheerror option, andthen usethedebugger
+function:
+options(error=dum p.frames)
+#command thatcausestheerror
+debugger()
+Thedebugger function then provides amenuofthestackoffunctions that have
+beencalled atthepointoftheerror. Youcaninspectthestate oftheobjects
+inside these functions, andhopefully understand what theproblem is.
+115
+9.2. CHECK THE FAQCIRCLE 9.UNHELPFULL YSEEKING HELP
+Figure 9.1:Thethiev esbySandro Botticelli.
+AsVirgil saidtome,\I'm pleased with allyourquestions, butoneofthem
+migh thavefound itsansw erwhen yousawtheredstream boiling."
+9.2 Chec ktheFAQ
+Most occurrences ofquestions arefrequen tlyaskedquestions. Looking through
+theFAQwilloften solveyourproblem. Evenifitdoesn't, youwillprobably
+learn some things that willavoidlater frustration.
+9.3 Update
+Sometimes youarehaving aproblem that hasalready beenxed. Iftheproblem
+isinacontributed package,youcando:
+update.packages()
+Butthiswillonly giveyouthelatest possible packagegiventheversion ofR
+that youarerunning. Ifyouareusing anoldversion ofR,then youcanmiss
+outonxes inpackages.
+There canalsobeproblems ifsome packages areupdated while others are
+not.
+116
+9.4. POSTINGGUIDE CIRCLE 9.UNHELPFULL YSEEKING HELP
+9.4 Read theposting guide
+This willgiveyouanother pointofview abouthowtoapproac htheremaining
+steps. Inparticular, itwillinstruct youonwhat typesofquestions belong on
+thevarious mailing lists.
+Another goodresource (not specic toR,butaprop os)isawebpage called
+\Howtoaskquestions thesmart way".
+Ifyouhavefaithfully performed thetasks uptohere, youprobably donot
+need tocontinue.Butdocontinueifitiswarran ted.
+Youcando:
+help.request()
+onsome platforms. This willcreate alecontaining some oftheimportan t
+information that should beinthemessage. Italsoreminds youofsteps that
+youshould take.
+9.5 Select thebestlist
+Yourchoices areR-help, R-dev elandthespecial interest groups. OrtheBio-
+conductor listifyourquestion relates toaBioconductor package.
+Pickone|cross posting isseriously discouraged.
+There aresome topics that should denitely besenttoaspecial interest
+group. Forexample, questions aboutgarchshould gotoR-sig-nance. Noone
+outside ofnance knowsaboutgarch,norwillthey ever.Non-nance people
+havenoalternativ ebuttothink that agarchissomeone who livesinGarc hing.
+Garc hisaspecically nancial model.
+Sending thequestion totherightlistisineveryone's bestinterest. Ifyou
+send aquestion aboutgarchtoR-help, then:
+Some ofthepeople most qualied toansw eryourquestion willnotseeit
+(myguess isthat thevastmajorityofsubscrib erstoR-sig-nance donot
+subscrib etoR-help).
+There willbethousands ofpeople forwhom thequestion willbeacomplete
+wasteoftime.
+There willbepeople inthespecial interest group who could prot from
+theansw ers,butwho willneverseetheansw ers.
+Ifthefunctionalit yyouareconcerned with isfrom acontributed package,seri-
+ously consider writing only tothemain tainer ofthepackage. Should youdeem
+itappropriate towrite toalist,then certainly saywhat packageorpackages
+areinvolved.
+117
+9.6. SUBJECTLINE CIRCLE 9.UNHELPFULL YSEEKING HELP
+DoNOT leabugreportunless youareabsolutely sure itisabug|bug
+reportsentailadditional workonthepart ofRCore. Ifthebehaviorisdiscussed
+inthisdocumen t,itisnotabug. Just because something doesn't workonyour
+machine, that doesnotmean itisaproblem inR.Ifthere isaquestion mark
+inyourstatemen t(oryourmind), itisnot(yet)abug. Itcannotbeabugif
+youdonothavearepro ducible metho dofexhibiting thebehavior. Itisabug
+ifyouhaveawell-reasoned argumen tofwhythecurren tbehaviorisbad, itis
+notdocumen tedtohavethecurren tbehavior, andyouhaveapatchtoxthe
+problem. Patchesarehighly appreciated. Note that \curren tbehavior" means
+thebuggy behaviorneeds tobeexhibited inthedevelopmen tversion ofR|do
+notconsider itenough toonly checkwhatev erversion ofRyouhapp entobe
+running. Also checktomakesure thebughasnotalready beenreported.
+Evenifitisclearly abug, itmaybeinappropriate toleanRbugreport.
+Thebugneed notbeinR,butmaybeinsome other piece ofsoftware.Ifinany
+doubt, send amessage toR-dev elinstead. Inparticular donotleanRbug
+reportforacontributed package|send yourmessage tothepackagemain tainer.
+Another donot: Donothijackanexisting thread. That willmakeamess
+forpeople viewing thelistbythreads. Makeanew message addressed tothe
+list.
+9.6 Useadescriptiv esubjectline
+Recall what words youused tosearc hthearchives(whic hyoudiddo)totry
+tondanansw ertoyourproblem, anduseaselection ofthose. Subjects like
+\Problem with code"and\Help!!" arelessthan perfect. Alegacy ofyourmail
+should betoimpro vethings forother users|that isunlik elytohapp enwithout
+anexplicit subjectline.
+With anappropriate subject, more oftherightpeople willread yourmessage
+andhence beinaposition togiveyouanansw er.
+Donotinclude words like\urgen t".The help youreceiv eonthemailing
+lists isagift, notaright.Being pushyislikelytoengender worse service, not
+better service.
+Attheother endofthemessage there isroomforyouridentity.Some people
+refuse torespondtoanon ymous messages. Indithard tobelievethat many
+people refuse torespondtoamessage because thesender isidentied. Soon
+balance youmaygetbetter response ifyouidentifyyourself.
+9.7 Clearly state yourquestion
+Astatemen tlike:
+When Iusefunctionblahblah ,itdoesn't work.
+118
+9.7. CLEARL YSTATE CIRCLE 9.UNHELPFULL YSEEKING HELP
+Figure 9.2:Thethiev esbySandro Botticelli.
+isnotaclear statemen tofyourquestion. Wedon't knowwhat \use" means,
+wedon't knowwhat youexpect\work" tolooklike,andwedon't knowwhat
+\doesn't work" means.
+Explain:
+What function youareusing (forexample, there areanumberofgarch
+implemen tations|y ouneed tosaywhichoneyouareusing).
+What youwant.
+What youexpected.
+Showuswhat happ ened.
+Showustheoutput ofstronyourdata.
+Sometimes background onwhyyouareasking thequestion isrelevant.Consider
+thequestion:
+Isthere awaytoorder pizza with R?
+The answ eris,ofcourse, \Ofcourse there isawaytoorder pizza. This*is*
+R."
+119
+9.8. EXAMPLE CIRCLE 9.UNHELPFULL YSEEKING HELP
+Thequestion lacksbothspecicit yandbackground (though itismercifully
+brief).The answ ertohowtodotheoperation could dependonwhether you
+wantitdelivered, andwhat sizeitshould be.And doyouwantanchovies? If
+youprovide background, youmaygetanansw erthat proposes abetter|but
+entirely dieren t|w ayofgetting nutrien tsintoyourbloodstream.
+Donotconfuse awarning with anerror. There aretwodierences:
+1.warnings say\warning" anderrors say\error".
+2.thecomputation continueswhen there isawarning butisinterrupted
+when there isanerror.
+Ifthere really isanerror, then givetheresults of:
+traceback()
+The word\crash" isveryambiguous. Itwould bebetter ifyoudidn't usethe
+wordatall.Ifyoudouseit,youneed toexplain exactly what youmean. In
+addition toavoiding theuseofvague words like\crash", youcanbeinformativ e
+bydispla ying theresults ofsessionInfo() .
+Iferror orwarning messages arenotinEnglish andyouarewriting toan
+English mailing list,then translating pertinen tmessages would beinyourbest
+interest. Butdoshowtherealmessage aswell.
+Ifyouareasking ifmetho dXYZ isimplemen tedinR,then saythat XYZ
+stands forXeric YareZeugma (and hence notX-raY Zoometry). Giveabrief
+explanation andareference (preferably available online). Thesame technique,
+orsomething suitably similar, maywellgobyadieren tname.
+DidIsayyoushould givetheresults ofsessionInfo() ?The more infor-
+mation abouttheversion ofRyouareusing andyourmachine, thebetter. If
+theinformation isaccurate, that's aplus.
+9.8 Giveaminimal, self-con tained example
+Note thisdoesnotsay,\Giveanexample." Itsaystogiveaminimal, self-
+contained example. Aminimal, self-con tained example allowsreaders torepro-
+duce theproblem easily .Theeasier youmakeitforyourreaders, themore likely
+youreceiv ehelp.
+Theword\minimal" implies anoptimization. Elemen tsofthat optimization
+include:
+Minimize thenumberofpackages involved.Ideal isifavanilla session
+suces.
+Minimize thenumberoffunctions involved.
+Minimize thesizeofanyfunctions that areyours.
+120
+9.9. WAIT CIRCLE 9.UNHELPFULL YSEEKING HELP
+Minimize thenumberandsizeofdatasets involved.Ifpeculiar data are
+required andyourdata arecomplicated, large and/or proprietary ,then
+makeupsome data that exhibits theproblem.
+Often theprocess ofmaking aminimal example revealstheproblem. Ifthe
+problem doesnotrevealitself, then keepthese hintsinmind:
+Makeyourexample easy tocutandpaste. Thedput function issometimes
+useful forthis.
+Iftheexample involvesrandom numbers,then useset.seed tomakethe
+numbersnon-random.
+Using data that comes with Risoften theeasiest foryourreaders.
+Format thecodetobeeasy tounderstand|the space barisanexcellen t
+resource.
+Yourminimal, self-con tained example should nevereverinclude alineofcode
+like:
+rm(list=ls())
+There's aspecial special place forthose who trytolulltheir would-b ehelpers
+intodestro ying their data.
+Itcannotbeemphasized enough that amessage isputting yourself atthe
+mercy ofstrangers. Ifsomeone hasthewitand knowledge toansw eryour
+question, they probably haveother things they would liketodo.Making your
+message clear, concise anduser-friendly givesyouthebesthopeofatleast one
+ofthose strangers diverting their atten tion awayfrom their lifetowards your
+problem.
+9.9 Wait
+Don't send themessage immediately .Waitsome amoun toftime|at least 1
+hour, atmost 1.7348 days.Leavetheroomyou're in.
+Nowreread themessage from atypical listmem ber'spointofview. The
+answ ermaybecome apparen t.More likelyyoumayseehowthequestion could
+bemade more clear. Add information thatonly youknowbutwhichthemessage
+assumes thereader knows.Imagine yourself going through allofthesteps of
+yourproblem from thebeginning.
+Send themessage inplain text, nothtml.
+Only send themessage once. Just because youdon't immediately seeyour
+message onthelistdoesnotmean itdidn't gothrough. Seeing thesame message
+multiple times anno yspeople andreduces thechances they willansw eryou.
+There seems tobepositiv ecorrelation betweenaperson's levelofanno yance at
+thisandabilit ytoansw erquestions.
+121
+Postscript
+irgiland Icame upontheroad leading tothebrigh tworld. Weclimbed
+through anopening toseeonce again thestars.
+Most ofthiswasstolen from thearchivesofR-help (thiev esareconsigned to
+Circle 9[page 115],asyou'll recall). Thanks gotoTim Triche,Jr.andespecially
+Mark Diord forhelp with thetable ofcontentsandtheindex, andforwell-
+placed prods.Mark's version ofthesource documen twentthrough aninferno
+ofitsown.
+What spark oflifethere maybeinthese scribblings isduelargely tothecon-
+tributors ofR-help, andtoBeatrice.
+122
+Index
+1-Darrays,110
+tapply ,110
+Assignmen toperators, 94
+Attributes, seeObjects, S3metho ds,
+S4metho ds
+Backslashed characters, seeTable 8.1
+Braces, curly ,28
+Breathe, 115
+Calculating products, seeVectorization
+safe, ecien tcalculation, 18
+Capitalization, 46,78
+Circle I,9{11
+virtuous pagans, oating pointand
+allthat, 9
+Circle III,17{23
+cold, dead weightofthepast, 17
+foreign tongues, 17
+pain andpleasure ofperfection, 17
+Complex numbers,94
+Computing onthelanguage, 32
+Corrupted .RData, 113
+Curly braces, 28
+Data frame, 98{101
+Double bracketsversus single brackets,
+72
+Empt ycells
+aggregate, by,sapply, tapply
+(behaviour), 69{70
+split andsapply ,70
+Factors, 80{87Fileextension conventions, 64
+Floating PointTrap,9{11
+oating point,9,11,111
+numerical error andwrong calcu-
+lation, 11
+rank ofamatrix, 11
+Functions (R+other)
+all.equal ,93
+as.numeric ,91
+cbind ,100
+c,84
+data.table ,25
+ifelse ,90
+if,90
+integrate ,105
+is.integer ,91
+is.matrix ,92
+max,92
+pmax ,92
+return ,112,113
+Vectorize ,18,106
+aggregate ,70
+asalternativ etotapply ,25
+all.equal ,11
+apply ,24
+as.complex ,10,48
+as.integer ,91
+attach ,95
+by,70,110
+asalternativ etotapply ,25
+data frames, 110{111
+cbind ,10,18
+circle.area ,28
+do.call ,95
+for,12{15,17,18,21,22,26,50,
+123
+INDEX INDEX
+66,73{76,95,107
+getAnywhere ,95
+help.request ,117
+help ,95
+identical ,93
+ifelse ,21{22,84
+if,21{22
+is.complex ,10
+is.integer ,92
+is.matrix ,90
+is.na ,26,36,52,77,87,89
+equalit yofmissing values, 48
+is.numeric ,91,94
+isTRUE ,93
+library ,95
+max,19
+mean ,19
+memory.size ,15
+min,19
+na.rm ,28,39,57
+outer ,106
+prod ,18,19
+quadratic.formul a,10,18
+range ,19
+rbind ,13,14
+read.table ,101
+replicate ,95
+require ,95
+return ,28
+rm,95
+runif ,13,14,22,111
+sample ,96
+sapply ,70,108,110
+inside functions, 110
+save ,95
+seq,9,21,75,76,107,114
+sessionInfo ,120
+sqrt ,10
+str,114,119
+subset ,95{96
+sum,17{19
+system.time ,94
+tapply ,25,69,70,110
+alternativ es,seeby,aggregate
+traceback ,120
+unique ,9update.packages ,116
+vapply ,110
+write.table ,105
+formatting, 32{34
+passing information, 37
+writing functions
+consistency ,33{34
+inden ting, 33
+simplicit y,32{33
+spaces between(logical) opera-
+tors, 33
+Global Assignmen ts,35{37
+memoization, 36,37
+Green book,seeS4metho ds
+Help (asking for), 115{121
+rtfm,115
+dput ,121
+help.request ,117
+sessionInfo ,120
+set.seed ,121
+traceback ,120
+update.packages ,116
+checkthefaq,116
+descriptiv esubjectline, 118
+ling bugreports, 117{118
+hijackthread, 118
+minimal example (value of),120{
+121
+read theposting guide, 117
+repeating amessage, 121
+select bestlist,118
+special interest groups, 117
+typesoflist,117
+vanilla session, 120
+waitbefore posting, 121
+Integers, 91{92
+Namespaces, 42{43
+::(accessing public [exported] ob-
+jects), 43
+:::(accessing private[non-exp orted]
+objects), 43
+accessing functions/ob jects with the
+same name, 42
+124
+INDEX INDEX
+privateandpublic objects, 43
+Nonstandard evaluation, 95{96
+Objectorien tation, 38{43
+Objects, 29
+accessing objects, seeNamespaces
+attributes, 22,29{30,38
+disapp earing attributes, 62
+growing objects, 12{16
+performance, seeTable 2.1
+typesofobjects, seeTables 5.1,
+5.2
+Operators
+:timings, seeTable 2.1
+:,13{15,17,18,20{22,25{29,35,
+38,39,43,47,49{53,55,56,
+58,64{70,73{76,78
+formatting, 33
+::,43
+:::,43
+<< ,35{37
+@,seeS4metho dssubslots
+arithmetic
+arevectorized, 18
+precedence, 47{48
+using paren theses, 48
+Precedence ofoperators, 47{48
+Quadratic
+quadratic.formul a,10,18
+quadratic equation, 10
+Quote/Quotes
+thequote family offunctions, see
+Table 8.2
+Read data intoR,101{105
+Rectangular format, seeread.table
+subFunctions
+Reserv edwords, 112
+Return value offunction, 28
+S3metho ds,38{40
+print,38{39
+white book,38
+S4metho ds,40{42
+green book,38,40multiple dispatc h,40
+slots (@),41{42
+Scoping, 78{80
+Side eects ofafunction, 28,35
+Single bracketsversus double brackets,
+72
+Special special place, 121
+Storage mode,91
+Subscripting, 12,20,21,55,56,67,68,
+71,72,96
+array,20
+data frame, 20
+disapp earing attributes, 62
+list,20{21
+UweLigges
+maxim, 20,24,52,62
+Vanilla session
+minimize packages loaded, 120
+name masking, 63
+Vector
+three meanings, 29
+Vectorization, 12{26
+logfunction, 17
+outer (withVectorize ),106
+prod ,18
+sum,17{18
+forfree, 18
+over-vectorizing, 24{26
+apply family, seeTable 4.1
+sapply family, seeTable 4.1
+loop-hiding, 24
+performance
+rbind ,13{14
+fragmen tingmemory ,13
+suburbanization, 12,13
+reasons for
+clarit y,19{20
+computational speed,19
+stable computation
+taking logs, then doing sums, 18
+vectorization, 17
+White book,seeS3metho ds
+Writing functions, seeFunctions (R+other)
+125
