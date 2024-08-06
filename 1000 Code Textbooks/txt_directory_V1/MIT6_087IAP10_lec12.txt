@@ -1,0 +1,463 @@
+Outline
+Review 
+Multithreaded prog ramming 
+Concepts 
+Pthread 
+API 
+Mute x 
+Condition v ariables 
+1 
+6.087 Lecture 12 – January 27, 2010
+Review 
+Multithreaded prog ramming 
+Concepts 
+Pthread 
+API 
+Mute x 
+Condition v ariables 
+2 
+Review: malloc()
+•	Mapping memor y: mmap(), munmap(). Useful f or 
+demand paging. 
+•	Resizing heap: sbrk() 
+•	Designing malloc() 
+•	implicit link ed list,e xplicit link ed list 
+• best ﬁt,ﬁrst ﬁt,ne xt ﬁt
+Prob lems:
+ • 
+•	fragmentation 
+•	memor y leaks 
+•	valgrind –tool=memchec k, chec ks for memor y leaks . 
+2 
+Garba ge collection
+• C does not ha ve any garbage collectors 
+• Implementations a vailab le 
+• Types: 
+• Mark and s weep garbage collector (depth ﬁrst search) 
+• Chene y’s algor ithm (breadth ﬁrst search) 
+• Copying garbage collector 
+3 
+6.087 Lecture 12 – January 27, 2010
+Review 
+Multithreaded prog ramming 
+Concepts 
+Pthread 
+API 
+Mute x 
+Condition v ariables 
+4 
+Preliminaries: Parallel computing
+•	Parallelism: Multiple computations are done 
+simultaneously . 
+•	Instruction le vel (pipelining) 
+•	Data par allelism (SIMD) 
+•	Task par allelism (embarr assingly par allel) 
+•	Concurrency: Multiple computations that ma y be done in 
+parallel. 
+•	Concurrency vs . Parallelism 
+4 
+Process vs. Threads
+•	Process: An instance of a prog ram that is being e xecuted 
+in its o wn address space . In POSIX systems , each 
+process maintains its o wn heap , stac k, registers , ﬁle 
+descr iptors etc. 
+Comm unication: 
+•	Shared memor y
+Netw ork
+ • 
+•	Pipes , Queues 
+•	Thread: A light w eight process that shares its address 
+space with others .In POSIX systems , each thread 
+maintains the bare essentials: registers , stac k, signals . 
+Comm unication: 
+•	shared address space . 
+5 
+Multithreaded concurrenc y
+Serial execution: 
+•	All our prog rams so f ar has had a single thread of
+execution: main thread.
+• Prog ram e xits when the main thread e xits. 
+Multithreaded: 
+•	Prog ram is organiz ed as m ultiple and concurrent threads 
+of execution. 
+•	The main thread spa wns multiple threads . 
+•	The thread ma y comm unicate with one another . 
+•	Advantages: 
+•	Impro ves perf ormance 
+•	Impro ves responsiv eness 
+•	Impro ves utilization 
+•	less o verhead compared to m ultiple processes 
+6 
+Multithreaded programming
+Even in C , multithread prog ramming ma y be accomplished in 
+several ways 
+• Pthreads: POSIX C libr ary. 
+• OpenMP 
+• Intel threading b uilding b locks 
+• Cilk (from CSAIL!) 
+• Grand centr al despatch 
+• CUD A (GPU) 
+• OpenCL (GPU/CPU) 
+7 
+Not all code can be made parallel
+f l o a t params [ 1 0 ] ; 
+f o r ( i n t i =0; i <10; i ++) 
+do_something ( params [ i ] ) ; f l o a t params [ 1 0 ] ; 
+f l o a t prev =0; 
+fo r ( i n t i =0; i <10; i ++) 
+{ 
+prev=complicated ( params [ i ] , prev ) ; 
+} 
+paralleizab le not par allelizab le 
+8 
+Not all multi-threaded code is safe
+int balance =500; 
+void deposit ( int sum ) { 
+int currbalance=balance ; /∗ read balance ∗/ 
+... 
+currbalance+=sum ; 
+balance=currbalance ; /∗ write balance ∗/ 
+} 
+void withdraw ( int sum ) { 
+int currbalance=balance ; /∗ read balance ∗/ 
+if ( currbalance >0) 
+currbalance−=sum ; 
+balance=currbalance ; /∗ write balance ∗/ 
+} 
+.. 
+deposit (100); /∗ thread 1∗/ 
+.. 
+withdraw (50);/ thread 2∗/ 
+.. 
+withdraw (100); /∗ thread 3∗/ 
+... 
+• minimiz e use of global/static memor y 
+• Scenar io: T1(read),T2(read,wr ite),T1(wr ite) ,balance=600 
+• Scenar io: T2(read),T1(read,wr ite),T2(wr ite) ,balance=450 
+9 
+6.087 Lecture 12 – January 27, 2010
+Review 
+Multithreaded prog ramming 
+Concepts 
+Pthread 
+API 
+Mute x 
+Condition v ariables 
+10 
+Pthread
+API: 
+• Thread management: creating, joining, attr ibutes 
+pthread_ 
+• Mute xes: create , destro y mutexes 
+pthread_m utex_ 
+• Condition v ariables: create ,destro y,wait,signal 
+pthread_cond_ 
+• Synchronization: read/wr ite loc ks and barr iers 
+pthread_rwloc k_, pthread_barr ier_ 
+API: 
+• #include <pthread.h> 
+• gcc −Wall −O0 −o <output> ﬁle.c −pthread (no −l preﬁx) 
+10 
+Creating threads
+int	pthread_create ( pthread_t thread , ∗ 
+const pthread _attr _t attr , ∗ 
+void ∗(∗ start _routine )( void ∗ ), void arg ); ∗ 
+•	creates a ne w thread with the attr ibutes speciﬁed b y attr. 
+Default attr ibutes are used if attr is NULL. • 
+•	On success , stores the thread it into thread 
+•	calls function start_routine(arg) on a separ ate
+thread of e xecution.
+•	returns zero on success , non-z ero on error . 
+void pthread_e xit(void ∗value_ptr); 
+•	called implicitly when thread function e xits. 
+•	analogous to exit(). 
+11 
+Example
+#include <pthread . h> 
+#include < s t d i o . h> 
+#define NUM_THREADS 5 
+void ∗ P r i n t H e l l o ( void ∗threadid ) 
+{ 
+long t i d ; 
+t i d = ( long ) threadid ; 
+p r i n t f ( " Hello World ! I t ’ s me, thread #%l d ! \ n " , t i d ) ; 
+pthread _exit (NULL ) ; 
+} 
+i n t main ( i n t argc , char ∗argv [ ] ) 
+{ 
+pthread_t threads [NUM_THREADS] ; 
+i n t rc ; 
+long t ; 
+for ( t =0; t <NUM_THREADS; t ++){ 
+p r i n t f ( " In main : c reating thread %l d \ n " , t ) ;
+rc = pthread_create (& threads [ t ] , NULL, P ri n t H e ll o , ( void ∗) t ) ;
+i f ( rc ) {
+p r i n t f ( "ERROR; r e t u r n code from pthread_create ( ) i s %d \ n " , rc ) ; 
+e x i t ( −1); 
+}
+}
+pthread _exit (NULL ) ;
+} 
+code: https://computing.llnl.gov/tutorials/pthreads/ 
+© Lawrence Livermore National Laboratory. All rights reserved. This content is excluded from our Creative Commons license. For more information, see http://ocw.mit.edu/fairuse.
+Output
+In main : c r e a t i n g thread 0 In main : c r e a t i n g thread 0 
+In main : c r e a t i n g thread 1 Hello World ! I t ’ s me, thread #0! 
+Hello World ! I t ’ s me, thread #0! In main : c r e a t i n g thread 1 
+Hello World ! I t ’ s me, thread #1! Hello World ! I t ’ s me, thread #1! 
+In main : c r e a t i n g thread 2 In main : c r e a t i n g thread 2 
+In main : c r e a t i n g thread 3 Hello World ! I t ’ s me, thread #2! 
+Hello World ! I t ’ s me, thread #2! In main : c r e a t i n g thread 3 
+Hello World ! I t ’ s me, thread #3! Hello World ! I t ’ s me, thread #3! 
+In main : c r e a t i n g thread 4 In main : c r e a t i n g thread 4 
+Hello World ! I t ’ s me, thread #4! Hello World ! I t ’ s me, thread #4! 
+13 
+Sync hronization: joining
+Figure: https://computing.llnl.gov/tutorials/pthreads 
+int pthread_join (pthread_t thread , void ∗∗value_ptr); 
+•	pthread_join () blocks the calling thread until the speciﬁed thread 
+terminates . 
+•	If value_ptr is not n ull, it will contain the retur n status of the 
+called thread 
+Other w ays to synchroniz e: mutex,condition v ariables 
+Courtesy of Lawrence Livermore National Laboratory. Used with permission. 14© Lawrence Livermore National Laboratory. All rights reserved. This content is excluded from our Creative Commons license. For more information, see http://ocw.mit.edu/fairuse.
+Example
+#define NELEMENTS 5000 
+#define BLK_SIZE 1000 
+#define NTHREADS (NELEMENTS/BLK_SIZE) 
+int main ( int argc , char ∗argv []) 
+{ 
+pthread_t thread [NUM_THREADS] ; 
+pthread _attr _t attr ;
+int rc ; long t; void ∗status ;
+/∗ Initialize and set thread detached attribute ∗/ 
+pthread _attr _init(&attr );
+pthread _attr_setdetachstate(&attr , PTHREAD_CREATE_JOINABLE);
+for ( t =0; t <NUM_THREADS; t ++) {
+printf("Main: creating thread %ld\n ", t);
+rc = pthread_create(&thread[t], &attr , work, ( void ∗ )( t ∗BLK_SIZE ) ) ;
+if (rc) {
+printf("ERROR; return code from pthread_create() is %d\n ", rc); exit( −1);
+}
+}
+/∗ Free attribute and wait for the other threads ∗/ 
+pthread_attr _destroy(&attr ); 
+for ( t =0; t <NUM_THREADS; t ++) {
+rc = pthread _join(thread[t], &status);
+if (rc) {
+printf("ERROR; return code from pthread _join() is %d\n ", rc);exit( −1); 
+}
+}
+printf("Main: program completed. Exiting.\n ");
+} 15 
+Mute x
+•	Mute x (mutual exclusion) acts as a "lock" protecting access 
+to the shared resource . 
+•	Only one thread can "o wn" the m utex at a time . Threads 
+must tak e turns to loc k the m utex. 
+int pthread_mutex_destroy ( pthread_mutex_t ∗mutex ) ; 
+int pthread_mutex_init ( pthread_mutex_t mutex , ∗ 
+const pthread_mutexattr_t attr ); ∗ 
+thread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; 
+•	pthread_m utex_init() initializ es a m utex. If attr ibutes are NULL, 
+default attr ibutes are used.
+The macro PTHREAD_MUTEX_INITIALIZER can be used to initializ e
+ • 
+static m utexes.
+pthread_m utex_destro y() destro ys the m utex.
+ • 
+•	Both function return return 0 on success , non zero on error. 
+16 
+Mute x
+int pthread_mutex_lock ( pthread_mutex_t ∗mutex ) ; 
+int pthread_mutex_trylock ( pthread_mutex_t ∗mutex ) ; 
+int pthread_mutex_unlock ( pthread_mutex_t ∗mutex ) ; 
+•	pthread_m utex_loc k() locks the giv en m utex. If the m utex is loc ked, 
+the function is b locked until it becomes a vailab le. 
+•	pthread_m utex_trylock() is the non-b locking v ersion. If the m utex is 
+currently loc ked the call will retur n immediately . 
+pthread_m utex_unloc k() unloc ks the m utex. • 
+17 
+Example revisited
+int balance =500; 
+void deposit ( int sum ) { 
+int currbalance=balance ; /∗ read balance ∗/ 
+... 
+currbalance+=sum ; 
+balance=currbalance ; /∗ write balance ∗/ 
+} 
+void withdraw ( int sum ) { 
+int currbalance=balance ; /∗ read balance ∗/ 
+if ( currbalance >0) 
+currbalance−=sum ; 
+balance=currbalance ; /∗ write balance ∗/ 
+} 
+.. 
+deposit (100); /∗ thread 1∗/ 
+.. 
+withdraw (50);/ thread 2∗/ 
+.. 
+withdraw (100); /∗ thread 3∗/ 
+... 
+• Scenar io: T1(read),T2(read,wr ite),T1(wr ite),balance=600 
+• Scenar io: T2(read),T1(read,wr ite),T2(wr ite),balance=450 
+18 
+Using mutex
+int balance =500;
+pthread_mutex_t mutexbalance=PTHREAD_MUTEX_INITIALIZER;
+void deposit ( int sum ) { 
+pthread_mutex_lock(&mutexbalance ); 
+{ 
+int currbalance=balance ; /∗ read balance ∗/ 
+...
+currbalance+=sum ;
+balance=currbalance ; /∗ write balance ∗/
+}
+pthread_mutex_unlock(&mutexbalance );
+} 
+void withdraw ( int sum ) { 
+pthread_mutex_lock(&mutexbalance ); 
+{ 
+int currbalance=balance ; /∗ read balance ∗/ 
+if ( currbalance >0) 
+currbalance−=sum ;
+balance=currbalance ; /∗ write balance ∗/
+}
+pthread_mutex_unlock(&mutexbalance );
+}
+.. deposit(100); /∗ thread 1∗/
+.. withdraw (50);/ thread 2∗/
+.. withdraw(100); /∗ thread 3∗/
+• Scenar io: T1(read,wr ite),T2(read,wr ite),balance=550 
+• Scenar io: T2(read),T1(read,wr ite),T2(wr ite),balance=550 
+19 
+Condition variab les
+Sometimes loc king or unloc king is based on a r un-time 
+condition (e xamples?).Without condition v ariables, prog ram 
+would ha ve to poll the v ariable/condition contin uously . 
+Consumer : 
+(a) lock mutex on global item v ariable 
+(b) wait for (item>0) signal from producer (m utex unloc ked 
+automatically). 
+(c) wake up when signalled (m utex locked again 
+automatically), unloc k mutex and proceed. 
+Producer : 
+(1) produce something 
+(2) Lock global item v ariable, update item 
+(3) signal w aiting (threads) 
+(4) unloc k mutex 
+20 
+Condition variab les
+int pthread_cond_destroy ( pthread_cond_t ∗cond ); 
+int pthread _cond_init(pthread_cond_t cond, const pthread_condattr_t attr ); ∗	 ∗ 
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER; 
+•	pthread_cond_init() initializ ed the condition v ariable. If attr is NULL, 
+default attr ibutes are sed. 
+•	pthread_cond_destro y() will destro y (uninitializ e) the condition
+variable.
+•	destro ying a condition v ariable upon which other threads 
+are currently b locked results in undeﬁned beha vior. 
+macro PTHREAD_COND_INITIALIZER can be used to initializ e condition • 
+variables. No error chec ks are perf ormed.
+Both function retur n 0 on success and non-z ero otherwise .
+ • 
+21 
+Condition variab les
+int pthread_cond_destroy ( pthread_cond_t ∗cond ); 
+int pthread _cond_init(pthread_cond_t cond, const pthread_condattr_t attr ); ∗	 ∗ 
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER; 
+•	pthread_cond_init() initializ ed the condition v ariable. If attr is NULL, 
+default attr ibutes are sed. 
+•	pthread_cond_destro y() will destro y (uninitializ e) the condition
+variable.
+•	destro ying a condition v ariable upon which other threads 
+are currently b locked results in undeﬁned beha vior. 
+macro PTHREAD_COND_INITIALIZER can be used to initializ e condition • 
+variables. No error chec ks are perf ormed.
+Both function retur n 0 on success and non-z ero otherwise .
+ • 
+22 
+Condition variab les
+int pthread_cond_w ait(pthread_cond_t ∗cond,pthread_m utex_t ∗mutex); 
+blocks on a condition v ariable. • 
+•	must be called with the m utex already loc ked otherwise 
+beha vior undeﬁned. 
+•	automatically releases m utex 
+•	upon successful retur n, the m utex will be automatically 
+locked again. 
+int pthread_cond_broadcast(pthread_cond_t ∗cond); 
+int pthread_cond_signal(pthread_cond_t ∗cond); 
+•	unblocks threads w aiting on a condition v ariable. 
+•	pthread_cond_broadcast() unloc ks all threads that are w aiting. 
+•	pthread_cond_signal() unloc ks one of the threads that are w aiting. 
+•	both retur n 0 on success , non z ero otherwise . 
+23 
+Example
+#include <pthread .h>
+pthread_cond_t cond_recv=PTHREAD_COND_INITIALIZER;
+pthread_cond_t cond_send=PTHREAD_COND_INITIALIZER;
+pthread_mutex_t cond_mutex=PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t count_mutex=PTHREAD_MUTEX_INITIALIZER;
+int full =0;
+int count =0;
+void∗ produce ( void ∗) void∗ consume ( void ∗) 
+{ {
+while (1) while (1)
+{ {
+pthread_mutex_lock(&cond_mutex); pthread_mutex_lock(&cond_mutex); 
+while ( full ) while (! full) 
+{ { 
+pthread_cond_wait(&cond_recv, pthread_cond_wait(&cond_send, 
+&cond_mutex ) ; &cond_mutex ) ; 
+} } 
+pthread_mutex_unlock(&cond_mutex); pthread_mutex_unlock(&cond_mutex); 
+pthread_mutex_lock(&count_mutex); pthread_mutex_lock(&count_mutex); 
+count++;full=1; full=0; 
+printf("produced(%d):%d\n", printf(" consumed(%ld):%d\n ", 
+pthread_self(),count); pthread _self(),count); 
+pthread_cond_broadcast(&cond_send); pthread_cond_broadcast(&cond_recv); 
+pthread_mutex_unlock(&count_mutex); pthread_mutex_unlock(&count_mutex); 
+if ( count >=10) break ; if ( count >=10)break ; 
+} } 
+24 
+Example
+int main () 
+{ 
+pthread_t cons_thread , prod_thread ; 
+pthread_create(&prod_thread ,NULL,produce ,NULL); 
+pthread_create(&cons_thread ,NULL,consume,NULL); 
+pthread _join(cons_thread ,NULL); 
+pthread _join(prod_thread ,NULL); 
+return 0; 
+} 
+Output: 
+produced (3077516144):1 
+consumed(3069123440):1 
+produced (3077516144):2 
+consumed(3069123440):2 
+produced (3077516144):3 
+consumed(3069123440):3 
+produced (3077516144):4 
+consumed(3069123440):4 
+produced (3077516144):5 
+consumed(3069123440):5 
+produced (3077516144):6 
+consumed(3069123440):6 
+produced (3077516144):7 
+consumed(3069123440):7 
+25 
+Summar y
+•	Parallel prog ramming concepts 
+•	Multithreaded prog ramming 
+Pthreads• 
+•	Syncrhonization 
+Mute x • 
+Condition v ariables • 
+26 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare 
+http://ocw.mit.edu 
+6.087  Practical Programming in C 
+January (IAP) 2010 
+ 
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms. 

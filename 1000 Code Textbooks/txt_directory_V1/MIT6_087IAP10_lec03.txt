@@ -1,0 +1,570 @@
+6.087 Lecture 3 – Jan uary 13, 2010
+Review 
+Blocks and Compound Statements 
+Control Flo w 
+Conditional Statements 
+Loops 
+Functions 
+Modular Prog ramming 
+Variable Scope 
+Static V ariables 
+Register V ariables 
+1 
+Review: Deﬁnitions
+•	Variable -name/ref erence to a stored v alue (usually in 
+memor y) 
+•	Data type - deter mines the siz e of a v ariable in memor y, 
+what v alues it can tak e on, what oper ations are allo wed 
+•	Oper ator - an oper ation perf ormed using 1-3 v ariables 
+•	Expression - combination of liter al values/v ariables and 
+operators/functions 
+1 
+Review: Data types
+• Various siz es (char, shor t, long, ﬂoat, doub le) 
+• Numer ic types - signed /unsigned 
+• Implementation - little or big endian 
+• Careful mixing and con verting (casting) types 
+2 
+Review: Operator s
+•	Unar y, binar y, ternary (1-3 arguments) 
+•	Arithmetic oper ators , relational oper ators , binar y (bitwise 
+and logical) oper ators , assignment oper ators , etc. 
+•	Conditional e xpressions 
+•	Order of e valuation (precedence , direction) 
+3 
+6.087 Lecture 3 – Jan uary 13, 2010
+Review 
+Blocks and Compound Statements 
+Control Flo w 
+Conditional Statements 
+Loops 
+Functions 
+Modular Prog ramming 
+Variable Scope 
+Static V ariables 
+Register V ariables 
+4 
+Bloc ks and compound statements
+•	A simple statement ends in a semicolon: 
+z = foo(x+y); 
+•	Consider the m ultiple statements: 
+temp = x+y;
+z = foo(temp);
+•	Curly braces – combine into compound statement/b lock 
+4 
+Bloc ks
+•	Block can substitute f or simple statement 
+•	Compiled as a single unit 
+Variables can be declared inside • 
+{
+int temp = x+y;
+z = foo(temp);
+} 
+•	Block can be empty {} 
+No semicolon at end • 
+5 
+Nested b locks
+Blocks nested inside each other • 
+{
+int temp = x+y;
+z = foo(temp);
+{
+float temp2 = x∗y;
+z += bar(temp2);
+}
+}
+6 
+6.087 Lecture 3 – Jan uary 13, 2010
+Review 
+Blocks and Compound Statements 
+Control Flo w 
+Conditional Statements 
+Loops 
+Functions 
+Modular Prog ramming 
+Variable Scope 
+Static V ariables 
+Register V ariables 
+7 
+Contr ol conditions
+• Unlik e C++ or J ava, no boolean type (in C89/C90) 
+• in C99, bool type a vailab le (use stdbool.h) 
+• Condition is an e xpression (or ser ies of e xpressions) 
+e.g. n<3 orx<y || z<y 
+Expression is non-z ero condition tr ue • ⇒ 
+• Expression m ust be n umer ic (or a pointer) 
+const char str[] = "some text" ;
+if (str) / ∗ string is not null ∗ /
+return 0;
+7 
+Conditional statements
+The if statement• 
+The switch statement• 
+8 
+The if statement
+if (x% 2) 
+y += x/2; 
+Evaluate condition • 
+if	(x %2==0) 
+•	If true, evaluate inner statement 
+y += x/2; 
+•	Otherwise , do nothing 
+9 
+The else keyword
+if (x%2 == 0) 
+y += x/2; 
+else 
+y	+= (x+1)/2; 
+•	Optional 
+Execute statement if condition is f alse • 
+y += (x+1)/2; 
+• Either inner statement ma y be b lock 
+10 
+The else if keyword
+if (x%2 == 0) 
+y += x/2; 
+else if (x%4 == 1) 
+y+= 2∗ ((x+3)/4); 
+else 
+y	+= (x+1)/2; 
+•	Additional alter nativ e control paths 
+•	Conditions e valuated in order until one is met; inner 
+statement then e xecuted 
+•	If multiple conditions tr ue, only ﬁrst e xecuted 
+•	Equiv alent to nested if statements 
+11 
+Nesting if statements
+if (x%4 == 0) 
+if (x%2 == 0) 
+y= 2; 
+else 
+y= 1; 
+To which if statement does the else keyword belong? 
+12 
+Nesting if statements
+To associate else with outer if statement: use br aces 
+if (x%4 == 0) { 
+if (x%2 == 0) 
+y= 2; 
+} else 
+y= 1; 
+13 
+The switch statement
+Alternativ e conditional statement • 
+• Integer (or char acter) v ariable as input 
+Considers cases f or value of v ariable • 
+switch (ch) {
+case ’Y’ :/ ∗ ch == ’Y’ ∗ /
+/ ∗ do something ∗ /
+break ; 
+case ’N’ :/ ∗ ch == ’N’ ∗ / 
+/ ∗ do something else ∗ / 
+break ;
+default :/ ∗ otherwise ∗ /
+/ ∗ do a third thing ∗ /
+break ;
+}
+14 
+Multiple cases
+•	Compares v ariable to each case in order 
+•	When match f ound, star ts executing inner code until 
+break; reached 
+•	Execution “f alls through” if break; not included 
+switch (ch) { 
+switch (ch) { case ’Y’ : 
+case ’Y’ : / ∗ do something i f 
+case ’y’ : ch == ’Y’ ∗ / 
+/ ∗	do something i f case ’N’ : 
+ch == ’Y’ or / ∗ do something i f 
+ch == ’y’ ∗ / ch == ’Y’ or 
+break ; ch == ’N’ ∗ / 
+} break ; 
+} 
+15 
+The switch statement
+Contents of switch statement a b lock • 
+• Case labels: different entr y points into b lock 
+• Similar to labels used with goto keyword (ne xt lecture. . . ) 
+16 
+Loop statements
+• The while loop 
+• The for loop 
+• The do-while loop 
+• The break and continue keywords 
+17 
+The while loop
+while (/ ∗ condition ∗ /) 
+/ ∗ loop body ∗ / 
+•	Simplest loop str ucture – e valuate body as long as
+condition is tr ue
+•	Condition e valuated ﬁrst, so body ma y never be e xecuted 
+18 
+The for loop
+int factorial ( int n) { 
+int i, j=1; 
+for (i =1; i<= n; i++) 
+j ∗= i; 
+return j; 
+} 
+• The “counting” loop 
+• Inside parentheses , three e xpressions , separ ated b y 
+semicolons:
+Initialization: i=1
+ • 
+Condition: i <= n • 
+Increment: i++ • 
+• Expressions can be empty (cond ition assumed to be “true”) 
+19 
+The for loop
+Equiv alent to while loop: 
+int factorial ( int n) { 
+int j =1; 
+int i=1; / ∗ initialization ∗ / 
+while (i <= n/ ∗ condition ∗ /) { 
+j ∗= i; 
+i ++; / ∗ increment ∗ /
+}
+return j;
+} 
+20 
+The for loop
+•	Compound e xpressions separ ated b y commas 
+int factorial ( int n) { 
+int i, j; 
+for (i =1, j=1; i<= n; j ∗= i , i++) 
+;
+return j;
+}
+•	Comma: operator with lo west precedence , evaluated 
+left-to-r ight; not same as betw een function arguments 
+21 
+The do-while loop
+char c; 
+do { 
+/ ∗ loop body ∗ / 
+puts ( "Keep going? (y/n) " );
+c = getchar ( ) ;
+/ ∗ other processing ∗ / 
+} while (c == ’y’ && / ∗ other conditions ∗ / ); 
+•	Differs from while loop – condition e valuated after each 
+iteration 
+•	Body e xecuted at least once
+Note semicolon at end
+• 
+22 
+The break keyword
+•	Sometimes w ant to ter minate a loop ear ly 
+•	break; exits inner most loop or switch statement to e xit 
+early 
+•	Consider the modiﬁcation of the do-while example: 
+char c;
+do {
+/ ∗ loop body ∗ / 
+puts ( "Keep going? (y/n) " );
+c = getchar ( ) ;
+if (c != ’y’ )
+break ; 
+/ ∗ other processing ∗ /
+} while (/ ∗ other conditions ∗ / );
+23 
+The continue keyword
+•	Use to skip an iter ation 
+•	contin ue; skips rest of inner most loop body , jumping to loop 
+condition 
+•	Example: 
+#define min(a,b) ((a) < (b) ? (a) : (b)) 
+int gcd ( int a, int b) {
+int i , ret = 1, minval = min(a,b);
+for (i = 2; i <= minval; i++) {
+if (a%i) / ∗ i not divisor of a ∗ / 
+continue ; 
+if (b%i == 0) / ∗ i is divisor of both a and b ∗ / 
+ret = i;
+}
+return ret ;
+} 
+24 
+6.087 Lecture 3 – Jan uary 13, 2010
+Review 
+Blocks and Compound Statements 
+Control Flo w 
+Conditional Statements 
+Loops 
+Functions 
+Modular Prog ramming 
+Variable Scope 
+Static V ariables 
+Register V ariables 
+25 
+Functions
+•	Already seen some functions , including main(): 
+int main ( void ){ 
+/ ∗	do stuff ∗ / 
+return 0; / ∗ success ∗ / 
+} 
+•	Basic syntax of functions e xplained in Lecture 1 
+•	How to wr ite a prog ram using functions? 
+25 
+Divide and conquer
+•	Conceptualiz e how a prog ram can be brok en into smaller 
+parts 
+•	Let’s design a prog ram to solv e linear Diophantine 
+equation (ax + by = c,x, y: integers): 
+get a, b, c from command line
+compute g = gcd(a,b)
+if (c is not a multiple of the gcd)
+no solutions exist; exit
+run Extended Euclidean algorithm on a, b
+rescale x and y output by (c/g)
+print solution 
+•	Extended Euclidean algor ithm: ﬁnds integers x, y s.t. 
+ax + by = gcd(a, b). 
+26 
+Computing the gcd
+•	Compute the gcd using the Euclidean algor ithm: 
+int gcd ( int a, int b) { 
+while (b) { / ∗ if a < b, performs swap ∗ / 
+int temp = b; 
+b = a%b; 
+a = temp ; 
+}
+return a;
+}
+•	Algor ithm relies on gcd(a, b) = gcd(b, a mod b), for natur al 
+numbers a >b. 
+[Knuth, D. E. The Art of Computer Programming, Volume 1: Fundamental 
+Algorithms. 3rd ed. Addison-Wesley, 1997.] 
+27 © Addison Wesley. All rights reserved. This content is excluded from our Creative Commons license.
+For more information, see http://ocw.mit.edu/fairuse.
+Extended Euc lidean algorithm
+Pseudocode f or Extended Euclidean algor ithm: 
+Initialize state variables (x,y) 
+if (a<b) 
+swap(a,b) 
+while (b>0){ 
+compute quotient, remainder 
+update state variables (x,y) 
+} 
+return gcd and state variables (x,y) 
+[Menez es, A. J., et al. Handbook of Applied Cryptog raphy. CRC Press , 1996.] 
+28 © CRC Press. All rights reserved. This content is excluded from our Creative Commons license.
+For more information, see http://ocw.mit.edu/fairuse.
+Returning m ultiple v alues
+•	Extended Euclidean algor ithm retur ns gcd, and tw o other 
+state v ariables, x and y 
+•	Functions only retur n (up to) one v alue 
+•	Solution: use global variables 
+•	Declare v ariables for other outputs outside the function 
+•	variables declared outside of a function b lock are globals 
+•	persist throughout lif e of prog ram 
+•	can be accessed/modiﬁed in an y function 
+29 
+Divide and conquer
+•	Break do wn prob lem into simpler sub-prob lems 
+Consider iter ation and recursion • 
+• How can w e implement gcd(a,b) recursiv ely? 
+Minimiz e transfer of state betw een functions • 
+•	Writing pseudocode ﬁrst can help 
+30 
+6.087 Lecture 3 – Jan uary 13, 2010
+Review 
+Blocks and Compound Statements 
+Control Flo w 
+Conditional Statements 
+Loops 
+Functions 
+Modular Prog ramming 
+Variable Scope 
+Static V ariables 
+Register V ariables 
+31 
+Programming modules in C
+•	C prog rams do not need to be monolithic 
+•	Module: interf ace and implementation 
+interf ace: header ﬁles • 
+•	implementation: auxilliar y source/object ﬁles 
+•	Same concept carr ies o ver to e xternal libr aries (ne xt 
+week. . . ) 
+31 
+The Euc lid module
+• Euclid’ s algor ithms useful in man y conte xts 
+• Would lik e to include functionality in man y prog rams 
+• Solution: make a module f or Euclid’ s algor ithms 
+• Need to wr ite header ﬁle (.h) and source ﬁle (.c) 
+32 
+The sour ce: euclid.c
+Implement gcd() in euclid.c: 
+/ ∗ The gcd() function ∗ / 
+int gcd ( int a, int b) { 
+while (b) { / ∗ if a < b, performs swap ∗ / 
+int temp = b; 
+b = a%b; 
+a = temp ; 
+} 
+return a; 
+} 
+Extended Euclidean algor ithm implemented as 
+ext_euclid(), also in euclid.c 
+33 
+The extern keyword
+•	Need to inf orm other source ﬁles about functions/global 
+variables in euclid.c 
+•	For functions: put function prototypes in a header ﬁle 
+•	For variables: re-declare the global v ariable using the 
+extern keyword in header ﬁle 
+•	extern informs compiler that v ariable deﬁned some where 
+else 
+•	Enab les access/modifying of global v ariable from other 
+source ﬁles 
+34 
+The header: euclid.h
+Header contains prototypes f or gcd() and ext_euclid(): 
+/ ∗ ensure included only once ∗ / 
+#ifndef __EUCLID_H__ 
+#define __EUCLID_H__ 
+/ ∗ global variables (declared in euclid.c) ∗ / 
+extern int x, y; 
+/ ∗ compute gcd ∗ / 
+int gcd ( int a, int b); 
+/ ∗ compute g = gcd(a,b) and solve ax+by=g ∗ / 
+int ext _euclid ( int a, int b); 
+#endif 
+35 
+Using the Euc lid module
+• Want to be ab le to call gcd() or ext_euclid() from the 
+main ﬁle diophant.c
+Need to include the header ﬁle euclid.h:
+• 
+#include "euclid.h" (ﬁle in “.”, not search path) 
+• Then, can call as an y other function: 
+/ ∗ compute g = gcd(a,b) ∗ / 
+g = gcd(a,b); 
+/ ∗ compute x and y using Extended Euclidean alg . ∗ / 
+g = ext _euclid(a,b); 
+• Results in global v ariables x and y 
+/ ∗ rescale so ax+by = c ∗ / 
+grow = c/g; 
+x ∗= grow ; 
+y ∗= grow ; 
+36 
+Compiling with the Euc lid module
+•	Just compiling diophant.c is insufﬁcient 
+•	The functions gcd() and ext_euclid() are deﬁned in 
+euclid.c; this source ﬁle needs to be compiled, too 
+•	When compiling the source ﬁles , the outputs need to be 
+linked together into a single output 
+•	One call to gcc can accomplish all this: 
+athena% gcc -g -O0 -Wall diophant.c 
+euclid.c -o diophant.o 
+•	diophant.o can be r un as usual 
+Athena is MIT's UNIX-based computing environment. OCW does not provide access to it. 
+37 1 1
+6.087 Lecture 3 – Jan uary 13, 2010
+Review 
+Blocks and Compound Statements 
+Control Flo w 
+Conditional Statements 
+Loops 
+Functions 
+Modular Prog ramming 
+Variable Scope 
+Static V ariables 
+Register V ariables 
+38 
+Variab le scope
+•	scope – the region in which a v ariable is v alid 
+•	Many cases , corresponds to b lock with v ariable’s 
+declar ation 
+•	Variables declared outside of a function ha ve global scope 
+•	Function deﬁnitions also ha ve scope 
+38 
+An e xample
+What is the scope of each v ariable in this e xample? 
+int nmax = 20; 
+/ ∗ The main() function ∗ /
+int main ( int argc , char argv) / ∗ entry point ∗ /
+ ∗∗ 
+{ 
+int a=0, b=1, c, n; 
+printf ( "%3d: %d\n" ,1 ,a ); 
+printf ( "%3d: %d\n" ,2 ,b ); 
+for (n =3; n<= nmax; n++) { 
+c=a+b; a=b; b=c; 
+printf ( "%3d: %d\n" ,n, c ); 
+} 
+return 0; / ∗ success ∗ / 
+} 
+39 
+Scope and nested dec larations
+How man y lines are pr inted no w? 
+int nmax = 20; 
+/ ∗ The main() function ∗ /
+int main ( int argc , char argv) / ∗ entry point ∗ /
+ ∗∗ 
+{ 
+int a=0, b=1, c, n, nmax =25; 
+printf ( "%3d: %d\n" ,1 ,a ); 
+printf ( "%3d: %d\n" ,2 ,b ); 
+for (n =3; n<= nmax; n++) { 
+c=a+b; a=b; b=c; 
+printf ( "%3d: %d\n" ,n, c );
+}
+return 0; / ∗ success ∗ /
+} 
+40 
+Static v ariab les
+•	static keyword has tw o meanings , depending on where 
+the static v ariable is declared 
+•	Outside a function, static variables/functions only visib le 
+within that ﬁle , not globally (cannot be extern’ed) 
+•	Inside a function, static variables:
+are still local to that function
+• 
+•	are initializ ed only dur ing prog ram initialization 
+•	do not get reinitializ ed with each function call 
+static int somePersistentVar = 0; 
+41 
+Register v ariab les
+•	During e xecution, data processed in registers 
+•	Explicitly store commonly used data in registers – minimiz e 
+load/store o verhead 
+•	Can e xplicitly declare cer tain v ariables as registers using 
+register keyword 
+• must be a simple type (implementation-dependent) 
+• only local v ariables and function arguments eligib le 
+•	excess/unallo wed register declar ations ignored, compiled 
+as regular v ariables 
+•	Registers do not reside in addressed memor y; pointer of a 
+register v ariable illegal 
+42 
+Example
+Variable scope e xample , revisited, with register variables: 
+/ ∗ The main() function ∗ / 
+int main ( register int argc , register char argv ) ∗∗ 
+{ 
+register int a=0, b=1, c, n, nmax =20; 
+printf ( "%3d: %d\n" ,1 ,a ); 
+printf ( "%3d: %d\n" ,2 ,b ); 
+for (n =3; n<= nmax; n++) { 
+c=a+b; a=b; b=c; 
+printf ( "%3d: %d\n" ,n, c );
+}
+return 0; / ∗ success ∗ /
+} 
+43 
+Summar y
+Topics co vered: 
+•	Controlling prog ram ﬂo w using conditional statements and 
+loops 
+•	Dividing a comple x prog ram into man y simpler 
+sub-prog rams using functions and modular prog ramming 
+techniques 
+•	Variable scope r ules and extern, static, and
+register variables
+44 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

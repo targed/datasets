@@ -1,0 +1,329 @@
+6.087 Lecture 6 – Jan uary 19, 2010
+Review 
+User deﬁned datatype 
+Structures 
+Unions 
+Bitﬁelds 
+Data str ucture 
+Memor y allocation 
+Linked lists 
+Binar y trees 
+1 
+Review: pointer s
+•	Pointers: memor y address of v ariables 
+•	’&’ (address of) oper ator. 
+•	Declar ing: int x=10; int ∗ px= &x; 
+•	Deref erencing: ∗px=20; 
+Pointer ar ithmetic: • 
+•	sizeof() 
+•	incrementing/decrementing 
+•	absolute value after operation depends on pointer datatype . 
+1 
+Review: string.h
+• String cop y: strcpy(),strncpy() 
+• Compar ison: strcmp(),strncmp() 
+• Length: strlen() 
+• Concatenation: strcat() 
+• Search: strchr(),strstr() 
+2 
+Sear ching and sor ting
+Searching 
+• Linear search: O(n) 
+• Binar y search: O(logn). The arr ay has to be sor ted ﬁrst. 
+Sorting 
+• Inser tion sor t: O(n2) 
+• Quick sor t: O(n log n) 
+3 
+6.087 Lecture 6 – Jan uary 19, 2010
+Review 
+User deﬁned datatype 
+Structures 
+Unions 
+Bitﬁelds 
+Data str ucture 
+Memor y allocation 
+Linked lists 
+Binar y trees 
+4 
+Structure
+Deﬁnition: A structure is a collection of related v ariables (of
+possib ly diff erent types) g rouped together under a single name .
+This is a an e xample of composition–b uilding comple x
+structures out of simple ones .
+Examples:
+struct employee 
+struct p o i n t { 
+{ char fname [ 1 0 0 ] ; 
+i n t x ; char lname [ 1 0 0 ] ; 
+i n t y ; i n t age ; 
+} ; } ; 
+/ ∗ n o t i c e the ; at the end ∗ / / ∗ members of d i f f e r e n t 
+type ∗ / 
+4 
+Structure
+•	struct deﬁnes a ne w datatype . 
+•	The name of the str ucture is optional. 
+struct {...} x,y,z;
+The v ariables declared within a str ucture are called its
+ • 
+members 
+•	Variables can be declared lik e any other b uilt in data-type . 
+struct point ptA; 
+•	Initialization is done b y specifying v alues of e very member . 
+struct point ptA={10,20}; 
+•	Assignment oper ator copies e very member of the str ucture 
+(be careful with pointers). 
+5 
+;Structure (cont.)
+More e xamples: 
+struct triangle struct chain_element
+{
+ {
+struct point ptA;
+ int data ;
+struct point ptB;
+ struct chain_element ∗ next 
+struct point ptC; };
+};
+ / ∗ members can be
+/ ∗ members can be structures ∗ / self referential ∗ /
+6 
+Structure (cont.)
+•	Individual members can be accessed using ’. ’ operator. 
+struct point pt={10,20}; int x=pt.x; int y=pt.y; 
+•	If structure is nested, m ultiple ’. ’ are required 
+struct rectangle 
+{
+struct point tl; / ∗ top left ∗ /
+struct point br; / ∗ bot right ∗ /
+};
+struct rectangle rect ;
+int tlx= rect.tl.x; / ∗ nested ∗ /
+int tly= rect. tl .y;
+7 
+Structure pointer s
+•	Structures are copied element wise . 
+•	For large str uctures it is more efﬁcient to pass pointers . 
+void foo(struct point ∗ pp); struct point pt; foo(&pt ) 
+•	Members can be accesses from str ucture pointers using 
+’->’ oper ator. 
+struct point p={10,20};
+struct point ∗ pp=&p ;
+pp−>x =10; / ∗ changes p . x ∗ /
+int y= pp−>y; / ∗ same as y=p.y ∗ /
+Other w ays to access str ucture members? 
+struct point p={10,20}; 
+struct point ∗ pp=&p ; 
+(∗ pp).x = 10; / ∗ changes p . x ∗ / 
+int y= (∗ pp).y; / ∗ same as y=p.y ∗ / 
+why is the () required? 
+8 
+Arrays of structures
+•	Declar ing arr ays of int: int x[10]; 
+•	Declar ing arr ays of str ucture: struct point p[10]; 
+•	Initializing arr ays of int: int x [4]={0,20,10,2}; 
+•	Initializing arr ays of str ucture: 
+struct point p[3]={0,1,10,20,30,12}; 
+struct point p [3]={{0,1},{10,20},{30,12}}; 
+9 
+Size of structures
+•	The siz e of a str ucture is g reater than or equal to the sum 
+of the siz es of its members . 
+•	Alignment 
+struct {
+char c;
+/ ∗ padding ∗ / 
+int i; 
+•	Why is this an impor tant issue? libraries, precompiled ﬁles , 
+SIMD instr uctions . 
+•	Members can be e xplicitly aligned using compiler 
+extensions . 
+__attr ibute__ ((aligned (x))) /∗gcc∗/ 
+__declspec((aligned(x ))) /∗MSVC ∗/ 
+10 
+Union
+A union is a v ariable that ma y hold objects of diff erent 
+types/siz es in the same memor y location. Example: 
+union data 
+{ 
+int idata ; 
+float fdata ; 
+char∗ sdata ; 
+} d1,d2,d3; 
+d1. idata=10; 
+d1. fdata=3.14F; 
+d1. sdata="hello world" ; 
+11 
+Unions (cont.)
+•	The siz e of the union v ariable is equal to the siz e of its 
+largest element. 
+•	Impor tant: The compiler does not test if the data is being 
+read in the correct f ormat. 
+union data d; d .idata =10; ﬂoat f=d.fdata ; /∗ will give junk∗/ 
+•	A common solution is to maintain a separ ate v ariable. 
+enum dtype {INT ,FLOAT,CHAR};
+struct variant
+{
+union data d;
+enum dtype t ;
+};
+12 
+Bit ﬁelds
+Deﬁnition: A bit-ﬁeld is a set of adjacent bits within a single 
+’word’. Example: 
+struct flag {
+unsigned i n t is _color :1;
+unsigned i n t has_sound : 1 ;
+unsigned i n t is _ntsc :1;
+};
+• the n umber after the colons speciﬁes the width in bits . 
+• each v ariables should be declared as unsigned int 
+Bit ﬁelds vs. masks 
+CLR=0x1,SND=0x2,NTSC=0x4; struct ﬂag f; 
+x|= CLR; x|=SND; x|=NTSC f.has_sound=1;f.is_color=1; 
+x&= ~CLR; x&=~SND; f.has_sound=0;f.is_color=0; 
+if (x & CLR || x& NTSC) if (f.is_color || f.has_sound) 
+13 
+6.087 Lecture 6 – Jan uary 19, 2010
+Review 
+User deﬁned datatype 
+Structures 
+Unions 
+Bitﬁelds 
+Data str ucture 
+Memor y allocation 
+Linked lists 
+Binar y trees 
+14 
+Digression: dynamic memor y allocation
+void∗ malloc(siz e_t n) 
+•	malloc() allocates b locks of memor y 
+•	returns a pointer to unitializ ed block of memor y on 
+success
+returns NULL on f ailure .
+ • 
+•	the returned value should be cast to appropr iate type using 
+(). int∗ ip=(int∗)malloc(siz eof(int)∗100) 
+void∗ calloc (size_t n,size_t size) 
+•	allocates an arr ay of n elements each of which is ’ size’
+bytes.
+• initializ es memor y to 0 
+void free(void∗) 
+•	Frees memor y allocated m y malloc() 
+•	Common error : accessing memor y after calling free 
+14 
+Linked list
+Deﬁnition: A dynamic data str ucture that consists of a 
+sequence of records where each element contains a link to the 
+next record in the sequence . 
+•	Linked lists can be singly linked, doub ly linked or circular. 
+For no w, we will f ocus on singly linked list. 
+•	Every node has a pa yload and a link to the ne xt node in 
+the list. 
+•	The star t (head) of the list is maintained in a separ ate
+variable.
+•	End of the list is indicated b y NULL (sentinel). 
+12
+99
+37
+15 
+Linked list
+struct node 
+{ 
+int data; / ∗ payload ∗ / 
+struct node∗ next ; 
+};
+struct node∗ head; / ∗ beginning ∗ /
+Linked list vs . arrays 
+linked-list array 
+size dynamic ﬁxed 
+indexing O(n) O(1) 
+inser ting O(1) O(n) 
+deleting O(1) O(n) 
+16 
+Linked list
+Creating ne w element: 
+struct node∗ nalloc ( int data ) 
+{ 
+struct node∗ p=( struct node ∗ ) malloc ( sizeof (node )) ; 
+if ( p!=NULL) 
+{ 
+p−>data=data ; 
+p−>next=NULL;
+}
+return p;
+} 
+17 
+Linked list
+Adding elements to front: 
+struct node∗ addfront ( struct node∗ head , int data ) 
+{ 
+struct node∗ p= nalloc (data ); 
+if ( p==NULL) return head ; 
+p−>next=head ; 
+return p; 
+18 
+Linked list
+Iterating:
+for ( p=head ; p!=NULL; p=p−>next )
+/ ∗ do something ∗ / 
+for ( p=head ; p−>next !=NULL;p=p−>next ) 
+/ ∗ do something ∗ / 
+19 
+Binar y trees
+•	A binar y tree is a dynamic data str ucture where each node 
+has at most tw o children. A binar y sear ch tree is a binar y 
+tree with order ing among its children. 
+•	Usually , all elements in the left subtree are assumed to be 
+”less” than the root element and all elements in the r ight 
+subtree are assumed to be "g reater" than the root element. 
+3
+1 8
+0 2 6 9
+5
+20 
+Binar y tree (cont.)
+struct tnode 
+{ 
+int data; / ∗ payload ∗ / 
+struct tnode ∗ left ; 
+struct tnode ∗ right ; 
+}; 
+The oper ation on trees can be fr amed as recursiv e oper ations . 
+Traversal (printing, 
+searching): 
+•	pre-order : root, left
+subtree , right subtree
+•	Inorder : left subtree , root,
+right subtree
+•	post-order : right subtree ,
+right subtree , root
+3
+1 8
+0 2 6 9
+5
+21 
+Binary tree (cont.) 
+Add node: 
+struct tnode ∗ addnode ( struct tnode ∗ root , int data ) 
+{ 
+struct tnode ∗ p=NULL; 
+/ ∗ termination condition ∗ / 
+if ( root ==NULL) 
+{ 
+/ ∗ allocate node ∗ / 
+/ ∗ return new root ∗ / 
+} 
+/ ∗ recursive call ∗ / 
+else if (data< root −>data ) 
+root −>le f t =addnode( root −>left ,data) 
+else 
+root −>right =addnode( root −>right ,data) 
+} 
+22 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

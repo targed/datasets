@@ -1,0 +1,2871 @@
+Introduction t o Docker
+Version: 2cb8348
+See those slides a thttp:/ /52. 10.123.64/
+An O pen P latform t o Build, Ship, and R un D istribut ed Applica tions
+Docker Fundamen tals 2cb8348 1 © 2014 D ocker Inc
+Other sessions on this t opic, a t SCALE...
+Today:
+•Containeriza tion in P roduction: T he G ood, T he Bad, T he U gly
+•Building a M inimal H ost f or D ocker Containers
+Tomorr ow:
+•Using D ocker, CoreOS, and git hooks t o depl oy applica tions
+•NGINX 101 - no w with mor e Docker
+•Docker and M icroservic es
+Sunda y:
+•Docker for M ulti-Cl oud Apps
+Non e xhaustiv e list!
+Docker Fundamen tals 2cb8348 2 © 2014 D ocker Inc
+Course Ov erview
+You will:
+•Learn wha t Docker is and wha t it is f or.
+•Learn the t erminol ogy, and define images, c ontainers, et c.
+•Learn ho w to install D ocker.
+•Use D ocker to run c ontainers.
+•Use D ocker to buil d containers.
+•Learn ho w to orchestr ate Docker containers.
+•Interact with the D ocker H ub w ebsit e.
+•Acquire tips and good pr actic e.
+•Know wha t's ne xt: the futur e of Docker, and ho w to get help.
+Docker Fundamen tals 2cb8348 3 © 2014 D ocker Inc
+Course A genda
+Part 1
+•About D ocker
+•Using the tr aining virtual machines
+•Installing D ocker
+•Our first c ontainers
+•Running c ontainers in the back ground
+•Images and c ontainers
+•Building images manuall y
+•Building images aut oma ticall y
+•Basic netw orking
+•Local de velopmen t workfl ow
+Docker Fundamen tals 2cb8348 4 © 2014 D ocker Inc
+Course A genda
+Part 2
+•Working with v olumes
+•Connecting c ontainers
+•Advanced D ockerfiles
+•Orchestr ation
+•Ambassadors
+•The D ocker H ub
+•Automa ted buil ds
+•Security
+•The D ocker API
+Docker Fundamen tals 2cb8348 5 © 2014 D ocker Inc
+Table of Contents
+About D ocker..................................................................................................................................................................................................... 7
+Your tr aining Virtual M achine ................................................................................................................................................................... 27
+Install D ocker.................................................................................................................................................................................................. 32
+Our First C ontainers ..................................................................................................................................................................................... 44
+Back ground C ontainers .............................................................................................................................................................................. 53
+Understanding D ocker Images ................................................................................................................................................................ 65
+Building I mages I nteractiv ely................................................................................................................................................................... 85
+Building D ocker images .............................................................................................................................................................................. 95
+CMD and ENTR YPOINT .......................................................................................................................................................................... 106
+Container N etworking Basics .................................................................................................................................................................. 119
+Local D evelopmen t Work fl ow with D ocker................................................................................................................................... 132
+Working with V olumes .............................................................................................................................................................................. 148
+Connecting C ontainers ............................................................................................................................................................................. 167
+Advanced D ockerfiles............................................................................................................................................................................... 186
+Container O rchestr ation ........................................................................................................................................................................... 212
+Ambassadors ............................................................................................................................................................................................... 233
+Introducing D ocker H ub........................................................................................................................................................................... 241
+Working with I mages ................................................................................................................................................................................ 259
+Using D ocker for testing ......................................................................................................................................................................... 278
+Security .......................................................................................................................................................................................................... 307
+Securing D ocker with TLS ....................................................................................................................................................................... 321
+The D ocker API ........................................................................................................................................................................................... 333
+Course C onclusion ...................................................................................................................................................................................... 351
+Docker Fundamen tals 2cb8348 6 © 2014 D ocker Inc
+About D ocker
+About D ocker
+Docker Fundamen tals 2cb8348 7 © 2014 D ocker Inc
+Overview: About D ocker
+Objectiv es
+In this l esson, w e will l earn about:
+•Docker Inc. (the c ompan y)
+•Docker (the O pen Sour ce project)
+•Containers (ho w and wh y the y are useful)
+We won't actuall y run D ocker or c ontainers in this chap ter (yet!), but don 't worry, we will
+get t o tha t fast enough !About D ocker
+Docker Fundamen tals 2cb8348 8 © 2014 D ocker Inc
+About D ocker Inc.
+Focused on D ocker and gr owing the D ocker ec osystem:
+•Founded in 2009 .
+•Formerl y do tCloud I nc.
+•Released D ocker in 2013.About D ocker
+Docker Fundamen tals 2cb8348 9 © 2014 D ocker Inc
+Wha t does D ocker Inc. do ?
+•Docker Engine - open sour ce container managemen t.
+•Docker H ub - online home and hub f or managing y our D ocker containers.
+•Docker Enterprise S upport - c ommer cial support f or D ocker.
+•Docker Servic es & T raining - pr ofessional servic es and tr aining t o help y ou get
+the best out o f Docker.About D ocker
+Docker Fundamen tals 2cb8348 10 © 2014 D ocker Inc
+Why Docker?
+•The so ftware industry has changed.
+•Applica tions used t o be monolithic, with l ong lif ecycles, scal ed up.
+•Today, applica tions ar e dec oupl ed, buil t iteratively, scal ed out.
+•As a r esult, depl oymen t is though !About D ocker
+Docker Fundamen tals 2cb8348 11 © 2014 D ocker Inc
+The pr oblem in 2015
+About D ocker
+Docker Fundamen tals 2cb8348 12 © 2014 D ocker Inc
+The M atrix fr om H ell
+About D ocker
+Docker Fundamen tals 2cb8348 13 © 2014 D ocker Inc
+An inspir ation and some ancien t hist ory!
+About D ocker
+Docker Fundamen tals 2cb8348 14 © 2014 D ocker Inc
+Intermodal shipping c ontainers
+About D ocker
+Docker Fundamen tals 2cb8348 15 © 2014 D ocker Inc
+This spa wned a S hipping C ontainer E cosystem!
+About D ocker
+Docker Fundamen tals 2cb8348 16 © 2014 D ocker Inc
+A shipping c ontainer sy stem f or applica tions
+About D ocker
+Docker Fundamen tals 2cb8348 17 © 2014 D ocker Inc
+Elimina te the ma trix fr om H ell
+About D ocker
+Docker Fundamen tals 2cb8348 18 © 2014 D ocker Inc
+Docker high-l evel roadmap
+•Step 1: c ontainers as ligh tweigh t VMs
+•Step 2: c ommoditiza tion o f containers
+•Step 3: shipping c ontainers efficien tly
+•Step 4: c ontainers in a modern so ftware factoryAbout D ocker
+Docker Fundamen tals 2cb8348 19 © 2014 D ocker Inc
+Step 1: c ontainers as ligh tweigh t VMs
+•This dr ew a ttention fr om hosting and P AAS industry .
+•Highly technical audienc e with str ong ops cul ture.About D ocker
+Docker Fundamen tals 2cb8348 20 © 2014 D ocker Inc
+Step 2: c ommoditiza tion o f containers
+Container t echnol ogy has been ar ound f or a whil e.
+(c.f. LXC, Solaris Z ones, B SD J ails, LP AR...)
+So wha t's new ?
+•Standar dize the c ontainer f orma t, because c ontainers w ere no t portabl e.
+•Anal ogy:
+•shipping c ontainers ar e no t just st eel bo xes
+•they are steel bo xes tha t are a standar d siz e, with the same hooks and
+holes
+•Make containers easy t o use f or de velopers.
+•Emphasis on r e-usabl e componen ts, API s, ec osystem o f standar d tools.
+•Impr ovemen t over ad-hoc, in-house, specific t ools.About D ocker
+Docker Fundamen tals 2cb8348 21 © 2014 D ocker Inc
+Running c ontainers e verywher e
+•Maturity o f underl ying t echnol ogy ( cgroups, namespac es, c opy-on-writ e
+systems ).
+•Ability t o run on an y Linux serv er today: ph ysical, virtual, V M, cl oud, O penStack...
+•Ability t o mo ve betw een an y of the abo ve in a ma tter of sec onds-no
+modifica tion or dela y.
+•Ability t o shar e containeriz ed c omponen ts.
+•Self c ontained en vironmen t - no dependency hell.
+•Tools f or ho w containers w ork t ogether: linking, disc overy, orchestr ation...About D ocker
+Docker Fundamen tals 2cb8348 22 © 2014 D ocker Inc
+Technical & cul tural revolution: separ ation o f concerns
+About D ocker
+Docker Fundamen tals 2cb8348 23 © 2014 D ocker Inc
+Step 3: shipping c ontainers efficien tly
+Ship c ontainer images, made o f reusabl e shar ed la yers.
+Optimiz es disk usage, memory usage, netw ork usage.
+About D ocker
+Docker Fundamen tals 2cb8348 24 © 2014 D ocker Inc
+Step 4: c ontainers in a modern so ftware factory
+The c ontainer bec omes the new buil d art efact.
+The same c ontainer can go fr om de v, to test, t o QA, to prod.
+About D ocker
+Docker Fundamen tals 2cb8348 25 © 2014 D ocker Inc
+Docker ar chitectur e
+Docker is a clien t-serv er applica tion.
+•The D ocker daemon
+Receives and pr ocesses inc oming D ocker API r equests.
+•The D ocker clien t
+Command line t ool - the dockerbinary .
+Talks t o the D ocker daemon via the D ocker API.
+•Docker H ub R egistry
+Public image r egistry .
+The D ocker daemon talks t o it via the r egistry API.About D ocker
+Docker Fundamen tals 2cb8348 26 © 2014 D ocker Inc
+Your tr aining Virtual M achine
+Your tr aining Virtual M achine
+Docker Fundamen tals 2cb8348 27 © 2014 D ocker Inc
+Lesson 2: Y our tr aining Virtual M achine
+If you ar e following this c ourse as part o f an o fficial D ocker tr aining or w orkshop, y ou
+have been giv en cr eden tials t o connect t o your o wn priv ate Docker VM.
+If you ar e following this c ourse on y our o wn, without ac cess t o an o fficial tr aining Virtual
+Machine, just skip this l esson, and check "I nstalling D ocker" inst ead.Your tr aining Virtual M achine
+Docker Fundamen tals 2cb8348 28 © 2014 D ocker Inc
+Your tr aining Virtual M achine
+If you ar e following this c ourse as part o f an o fficial D ocker tr aining or w orkshop, y ou
+have been giv en cr eden tials t o connect t o your o wn priv ate Docker VM.
+This V M has been cr eated specificall y for you, just bef ore the tr aining.
+It comes pr e-install ed with the la test and shiniest v ersion o f Docker, as w ell as some
+useful t ools.
+It will sta y up and running f or the whol e training, but it will be destr oyed shortl y after
+the tr aining.Your tr aining Virtual M achine
+Docker Fundamen tals 2cb8348 29 © 2014 D ocker Inc
+Connecting t o your Virtual M achine
+You need an SSH clien t.
+•On OS X, Linux, and o ther UNIX sy stems, just use ssh:
+$ ssh <login>@<ip-address>
+•On W indo ws, if y ou don 't ha ve an SSH clien t, you can do wnload P utty fr om
+www .putty .org.Your tr aining Virtual M achine
+Docker Fundamen tals 2cb8348 30 © 2014 D ocker Inc
+Checking y our Virtual M achine
+Once logged in, mak e sur e tha t you can run a basic D ocker command:
+$ docker version
+Client version: 1.4.1
+Client API version: 1.16
+Go version (client): go1.3.3
+Git commit (client): 5bc2ff8
+OS/Arch (client): linux/amd64
+Server version: 1.4.1
+Server API version: 1.16
+Go version (server): go1.3.3
+Git commit (server): 5bc2ff8
+•If this doesn 't work, r aise y our hand so tha t an instruct or can assist y ou!Your tr aining Virtual M achine
+Docker Fundamen tals 2cb8348 31 © 2014 D ocker Inc
+Install D ocker
+Install D ocker
+Docker Fundamen tals 2cb8348 32 © 2014 D ocker Inc
+Lesson 3: I nstalling D ocker
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Install D ocker.
+•Run D ocker without sudo.
+Note:if you w ere provided with a tr aining V M for a hands-on tut orial, y ou can skip this
+chap ter, sinc e tha t VM alr eady has D ocker install ed, and D ocker has alr eady been setup
+to run without sudo.Install D ocker
+Docker Fundamen tals 2cb8348 33 © 2014 D ocker Inc
+Installing D ocker
+Docker is easy t o install.
+It runs on:
+•A variety o f Linux distributions.
+•OS X via a virtual machine.
+•Microsoft W indo ws via a virtual machine.Install D ocker
+Docker Fundamen tals 2cb8348 34 © 2014 D ocker Inc
+Installing D ocker on Linux
+It can be install ed via:
+•Distribution-supplied pack ages on virtuall y all distr os.
+(Includes a t least: Ar ch Linux, C entOS, D ebian, F edor a, Gentoo, open SUSE,
+RHEL, U buntu.)
+•Packages supplied b y Docker.
+•Installa tion scrip t from D ocker.
+•Binary do wnload fr om D ocker (it's a singl e file).Install D ocker
+Docker Fundamen tals 2cb8348 35 © 2014 D ocker Inc
+Installing D ocker on y our Linux distribution
+On Fedor a:
+$ sudo yum install docker-io
+On CentOS 7:
+$ sudo yum install docker
+On Debian and deriv atives:
+$ sudo apt-get install docker.ioInstall D ocker
+Docker Fundamen tals 2cb8348 36 © 2014 D ocker Inc
+Installa tion scrip t from D ocker
+You can use the curlcommand t o install on se veral pla tforms:
+$ curl -s https://get.docker.com/ | sudo sh
+This curr ently works on:
+•Ubuntu
+•Debian
+•Fedor a
+•GentooInstall D ocker
+Docker Fundamen tals 2cb8348 37 © 2014 D ocker Inc
+Installing on OS X and M icrosoft W indo ws
+Docker doesn 't run na tively on OS X or M icrosoft W indo ws.
+To install D ocker on these pla tforms w e run a small virtual machine using a t ool call ed
+Boo t2Docker.
+Install D ocker
+Docker Fundamen tals 2cb8348 38 © 2014 D ocker Inc
+Check tha t Docker is w orking
+Using the dockerclien t:
+$ docker version
+Client version: 1.5.0
+Client API version: 1.17
+Go version (client): go1.4.1
+Git commit (client): a8a31ef
+OS/Arch (client): linux/amd64
+Server version: 1.5.0
+Server API version: 1.17
+Go version (server): go1.4.1
+Git commit (server): a8a31efInstall D ocker
+Docker Fundamen tals 2cb8348 39 © 2014 D ocker Inc
+Su-su-sudo
+Install D ocker
+Docker Fundamen tals 2cb8348 40 © 2014 D ocker Inc
+Thedockergroup
+Warning!
+Thedockeruser is rootequiv alent.
+It provides root-level ac cess t o the host.
+You shoul d restrict ac cess t o it lik e you w ould protectroot.
+Add the D ocker gr oup
+$ sudo groupadd docker
+Add oursel ves to the gr oup
+$ sudo gpasswd -a $USER docker
+Restart the D ocker daemon
+$ sudo service docker restart
+Log out
+$ exitInstall D ocker
+Docker Fundamen tals 2cb8348 41 © 2014 D ocker Inc
+Check tha t Docker w orks without sudo
+$ docker version
+Client version: 1.5.0
+Client API version: 1.17
+Go version (client): go1.4.1
+Git commit (client): a8a31ef
+OS/Arch (client): linux/amd64
+Server version: 1.5.0
+Server API version: 1.17
+Go version (server): go1.4.1
+Git commit (server): a8a31efInstall D ocker
+Docker Fundamen tals 2cb8348 42 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Install D ocker.
+•Run D ocker without sudo.Install D ocker
+Docker Fundamen tals 2cb8348 43 © 2014 D ocker Inc
+Our First C ontainers
+Our First C ontainers
+Docker Fundamen tals 2cb8348 44 © 2014 D ocker Inc
+Overview: O ur First C ontainers
+Objectiv es
+At the end o f this l esson, y ou will ha ve:
+•Seen D ocker in action.
+•Started y our first c ontainers.Our First C ontainers
+Docker Fundamen tals 2cb8348 45 © 2014 D ocker Inc
+Hello W orld
+In your D ocker en vironmen t, just run the f ollowing c ommand:
+$ docker run busybox echo hello world
+hello worldOur First C ontainers
+Docker Fundamen tals 2cb8348 46 © 2014 D ocker Inc
+That was our first c ontainer!
+•We used one o f the small est, simpl est images a vailabl e:busybox.
+•busyboxis typicall y used in embedded sy stems ( phones, r outers...)
+•We ran a singl e process and echo 'edhello world .Our First C ontainers
+Docker Fundamen tals 2cb8348 47 © 2014 D ocker Inc
+A mor e useful c ontainer
+Let's run a mor e exciting c ontainer:
+$ docker run -it ubuntu bash
+root@04c0bb0a6c07:/#
+•This is a br and new c ontainer .
+•It runs a bar e-bones, no-frills ubuntusystem.Our First C ontainers
+Docker Fundamen tals 2cb8348 48 © 2014 D ocker Inc
+Do something in our c ontainer
+Try to run curlin our c ontainer .
+root@04c0bb0a6c07:/# curl ifconfig.me/ip
+bash: curl: command not found
+Told you it w as bar e-bones!
+Let's check ho w man y pack ages ar e install ed her e.
+root@04c0bb0a6c07:/# dpkg -l | wc -l
+189
+•dpkg -llists the pack ages install ed in our c ontainer
+•wc -lcounts them
+•If you ha ve a D ebian or U buntu machine, y ou can run the same c ommand and
+compar e the r esults.Our First C ontainers
+Docker Fundamen tals 2cb8348 49 © 2014 D ocker Inc
+Install a pack age in our c ontainer
+We wantcurl, so l et's install it:
+root@04c0bb0a6c07:/# apt-get update
+...
+Fetched 1514 kB in 14s (103 kB/s)
+Reading package lists... Done
+root@04c0bb0a6c07:/# apt-get install curl
+Reading package lists... Done
+...
+Do you want to continue? [Y/n]
+Answ erYor just pr essEnter.
+One minut e later,curlis install ed!
+# curl ifconfig.me/ip
+64.134.229.24Our First C ontainers
+Docker Fundamen tals 2cb8348 50 © 2014 D ocker Inc
+Exiting our c ontainer
+Just e xit the shell, lik e you w ould usuall y do.
+(E.g. with ^Dorexit)
+root@04c0bb0a6c07:/# exit
+•Our container is no w in a stopped state.
+•It still e xists on disk, but all c omput e resour ces ha ve been fr eed up.Our First C ontainers
+Docker Fundamen tals 2cb8348 51 © 2014 D ocker Inc
+Starting ano ther c ontainer
+Wha t if w e start a new c ontainer , and try t o run curlagain ?
+$ docker run -it ubuntu bash
+root@b13c164401fb:/# curl
+bash: curl: command not found
+•We start ed a brand new c ontainer .
+•The basic U buntu image w as used, and curlis no t her e.
+•We will see in the ne xt chap ters ho w to bak e a cust om image with curl.Our First C ontainers
+Docker Fundamen tals 2cb8348 52 © 2014 D ocker Inc
+Back ground C ontainers
+Back ground C ontainers
+Docker Fundamen tals 2cb8348 53 © 2014 D ocker Inc
+Back ground C ontainers
+Our first c ontainers w ereinteractive.
+We will no w see ho w to:
+•Run a non-in teractiv e container .
+•Run a c ontainer in the back ground.
+•List running c ontainers.
+•Check the l ogs o f a c ontainer .
+•Stop a c ontainer .
+•List st opped c ontainers.Back ground C ontainers
+Docker Fundamen tals 2cb8348 54 © 2014 D ocker Inc
+A non-in teractiv e container
+We will run a small cust om c ontainer .
+This c ontainer just displa ys the time e very sec ond.
+$ docker run jpetazzo/clock
+Fri Feb 20 00:28:53 UTC 2015
+Fri Feb 20 00:28:54 UTC 2015
+Fri Feb 20 00:28:55 UTC 2015
+...
+•This c ontainer will run f orever.
+•To stop it, pr ess^C.
+•Docker has aut oma ticall y do wnloaded the image jpetazzo/clock .
+•This image is a user image, cr eated b yjpetazzo .
+•We will t ell mor e about user images ( and o ther types o f images ) later.Back ground C ontainers
+Docker Fundamen tals 2cb8348 55 © 2014 D ocker Inc
+Run a c ontainer in the back ground
+Containers can be start ed in the back ground, with the -dflag ( daemon mode ):
+$ docker run -d jpetazzo/clock
+47d677dcfba4277c6cc68fcaa51f932b544cab1a187c853b7d0caf4e8debe5ad
+•We don 't see the output o f the c ontainer .
+•But don 't worry: D ocker collects tha t output and l ogs it!
+•Docker giv es us the ID o f the c ontainer .Back ground C ontainers
+Docker Fundamen tals 2cb8348 56 © 2014 D ocker Inc
+List running c ontainers
+How can w e check tha t our c ontainer is still running ?
+Withdocker ps , just lik e the UNIX pscommand, lists running pr ocesses.
+$ docker ps
+CONTAINER ID  IMAGE                  COMMAND  CREATED        STATUS        ...
+47d677dcfba4  jpetazzo/clock:latest  ...      2 minutes ago  Up 2 minutes  ...
+Docker tells us:
+•The (trunca ted) ID o f our c ontainer .
+•The image used t o start the c ontainer .
+•That our c ontainer has been running ( Up) for a c oupl e of minut es.
+•Other in forma tion ( COMMAND , POR TS, NAM ES) tha t we will e xplain la ter.Back ground C ontainers
+Docker Fundamen tals 2cb8348 57 © 2014 D ocker Inc
+Two useful flags f ordocker ps
+To see onl y the last c ontainer tha t was start ed:
+$ docker ps -l
+CONTAINER ID  IMAGE                  COMMAND  CREATED        STATUS        ...
+47d677dcfba4  jpetazzo/clock:latest  ...      2 minutes ago  Up 2 minutes  ...
+To see onl y the ID o f containers:
+$ docker ps -q
+47d677dcfba4
+66b1ce719198
+ee0255a5572e
+Combine those flags t o see onl y the ID o f the last c ontainer start ed!
+$ docker ps -q
+47d677dcfba4Back ground C ontainers
+Docker Fundamen tals 2cb8348 58 © 2014 D ocker Inc
+View the l ogs o f a c ontainer
+We told you tha t Docker w as logging the c ontainer output.
+Let's see tha t now.
+$ docker logs 47d6
+Fri Feb 20 00:39:52 UTC 2015
+Fri Feb 20 00:39:53 UTC 2015
+...
+•We specified a prefixof the full c ontainer ID .
+•You can, o f course, specify the full ID .
+•Thelogscommand will output the entirelogs o f the c ontainer .
+(Sometimes, tha t will be t oo much. L et's see ho w to addr ess tha t.)Back ground C ontainers
+Docker Fundamen tals 2cb8348 59 © 2014 D ocker Inc
+View onl y the tail o f the l ogs
+To avoid being spammed with el eventy pages o f output, w e can use the --tail
+option:
+$ docker logs --tail 3 47d6
+Fri Feb 20 00:55:35 UTC 2015
+Fri Feb 20 00:55:36 UTC 2015
+Fri Feb 20 00:55:37 UTC 2015
+•The par amet er is the number o f lines tha t we want to see.Back ground C ontainers
+Docker Fundamen tals 2cb8348 60 © 2014 D ocker Inc
+Follow the l ogs in r eal time
+Just lik e with the standar d UNIX c ommand tail -f, we can f ollow the l ogs o f our
+container:
+$ docker logs --tail 1 --follow 47d6
+Fri Feb 20 00:57:12 UTC 2015
+Fri Feb 20 00:57:13 UTC 2015
+^C
+•This will displa y the last line in the l og fil e.
+•Then, it will c ontinue t o displa y the l ogs in r eal time.
+•Use^Cto exit.Back ground C ontainers
+Docker Fundamen tals 2cb8348 61 © 2014 D ocker Inc
+Stop our c ontainer
+There are tw o ways we can t ermina te our detached c ontainer .
+•Killing it using the docker kill command.
+•Stopping it using the docker stop command.
+The first one st ops the c ontainer immedia tely, by using the KILLsignal.
+The sec ond one is mor e graceful. I t sends a TERMsignal, and a fter 10 sec onds, if the
+container has no t stopped, it sends KILL.
+Reminder: the KILLsignal canno t be in tercepted, and will f orcibly termina te the
+container .Back ground C ontainers
+Docker Fundamen tals 2cb8348 62 © 2014 D ocker Inc
+Killing it
+Let's kill our c ontainer:
+$ docker kill 47d6
+47d6
+Docker will echo the ID o f the c ontainer w e've just st opped.
+Let's check tha t our c ontainer doesn 't sho w up an ymor e:
+$ docker psBack ground C ontainers
+Docker Fundamen tals 2cb8348 63 © 2014 D ocker Inc
+List st opped c ontainers
+We can also see st opped c ontainers, with the -a(--all) option.
+$ docker ps -a
+CONTAINER ID  IMAGE                  ...  CREATED      STATUS
+47d677dcfba4  jpetazzo/clock:latest  ...  23 min. ago  Exited (0) 4 min. ago
+5c1dfd4d81f1  jpetazzo/clock:latest  ...  40 min. ago  Exited (0) 40 min. ago
+b13c164401fb  ubuntu:latest          ...  55 min. ago  Exited (130) 53 min. agoBack ground C ontainers
+Docker Fundamen tals 2cb8348 64 © 2014 D ocker Inc
+Understanding D ocker Images
+Understanding D ocker Images
+Docker Fundamen tals 2cb8348 65 © 2014 D ocker Inc
+Lesson 6: U nderstanding D ocker Images
+Objectiv es
+In this l esson, w e will e xplain:
+•Wha t is an image.
+•Wha t is a la yer.
+•The v arious image namespac es.
+•How to sear ch and do wnload images.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 66 © 2014 D ocker Inc
+Wha t is an image ?
+•An image is a c ollection o f files + some meta da ta.
+(Technicall y: those fil es form the r oot filesystem o f a c ontainer .)
+•Images ar e made o flayers, conceptuall y stack ed on t op o f each o ther.
+•Each la yer can add, change, and r emo ve files.
+•Images can shar e layers t o op timiz e disk usage, tr ansf er times, and memory use.
+Understanding D ocker Images
+Docker Fundamen tals 2cb8348 67 © 2014 D ocker Inc
+Differences betw een c ontainers and images
+•An image is a r ead-onl y filesystem.
+•A container is an encapsula ted set o f processes running in a r ead-writ e copy of
+that filesystem.
+•To op timiz e container boo t time, copy-on-write is used inst ead o f regular c opy.
+•docker run starts a c ontainer fr om a giv en image.
+Let's giv e a c oupl e of metaphors t o illustr ate those c oncepts.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 68 © 2014 D ocker Inc
+Image as st encils
+Images ar e like templa tes or st encils tha t you can cr eate containers fr om.
+Understanding D ocker Images
+Docker Fundamen tals 2cb8348 69 © 2014 D ocker Inc
+Object-orien ted pr ogramming
+•Images ar e conceptuall y similar t oclasses .
+•Layers ar e conceptuall y similar t oinheritanc e.
+•Containers ar e conceptuall y similar t oinstanc es.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 70 © 2014 D ocker Inc
+Wait a minut e...
+If an image is r ead-onl y, how do w e change it ?
+•We don 't.
+•We create a new c ontainer fr om tha t image.
+•Then w e mak e changes t o tha t container .
+•When w e are satisfied with those changes, w e transf orm them in to a new la yer.
+•A new image is cr eated b y stacking the new la yer on t op o f the ol d image.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 71 © 2014 D ocker Inc
+In practic e
+There are mul tiple ways to create new images.
+•docker commit : creates a new la yer (and a new image ) from a c ontainer .
+•docker build : perf orms a r epea table buil d sequenc e.
+•docker import : loads a tarball in to Docker, as a standal one base la yer.
+We will e xplain commitand buildin la ter chap ters.
+importcan be used f or various hacks, but its main purpose is t o boo tstrap the cr eation
+of base images.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 72 © 2014 D ocker Inc
+Images namespac es
+There are thr ee namespac es:
+•Root-like
+ubuntu
+•User ( and or ganiza tions )
+jpetazzo/clock
+•Self-Hosted
+registry.example.com:5000/my-private-image
+Let's e xplain each o f them.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 73 © 2014 D ocker Inc
+Root namespac e
+The root namespac e is f or official images. T hey are put ther e by Docker Inc., but the y
+are gener ally author ed and main tained b y thir d parties.
+Those images include:
+•Small, " swiss-arm y-knif e" images lik e busybo x.
+•Distro images t o be used as bases f or your buil ds, lik e ubun tu, fedor a...
+•Ready-t o-use c omponen ts and servic es, lik e redis, postgr esql...Understanding D ocker Images
+Docker Fundamen tals 2cb8348 74 © 2014 D ocker Inc
+User namespac e
+The user namespac e hol ds images f or D ocker H ub users and or ganiza tions.
+For exampl e:
+jpetazzo/clock
+The D ocker H ub user is:
+jpetazzo
+The image name is:
+clockUnderstanding D ocker Images
+Docker Fundamen tals 2cb8348 75 © 2014 D ocker Inc
+Self-Hosted namespac e
+This namespac e hol ds images which ar e no t host ed on D ocker H ub, but on thir d party
+registries.
+They contain the hostname ( or IP addr ess), and op tionall y the port, o f the r egistry
+serv er.
+For exampl e:
+localhost:5000/wordpress
+The remo te host and port is:
+localhost:5000
+The image name is:
+wordpressUnderstanding D ocker Images
+Docker Fundamen tals 2cb8348 76 © 2014 D ocker Inc
+Historical detail
+Self-host ed registries used t o be call edprivateregistries, but this w as misl eading!
+•A self -host ed registry can be public or priv ate.
+•A registry in the U ser namespac e on D ocker H ub can be public or priv ate.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 77 © 2014 D ocker Inc
+How do y ou st ore and manage images ?
+Images can be st ored:
+•On your D ocker host.
+•In a D ocker registry .
+You can use the D ocker clien t to do wnload ( pull) or upl oad ( push ) images.
+To be mor e accurate: you can use the D ocker clien t to tell a D ocker serv er to push and
+pull images t o and fr om a r egistry .Understanding D ocker Images
+Docker Fundamen tals 2cb8348 78 © 2014 D ocker Inc
+Showing curr ent images
+Let's l ook a t wha t images ar e on our host no w.
+$ docker images
+REPOSITORY         TAG     IMAGE ID     CREATED     VIRTUAL SIZE
+ubuntu             13.10   9f676bd305a4 7 weeks ago 178 MB
+ubuntu             saucy   9f676bd305a4 7 weeks ago 178 MB
+ubuntu             raring  eb601b8965b8 7 weeks ago 166.5 MB
+ubuntu             13.04   eb601b8965b8 7 weeks ago 166.5 MB
+ubuntu             12.10   5ac751e8d623 7 weeks ago 161 MB
+ubuntu             quantal 5ac751e8d623 7 weeks ago 161 MB
+ubuntu             10.04   9cc9ea5ea540 7 weeks ago 180.8 MB
+ubuntu             lucid   9cc9ea5ea540 7 weeks ago 180.8 MB
+ubuntu             12.04   9cd978db300e 7 weeks ago 204.4 MB
+ubuntu             latest  9cd978db300e 7 weeks ago 204.4 MB
+ubuntu             precise 9cd978db300e 7 weeks ago 204.4 MBUnderstanding D ocker Images
+Docker Fundamen tals 2cb8348 79 © 2014 D ocker Inc
+Sear ching f or images
+Sear ches y our r egistry f or images:
+$ docker search zookeeper
+NAME                             DESCRIPTION                     STARS  ...
+jplock/zookeeper                 Builds a docker image for ...   27
+thefactory/zookeeper-exhibitor   Exhibitor-managed ZooKeepe...   2
+misakai/zookeeper                ZooKeeper is a service for...   1
+digitalwonderland/zookeeper      Latest Zookeeper - cluster...   1
+garland/zookeeper                                                1
+raycoding/piggybank-zookeeper    Zookeeper 3.4.6 running on...   1
+gregory90/zookeeper                                              0
+•"Stars" indica te the popularity o f the image.
+•"Official " images ar e those in the r oot namespac e.
+•"Automa ted" images ar e buil t aut oma ticall y by the D ocker H ub.
+(This means tha t their buil d recipe is al ways availabl e.)Understanding D ocker Images
+Docker Fundamen tals 2cb8348 80 © 2014 D ocker Inc
+Downloading images
+There are tw o ways to do wnload images.
+•Explicitl y, with docker pull .
+•Implicitl y, when e xecuting docker run and the image is no t found l ocall y.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 81 © 2014 D ocker Inc
+Pulling an image
+$ docker pull debian:jessie
+Pulling repository debian
+b164861940b8: Download complete
+b164861940b8: Pulling image (jessie) from debian
+d1881793a057: Download complete
+•As seen pr eviousl y, images ar e made up o f layers.
+•Docker has do wnloaded all the nec essary la yers.
+•In this e xampl e,:jessieindica tes which e xact v ersion o f Debian w e would
+like. It is a version tag .Understanding D ocker Images
+Docker Fundamen tals 2cb8348 82 © 2014 D ocker Inc
+Image and tags
+•Images can ha ve tags.
+•Tags define image v arian ts.
+•docker pull ubuntu will r efer toubuntu:latest .
+•The:latesttag can be upda ted fr equen tly.
+•When using images it is al ways best t o be specific.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 83 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Understand images and la yers.
+•Understand D ocker image namespacing.
+•Sear ch and do wnload images.Understanding D ocker Images
+Docker Fundamen tals 2cb8348 84 © 2014 D ocker Inc
+Building I mages I nteractiv ely
+Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 85 © 2014 D ocker Inc
+Lesson 7: B uilding I mages I nteractiv ely
+In this l esson, w e will cr eate our first c ontainer image.
+We will install so ftware manuall y in a c ontainer , and turn it in to a new image.
+We will in troduc e commands docker commit ,docker tag , and docker diff .Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 86 © 2014 D ocker Inc
+Building I mages I nteractiv ely
+As w e ha ve seen, the images on the D ocker H ub ar e sometimes v ery basic.
+How do w e want to construct our o wn images ?
+As an e xampl e, we will buil d an image tha t has wget.
+First, w e will do it manuall y with docker commit .
+Then, in an upc oming chap ter, we will use a Dockerfile and docker build .Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 87 © 2014 D ocker Inc
+Building fr om a base
+Our base will be the ubuntuimage.
+If you pr eferdebian,centos, orfedora, feel fr ee to use them inst ead.
+(You will ha ve to adap tapttoyum, of course.)Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 88 © 2014 D ocker Inc
+Create a new c ontainer and mak e some changes
+Start an U buntu container:
+$ docker run -it ubuntu bash
+root@<yourContainerId>:#/
+Run the c ommand apt-get update to refresh the list o f pack ages a vailabl e to
+install.
+Then run the c ommand apt-get install -y wget to install the pr ogram w e are
+interested in.
+root@<yourContainerId>:#/ apt-get update && apt-get install -y wget
+.... OUTPUT OF APT-GET COMMANDS ....Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 89 © 2014 D ocker Inc
+Inspect the changes
+Type exitat the c ontainer pr omp t to leave the in teractiv e session.
+Now let's run docker diff to see the diff erence betw een the base image and our
+container .
+$ docker diff <yourContainerId>
+C /root
+A /root/.bash_history
+C /tmp
+C /usr
+C /usr/bin
+A /usr/bin/wget
+...Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 90 © 2014 D ocker Inc
+Docker tr acks fil esystem changes
+As e xplained bef ore:
+•An image is r ead-onl y.
+•When w e mak e changes, the y happen in a c opy of the image.
+•Docker can sho w the diff erence betw een the image, and its c opy.
+•For perf ormanc e, Docker uses c opy-on-writ e systems.
+(i.e. starting a c ontainer based on a big image doesn 't incur a huge c opy.)Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 91 © 2014 D ocker Inc
+Commit and run y our image
+Thedocker commit command will cr eate a new la yer with those changes, and a new
+image using this new la yer.
+$ docker commit <yourContainerId>
+<newImageId>
+The output o f the docker commit command will be the ID f or your newl y created
+image.
+We can run this image:
+$ docker run -it <newImageId> bash
+root@fcfb62f0bfde:/# wget
+wget: missing URL
+...Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 92 © 2014 D ocker Inc
+Tagging images
+Referring t o an image b y its ID is no t convenien t. Let's tag it inst ead.
+We can use the tagcommand:
+$ docker tag <newImageId> mydistro
+But w e can also specify the tag as an e xtra argumen t tocommit:
+$ docker commit <containerId> mydistro
+And then run it using its tag:
+$ docker run -it mydistro bashBuilding I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 93 © 2014 D ocker Inc
+Wha t's ne xt?
+Manual pr ocess = bad.
+Automa ted pr ocess = good.
+In the ne xt chap ter, we will l earn ho w to aut oma te the buil d process b y writing a
+Dockerfile .Building I mages I nteractiv ely
+Docker Fundamen tals 2cb8348 94 © 2014 D ocker Inc
+Building D ocker images
+Building D ocker images
+Docker Fundamen tals 2cb8348 95 © 2014 D ocker Inc
+Lesson 8: B uilding D ocker Images
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Write aDockerfile .
+•Build an image fr om a Dockerfile .Building D ocker images
+Docker Fundamen tals 2cb8348 96 © 2014 D ocker Inc
+Dockerfile overview
+•ADockerfile is a buil d recipe f or a D ocker image.
+•It contains a series o f instructions t elling D ocker ho w an image is c onstruct ed.
+•Thedocker build command buil ds an image fr om a Dockerfile .Building D ocker images
+Docker Fundamen tals 2cb8348 97 © 2014 D ocker Inc
+Writing our first Dockerfile
+Our D ockerfile must be in a new , emp ty dir ectory .
+1.Create a dir ectory t o hol d our Dockerfile .
+$ mkdir myimage
+2.Create aDockerfile inside this dir ectory.
+$ cd myimage
+$ vim Dockerfile
+Of c ourse, y ou can use an y other edit or of your choic e.Building D ocker images
+Docker Fundamen tals 2cb8348 98 © 2014 D ocker Inc
+Type this in to our D ockerfile...
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y wget
+•FROMindica tes the base image f or our buil d.
+•Each RUNline will be e xecut ed b y Docker during the buil d.
+•OurRUNcommands must be non-in teractiv e.
+(No input can be pr ovided t o Docker during the buil d.)Building D ocker images
+Docker Fundamen tals 2cb8348 99 © 2014 D ocker Inc
+Build it!
+Save our fil e, then e xecut e:
+$ docker build -t myimage .
+•-tindica tes the tag t o appl y to the image.
+•.indica tes the l ocation o f the build context.
+(We will talk mor e about the buil d context la ter; but t o keep things simpl e: this is
+the dir ectory wher e our D ockerfile is l ocated.)Building D ocker images
+Docker Fundamen tals 2cb8348 100 © 2014 D ocker Inc
+Wha t happens when w e buil d the image ?
+The output o fdocker build looks lik e this:
+$ docker build -t myimage .
+Sending build context to Docker daemon 2.048 kB
+Sending build context to Docker daemon
+Step 0 : FROM ubuntu
+---> e54ca5efa2e9
+Step 1 : RUN apt-get update
+---> Running in 840cb3533193
+---> 7257c37726a1
+Removing intermediate container 840cb3533193
+Step 2 : RUN apt-get install -y wget
+---> Running in 2b44df762a2f
+---> f9e8f1642759
+Removing intermediate container 2b44df762a2f
+Successfully built f9e8f1642759
+•The output o f the RUNcommands has been omitt ed.
+•Let's e xplain wha t this output means.Building D ocker images
+Docker Fundamen tals 2cb8348 101 © 2014 D ocker Inc
+Sending the buil d context to Docker
+Sending build context to Docker daemon 2.048 kB
+•The buil d context is the .directory giv en todocker build .
+•It is sen t (as an ar chiv e) by the D ocker clien t to the D ocker daemon.
+•This all ows t o use a r emo te machine t o buil d using l ocal fil es.
+•Be car eful ( or pa tient) if tha t directory is big and y our link is sl ow.Building D ocker images
+Docker Fundamen tals 2cb8348 102 © 2014 D ocker Inc
+Executing each st ep
+Step 1 : RUN apt-get update
+---> Running in 840cb3533193
+(...output of the RUN command...)
+---> 7257c37726a1
+Removing intermediate container 840cb3533193
+•A container ( 840cb3533193 ) is cr eated fr om the base image.
+•TheRUNcommand is e xecut ed in this c ontainer .
+•The c ontainer is c ommitt ed in to an image ( 7257c37726a1 ).
+•The buil d container ( 840cb3533193 ) is remo ved.
+•The output o f this st ep will be the base image f or the ne xt one.Building D ocker images
+Docker Fundamen tals 2cb8348 103 © 2014 D ocker Inc
+Running the image
+The resulting image is no t diff erent from the one pr oduc ed manuall y.
+$ docker run -ti myimage bash
+root@91f3c974c9a1:/# wget
+wget: missing URL
+•Sweet is the tast e of suc cess!Building D ocker images
+Docker Fundamen tals 2cb8348 104 © 2014 D ocker Inc
+Using image and viewing hist ory
+Thehistorycommand lists all the la yers c omposing an image.
+For each la yer, it sho ws its cr eation time, siz e, and cr eation c ommand.
+When an image w as buil t with a D ockerfile, each la yer corresponds t o a line o f the
+Dockerfile.
+$ docker history myimage
+IMAGE         CREATED            CREATED BY                     SIZE
+f9e8f1642759  About an hour ago  /bin/sh -c apt-get install -y  6.062 MB
+7257c37726a1  About an hour ago  /bin/sh -c apt-get update      8.549 MB
+e54ca5efa2e9  8 months ago       /bin/sh -c apt-get update &&   8 B
+6c37f792ddac  8 months ago       /bin/sh -c apt-get update &&   83.43 MB
+83ff768040a0  8 months ago       /bin/sh -c sed -i  s/^#\s*\(d  1.903 kB
+2f4b4d6a4a06  8 months ago       /bin/sh -c echo  #!/bin/sh  >  194.5 kB
+d7ac5e4f1812  8 months ago       /bin/sh -c #(nop) ADD file:ad  192.5 MB
+511136ea3c5a  20 months ago                                     0 BBuilding D ocker images
+Docker Fundamen tals 2cb8348 105 © 2014 D ocker Inc
+CMD and ENTR YPOINT
+CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 106 © 2014 D ocker Inc
+Lesson 9: CM D and ENTR YPOINT
+Objectiv es
+In this l esson, w e will l earn about tw o importan t Dockerfile commands:
+CMDand ENTRYPOINT .
+Those c ommands all ow us t o set the def ault command t o run in a c ontainer .CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 107 © 2014 D ocker Inc
+Defining a def ault command
+When peopl e run our c ontainer , we want to aut oma ticall y execut ewgetto retrie ve our
+public IP addr ess, using if config.me.
+For tha t, we will e xecut e:
+wget -O- -q http://ifconfig.me/ip
+•-O-tells wget t o output t o standar d output inst ead o f a fil e.
+•-qtells wget t o skip v erbose output and giv e us onl y the da ta.
+•http://ifconfig.me/ip is the URL w e want to retrie ve.CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 108 © 2014 D ocker Inc
+Adding CMDto our D ockerfile
+Our new D ockerfile will l ook lik e this:
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y wget
+CMD wget -O- -q http://ifconfig.me/ip
+•CMDdefines a def ault command t o run when none is giv en.
+•It can appear a t any poin t in the fil e.
+•Each CMDwill r eplac e and o verride the pr evious one.
+•As a r esult, whil e you can ha ve mul tipleCMDlines, it is usel ess.CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 109 © 2014 D ocker Inc
+Build and t est our image
+Let's buil d it:
+$ docker build -t ifconfigme .
+...
+Successfully built 042dff3b4a8d
+And run it:
+$ docker run ifconfigme
+64.134.229.24CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 110 © 2014 D ocker Inc
+Overriding CMD
+If we want to get a shell in to our c ontainer (inst ead o f running wget), we just ha ve to
+specify a diff erent program t o run:
+$ docker run -it ifconfigme bash
+root@7ac86a641116:/#
+•We specified bash.
+•It replac ed the v alue o fCMD.CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 111 © 2014 D ocker Inc
+Using ENTRYPOINT
+We want to be abl e to specify a diff erent URL on the c ommand line, whil e retaining
+wgetand some def ault par amet ers.
+In other w ords, w e would like to be abl e to do this:
+$ docker run ifconfigme http://ifconfig.me/ua
+Wget/1.12 (linux-gnu)
+We will use the ENTRYPOINT verb in D ockerfile.CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 112 © 2014 D ocker Inc
+Adding ENTRYPOINT to our D ockerfile
+Our new D ockerfile will l ook lik e this:
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y wget
+ENTRYPOINT ["wget", "-O-", "-q"]
+•ENTRYPOINT defines a base c ommand ( and its par amet ers) for the c ontainer .
+•The c ommand line ar gumen ts ar e appended t o those par amet ers.
+•LikeCMD,ENTRYPOINT can appear an ywher e, and r eplac es the pr evious v alue.CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 113 © 2014 D ocker Inc
+Build and t est our image
+Let's buil d it:
+$ docker build -t ifconfigme .
+...
+Successfully built 36f588918d73
+And run it:
+$ docker run ifconfigme http://ifconfig.me/ua
+Wget/1.12 (linux-gnu)
+Great suc cess!CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 114 © 2014 D ocker Inc
+Using CMDand ENTRYPOINT together
+Wha t if w e want to define a def ault URL f or our c ontainer ?
+Then w e will use ENTRYPOINT and CMDtogether .
+•ENTRYPOINT will define the base c ommand f or our c ontainer .
+•CMDwill define the def ault par amet er(s) for this c ommand.CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 115 © 2014 D ocker Inc
+CMDand ENTRYPOINT together
+Our new D ockerfile will l ook lik e this:
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y wget
+ENTRYPOINT ["wget", "-O-", "-q"]
+CMD http://ifconfig.me/ip
+•ENTRYPOINT defines a base c ommand ( and its par amet ers) for the c ontainer .
+•If we don 't specify e xtra command-line ar gumen ts when starting the c ontainer ,
+the v alue o fCMDis appended.
+•Otherwise, our e xtra command-line ar gumen ts ar e used inst ead o fCMD.CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 116 © 2014 D ocker Inc
+Build and t est our image
+Let's buil d it:
+$ docker build -t ifconfigme .
+...
+Successfully built 6e0b6a048a07
+And run it:
+$ docker run ifconfigme
+64.134.229.24
+$ docker run ifconfigme http://ifconfig.me/ua
+Wget/1.12 (linux-gnu)CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 117 © 2014 D ocker Inc
+Overriding ENTRYPOINT
+Wha t if w e want to run a shell in our c ontainer ?
+We canno t just do docker run ifconfigme bash because tha t would try t o fetch
+the URL bash(which is no t a v alid URL, ob viousl y).
+We use the --entrypoint paramet er:
+$ docker run -it --entrypoint bash ifconfigme
+root@6027e44e2955:/#CMD and ENTR YPOINT
+Docker Fundamen tals 2cb8348 118 © 2014 D ocker Inc
+Container N etworking Basics
+Container N etworking Basics
+Docker Fundamen tals 2cb8348 119 © 2014 D ocker Inc
+Lesson 10: C ontainer N etworking Basics
+We will no w run netw ork servic es (accepting r equests ) in c ontainers.
+At the end o f this l esson, y ou will be abl e to:
+•Run a netw ork servic e in a c ontainer .
+•Manipula te container netw orking basics.
+•Find a c ontainer's IP addr ess.
+We will also e xplain the netw ork model used b y Docker.Container N etworking Basics
+Docker Fundamen tals 2cb8348 120 © 2014 D ocker Inc
+A simpl e, sta tic w eb serv er
+Run the D ocker H ub image jpetazzo/web , which c ontains a basic w eb serv er:
+$ docker run -d -P jpetazzo/web
+66b1ce719198711292c8f34f84a7b68c3876cf9f67015e752b94e189d35a204e
+•Docker will do wnload the image fr om the D ocker H ub.
+•-dtells D ocker to run the image in the back ground.
+•-Ptells D ocker to mak e this servic e reachabl e from o ther c omput ers.
+(-Pis the short v ersion o f--publish-all .)
+But, ho w do w e connect t o our w eb serv er no w?Container N etworking Basics
+Docker Fundamen tals 2cb8348 121 © 2014 D ocker Inc
+Finding our w eb serv er port
+We will use docker ps :
+$ docker ps
+CONTAINER ID  IMAGE                ...     PORTS                    ...
+66b1ce719198  jpetazzo/web:latest  ...     0.0.0.0:49153->8000/tcp  ...
+•The w eb serv er is running on port 8000 inside the c ontainer .
+•That port is e xposed on port 49153 on our D ocker host.
+We will e xplain the wh ys and ho ws o f this port mapping.
+But first, l et's mak e sur e tha t everything w orks pr operl y.Container N etworking Basics
+Docker Fundamen tals 2cb8348 122 © 2014 D ocker Inc
+Connecting t o our w eb serv er (GUI)
+Point your br owser t o the IP addr ess o f your D ocker host, on the port sho wn b y
+docker ps .
+Container N etworking Basics
+Docker Fundamen tals 2cb8348 123 © 2014 D ocker Inc
+Connecting t o our w eb serv er (CLI)
+You can also use curldirectly from the D ocker host.
+Make sur e to use the righ t port number if it is diff erent from the e xampl e bel ow:
+$ curl localhost:49153
+Hello, world!Container N etworking Basics
+Docker Fundamen tals 2cb8348 124 © 2014 D ocker Inc
+Docker netw ork model
+•We are out o f IPv4 addr esses.
+•Containers canno t have public IPv4 addr esses.
+•They ha ve priv ate addr esses.
+•Servic es ha ve to be e xposed port b y port.
+•Ports ha ve to be mapped t o avoid c onflicts.Container N etworking Basics
+Docker Fundamen tals 2cb8348 125 © 2014 D ocker Inc
+Finding the w eb serv er port in a scrip t
+Parsing the output o fdocker ps would be pain ful.
+There is a c ommand t o help us:
+$ docker port <containerID> 8000
+49153Container N etworking Basics
+Docker Fundamen tals 2cb8348 126 © 2014 D ocker Inc
+Manual all ocation o f port numbers
+If you w ant to set port numbers y ourself , no pr oblem:
+$ docker run -t -p 80:8000 jpetazzo/web
+•This time, w e are running our c ontainer in the f oreground.
+(That way, we can kill it easil y with ^C.)
+•We mapped port 80 on the host, t o port 8000 in the c ontainer .Container N etworking Basics
+Docker Fundamen tals 2cb8348 127 © 2014 D ocker Inc
+Plumbing c ontainers in to your in frastructur e
+There are (at least) thr ee w ays to integrate containers in y our netw ork.
+•Start the c ontainer , letting D ocker all ocate a public port f or it.
+Then r etrie ve tha t port number and f eed it t o your c onfigur ation.
+•Pick a fix ed port number in adv ance, when y ou gener ate your c onfigur ation.
+Then start y our c ontainer b y setting the port numbers manuall y.
+•Use an o verlay netw ork, c onnecting y our c ontainers with e.g. VLAN s, tunnels...Container N etworking Basics
+Docker Fundamen tals 2cb8348 128 © 2014 D ocker Inc
+Finding the c ontainer's IP addr ess
+We can use the docker inspect command t o find the IP addr ess o f the c ontainer .
+$ docker inspect --format '{{ .NetworkSettings.IPAddress }}' <yourContainerID>
+172.17.0.3
+•docker inspect is an adv anced c ommand, tha t can r etrie ve a t on o f
+informa tion about our c ontainers.
+•Here, we provide it with a f orma t string t o extract e xactly the priv ate IP addr ess
+of the c ontainer .Container N etworking Basics
+Docker Fundamen tals 2cb8348 129 © 2014 D ocker Inc
+Pinging our c ontainer
+We can t est c onnectivity t o the c ontainer using the IP addr ess w e've just disc overed.
+Let's see this no w by using the pingtool.
+$ ping <ipAddress>
+64 bytes from <ipAddress>: icmp_req=1 ttl=64 time=0.085 ms
+64 bytes from <ipAddress>: icmp_req=2 ttl=64 time=0.085 ms
+64 bytes from <ipAddress>: icmp_req=3 ttl=64 time=0.085 msContainer N etworking Basics
+Docker Fundamen tals 2cb8348 130 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Expose a netw ork port.
+•Manipula te container netw orking basics.
+•Find a c ontainer's IP addr ess.
+NOTE: La ter on w e'll see ho w to netw ork c ontainers without e xposing ports using the
+link primitiv e.Container N etworking Basics
+Docker Fundamen tals 2cb8348 131 © 2014 D ocker Inc
+Local D evelopmen t Work fl ow with D ocker
+Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 132 © 2014 D ocker Inc
+Lesson 11: L ocal D evelopmen t Workfl ow with D ocker
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Share code betw een c ontainer and host.
+•Use a simpl e local de velopmen t workfl ow.Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 133 © 2014 D ocker Inc
+Using a D ocker container f or local de velopmen t
+Docker containers ar e perf ect f or local de velopmen t.
+Let's gr ab an image with a w eb applica tion and see ho w this w orks.
+$ docker pull training/namerLocal D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 134 © 2014 D ocker Inc
+Our namer image
+Ourtraining/namer image is based on the U buntu image.
+It contains:
+•Ruby.
+•Sinatra.
+•Requir ed dependencies.Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 135 © 2014 D ocker Inc
+Adding our sour ce code
+Let's do wnload our applica tion's sour ce code.
+$ git clone https://github.com/docker-training/namer.git
+$ cd namer
+$ ls
+company_name_generator.rb  config.ru  Dockerfile  Gemfile  README.mdLocal D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 136 © 2014 D ocker Inc
+Creating a c ontainer fr om our image
+We've go t an image, some sour ce code and no w we can add a c ontainer t o run tha t
+code.
+$ docker run -d \
+-v $(pwd):/opt/namer \
+-p 80:9292 \
+training/namer
+•The-dflag indica tes tha t the c ontainer shoul d run in detached mode (in the
+back ground).
+•The-vflag pr ovides v olume moun ting inside c ontainers.
+•The-pflag maps port 9292inside the c ontainer t o port 80on the host.
+•training/namer is the name o f the image w e will run.
+More on these la ter.
+We've launched the applica tion with the training/namer image and the rackup
+command. rackuphas been set as the CMDin the Dockerfile .Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 137 © 2014 D ocker Inc
+Mounting v olumes inside c ontainers
+The-vflag moun ts a dir ectory fr om y our host in to your D ocker container . The flag
+structur e is:
+[host-path]:[container-path]:[rw|ro]
+•If [host-pa th] or [ container -path] doesn 't exist it is cr eated.
+•You can c ontrol the writ e sta tus o f the v olume with the roand rwoptions.
+•If you don 't specify rworro, it will be rwby def ault.Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 138 © 2014 D ocker Inc
+Checking our new c ontainer
+Now let us see if our new c ontainer is running.
+$ docker ps
+CONTAINER ID  IMAGE                 COMMAND CREATED       STATUS
+PORTS                NAMES
+045885b68bc5  training/namer:latest rackup  3 seconds ago Up 3 seconds
+0.0.0.0:80->9292/tcp condescending_shockleyLocal D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 139 © 2014 D ocker Inc
+Viewing our applica tion
+Now let's br owse t o our w eb applica tion on:
+http://<yourHostIP>:80
+We can see our c ompan y naming applica tion.
+Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 140 © 2014 D ocker Inc
+Making a change t o our applica tion
+Our cust omer r eally doesn 't like the c olor of our t ext. L et's change it.
+$ vi company_name_generator.rb
+And change
+color: royalblue;
+To:
+color: red;Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 141 © 2014 D ocker Inc
+Refreshing our applica tion
+Now let's r efresh our br owser:
+http://<yourHostIP>:80
+We can see the upda ted c olor of our c ompan y naming applica tion.
+Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 142 © 2014 D ocker Inc
+Workfl ow explained
+We can see a simpl e workfl ow:
+1.Build an image c ontaining our de velopmen t environmen t.
+(Rails, D jango...)
+2.Start a c ontainer fr om tha t image.
+Use the -vflag t o moun t sour ce code inside the c ontainer .
+3.Edit sour ce code outside the c ontainers, using r egular t ools.
+(vim, emacs, t extma te...)
+4.Test applica tion.
+(Some fr amew orks pick up changes aut oma ticall y.
+Others r equir e you to Ctrl-C + r estart a fter each modifica tion.)
+5.Repea t last tw o steps un til sa tisfied.
+6.When done, c ommit+push sour ce code changes.
+(Youareusing v ersion c ontrol, righ t?)Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 143 © 2014 D ocker Inc
+Debugging inside the c ontainer
+In 1.3, D ocker in troduc ed a f eature call eddocker exec .
+It allows users t o run a new pr ocess in a c ontainer which is alr eady running.
+It is no t mean t to be used f or pr oduction ( except in emer gencies, as a sort o f pseudo-
+SSH ), but it is handy f or de velopmen t.
+You can get a shell pr omp t inside an e xisting c ontainer this w ay.Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 144 © 2014 D ocker Inc
+docker exec exampl e
+$ # You can run ruby commands in the area the app is running and more!
+$ docker exec -it <yourContainerId> bash
+root@5ca27cf74c2e:/opt/namer# irb
+irb(main):001:0> [0, 1, 2, 3, 4].map {|x| x ** 2}.compact
+=> [0, 1, 4, 9, 16]
+irb(main):002:0> exitLocal D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 145 © 2014 D ocker Inc
+Stopping the c ontainer
+Now tha t we're done l et's st op our c ontainer .
+$ docker stop <yourContainerID>
+And r emo ve it.
+$ docker rm <yourContainerID>Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 146 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Share code betw een c ontainer and host.
+•Set our w orking dir ectory.
+•Use a simpl e local de velopmen t workfl ow.Local D evelopmen t Work fl ow with D ocker
+Docker Fundamen tals 2cb8348 147 © 2014 D ocker Inc
+Working with V olumes
+Working with V olumes
+Docker Fundamen tals 2cb8348 148 © 2014 D ocker Inc
+Lesson 12: W orking with V olumes
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Create containers hol ding v olumes.
+•Share volumes acr oss c ontainers.
+•Share a host dir ectory with one or man y containers.Working with V olumes
+Docker Fundamen tals 2cb8348 149 © 2014 D ocker Inc
+Working with V olumes
+Docker volumes can be used t o achie ve man y things, including:
+•Bypassing the c opy-on-writ e system t o ob tain na tive disk I/O perf ormanc e.
+•Bypassing c opy-on-writ e to leave some fil es out o fdocker commit .
+•Sharing a dir ectory betw een mul tiple containers.
+•Sharing a dir ectory betw een the host and a c ontainer .
+•Sharing a singl e filebetw een the host and a c ontainer .Working with V olumes
+Docker Fundamen tals 2cb8348 150 © 2014 D ocker Inc
+Volumes ar e special dir ectories in a c ontainer
+Volumes can be declar ed in tw o diff erent ways.
+•Within a Dockerfile , with a VOLUMEinstruction.
+VOLUME /var/lib/postgresql
+•On the c ommand-line, with the -vflag f ordocker run .
+$ docker run -d -v /var/lib/postgresql \
+training/postgresql
+In bo th cases, /var/lib/postgresql (inside the c ontainer ) will be a v olume.Working with V olumes
+Docker Fundamen tals 2cb8348 151 © 2014 D ocker Inc
+Volumes b ypass the c opy-on-writ e system
+Volumes act as passthr oughs t o the host fil esystem.
+•The I/O perf ormanc e on a v olume is e xactly the same as I/O perf ormanc e on
+the D ocker host.
+•When y oudocker commit , the c ontent of volumes is no t brough t into the
+resulting image.
+•If aRUNinstruction in a Dockerfile changes the c ontent of a v olume, those
+changes ar e no t recorded neither .Working with V olumes
+Docker Fundamen tals 2cb8348 152 © 2014 D ocker Inc
+Volumes can be shar ed acr oss c ontainers
+You can start a c ontainer with exactly the same v olumes as ano ther one.
+The new c ontainer will ha ve the same v olumes, in the same dir ectories.
+They will c ontain e xactly the same thing, and r emain in sync.
+Under the hood, the y are actuall y the same dir ectories on the host an yway.
+This is done using the --volumes-from flag f ordocker run .
+$ docker run -it --name alpha -v /var/log ubuntu bash
+root@99020f87e695:/# date >/var/log/now
+In ano ther t erminal, l et's start ano ther c ontainer with the same v olume.
+$ docker run --volumes-from alpha ubuntu cat /var/log/now
+Fri May 30 05:06:27 UTC 2014Working with V olumes
+Docker Fundamen tals 2cb8348 153 © 2014 D ocker Inc
+Volumes e xist independen tly of containers
+If a c ontainer is st opped, its v olumes still e xist and ar e availabl e.
+In the last e xempl e, it doesn 't ma tter if c ontainer alphais running or no t.Working with V olumes
+Docker Fundamen tals 2cb8348 154 © 2014 D ocker Inc
+Data containers
+Adata container is a c ontainer cr eated for the sol e purpose o f referencing one ( or man y)
+volumes.
+It is typicall y created with a no-op c ommand:
+$ docker run --name wwwdata -v /var/lib/www busybox true
+$ docker run --name wwwlogs -v /var/log/www busybox true
+•We created tw o da ta containers.
+•They are using the busyboximage, a tin y image.
+•We used the c ommand true, possibl y the simpl est c ommand in the w orld!
+•We named each c ontainer t o reference them easil y later.
+Try it out!Working with V olumes
+Docker Fundamen tals 2cb8348 155 © 2014 D ocker Inc
+Using da ta containers
+Data containers ar e used b y other c ontainers thanks t o--volumes-from .
+Consider the f ollowing ( fictitious ) exampl e, using the pr eviousl y created v olumes:
+$ docker run -d --volumes-from wwwdata --volumes-from wwwlogs webserver
+$ docker run -d --volumes-from wwwdata ftpserver
+$ docker run -d --volumes-from wwwlogs pipestash
+•The first c ontainer runs a w ebserv er, serving c ontent from/var/lib/www and
+logging t o/var/log/www .
+•The sec ond c ontainer runs a F TP serv er, allowing t o upl oad c ontent to the same
+/var/lib/www path.
+•The thir d container c ollects the l ogs, and sends them t o logstash, a l og st orage
+and anal ysis sy stem.Working with V olumes
+Docker Fundamen tals 2cb8348 156 © 2014 D ocker Inc
+Managing v olumes y ourself (inst ead o f letting D ocker
+do it)
+In some cases, y ou w ant a specific dir ectory on the host t o be mapped inside the
+container:
+•You w ant to manage st orage and snapsho ts yourself .
+(With L VM, or a SAN, or ZFS, or an ything else!)
+•You ha ve a separ ate disk with bett er perf ormanc e (SSD ) or r esiliency ( EBS) than
+the sy stem disk, and y ou w ant to put importan t data on tha t disk.
+•You w ant to shar e your sour ce dir ectory betw een y our host ( wher e the sour ce
+gets edit ed) and the c ontainer ( wher e it is c ompil ed or e xecut ed).
+Wait, w e alr eady met the last use-case in our e xampl e de velopmen t workfl ow! N ice.Working with V olumes
+Docker Fundamen tals 2cb8348 157 © 2014 D ocker Inc
+Sharing a dir ectory betw een the host and a c ontainer
+$ cd
+$ mkdir bindthis
+$ ls bindthis
+$ docker run -it -v $(pwd)/bindthis:/var/www/html/webapp ubuntu bash
+root@<yourContainerID>:/# touch /var/www/html/webapp/index.html
+root@<yourContainerID>:/# exit
+$ ls bindthis
+index.html
+This will moun t the bindthis directory in to the c ontainer a t/var/www/html/
+webapp.
+Note tha t the pa ths must be absolut e.
+It def aults to moun ting r ead-writ e but w e can also moun t read-onl y.
+$ docker run -it -v $(pwd)/bindthis:/var/www/html/webapp:ro ubuntu bash
+Those v olumes can also be shar ed with --volumes-from .Working with V olumes
+Docker Fundamen tals 2cb8348 158 © 2014 D ocker Inc
+Chaining c ontainer v olumes t ogether
+Let's see ho w to put bo th piec es together .
+1.Create an initial c ontainer .
+$ docker run -it -v /var/appvolume \
+--name appdata ubuntu bash
+root@<yourContainerID>#
+2.Create some da ta in our da ta volume.
+root@<yourContainerID># cd /var/appvolume
+root@<yourContainerID># echo "Hello" > data
+3.Exit the c ontainer .
+root@<yourContainerID># exitWorking with V olumes
+Docker Fundamen tals 2cb8348 159 © 2014 D ocker Inc
+Use a da ta volume fr om our c ontainer .
+1.Create a new c ontainer .
+$ docker run -it --volumes-from appdata \
+--name appserver1 ubuntu bash
+root@<yourContainerID>#
+2.Let's view our da ta.
+root@<yourContainerID># cat /var/appvolume/
+data
+Hello
+3.Let's mak e a change t o our da ta.
+root@<yourContainerID># echo "Good bye" \
+>> /var/appvolume/data
+4.Exit the c ontainer .
+root@<yourContainerID># exitWorking with V olumes
+Docker Fundamen tals 2cb8348 160 © 2014 D ocker Inc
+Chain c ontainers with da ta volumes
+1.Create a thir d container .
+docker run -it --volumes-from appserver1
+--name appserver2 ubuntu bash
+root@179c063af97a#
+2.Let's view our da ta.
+root@179c063af97a# cat /var/appvolume/data
+Hello
+Good bye
+3.Exit the c ontainer .
+root@179c063af97a# exit
+4.Tidy up y our c ontainers.
+$ docker rm -v appdata appserver1 appserver2Working with V olumes
+Docker Fundamen tals 2cb8348 161 © 2014 D ocker Inc
+Wha t happens when y ou remo ve containers with
+volumes ?
+•As long as a v olume is r eferenced b y at least one c ontainer , you will be abl e to
+access it.
+•When y ou remo ve the last c ontainer r eferencing a v olume, tha t volume will be
+orphaned.
+•Orphaned v olumes ar e no t del eted (as of Docker 1.2).
+•The da ta is no t lost, but y ou will no t be abl e to ac cess it.
+(Unless y ou do some serious ar cheol ogy in /var/lib/docker .)
+Ultima tely,youare the one r esponsibl e for logging, monit oring, and backup o f your
+volumes.Working with V olumes
+Docker Fundamen tals 2cb8348 162 © 2014 D ocker Inc
+Checking v olumes defined b y an image
+Wondering if an image has v olumes ? Just use docker inspect :
+$ # docker inspect training/datavol
+[{
+"config": {
+. . .
+"Volumes": {
+"/var/webapp": {}
+},
+. . .
+}]Working with V olumes
+Docker Fundamen tals 2cb8348 163 © 2014 D ocker Inc
+Checking v olumes used b y a c ontainer
+To look which pa ths ar e actuall y volumes, and t o wha t the y are bound, use docker
+inspect(again ):
+$ docker inspect <yourContainerID>
+[{
+"ID": "<yourContainerID>",
+. . .
+"Volumes": {
+"/var/webapp": "/var/lib/docker/vfs/dir/
+f4280c5b6207ed531efd4cc673ff620cef2a7980f747dbbcca001db61de04468"
+},
+"VolumesRW": {
+"/var/webapp": true
+},
+}]
+•We can see tha t our v olume is pr esen t on the fil e system o f the D ocker host.Working with V olumes
+Docker Fundamen tals 2cb8348 164 © 2014 D ocker Inc
+Sharing a singl e file betw een the host and a c ontainer
+The same -vflag can be used t o shar e a singl e file.
+$ echo 4815162342 > /tmp/numbers
+$ docker run -it -v /tmp/numbers:/numbers ubuntu bash
+root@<yourContainerId>:/# cat /numbers
+4815162342
+•All modifica tions done t o/numbers in the c ontainer will also change /tmp/
+numberson the host!
+It can also be used t o shar e asock et.
+$ docker run -it -v /var/run/docker.sock:/docker.sock ubuntu bash
+•This pa ttern is fr equen tly used t o giv e access t o the D ocker sock et to a giv en
+container .
+Warning: when using such moun ts, the c ontainer gains r oot-like access t o the host. I t
+can po tentially do bad things.Working with V olumes
+Docker Fundamen tals 2cb8348 165 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Create containers hol ding v olumes.
+•Share volumes acr oss c ontainers.
+•Share a host dir ectory with one or man y containers.Working with V olumes
+Docker Fundamen tals 2cb8348 166 © 2014 D ocker Inc
+Connecting C ontainers
+Connecting C ontainers
+Docker Fundamen tals 2cb8348 167 © 2014 D ocker Inc
+Lesson 13: C onnecting c ontainers
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Launch named c ontainers.
+•Create links betw een c ontainers.
+•Use names and links t o communica te acr oss c ontainers.
+•Use these f eatures to dec oupl e app dependencies and r educ e compl exity.Connecting C ontainers
+Docker Fundamen tals 2cb8348 168 © 2014 D ocker Inc
+Connecting c ontainers
+•We will l earn ho w to use names and links t o expose one c ontainer's port( s) to
+another.
+•Why? So each c omponen t of your app ( e.g., DB v s. web app ) can run
+independen tly with its o wn dependencies.Connecting C ontainers
+Docker Fundamen tals 2cb8348 169 © 2014 D ocker Inc
+Wha t we've go t planned
+•We're going t o get tw o images: a R edis (k ey-value st ore) image and a R uby on
+Rails applica tion image.
+•We're going t o start c ontainers fr om each image.
+•We're going t o link the c ontainer running our R ails applica tion and the c ontainer
+running R edis using D ocker's link primitiv e.Connecting C ontainers
+Docker Fundamen tals 2cb8348 170 © 2014 D ocker Inc
+Our Redis da tabase image
+Let's start b y pulling do wn our da tabase image.
+•There are mul tiple versions o f the redisimage.
+•To save time and netw ork r esour ces, w e will pull onl y the one w e need (la test).
+To do tha t, we will specify the e xact v ersion tag t o be used.
+$ docker pull redis:latest
+Let's r eview the r esult.
+$ docker images redis
+REPOSITORY          TAG                 IMAGE ID            CREATED
+VIRTUAL SIZE
+redis               latest              b73cdc045d3c        2 weeks ago
+98.42 MBConnecting C ontainers
+Docker Fundamen tals 2cb8348 171 © 2014 D ocker Inc
+Launch a c ontainer fr om the redisimage.
+Let's launch a c ontainer fr om the redisimage.
+$ docker run -d --name mycache redis
+<yourContainerID>
+Let's check the c ontainer is running:
+$ docker ps -l
+CONTAINER ID        IMAGE               COMMAND             CREATED
+STATUS              PORTS               NAMES
+9efd72a4f320        redis:latest        redis-server        5 seconds ago       Up
+4 seconds        6379/tcp            mycache
+•Our container is launched and running an instanc e of Redis.
+•Using the --nameflag w e've giv en it a name: mycache. Remember tha t!
+Container names ar e unique. W e're going t o use tha t name shortl y.Connecting C ontainers
+Docker Fundamen tals 2cb8348 172 © 2014 D ocker Inc
+Our Rails applica tion image
+Let's start b y pulling do wn our R ails applica tion image.
+$ docker pull nathanleclaire/redisonrails
+And r eviewing it.
+$ docker images nathanleclaire/redisonrailsConnecting C ontainers
+Docker Fundamen tals 2cb8348 173 © 2014 D ocker Inc
+Thenathanleclaire/redisonrails Dockerfile
+Let's l ook a t the D ockerfile tha t buil ds this image.
+FROM ruby
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+RUN mkdir /myapp
+WORKDIR /myapp
+ADD Gemfile /myapp/Gemfile
+RUN bundle install -j8
+EXPOSE 3000
+ADD . /myapp
+CMD ["bundle", "exec", "rails", "s"]Connecting C ontainers
+Docker Fundamen tals 2cb8348 174 © 2014 D ocker Inc
+Thenathanleclaire/redisonrails Dockerfile
+in detail
+•Based on the rubybase image fr om D ocker H ub (provided b y Docker Inc.)
+•Installs the r equir ed pack ages with bundle install .
+•Adds the R ails applica tion itself t o the /myappdirectory.
+•Exposes port 3000.
+•Runs R uby on R ails when a c ontainer is launched fr om the image.Connecting C ontainers
+Docker Fundamen tals 2cb8348 175 © 2014 D ocker Inc
+Connecting t o redis in the c ontainer
+The following R uby code will be used in /myapp/config/initializers/
+redis.rb to connect t o the running R edis c ontainer .
+$redis = Redis.new(:host => 'redis', :port => 6379)
+As w e'll see in mor e detail la ter, Links pr ovide a DNS en try f or the link ed c ontainer as
+well as in forma tion about ho w to connect ( IP addr ess, ports, et c.) popula ted in
+environmen t variabl es.Connecting C ontainers
+Docker Fundamen tals 2cb8348 176 © 2014 D ocker Inc
+Launch a c ontainer fr om the nathanleclaire/
+redisonrails image.
+Let's launch a c ontainer fr om the nathanleclaire/redisonrails image, without
+links t o start.
+In the R ails c onsol e we can see tha t$redisexists, but w e did no t link t o an y actual
+Redis instanc e.
+$ docker run -it nathanleclaire/redisonrails rails console
+Loading development environment (Rails 4.0.2)
+irb(main):001:0> $redis
+=> #<Redis client v3.1.0 for redis://redis:6379/0>
+irb(main):002:0> $redis.set('foo', 'bar')
+SocketError: getaddrinfo: Name or service not known
+from /usr/local/lib/ruby/gems/2.1.0/gems/redis-3.1.0/lib/redis/connection/
+ruby.rb:152:in `getaddrinfo'
+from /usr/local/lib/ruby/gems/2.1.0/gems/redis-3.1.0/lib/redis/connection/
+ruby.rb:152:in `connect'
+from /usr/local/lib/ruby/gems/2.1.0/gems/redis-3.1.0/lib/redis/connection/
+ruby.rb:211:in `connect'
+from /usr/local/lib/ruby/gems/2.1.0/gems/redis-3.1.0/lib/redis/client.rb:304:in
+`establish_connection'
+.....
+Without ac cess t o a R edis serv er at the pr oper l ocation the initializ ed$redisobject
+will no t work.Connecting C ontainers
+Docker Fundamen tals 2cb8348 177 © 2014 D ocker Inc
+Launch and link a c ontainer
+Let's try again but this time w e'll link our c ontainer t o our e xisting R edis c ontainer .
+$ docker run -it --link mycache:redis \
+nathanleclaire/redisonrails rails console
+Loading development environment (Rails 4.0.2)
+irb(main):001:0> $redis
+=> #<Redis client v3.1.0 for redis://redis:6379/0>
+irb(main):002:0> $redis.set('a', 'b')
+=> "OK"
+irb(main):003:0> $redis.get('a')
+=> "b"
+irb(main):004:0> $redis.set('someHash', {:foo => 'bar', :spam => 'eggs'})
+=> "OK"
+irb(main):005:0> $redis.get('someHash')
+=> "{:foo=>\"bar\", :spam=>\"eggs\"}"
+irb(main):006:0> $redis.set('users', ['Aaron', 'Jerome', 'Nathan'])
+=> "OK"
+irb(main):007:0> $redis.get('users')
+=> "[\"Aaron\", \"Jerome\", \"Nathan\"]"
+irb(main):008:0> exit
+Woot! That's mor e like it.
+•The--linkflag c onnects one c ontainer t o ano ther.
+•We specify the name o f the c ontainer t o link t o,mycache, and an alias f or the
+link, redis, in the f orma tname:alias .
+•We can use $redisin an ActiveRecord class t o create da ta models tha t
+have the speed on in-memory l ookups.Connecting C ontainers
+Docker Fundamen tals 2cb8348 178 © 2014 D ocker Inc
+More about our link - E nvironmen t variabl es
+The link pr ovides a secur e tunnel betw een c ontainers. O n our mycachecontainer port
+6379(the def ault Redis port) has been e xposed t o the link ed c ontainer .
+Docker will aut oma ticall y set en vironmen t variabl es in our c ontainer , and popula te an
+/etc/hosts entry f or DNS l ookup, t o indica te connection in forma tion.
+Let's see tha t informa tion:
+$ docker run --link mycache:redis nathanleclaire/redisonrails env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=0738e57b771e
+REDIS_PORT=tcp://172.17.0.120:6379
+REDIS_PORT_6379_TCP=tcp://172.17.0.120:6379
+REDIS_PORT_6379_TCP_ADDR=172.17.0.120
+REDIS_PORT_6379_TCP_PORT=6379
+REDIS_PORT_6379_TCP_PROTO=tcp
+REDIS_NAME=/dreamy_wilson/redis
+REDIS_ENV_REDIS_VERSION=2.8.13
+REDIS_ENV_REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-2.8.13.tar.gz
+REDIS_ENV_REDIS_DOWNLOAD_SHA1=a72925a35849eb2d38a1ea076a3db82072d4ee43
+HOME=/
+RUBY_MAJOR=2.1
+RUBY_VERSION=2.1.2
+•Each v ariabl es is pr efixed with the link alias: redis.
+•Includes c onnection in forma tion PL US an y en vironmen t variabl es set in the
+mycachecontainer via ENVinstructions.Connecting C ontainers
+Docker Fundamen tals 2cb8348 179 © 2014 D ocker Inc
+DNS
+Links also pr ovides y ou with a DNS en try c orresponding t o the name o f the c ontainer ,
+which is wha t we've used in this sampl e applica tion.
+$ docker run -it --link mycache:redis nathanleclaire/redisonrails ping redis
+PING redis (172.17.0.29): 56 data bytes
+64 bytes from 172.17.0.29: icmp_seq=0 ttl=64 time=0.164 ms
+64 bytes from 172.17.0.29: icmp_seq=1 ttl=64 time=0.122 ms
+64 bytes from 172.17.0.29: icmp_seq=2 ttl=64 time=0.086 ms
+^C--- redis ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 0.086/0.124/0.164/0.032 msConnecting C ontainers
+Docker Fundamen tals 2cb8348 180 © 2014 D ocker Inc
+Starting our R ails applica tion
+Now tha t we've pok ed ar ound a bit l et's start the applica tion itself in a fr esh c ontainer:
+$ docker run -d -p 80:3000 --link mycache:redis nathanleclaire/redisonrails
+Now let's check the c ontainer is running.
+$ docker ps -lConnecting C ontainers
+Docker Fundamen tals 2cb8348 181 © 2014 D ocker Inc
+Starting our R ails applica tion
+Our homepage c ontroller contains the f ollowing c ode.
+class WelcomeController < ApplicationController
+def index
+views = $redis.get('views').to_i()
+views += 1
+$redis.set('views', views)
+@page_views = views
+end
+endConnecting C ontainers
+Docker Fundamen tals 2cb8348 182 © 2014 D ocker Inc
+Viewing our R ails applica tion
+Finall y, let's br owse t o our applica tion and c onfirm it's w orking.
+http://<yourHostIP>
+Connecting C ontainers
+Docker Fundamen tals 2cb8348 183 © 2014 D ocker Inc
+Tidying up
+Finall y let's tidy up our da tabase.
+$ docker kill mycache
+. . .
+$ docker rm mycache
+•We can use the c ontainer name t o stop and r emo ve them.
+•We remo ved it so w e can r e-use its name la ter if w e want.
+(Remember c ontainer names ar e unique!)Connecting C ontainers
+Docker Fundamen tals 2cb8348 184 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Launch named c ontainers.
+•Create links betw een c ontainers.
+•Use names and links t o communica te acr oss c ontainers.
+•Use these f eatures to dec oupl e app dependencies and r educ e compl exity.Connecting C ontainers
+Docker Fundamen tals 2cb8348 185 © 2014 D ocker Inc
+Advanced D ockerfiles
+Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 186 © 2014 D ocker Inc
+Lesson 14: A dvanced D ockerfilesAdvanced D ockerfiles
+Docker Fundamen tals 2cb8348 187 © 2014 D ocker Inc
+Dockerfile usage summary
+•Dockerfile instructions ar e execut ed in or der.
+•Each instruction cr eates a new la yer in the image.
+•Instructions ar e cached. I f no changes ar e det ected then the instruction is
+skipped and the cached la yer used.
+•TheFROMinstruction M UST be the first non-c ommen t instruction.
+•Lines starting with #are treated as c ommen ts.
+•You can onl y ha ve one CMDand one ENTRYPOINT instruction in a
+Dockerfile .Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 188 © 2014 D ocker Inc
+TheFROMinstruction
+•Specifies the sour ce image t o buil d this image.
+•Must be the first instruction in the Dockerfile , except for commen ts.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 189 © 2014 D ocker Inc
+TheFROMinstruction
+Can specify a base image:
+FROM ubuntu
+An image tagged with a specific v ersion:
+FROM ubuntu:12.04
+A user image:
+FROM training/sinatra
+Or self -host ed image:
+FROM localhost:5000/funtooAdvanced D ockerfiles
+Docker Fundamen tals 2cb8348 190 © 2014 D ocker Inc
+More about FROM
+•TheFROMinstruction can be specified mor e than onc e to buil d mul tiple images.
+FROM ubuntu:14.04
+. . .
+FROM fedora:20
+. . .
+Each FROMinstruction marks the beginning o f the buil d of a new image.
+The-tcommand-line par amet er will onl y appl y to the last image.
+•If the buil d fails, e xisting tags ar e left unchanged.
+•An op tional v ersion tag can be added a fter the name o f the image.
+E.g.: ubuntu:14.04 .Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 191 © 2014 D ocker Inc
+TheMAINTAINER instruction
+TheMAINTAINER instruction t ells y ou who wr ote the Dockerfile .
+MAINTAINER Docker Education Team <education@docker.com>
+It's op tional but r ecommended.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 192 © 2014 D ocker Inc
+TheRUNinstruction
+TheRUNinstruction can be specified in tw o ways.
+With shell wr apping, which runs the specified c ommand inside a shell, with /bin/sh
+-c:
+RUN apt-get update
+Or using the execmethod, which a voids shell string e xpansion, and all ows e xecution in
+images tha t don 't ha ve/bin/sh:
+RUN [ "apt-get", "update" ]Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 193 © 2014 D ocker Inc
+More about the RUNinstruction
+RUNwill do the f ollowing:
+•Execut e a c ommand.
+•Record changes made t o the fil esystem.
+•Work gr eat to install libr aries, pack ages, and v arious fil es.
+RUNwill NO T do the f ollowing:
+•Record sta te ofprocesses .
+•Automa ticall y start daemons.
+If you w ant to start something aut oma ticall y when the c ontainer runs, y ou shoul d use
+CMDand/or ENTRYPOINT .Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 194 © 2014 D ocker Inc
+TheEXPOSEinstruction
+TheEXPOSEinstruction t ells D ocker wha t ports ar e to be published in this image.
+EXPOSE 8080
+•All ports ar e priv ate by def ault.
+•TheDockerfile doesn 't control if a port is publicl y availabl e.
+•When y oudocker run -p <port> ... , tha t port bec omes public.
+(Even if it w as no t declar ed with EXPOSE.)
+•When y oudocker run -P ... (without port number ), all ports declar ed
+with EXPOSEbecome public.
+Apublic port is reachabl e from o ther c ontainers and fr om outside the host.
+Aprivate port is no t reachabl e from outside.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 195 © 2014 D ocker Inc
+TheADDinstruction
+TheADDinstruction adds fil es and c ontent from y our host in to the image.
+ADD /src/webapp /opt/webapp
+This will add the c ontents of the /src/webapp/ directory t o the /opt/webapp
+directory in the image.
+Note:/src/webapp/ is no t relative to the host fil esystem, but t o the dir ectory
+containing the Dockerfile .
+Otherwise, a Dockerfile could suc ceed on host A, but f ail on host B.
+TheADDinstruction can also be used t o get r emo te files.
+ADD http://www.example.com/webapp /opt/
+This w ould do wnload the webappfile and plac e it in the /optdirectory.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 196 © 2014 D ocker Inc
+More about the ADDinstruction
+•ADDis cached. I f you recreate the image and no fil es ha ve changed then a cache
+is used.
+•If the l ocal sour ce is a zip fil e or a tarball it'll be unpack ed to the destina tion.
+•Sour ces tha t are URLs and zipped will no t be unpack ed.
+•Any files cr eated b y the ADDinstruction ar e owned b yrootwith permissions o f
+0755.
+More on ADDhere.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 197 © 2014 D ocker Inc
+TheVOLUMEinstruction
+TheVOLUMEinstruction will cr eate a da ta volume moun t poin t at the specified pa th.
+VOLUME [ "/opt/webapp/data" ]
+•Data volumes b ypass the union fil e system.
+In other w ords, the y are no t cap tured b ydocker commit .
+•Data volumes can be shar ed and r eused betw een c ontainers.
+We'll see ho w this w orks in a subsequen t lesson.
+•It is possibl e to shar e a v olume with a st opped c ontainer .
+•Data volumes persist un til all c ontainers r eferencing them ar e destr oyed.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 198 © 2014 D ocker Inc
+TheWORKDIRinstruction
+TheWORKDIRinstruction sets the w orking dir ectory f or subsequen t instructions.
+It also a ffects CMDand ENTRYPOINT , sinc e it sets the w orking dir ectory used when
+starting the c ontainer .
+WORKDIR /opt/webapp
+You can specify WORKDIRagain t o change the w orking dir ectory f or further oper ations.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 199 © 2014 D ocker Inc
+TheENVinstruction
+TheENVinstruction specifies en vironmen t variabl es tha t shoul d be set in an y container
+launched fr om the image.
+ENV WEBAPP_PORT 8080
+This will r esult in an en vironmen t variabl e being cr eated in an y containers cr eated fr om
+this image o f
+WEBAPP_PORT=8080
+You can also specify en vironmen t variabl es when y ou use docker run .
+$ docker run -e WEBAPP_PORT=8000 -e WEBAPP_HOST=www.example.com ...Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 200 © 2014 D ocker Inc
+TheUSERinstruction
+TheUSERinstruction sets the user name or UID t o use when running the image.
+It can be used mul tiple times t o change back t o root or t o ano ther user .Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 201 © 2014 D ocker Inc
+TheCMDinstruction
+TheCMDinstruction is a def ault command run when a c ontainer is launched fr om the
+image.
+CMD [ "nginx", "-g", "daemon off;" ]
+Means w e don 't need t o specify nginx -g "daemon off;" when running the
+container .
+Instead o f:
+$ docker run <dockerhubUsername>/web_image nginx -g "daemon off;"
+We can just do:
+$ docker run <dockerhubUsername>/web_imageAdvanced D ockerfiles
+Docker Fundamen tals 2cb8348 202 © 2014 D ocker Inc
+More about the CMDinstruction
+Just lik eRUN, the CMDinstruction c omes in tw o forms. T he first e xecut es in a shell:
+CMD nginx -g "daemon off;"
+The sec ond e xecut es dir ectly, without shell pr ocessing:
+CMD [ "nginx", "-g", "daemon off;" ]Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 203 © 2014 D ocker Inc
+Overriding the CMDinstruction
+TheCMDcan be o verridden when y ou run a c ontainer .
+$ docker run -it <dockerhubUsername>/web_image bash
+Will run bashinstead o fnginx -g "daemon off;" .Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 204 © 2014 D ocker Inc
+TheENTRYPOINT instruction
+TheENTRYPOINT instruction is lik e the CMDinstruction, but ar gumen ts giv en on the
+command line ar eappended to the en try poin t.
+Note: you ha ve to use the " exec" syn tax ( [ "..." ] ).
+ENTRYPOINT [ "/bin/ls" ]
+If we were to run:
+$ docker run training/ls -l
+Instead o f trying t o run -l, the c ontainer will run /bin/ls -l .Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 205 © 2014 D ocker Inc
+Overriding the ENTRYPOINT instruction
+The en try poin t can be o verriden as w ell.
+$ docker run -it training/ls
+bin   dev  home  lib64  mnt  proc  run   srv  tmp  var
+boot  etc  lib   media  opt  root  sbin  sys  usr
+$ docker run -it --entrypoint bash training/ls
+root@d902fb7b1fc7:/#Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 206 © 2014 D ocker Inc
+HowCMDand ENTRYPOINT interact
+TheCMDand ENTRYPOINT instructions w ork best when used t ogether .
+ENTRYPOINT [ "nginx" ]
+CMD [ "-g", "daemon off;" ]
+TheENTRYPOINT specifies the c ommand t o be run and the CMDspecifies its op tions.
+On the c ommand line w e can then po tentially override the op tions when needed.
+$ docker run -d <dockerhubUsername>/web_image -t
+This will o verride the op tions CMDprovided with new flags.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 207 © 2014 D ocker Inc
+TheONBUILDinstruction
+TheONBUILDinstruction is a trigger . It sets instructions tha t will be e xecut ed when
+another image is buil t from the image being buil d.
+This is useful f or buil ding images which will be used as a base t o buil d other images.
+ONBUILD ADD . /app/src
+•You can 't chain ONBUILDinstructions with ONBUILD.
+•ONBUILDcan't be used t o trigger FROMand MAINTAINER instructions.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 208 © 2014 D ocker Inc
+Building an efficien tDockerfile
+•Each line in a Dockerfile creates a new la yer.
+•Build yourDockerfile to tak e adv antage o f Docker's caching sy stem.
+•Combine mul tiple similar c ommands in to one b y using &&to continue
+commands and \to wr ap lines.
+•ADDdependency lists ( package.json ,requirements.txt , etc.) b y
+themsel ves to avoid r einstalling unchanged dependencies e very time.Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 209 © 2014 D ocker Inc
+Exampl e "bad" Dockerfile
+The dependencies ar e reinstall ed e very time, because the buil d sy stem does no t kno w if
+requirements.txt has been upda ted.
+FROM ubuntu:14.04
+MAINTAINER Docker Education Team <education@docker.com>
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
+python-all python-pip
+ADD ./webapp /opt/webapp/
+WORKDIR /opt/webapp
+RUN pip install -qr requirements.txt
+EXPOSE 5000
+CMD ["python", "app.py"]Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 210 © 2014 D ocker Inc
+FixedDockerfile
+Adding the dependencies as a separ ate step means tha t Docker can cache mor e
+efficien tly and onl y install them when requirements.txt changes.
+FROM ubuntu:14.04
+MAINTAINER Docker Education Team <education@docker.com>
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
+python-all python-pip
+ADD ./webapp/requirements.txt /tmp/requirements.txt
+RUN pip install -qr /tmp/requirements.txt
+ADD ./webapp /opt/webapp/
+WORKDIR /opt/webapp
+EXPOSE 5000
+CMD ["python", "app.py"]Advanced D ockerfiles
+Docker Fundamen tals 2cb8348 211 © 2014 D ocker Inc
+Container O rchestr ation
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 212 © 2014 D ocker Inc
+Lesson 15: O rchestr ation
+Objectiv es
+In this l esson, y ou will:
+•Understand wha t orchestr ation is and wh y it is needed.
+•Usefig, our r ecommended t ool, t o boo tstrap a de velopmen t environmen t.
+•Understand some o f the op tions and when y ou w ould use each one.Container O rchestr ation
+Docker Fundamen tals 2cb8348 213 © 2014 D ocker Inc
+Wha t is O rchestr ation?
+•Orchestr ation is a l oosel y defined t erm tha t peopl e use t o describe the set o f
+practic es ar ound managing mul tiple Docker containers.
+•It can be as simpl e as using t ools t o ease the "wiring t ogether" o f mul tiple
+Docker containers ( one f or applica tion, one f or DB, one f or key-value st ore etc.),
+or it can be as c ompl ex as the c oordina ting and scheduling o f man y resour ces
+and c ontainers acr oss lar ge clust ers o f comput ers.
+•For instanc e, wha t we did in the last section w as very handy f or learning, but it is
+difficul t / tedious t o remember and type in l ong docker run commands all
+the time. So w e want a bett er, mor e aut oma tic w ay.Container O rchestr ation
+Docker Fundamen tals 2cb8348 214 © 2014 D ocker Inc
+Getting start ed with O rchestr ation
+We're going t o get our hands dirty with an or chestr ation t ool o fficiall y endorsed b y
+Docker. It's call ed F ig.
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 215 © 2014 D ocker Inc
+Fig
+With fig, w e define a set o f set o f containers t o boo t up, and their run time pr operties, in
+a YAML file. Then w e run fig up, and w atch as fig boo ts the c ontainers, assigns the
+appr opria te links, and mul tiplexes the l ogs' outputs t ogether .
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 216 © 2014 D ocker Inc
+Installa tion
+To install fig:
+curl -L https://github.com/docker/fig/releases/download/0.5.2/linux \
+> /usr/local/bin/fig
+chmod +x /usr/local/bin/fig
+You can also use pipif you pr efer:
+sudo pip install -U figContainer O rchestr ation
+Docker Fundamen tals 2cb8348 217 © 2014 D ocker Inc
+Gettin ' Figgy W ith It
+Clone the sour ce code f or the app w e will be w orking on.
+cd
+git clone https://github.com/docker-training/simplefig
+cd simplefigContainer O rchestr ation
+Docker Fundamen tals 2cb8348 218 © 2014 D ocker Inc
+Gettin ' Figgy W ith It
+Create this D ockerfile:
+FROM python:2.7
+ADD requirements.txt /code/requirements.txt
+WORKDIR /code
+RUN pip install -r requirements.txt
+ADD . /codeContainer O rchestr ation
+Docker Fundamen tals 2cb8348 219 © 2014 D ocker Inc
+Gettin ' Figgy W ith It
+Now cr eate afig.ymlto store the run time pr operties o f the app.
+web:
+build: .
+command: python app.py
+ports:
+- "5000:5000"
+volumes:
+- .:/code
+links:
+- redis
+redis:
+image: orchardup/redisContainer O rchestr ation
+Docker Fundamen tals 2cb8348 220 © 2014 D ocker Inc
+Gettin ' Figgy W ith It
+Runfig upin the dir ectory, and w atch fig buil d and run y our app with the c orrect
+paramet ers, including linking the r elevant containers t ogether .
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 221 © 2014 D ocker Inc
+Gettin ' Figgy W ith It
+Verify tha t the app is running a thttp://<yourHostIP>:5000 .
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 222 © 2014 D ocker Inc
+Some mor e useful fig c ommands
+figintroduc es a unit o f abstr action call ed a " servic e" (mostl y, a container tha t interacts
+with o ther c ontainers in some w ay and has specific run time pr operties ).
+To rebuil d all the servic es in y ourfig.yml:
+fig build
+To run fig upin the back ground inst ead o f the f oreground:
+fig up -d
+To see curr ently running servic es:
+fig ps
+To remo ve the e xisting servic es:
+fig rmContainer O rchestr ation
+Docker Fundamen tals 2cb8348 223 © 2014 D ocker Inc
+Other O rchestr ation O ptions
+Now to rattle off some o f the o ther op tions v ery quickl y. Many of these ha ve a diff erent
+focus than fig, so the y ma y be useful in diff erent ways.
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 224 © 2014 D ocker Inc
+Fleet / et cd
+Go - fr om C oreOS
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 225 © 2014 D ocker Inc
+Consul
+Go - fr om H ashiCorp
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 226 © 2014 D ocker Inc
+Kubernet es
+Go - fr om G oogl e
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 227 © 2014 D ocker Inc
+Mesos
+C++ - fr om Apache/T witter
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 228 © 2014 D ocker Inc
+Helios
+Java - fr om S potify
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 229 © 2014 D ocker Inc
+Centurion
+Ruby - fr om N ew R elic
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 230 © 2014 D ocker Inc
+Futur e
+There are man y choic es - the dr eam is t o eventuall y be abl e to sw ap these choic es out
+seaml essly using libswarm , an ongoing pr oject D ocker has ar ound or chestr ation, and
+use wha tever fits y our needs.
+https:/ /github .com/dock er/libsw arm
+Container O rchestr ation
+Docker Fundamen tals 2cb8348 231 © 2014 D ocker Inc
+Section S ummary
+We've learned ho w to:
+•Understand wha t orchestr ation is and wh y it is needed.
+•Usefig, our r ecommended t ool, t o boo tstrap a de velopmen t environmen t.
+•Understand some o f the o ther op tions and when y ou w ould use each one.Container O rchestr ation
+Docker Fundamen tals 2cb8348 232 © 2014 D ocker Inc
+Ambassadors
+Ambassadors
+Docker Fundamen tals 2cb8348 233 © 2014 D ocker Inc
+Lesson 16: Ambassadors
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Understand the ambassador pa ttern and wha t it is used f or (servic e portability ).Ambassadors
+Docker Fundamen tals 2cb8348 234 © 2014 D ocker Inc
+Ambassadors
+We've alr eady seen a c oupl e of ways we can manage our applica tion ar chitectur e in
+Docker.
+•With links.
+•Using host-based v olumes.
+•Using da ta volumes shar ed betw een c ontainers.
+We're no w going t o see a pa ttern f or servic e portability w e call: ambassadors.Ambassadors
+Docker Fundamen tals 2cb8348 235 © 2014 D ocker Inc
+Introduction t o Ambassadors
+The ambassador pa ttern:
+•Takes adv antage o f Docker's ligh tweigh t link ages and abstr acts c onnections
+betw een servic es.
+•Allows y ou to manage servic es without har d-coding c onnection in forma tion
+inside applica tions.
+To do this, inst ead o f directly connecting c ontainers y ou insert ambassador c ontainers.Ambassadors
+Docker Fundamen tals 2cb8348 236 © 2014 D ocker Inc
+Ambassadors
+Docker Fundamen tals 2cb8348 237 © 2014 D ocker Inc
+Interacting with ambassadors
+•The w eb applica tion c ontainer uses a normal link t o connect t o the ambassador .
+•The da tabase c ontainer is link ed with an ambassador as w ell.
+•For bo th containers, ther e is no diff erence betw een normal oper ation and
+oper ation with ambassador c ontainers.
+•If the da tabase c ontainer is mo ved, its new l ocation will be tr acked b y the
+ambassador c ontainers, and the w eb applica tion c ontainer will still be abl e to
+connect, without r econfigur ation.Ambassadors
+Docker Fundamen tals 2cb8348 238 © 2014 D ocker Inc
+Implemen ting the ambassador pa ttern
+Different depl oymen ts will use diff erent underl ying t echnol ogies.
+•On-pr emise depl oymen ts with a trust ed netw ork can tr ack c ontainer l ocations
+in e.g. Z ookeeper , and gener ate HApr oxy configur ations each time a l ocation k ey
+changes.
+•Public cl oud depl oymen ts or depl oymen ts acr oss unsa fe netw orks can add TLS
+encryp tion.
+•Ad-hoc depl oymen ts can use a mast er-less disc overy pr otocol lik e avahi t o
+regist er and disc over servic es.Ambassadors
+Docker Fundamen tals 2cb8348 239 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Understand the ambassador pa ttern and wha t it is used f or (servic e portability ).Ambassadors
+Docker Fundamen tals 2cb8348 240 © 2014 D ocker Inc
+Introducing D ocker H ub
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 241 © 2014 D ocker Inc
+Lesson 17: I ntroducing D ocker H ub
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Regist er for an ac count on D ocker H ub.
+•Login t o your ac count from the c ommand line.
+•Learn about ho w Docker H ub w orks.
+•Learn about ho w to integrate Docker H ub in to your de velopmen t workfl ow.Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 242 © 2014 D ocker Inc
+Sign up f or a D ocker H ub ac count
+Note: if y ou alr eady ha ve an ac count on the I ndex/H ub, don 't create ano ther one.
+•Having a D ocker H ub ac count will all ow us t o store our images in the r egistry .
+•To sign up, y ou'll go t ohub.dock er.comand fill out the f orm.
+•Note: your D ocker H ub username has t o be all l owercase.
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 243 © 2014 D ocker Inc
+Activate your ac count thr ough e-mail.
+•Check y our e-mail and click the c onfirma tion link.Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 244 © 2014 D ocker Inc
+Login
+Let's use our new ac count to login t o the D ocker H ub!
+$ docker login
+Username: my_docker_hub_login
+Password:
+Email: my@email.com
+Login Succeeded
+Our cr eden tials will be st ored in ~/.dockercfg .Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 245 © 2014 D ocker Inc
+The.dockercfg configur ation fil e
+The~/.dockercfg configur ation fil e hol ds our D ocker registry authen tication
+creden tials.
+{
+"https://index.docker.io/v1/": {
+"auth":"amFtdHVyMDE6aTliMUw5ckE=",
+"email":"education@docker.com"
+}
+}
+Theauthsection is Base64 enc oding o f your user name and passw ord.
+It shoul d be o wned b y your user with permissions o f0600.
+You shoul d pr otect this fil e!Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 246 © 2014 D ocker Inc
+Navigating D ocker H ub
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 247 © 2014 D ocker Inc
+Reposit ories
+•Store all public and priv ate images in the r egistry
+•Appl y to your namespac e
+•Empty!
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 248 © 2014 D ocker Inc
+Public R eposit ories
+•Docker H ub pr ovides ac cess t o tens o f thousands o f pre-made images tha t you
+can buil d from.
+•Some o f these ar eofficial builds and liv e in the r oot namespac e.
+•Most ar e community c ontribut ed and main tained.
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 249 © 2014 D ocker Inc
+Official R eposit ories
+•Are main tained b y the pr oduct o wners
+•Blessed b y Docker
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 250 © 2014 D ocker Inc
+New R eposit ory (1/3 )
+•Pull do wnAdd Repository menu and sel ectRepository
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 251 © 2014 D ocker Inc
+New R eposit ory (2/3 )
+•Leavenamespace at the def ault (your username )
+•Give your r eposit ory a name
+•Type a brief descrip tion so peopl e kno w wha t it is
+•LeavePublicselected
+•Submit the f orm with Add Repository butt on (not sho wn)
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 252 © 2014 D ocker Inc
+New R eposit ory (3/3 )
+•Click Repositories and y ou will see y our new r eposit ory.
+•You can push images t o this r eposit ory fr om the dockercommandline.
+•More on this la ter.
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 253 © 2014 D ocker Inc
+Reposit ory Settings
+You can change the f ollowing:
+•Reposit ory D escrip tion
+•Webhooks
+•Collabor ators
+•Mark as unlist ed in the gl obal sear ch (NOT a priv ate reposit ory)
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 254 © 2014 D ocker Inc
+Collabor ators
+You can in vite other D ocker H ub to collabor ate on y our pr ojects.
+•Collabor ators canno t change settings in the r eposit ory.
+•Collabor ators can push images t o the r eposit ory.
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 255 © 2014 D ocker Inc
+Webhooks
+•Notify e xternal applica tions tha t an image has been upl oaded t o the r eposit ory.
+•Powerful t ool f or in tegrating with y our de velopmen t workfl ow.
+•Even mor e po werful when used with A utoma ted B uilds.
+Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 256 © 2014 D ocker Inc
+Automa ted B uilds
+•Automa ticall y buil d an image when sour ce code is changed.
+•Integrated with G ithub and B itbuck et
+•Work with public and priv ate reposit ories
+•Add the same as a r egular r eposit ory, selectAutomated Build from the Add
+Repository menu
+•We'll set one o f these up la ter!
+•You will need a G ithub ac count to follow along la ter, so go ahead and
+create one no w if y ou don 't ha ve one y et.Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 257 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Regist er for an ac count on D ocker H ub.
+•Login t o your ac count from the c ommand line.
+•Access some special D ocker H ub features for bett er w orkfl ows.Introducing D ocker H ub
+Docker Fundamen tals 2cb8348 258 © 2014 D ocker Inc
+Working with I magesWorking with I mages
+Docker Fundamen tals 2cb8348 259 © 2014 D ocker Inc
+Lesson 18: W orking with I mages
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Pull and push images t o the D ocker H ub.
+•Expl ore the D ocker H ub.
+•Understand and cr eateAutoma ted B uilds.Working with I mages
+Docker Fundamen tals 2cb8348 260 © 2014 D ocker Inc
+Working with images
+In the last section w e created a new image f or our w eb applica tion.
+This image w ould be useful t o the whol e team but ho w do w e shar e it?
+Using the Docker H ub!Working with I mages
+Docker Fundamen tals 2cb8348 261 © 2014 D ocker Inc
+Pulling images
+Earlier in this tr aining w e saw ho w to pull images do wn fr om the D ocker H ub.
+$ docker pull ubuntu:14.04
+This will c onnect t o the D ocker H ub and do wnload the ubuntu:14.04 image t o all ow
+us to buil d containers fr om it.
+We can also do the r everse and push an image t o the D ocker H ub so tha t others can use
+it.Working with I mages
+Docker Fundamen tals 2cb8348 262 © 2014 D ocker Inc
+Before pushing a D ocker image ...
+We push images using the docker push command.
+Images ar e upl oaded via HTTP and authen ticated.
+You can onl y push images t o the user namespa ce, and with y our o wn username.
+This means tha t you canno t push an image call edweb.
+It has t o be call ed<dockerhubUsername>/web .Working with I mages
+Docker Fundamen tals 2cb8348 263 © 2014 D ocker Inc
+Name y our image pr operl y
+Here are diff erent ways to ensur e tha t your image has the righ t name.
+Of c ourse, in the e xampl es bel ow, replac e<dockerhubUsername> with y our actual
+login on the D ocker H ub.
+•If you ha ve previousl y buil t the webimage, y ou can r e-tag it:
+$ docker tag web <dockerhubUsername>/web
+•Or, you can also r ebuil d it fr om scr atch:
+$ docker build -t <dockerhubUsername>/web \
+git://github.com/docker-training/
+staticweb.gitWorking with I mages
+Docker Fundamen tals 2cb8348 264 © 2014 D ocker Inc
+Pushing a D ocker image t o the D ocker H ub
+Now tha t the image is named pr operl y, we can push it:
+$ docker push <dockerhubUsername>/web
+You will be pr omp ted for a user name and passw ord.
+(Unless y ou alr eady did docker login earlier .)
+Please login prior to push:
+Username: <dockerhubUsername>
+Password: *********
+Email: ...
+Login Succeeded
+You will l ogin using y our D ocker H ub name, ac count and email addr ess y ou cr eated
+earlier in the tr aining.Working with I mages
+Docker Fundamen tals 2cb8348 265 © 2014 D ocker Inc
+More about pushing an image
+•If the image doesn 't exist on the D ocker H ub, a new r eposit ory will be cr eated.
+•You can push an upda ted image on t op o f an e xisting image. O nly the la yers
+which ha ve changed will be upda ted.
+•When y ou pull do wn the r esulting image, onl y the upda tes will need t o be
+downloaded.Working with I mages
+Docker Fundamen tals 2cb8348 266 © 2014 D ocker Inc
+Viewing our upl oaded image
+Let's sign on to the Docker H uband r eview our upl oaded image.
+Browse t o:
+https://hub.docker.com/
+Working with I mages
+Docker Fundamen tals 2cb8348 267 © 2014 D ocker Inc
+Logging in t o the D ocker H ub
+Now click the Loginlink and fill in the Username and Password fields.
+And clicking the Log Inbutt on.
+Working with I mages
+Docker Fundamen tals 2cb8348 268 © 2014 D ocker Inc
+Your ac count scr een
+This is the mast er ac count scr een. H ere you can see y our r eposit ories and r ecent
+activity .
+Working with I mages
+Docker Fundamen tals 2cb8348 269 © 2014 D ocker Inc
+Review y our w ebapp r eposit ory
+Click on the link t o your<dockerhubUsername>/web reposit ory.
+•You can see the basic in forma tion about y our image.
+•You can also br owse t o the Tagstab t o see image tags, or na vigate to a link in
+the "Settings" sidebar t o configur e the r epo.Working with I mages
+Docker Fundamen tals 2cb8348 270 © 2014 D ocker Inc
+Automa ted B uilds
+In addition t o pushing images t o Docker H ub y ou can also cr eate special images call ed
+Automa ted B uilds. An Automa ted B uildis created fr om a Dockerfile in a G itHub
+reposit ory.
+This pr ovides a guar antee tha t the image came fr om a specific sour ce and all ows y ou to
+ensur e tha t any do wnloaded image is buil t from a Dockerfile you can r eview .Working with I mages
+Docker Fundamen tals 2cb8348 271 © 2014 D ocker Inc
+Creating an A utoma ted buil d
+To create an Automa ted B uildclick on the Add Repository butt on on y our main
+account scr een and sel ectAutomated Build .
+Working with I mages
+Docker Fundamen tals 2cb8348 272 © 2014 D ocker Inc
+Connecting y our G itHub ac count
+If this is y our first Automa ted B uildyou will be pr omp ted to connect y our G itHub
+account to the D ocker H ub.
+Working with I mages
+Docker Fundamen tals 2cb8348 273 © 2014 D ocker Inc
+Select specific G itHub reposit ory
+You can then sel ect a specific G itHub reposit ory.
+It must c ontain a Dockerfile .
+If you don 't ha ve a r eposit ory with a D ockerfile, you can f orkhttps:/ /github .com/
+dock er-training /sta ticw eb, for instanc e.Working with I mages
+Docker Fundamen tals 2cb8348 274 © 2014 D ocker Inc
+Configuring A utoma ted B uild
+You can then c onfigur e the specifics o f yourAutoma ted B uildand click the Create
+Repository butt on.
+Working with I mages
+Docker Fundamen tals 2cb8348 275 © 2014 D ocker Inc
+Automa ted B uilding
+Once configur ed y ourAutoma ted B uildwill aut oma ticall y start buil ding an image fr om
+theDockerfile contained in y our G it reposit ory.
+Every time y ou mak e a c ommit t o tha t reposit ory a new v ersion o f the image will be
+built.Working with I mages
+Docker Fundamen tals 2cb8348 276 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Pull and push images t o the D ocker H ub.
+•Expl ore the D ocker H ub.
+•Understand and cr eateAutoma ted B uilds.Working with I mages
+Docker Fundamen tals 2cb8348 277 © 2014 D ocker Inc
+Using D ocker for testingUsing D ocker for testing
+Docker Fundamen tals 2cb8348 278 © 2014 D ocker Inc
+Lesson 19: U sing D ocker for testing
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Dockerize a Flask ( Python ) web applica tion and its t ests
+•Integrate this D ockerized applica tion with J enkins f or CI
+•Use W eb H ooks with A utoma ted B uilds to aut oma te testing and depl oymen t.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 279 © 2014 D ocker Inc
+Docker for so ftware testing
+One o f Docker's popular use cases is t o bett er enabl e testing.
+We're going t o see ho w to integrate Docker in to a C ontinuous I ntegration w orkfl ow.
+To do this w e're going t o assume tha t every time w e upda te an applica tion tha t we want
+to rebuil d its image and run the applica tion's tests.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 280 © 2014 D ocker Inc
+Wha t we want
+1.Every time our c ode changes w e want our image r ebuil t.
+2.Every time our c ode changes w e want the t ests run against our new image.
+3.If the t ests ar e good, depl oy the new c ode.Using D ocker for testing
+Docker Fundamen tals 2cb8348 281 © 2014 D ocker Inc
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 282 © 2014 D ocker Inc
+The plan
+•Use a simpl e web applica tion based on Python Flask.
+•Look a t the Dockerfile for tha t applica tion.
+•Look a t the t est suit e for tha t applica tion.
+•Create a A utoma ted B uild for tha t applica tion.
+•Configur e a W eb H ook t o trigger a J enkins buil d.Using D ocker for testing
+Docker Fundamen tals 2cb8348 283 © 2014 D ocker Inc
+Why?
+This fl ow is designed t o use all o f the po wer of Docker H ub to distribut e and main tain
+your r eposit ories and images. I t allows y ou to main tain the in tegrity and a vailability o f
+images t o all o f your hosts. I t also all ows y ou to easil y utiliz e an y futur e Docker H ub
+features.
+•We recommend using D ocker H ub's repositiories as a kno wn-good sour ce of
+images f or your depl oymen ts.
+•The CI sy stem ( Jenkins in this case ) shoul d run t ests inside o f the same
+environmen ts as de velopmen t and pr oduction.
+•Docker H ub shoul d buil d all images tha t will be depl oyed to production
+environmen ts.
+•The CI sy stem shoul d be abl e to block D ocker H ub fr om buil ding an image if
+ther e is a t est f ailur e.
+•The depl oymen t system ( also J enkins in this case ) shoul d onl y depl oy images
+that are buil t on D ocker H ub.Using D ocker for testing
+Docker Fundamen tals 2cb8348 284 © 2014 D ocker Inc
+Our w eb applica tion
+For simplicity , we are going t o use a tin y Python Flask applica tion, call edwebapp.
+We're going t o use this applica tion as our e xampl e of using D ocker for continous
+integration.Using D ocker for testing
+Docker Fundamen tals 2cb8348 285 © 2014 D ocker Inc
+The w ebapp D ockerfile
+Let's l ook a t the Dockerfile for tha t applica tion.
+FROM ubuntu:14.04
+MAINTAINER Docker Education Team <education@docker.com>
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python-all python-pip
+ADD ./webapp/requirements.txt /tmp/requirements.txt
+RUN pip install -qr /tmp/requirements.txt
+ADD ./webapp /opt/webapp/
+WORKDIR /opt/webapp
+EXPOSE 5000
+CMD ["python", "app.py"]
+You can see the Dockerfile and the applica tion on G itHub:
+https:/ /github .com/dock er-training /webappUsing D ocker for testing
+Docker Fundamen tals 2cb8348 286 © 2014 D ocker Inc
+The w ebapp D ockerfile explained
+OurDockerfile is pr etty simpl e:
+•We use an U buntu 12. 04 image as the base.
+•We install basic pr erequisit es, lik e Python.
+•We add the c ontents of the webappdirectory tha t hol ds our applica tion c ode.
+•We specify the w orking dir ectory o f the image as /opt/webapp .
+•We install the applica tion's Python-based dependencies using pip.
+•We expose port 5000 t o serv e our applica tion on.
+•Finall y, our applica tion is launched using python app.py .Using D ocker for testing
+Docker Fundamen tals 2cb8348 287 © 2014 D ocker Inc
+Our Flask t ests
+Inside our applica tion, in tests.p y, we've also go t a simpl e Python t est f or our Flask
+applica tion.
+from app import app
+import os
+import unittest
+class AppTestCase(unittest.TestCase):
+def test_root_text(self):
+tester = app.test_client(self)
+response = tester.get('/')
+assert 'Hello world!' in response.data
+if __name__ == '__main__':
+unittest.main()Using D ocker for testing
+Docker Fundamen tals 2cb8348 288 © 2014 D ocker Inc
+Forking our G itHub reposit ory
+We need a plac e to put our c ode changes tha t will trigger this whol e flow. Let's f ork the
+dock er-training /webapp r eposit ory.
+Go tohttp:/ /github .com/dock er-training /webapp . Click Forkin the upper -righ t corner .
+This will cr eate a new r eposit ory under y our ac count to hol d changes tha t you mak e.Using D ocker for testing
+Docker Fundamen tals 2cb8348 289 © 2014 D ocker Inc
+Adding a new A utoma ted B uild
+Go to your D ocker H ub pr ofile page and click:
+Add automated (source) build
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 290 © 2014 D ocker Inc
+Selecting the Sour ce Code Servic e
+Click on GitHubfor the servic e you w ant to use.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 291 © 2014 D ocker Inc
+Selecting the r eposit ory
+We then sel ect the webappreposit ory fr om y our G itHub A ccount.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 292 © 2014 D ocker Inc
+Configuring the buil d
+We then c onfigur e our A utoma ted B uild and click the Create Repository link.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 293 © 2014 D ocker Inc
+Success
+This is wha t suc cess l ooks lik e. Drink it in.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 294 © 2014 D ocker Inc
+Build sta tus page
+If you click on Automated Builds on the l eft sidebar , you can view the sta tus o f
+your buil d. When y ou cr eate a new buil d, w e aut oma ticall y run it the first time. H ow
+handy!
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 295 © 2014 D ocker Inc
+Run Jenkins
+We can use an e xisting D ocker image t o run J enkins, nathanleclaire/jenkins .
+Let's run a J enkins instanc e no w from this image.
+$ docker run -d --name=jenkins -p 8080:8080 \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-e DOCKERHUB_ID=<Your Docker Hub ID> \
+-e DOCKERHUB_EMAIL=<Your Docker Hub Email> \
+-e GITHUB_ID=<Your GitHub ID> \
+nathanleclaire/jenkins
+This will launch a c ontainer fr om our nathanleclaire/jenkins image and bind it
+to port 8080on our l ocal host. T he-eoptions pass en vironmen t variabl es to the scrip t
+that runs J enkins. T hey configur e the buil t-in jobs so tha t you don 't ha ve to.
+P.S. If you're interested y ou can see the Dockerfile that buil t this image:
+https:/ /github .com/dock er-training /jenkins/bl ob/mast er/DockerfileUsing D ocker for testing
+Docker Fundamen tals 2cb8348 296 © 2014 D ocker Inc
+Configur e Jenkins
+Our Jenkins image is alr eady pr e-popula ted with jobs tha t will run our W ebapp t ests. G o
+to the URL o f your J enkins instanc e
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 297 © 2014 D ocker Inc
+Configuring D eploy Job
+We're almost done. N ow we need t o set up a trigger f or the depl oymen t step. F rom the
+Jenkins D ashboar d click the training-webapp-deploy job. In the bo ttom-righ t of
+the page y ou will see a link f or the REST API . Click tha t link.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 298 © 2014 D ocker Inc
+Get the buil d link URL
+Scroll do wn a bit t o the Perform a build section. C opy the link wher e it sa ysPost
+to this URL .
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 299 © 2014 D ocker Inc
+Go back t o yourwebappDocker H ub reposit ory Settings and click Webhooks on the
+left sidebar . Paste the URL y ou just c opied in to the Hook URL box.
+Click AddUsing D ocker for testing
+Docker Fundamen tals 2cb8348 300 © 2014 D ocker Inc
+More Success!
+We ha ve suc cessfull y added a w ebhook.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 301 © 2014 D ocker Inc
+Make some changes
+Now we need t o mak e a change t o the r eposit ory. From the r eposit ory home page, click
+onREADME.md . Then click Editon the t op o f the ne xt page.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 302 © 2014 D ocker Inc
+Trivial changes ar e best
+When the edit bo x comes up, add some t ext to the bo ttom o f the fil e. Then scr oll to the
+bottom o f the page and click Commit Changes .
+The Jenkins job will be trigger ed b y this action !Using D ocker for testing
+Docker Fundamen tals 2cb8348 303 © 2014 D ocker Inc
+Watch it go
+Go back t o your J enkins dashboar d. You will see a job running or queued.
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 304 © 2014 D ocker Inc
+Automa tion in A ction
+When the training-webapp-test job finishes, y ou can l ook a t the Build
+Statuspage on y our A utoma ted B uild. It shoul d buil d fine.
+You can also try b0rking the sour ce code t o see tha t it fails ;)
+Using D ocker for testing
+Docker Fundamen tals 2cb8348 305 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Dockerize a Flask ( Python ) web applica tion and its t ests
+•Integrate this D ockerized applica tion with J enkins f or CI
+•Use W eb H ooks with A utoma ted B uilds to aut oma te testing.Using D ocker for testing
+Docker Fundamen tals 2cb8348 306 © 2014 D ocker Inc
+Security
+Security
+Docker Fundamen tals 2cb8348 307 © 2014 D ocker Inc
+Lesson 20: Security
+Objectiv es
+At the end o f this l esson, y ou will kno w:
+•The security implica tions o f exposing D ocker's API
+•How to tak e basic st eps t o mak e containers mor e secur e
+•Wher e to find mor e informa tion on D ocker securitySecurity
+Docker Fundamen tals 2cb8348 308 © 2014 D ocker Inc
+Wha t can w e do with D ocker API ac cess?
+Someone who has ac cess t o the D ocker API will ha ve full r oot privil eges on the D ocker
+host.
+If you giv e root privil eges t o someone, assume tha t the y can do anything they lik eon the
+host, including:
+•Accessing all da ta.
+•Changing all da ta.
+•Creating new user ac counts and changing passw ords.
+•Installing st ealth rootkits.
+•Shutting do wn the machine.Security
+Docker Fundamen tals 2cb8348 309 © 2014 D ocker Inc
+Accessing the host fil esystem
+To do tha t, we will use -vto expose the host fil esystem inside a c ontainer:
+$ docker run -v /:/hostfs ubuntu cat /hostfs/etc/passwd
+...This shows the content of /etc/passwd on the host...
+If you w ant to explore freely the host fil esystem:
+$ docker run -it -v /:/hostfs -w /hostfs ubuntu bashSecurity
+Docker Fundamen tals 2cb8348 310 © 2014 D ocker Inc
+Modifying the host fil esystem
+Volumes ar e read-writ e by def ault, so l et's cr eate a dumm y file on the host fil esystem:
+$ docker run -it -v /:/hostfs ubuntu touch /hostfs/hi-there
+$ ls -l /
+...You will see the hi-there file, created on the host...
+Note: if y ou ar e using boo t2dock er or a r emo te Docker host, y ou w on't see the hi-
+therefile. It will be in the boo t2dock er VM, or on the r emo te Docker host inst ead.Security
+Docker Fundamen tals 2cb8348 311 © 2014 D ocker Inc
+Privileged c ontainers
+If you start a c ontainer with --privileged , it will be abl e to ac cess all de vices and
+perf orm all oper ations.
+For instanc e, it will be abl e to ac cess the whol e kernel memory b y reading ( and e ven
+writing!) /dev/kcore .
+A container c ould also be start ed with --net host and --privileged together ,
+and be abl e to sniff all the tr affic going in and out o f the machine.Security
+Docker Fundamen tals 2cb8348 312 © 2014 D ocker Inc
+Other harm ful oper ations
+We won't explain ho w to do this (because w e don 't want you to break y our D ocker
+machines ), but with ac cess t o the D ocker API, y ou can:
+•Add user ac counts.
+•Change passw ord of existing ac counts.
+•Add SSH k ey authen tication t o existing ac counts.
+•Insert k ernel modul es.
+•Run malicious pr ocesses and insert special k ernel c ode t o hide them.Security
+Docker Fundamen tals 2cb8348 313 © 2014 D ocker Inc
+Wha t to do ?
+•Do no t expose the D ocker API t o the gener al public.
+•If you e xpose the D ocker API, secur e it with TLS c ertifica tes.
+•TLS c ertifica tes will be pr esen ted in the ne xt section.
+•Make sur e tha t your users ar e trained t o no t giv e away creden tials.Security
+Docker Fundamen tals 2cb8348 314 © 2014 D ocker Inc
+Security o f containers themsel ves
+•"Containers D o Not Contain!"
+•Containers themsel ves do no t have security f eatures.
+•Security is ensur ed b y a number o f other mechanisms.
+•We will no w review some o f those mechanisms.Security
+Docker Fundamen tals 2cb8348 315 © 2014 D ocker Inc
+Do no t run pr ocesses as r oot
+•By def ault, Docker runs e verything as r oot.
+•This is a security risk.
+•Docker migh t eventuall y drop root privil eges aut oma ticall y, but un til then, y ou
+shoul d specify USERin your D ockerfiles, or use suorsudo.Security
+Docker Fundamen tals 2cb8348 316 © 2014 D ocker Inc
+Don't colocate security-sensitiv e containers
+•If a c ontainer c ontains security-sensitiv e informa tion, put it on its o wn D ocker
+host, without o ther c ontainers.
+•Other c ontainers ( private de velopmen t environmen ts, non-sensitiv e
+applica tions...) can be put t ogether .Security
+Docker Fundamen tals 2cb8348 317 © 2014 D ocker Inc
+Run App Armor or SELinux
+•Both of these will pr ovide y ou with an additional la yer of protection if an
+attack er is abl e to gain el evated ac cess.Security
+Docker Fundamen tals 2cb8348 318 © 2014 D ocker Inc
+Learn mor e about c ontainers and security
+•Presen tation giv en a t Linux Con 2014 ( Chicago )
+http:/ /www .slideshar e.net/jpetazz o/dock er-linux -containers-lx c-and-securitySecurity
+Docker Fundamen tals 2cb8348 319 © 2014 D ocker Inc
+Section summary
+We ha ve learned:
+•The security implica tions o f exposing D ocker's API
+•How to tak e basic st eps t o mak e containers mor e secur e
+•Wher e to find mor e informa tion on D ocker securitySecurity
+Docker Fundamen tals 2cb8348 320 © 2014 D ocker Inc
+Securing D ocker with TLSSecuring D ocker with TLS
+Docker Fundamen tals 2cb8348 321 © 2014 D ocker Inc
+Lesson 21: Securing D ocker with TLS
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Understand ho w Docker uses TLS t o secur e and authoriz e remo te clien ts
+•Create a TLS C ertifica te Authority
+•Create TLS K eys
+•Sign TLS K eys
+•Use these k eys with D ockerSecuring D ocker with TLS
+Docker Fundamen tals 2cb8348 322 © 2014 D ocker Inc
+Why shoul d I car e?
+•Docker does no t have an y access c ontrols on its netw ork API unl ess y ou use
+TLS!Securing D ocker with TLS
+Docker Fundamen tals 2cb8348 323 © 2014 D ocker Inc
+Wha t is TLS
+•TLS is T ransport La yer Security .
+•The pr otocol tha t secur es w ebsit es with httpsURLs.
+•Uses P ublic K ey Cryptography to encryp t connections.
+•Keys are signed with C ertifica tes which ar e main tained b y a trust ed party .
+•These C ertifica tes indica te tha t a trust ed party belie ves the serv er is who it sa ys
+it is.
+•Each tr ansaction is ther efor encryp tedand authen ticated.Securing D ocker with TLS
+Docker Fundamen tals 2cb8348 324 © 2014 D ocker Inc
+How Docker U ses TLS
+•Docker pr ovides mechanisms t o authen ticate bo th the serv er the clien t toeach
+other .
+•Provides str ong authen tication, authoriza tion and encryp tion f or an y API
+connection o ver the netw ork.
+•Clien t keys can be distribut ed to authoriz ed clien tsSecuring D ocker with TLS
+Docker Fundamen tals 2cb8348 325 © 2014 D ocker Inc
+Environmen t Prepar ation
+•You need t o mak e sur e tha t OpenSSL v ersion 1. 0.1 is install ed on y our machine.
+•Make a dir ectory f or all o f the fil es to reside.
+•Make sur e tha t the dir ectory is pr otected and back ed up!
+•Treat these fil es the same as a r oot passwor d.Securing D ocker with TLS
+Docker Fundamen tals 2cb8348 326 © 2014 D ocker Inc
+Creating a C ertifica te Authority
+First, initializ e the CA serial fil e and gener ate CA priv ate and public k eys:
+$ echo 01 > ca.srl
+$ openssl genrsa -des3 -out ca-key.pem 2048
+$ openssl req -new -x509 -days 365 -key ca-key.pem -out ca.pem
+We will use the ca.pemfile to sign all o f the o ther k eys later.Securing D ocker with TLS
+Docker Fundamen tals 2cb8348 327 © 2014 D ocker Inc
+Create and S ign the Serv er Key
+Now tha t we ha ve a CA, w e can cr eate a serv er key and c ertifica te signing r equest. M ake
+sure tha tCNmatches the hostname y ou run the D ocker daemon on:
+$ openssl genrsa -des3 -out server-key.pem 2048
+$ openssl req -subj '/CN=**<Your Hostname Here>**' -new -key server-key.pem -out
+server.csr
+$ openssl rsa -in server-key.pem -out server-key.pem
+Next w e're going t o sign the k ey with our CA:
+$ openssl x509 -req -days 365 -in server.csr -CA ca.pem -CAkey ca-key.pem \
+-out server-cert.pemSecuring D ocker with TLS
+Docker Fundamen tals 2cb8348 328 © 2014 D ocker Inc
+Create and S ign the Clien t Key
+$ openssl genrsa -des3 -out client-key.pem 2048
+$ openssl req -subj '/CN=client' -new -key client-key.pem -out client.csr
+$ openssl rsa -in client-key.pem -out client-key.pem
+To mak e the k ey suitabl e for clien t authen tication, cr eate a e xtensions c onfig fil e:
+$ echo extendedKeyUsage = clientAuth > extfile.cnf
+Now sign the k ey:
+$ openssl x509 -req -days 365 -in client.csr -CA ca.pem -CAkey ca-key.pem \
+-out client-cert.pem -extfile extfile.cnfSecuring D ocker with TLS
+Docker Fundamen tals 2cb8348 329 © 2014 D ocker Inc
+Configuring the D ocker D aemon f or TLS
+•By def ault, Docker does no t list en on the netw ork a t all.
+•To enabl e remo te connections, use the -Hflag.
+•The assigned port f or D ocker over TLS is 2376.
+$ sudo docker -d --tlsverify
+--tlscacert=ca.pem --tlscert=server-cert.pem
+--tlskey=server-key.pem -H=0.0.0.0:2376
+Note: You will need t o modify the startup scrip ts on y our serv er for this t o be
+permanen t! The k eys shoul d be plac ed in a secur e system dir ectory, such as / etc/
+dock er.Securing D ocker with TLS
+Docker Fundamen tals 2cb8348 330 © 2014 D ocker Inc
+Configuring the D ocker Clien t for TLS
+If you w ant to secur e your D ocker clien t connections b y def ault, you can mo ve the k ey
+files to the .dockerdirectory in y our home dir ectory. Set the DOCKER_HOST variabl e
+as w ell.
+$ cp ca.pem ~/.docker/ca.pem
+$ cp client-cert.pem ~/.docker/cert.pem
+$ cp client-key.pem ~/.docker/key.pem
+$ export DOCKER_HOST=tcp://:2376
+Then y ou can run dock er with the --tlsverify option.
+$ docker --tlsverify psSecuring D ocker with TLS
+Docker Fundamen tals 2cb8348 331 © 2014 D ocker Inc
+Section S ummary
+We learned ho w to:
+•Create a TLS C ertifica te Authority
+•Create TLS K eys
+•Sign TLS K eys
+•Use these k eys with D ockerSecuring D ocker with TLS
+Docker Fundamen tals 2cb8348 332 © 2014 D ocker Inc
+The D ocker APIThe D ocker API
+Docker Fundamen tals 2cb8348 333 © 2014 D ocker Inc
+Lesson 22: T he D ocker API
+Objectiv es
+At the end o f this l esson, y ou will be abl e to:
+•Work with the D ocker API.
+•Create and manage c ontainers with the D ocker API.
+•Manage images with the D ocker API.The D ocker API
+Docker Fundamen tals 2cb8348 334 © 2014 D ocker Inc
+Introduction t o the D ocker API
+So far w e've used D ocker's c ommand line t ools t o interact with it. D ocker also has a
+fully fledged REST ful API y ou can w ork with.
+The API all ows:
+•To buil d images.
+•Run c ontainers.
+•Manage c ontainers.The D ocker API
+Docker Fundamen tals 2cb8348 335 © 2014 D ocker Inc
+Docker API details
+The D ocker API is:
+•Broadl y REST ful with some c ommands hijacking the HTTP c onnection f or
+STDIN, STDERR, and STDOUT .
+•The API binds l ocall y tounix:///var/run/docker.sock but can also be
+bound t o a netw ork in terface.
+•Not authen ticated b y def ault.
+•Secur able with c ertifica tes.
+In the e xampl es bel ow, we will assume tha t Docker has been setup so tha t the API
+listens on port 2375, because t ools lik ecurlcan't talk t o a l ocal UNIX sock et dir ectly.The D ocker API
+Docker Fundamen tals 2cb8348 336 © 2014 D ocker Inc
+Testing the D ocker API
+Let's start b y using the infoendpoin t to test the D ocker API.
+This endpoin t returns basic in forma tion about our D ocker host.
+$ curl --silent -X GET http://localhost:2375/info \
+| python -mjson.tool
+{
+"Containers": 68,
+"Debug": 0,
+"Driver": "aufs",
+"DriverStatus": [
+[
+"Root Dir",
+"/var/lib/docker/aufs"
+],
+[
+"Dirs",
+"711"
+]
+],
+"ExecutionDriver": "native-0.2",
+"IPv4Forwarding": 1,
+"Images": 575,
+"IndexServerAddress": "https://index.docker.io/v1/",
+"InitPath": "/usr/bin/docker",
+"InitSha1": "",
+"KernelVersion": "3.14.0-1-amd64",
+"MemoryLimit": 1,
+"NEventsListener": 0,
+"NFd": 11,
+"NGoroutines": 11,
+"OperatingSystem": "<unknown>",
+"SwapLimit": 1
+}The D ocker API
+Docker Fundamen tals 2cb8348 337 © 2014 D ocker Inc
+Doing docker run via the API
+It is simpl e to do docker run with the CLI, but it is mor e compl ex with the API. I t
+involves mul tiple calls.
+We will f ocus on deta ched containers f or no w (i.e., running in the back ground).
+Interactiv e containers in volve hijacking the HTTP c onnection. T his is easil y handl ed with
+Docker clien t libr aries, but f or no w, we will use r egular t ools lik ecurl.The D ocker API
+Docker Fundamen tals 2cb8348 338 © 2014 D ocker Inc
+Container lif ecycle with the API
+To run a c ontainer , you must:
+•Create the c ontainer . It is then st opped, but r eady t o go.
+•Start the c ontainer .
+•Optionall y, you can w ait for the c ontainer t o exit.
+•You can also r etrie ve the c ontainer output (l ogs) with the API.
+Each o f those oper ations c orresponds t o a specific API call.The D ocker API
+Docker Fundamen tals 2cb8348 339 © 2014 D ocker Inc
+"Create" vs. "S tart"
+ThecreateAPI call cr eates the c ontainer , and giv es us the ID o f the newl y created
+container . The c ontainer does no t run y et, though.
+ThestartAPI call t ells D ocker to transition the c ontainer fr om " stopped" t o "running" .
+Those ar e tw o diff erent calls, so y ou can a ttach t o the c ontainer bef ore starting it, t o
+mak e sur e tha t you will no t miss an y output fr om the c ontainer , for instanc e.
+Some par amet ers ( e.g. which image t o use, memory limits ) must be specified with
+create; others ( e.g. ports and v olumes mappings ) must be specified with start.
+To see the list o f all par amet ers, check the API r eference documen tation.The D ocker API
+Docker Fundamen tals 2cb8348 340 © 2014 D ocker Inc
+Creating a new c ontainer via the API
+Let's use curlto create a simpl e container .
+$ curl -X POST -H 'Content-Type: application/json' \
+http://localhost:2375/containers/create \
+-d '{
+"Cmd":["echo", "hello world"],
+"Image":"busybox"
+}'
+{"Id":"<yourContainerID>","Warnings":null}
+•You can see the c ontainer ID r eturned b y the API.
+•TheCmdparamet er has t o be a list.
+(If you put echo hello world it will try t o execut e a binary call edecho
+hello world .)
+•You can add mor e par amet ers in the JSON structur e.
+•The onl y manda tory par amet er is the Imageto use.The D ocker API
+Docker Fundamen tals 2cb8348 341 © 2014 D ocker Inc
+Starting our new c ontainer via the API
+In the pr evious st ep, the API ga ve you a c ontainer ID .
+You will ha ve to copy-past e tha t ID.
+$ curl -X POST -H 'Content-Type: application/json' \
+http://localhost:2375/containers/<yourContainerID>/start \
+-d '{}'
+No output will be sho wn ( unless an err or happens ).The D ocker API
+Docker Fundamen tals 2cb8348 342 © 2014 D ocker Inc
+Inspecting our launched c ontainer
+We can also inspect our fr eshl y launched c ontainer .
+$ curl --silent \
+http://localhost:2375/containers/<yourContainerID>/json |
+python -mjson.tool
+{
+"Args": [
+"hello world"
+],
+"Config": {
+"AttachStderr": false,
+"AttachStdin": false,
+"AttachStdout": false,
+"Cmd": [
+"echo",
+"hello world"
+],
+. . .
+}
+•It returns the same hash the docker inspect command r eturns.The D ocker API
+Docker Fundamen tals 2cb8348 343 © 2014 D ocker Inc
+Waiting f or our c ontainer t o exit and check its sta tus
+code
+Our test c ontainer will run and e xit almost instan tly.
+But for containers running f or a l onger period o f time, w e can call the waitendpoin t.
+Thewaitendpoin t also giv es the e xit sta tus o f the c ontainer .
+$ curl --silent -X POST \
+http://localhost:2375/containers/<yourContainerID>/wait
+{"StatusCode":0}
+•Note tha t you ha ve to use a POSTmethod her e.
+•TheStatusCode of0means tha t the pr ocess e xited normall y, without err or.The D ocker API
+Docker Fundamen tals 2cb8348 344 © 2014 D ocker Inc
+Viewing c ontainer output (l ogs)
+Our container is supposed t o echo hello world .
+Let's v erify tha t.
+$ curl --silent \
+http://localhost:2375/containers/<yourContainerID>/logs?stdout=1
+hello world
+•There are other op tions, t o sel ect which str eams t o see ( stdout and/or st derr),
+whether or no t to sho w timestamps, and t o follow the l ogs (lik etail -fdoes ).
+•Check the API r eference documen tation t o see all a vailabl e op tions.The D ocker API
+Docker Fundamen tals 2cb8348 345 © 2014 D ocker Inc
+Stopping a c ontainer
+We can also st op a c ontainer using the API.
+$ curl --silent -X POST \
+http://localhost:2375/containers/<yourContainerID>/stop
+•Note tha t you ha ve to use a POSTcall her e.
+•If it suc ceeds it will r eturn a HTTP 204 r esponse c ode.The D ocker API
+Docker Fundamen tals 2cb8348 346 © 2014 D ocker Inc
+Working with images
+We can also w ork with D ocker images.
+$ curl -X GET http://localhost:2375/images/json?all=0
+[
+{
+"Created": 1396291095,
+"Id": "cccdc2d2ec497e814793e8bd952ae76d5d552c8bb7ed927db54aa65579508ffd",
+"ParentId": "9cd978db300e27386baa9dd791bf6dc818f13e52235b26e95703361ec3c94dc6",
+"RepoTags": [
+"training/datavol:latest"
+],
+"Size": 0,
+"VirtualSize": 204371253
+},
+{
+"Created": 1396117401,
+"Id": "d4faa2107ddab5b22e815759d9a345f1381562ad44d1d95235347d6b006ec713",
+"ParentId": "439aa219e271671919a52a8d5f7a8e7c2b2950c639f09ce763ac3a06c0d15c22",
+. . .
+}
+]
+•Returns a hash o f all images.The D ocker API
+Docker Fundamen tals 2cb8348 347 © 2014 D ocker Inc
+Sear ching the D ocker H ub for an image
+We can also sear ch the D ocker H ub for specific images.
+$ curl -X GET http://localhost:2375/images/search?term=training
+[
+{
+"description": "",
+"is_official": false,
+"is_trusted": true,
+"name": "training/namer",
+"star_count": 0
+},
+{
+"description": "",
+"is_official": false,
+"is_trusted": true,
+"name": "training/postgres",
+"star_count": 0
+}
+]
+This r eturns a list o f images and their metada ta.The D ocker API
+Docker Fundamen tals 2cb8348 348 © 2014 D ocker Inc
+Creating an image
+We can then add one o f these images t o our D ocker host.
+$ curl -i -v -X POST \
+http://localhost:2375/images/create?fromImage=training/namer
+{"status":"Pulling repository training/namer"}
+This will pull do wn the training/namer image and add it t o our D ocker host.The D ocker API
+Docker Fundamen tals 2cb8348 349 © 2014 D ocker Inc
+Section summary
+We've learned ho w to:
+•Work with the D ocker API.
+•Create and manage c ontainers with the D ocker API.
+•Manage images with the D ocker API.The D ocker API
+Docker Fundamen tals 2cb8348 350 © 2014 D ocker Inc
+Course C onclusion
+Course C onclusion
+Docker Fundamen tals 2cb8348 351 © 2014 D ocker Inc
+Course S ummary
+During this class, w e:
+•Install ed D ocker.
+•Launched our first c ontainer .
+•Learned about images.
+•Got an understanding about ho w to manage c onnectivity and da ta in D ocker
+containers.
+•Learned ho w to integrate Docker in to your dail y work fl owCourse C onclusion
+Docker Fundamen tals 2cb8348 352 © 2014 D ocker Inc
+Questions & N ext Steps
+Still L earning:
+•Docker homepage - http:/ /www .dock er.com/
+•Docker H ub - https:/ /hub .dock er.com
+•Docker bl og - http:/ /blog.dock er.com/
+•Docker documen tation - http:/ /docs.dock er.com/
+•Docker G etting S tarted G uide - http:/ /www .dock er.com/gettingstart ed/
+•Docker code on G itHub - https:/ /github .com/dock er/dock er
+•Docker mailing list - https:/ /groups.googl e.com/f orum/#!f orum/dock er-user
+•Docker on IRC: ir c.freenode.net and channels #dockerand #docker-dev
+•Docker on T witter - http:/ /twitt er.com/dock er
+•Get D ocker help on S tack Ov erflow -http:/ /stack overflow.com/
+sear ch?q=dock erCourse C onclusion
+Docker Fundamen tals 2cb8348 353 © 2014 D ocker Inc
+Thank Y ou
+Course C onclusion
+Docker Fundamen tals 2cb8348 354 © 2014 D ocker Inc

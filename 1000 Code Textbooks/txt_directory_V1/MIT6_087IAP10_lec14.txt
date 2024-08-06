@@ -1,0 +1,294 @@
+Outline
+Review 
+Inter process comm unication 
+Signals 
+Fork 
+Pipes 
+FIFO 
+Spotlights 
+1 
+6.087 Lecture 14 – January 29, 2010
+Review 
+Inter process comm unication 
+Signals 
+Fork 
+Pipes 
+FIFO 
+Spotlights 
+2 
+Review: multithreading
+Race conditions • 
+non-deter minism in thread order . • 
+•	can be pre vented b y synchronization 
+•	atomic oper ations necessar y for synchronization 
+•	Mute x: Allows a single thread to o wn it 
+•	Semaphores: Gener alization of m utex, allo ws N threads to 
+acquire it at a time . 
+•	P(s) : acquires a loc k 
+•	V(s) : releases loc k 
+•	sem_init(),sem_destroy() 
+•	sem_wait(),sem_trywait(),sem_post() 
+•	Other prob lems: deadloc k, star vation 
+2 
+Sockets
+• <sys/soc ket.h> 
+• enab les client-ser ver computing 
+• Client: connect() 
+• Server: bind(),listen(),accept() 
+• I/O: write(),send(),read(),recv() 
+3 
+6.087 Lecture 14 – January 29, 2010
+Review 
+Inter process comm unication 
+Signals 
+Fork 
+Pipes 
+FIFO 
+Spotlights 
+4 
+Preliminaries
+•	Each process has its o wn address space . Theref ore, 
+individual processes cannot comm unicate unlik e threads . 
+•	Interprocess comm unication: Linux/Unix pro vides se veral 
+ways to allo w comm unications 
+•	signal 
+•	pipes 
+•	FIFO queues 
+•	shared memor y 
+•	semaphores 
+sockets • 
+4 
+<signals.h>
+•	Unix/Lin ux allo ws us to handle e xceptions that ar ise dur ing 
+execution (e .g., interr upt, ﬂoating point error , segmentation 
+fault etc.). 
+•	A process recie ves a signal when such a condition occurs . 
+void (∗signal (int sig,void(∗handler)(int )))( int ) 
+•	deter mines ho w subsequent signals will be handled. 
+•	pre-deﬁned beha vior: SIG_DFL (default), SIG_IGN (ignore) 
+•	returns the pre vious handler . 
+5 
+<signal.h>
+Valid signals:
+SIGABR T abnor mal ter mination 
+SIGFPE ﬂoating point error 
+SIGILL illegal instr uction 
+SIGINT interr upt 
+SIGSEGV segmentation f ault 
+SIGTERM termination request 
+SIGB US bus error 
+SIGQ UIT quit 
+The tw o signals SIGST OP,SIGKILL cannot be handled. 
+6 
+<signal.h>
+int raise( int sig) can be used to send signal sig to the prog ram. 
+Notes: 
+There can be r ace conditions . • 
+•	signal handler itself can be interr upted.
+use of non-reentr ant functions unsaf e.
+ • 
+•	sigprocmask can be used to pre vent interr uptions .
+handler is reset each time it is called.
+ • 
+7 
+Example
+#include <stdio .h> 
+void sigproc () 
+{ signal(SIGINT, sigproc); /∗∗/ 
+printf("you have pressed ctrl −c \n " ); 
+} 
+void quitproc ()
+{ printf("ctrl −\\ pressed to quit " );
+exit (0); /∗ normal exit status ∗/ 
+} 
+main () 
+{ 
+signal(SIGINT, sigproc);
+signal (SIGQUIT, quitproc );
+printf ( ‘ ‘ ctrl −c disabled use ctrl −\\ to quitn’’);
+for (;;); /∗ infinite loop ∗/
+} 
+8 
+Fork
+pid_t fork(void) 
+•	fork() is a system call to create a ne w process 
+•	In the child process , it retur ns 0 
+•	In the parent process , it retur ns the PID (process id) of the 
+child. 
+•	The child PID can be used to send signals to the child 
+process . 
+•	returns -1 on f ailure (in valid PID) 
+9 
+Example
+#include <stdlib .h> 
+#include <stdio .h> 
+int	main() { 
+/∗some code ∗/ 
+pid _t pid=fork (); 
+int	i;
+if (pid) {
+for ( i =0;i <5; i ++){
+sleep (2); 
+printf("parent process:%d\n ",i); 
+} 
+} 
+else { 
+for ( i =0;i <5; i ++){ 
+sleep (1); 
+printf("child process:%d\n ",i); 
+} 
+}/∗ end child ∗/ 
+}/∗ end main ∗/ 
+parent process :0 
+child process:1 
+child process:2 
+parent process :1 
+child process:3 
+child process:4 
+parent process :2 
+parent process :3 
+parent process :4 
+10 
+Fork
+• fork() makes a full cop y of the parents address space . 
+• pid_t getpid () returns PID of the current process . 
+• pid_t getppid () returns PID of the parent process . 
+• wait(int∗) is used to w ait for the child to ﬁnish. 
+• waitpid () is used to w ait for a speciﬁc child. 
+Zombies: 
+• the child process can e xit bef ore the parent 
+• stray process is mar ked as <defunct> 
+• preap can be used to reap z ombie processes . 
+11 
+Pipes
+Pipes are used in unix to redirect output of one command to 
+another . Pipes also allo w parent processes to comm unicate 
+with its children. Examples 
+•	ls | more -displa ys results of ls one screen at a time 
+•	cat file.txt | sort -displa ys contents of ﬁle .txt in 
+sorted order 
+int pipe(int FILEDES[2]) 
+•	A pipe can be thought of as a pair of ﬁle descr iptors 
+• no ph ysical ﬁle is associated with the ﬁle descr iptor
+• one end is opened in wr ite mode .
+• other end is opened in read mode .
+12 
+Example
+/∗ source: http://beej.us/guide ∗/
+#include <stdio .h>
+#include <stdlib .h>
+#include <errno .h>
+#include <sys / types .h>
+#include <unistd .h> /∗ ipc ∗/
+int main ( void ) 
+{ 
+int pfds [2]; 
+char buf [30]; 
+pipe(pfds ); 
+if (! fork ()) { 
+printf(" CHILD : writing to the pipe\n ");
+write(pfds[1], "test", 5);
+printf(" CHILD : exiting\n");
+exit (0);
+} else { 
+printf("PARENT: reading from pipe\n"); 
+read(pfds[0], buf, 5); 
+printf("PARENT: read \"%s\"\n ", buf); 
+wait (NULL); 
+} 
+return 0; 
+} 
+13 
+FIFO
+• FIFO queues ma y be thought of as named pipes . 
+• Multiple processes can read and wr ite from a FIFO . 
+• Unlik e pipes , the processes can be unrelated. 
+• FIFOs can be created using mknod system call. 
+int mknod (const char ∗path,mode_t mode,de v_t de v) 
+• <sys/ stat.h> contains the declar ation f or mknod. 
+• mknod used to create special ﬁles - devices ,ﬁfos etc. 
+• mode can ha ve special bits such as S_IFIFO | 0644 
+• dev is inter preted based on the mode . 
+Example: mknod("m yﬁfo", S_IFIFO | 0644 , 0); 
+14 
+Example
+/∗ source: http://beej.us/guide ∗/ 
+#include <stdio .h> 
+#include <stdlib .h> 
+#include <string .h> 
+#include <sys/ stat .h> 
+#include <unistd .h> 
+#define FIFO_NAME "fifo" 
+int main ( void ){ 
+char s[300]; 
+int num, fd ; 
+mkno d(FIFO_NAME, S_IFIFO | 0666, 0); 
+printf("waiting for readers...\n "); 
+fd = open(FIFO_NAME, O_WRONLY); 
+printf("got a reader\n "); 
+while (gets(s), !feof(stdin)) {
+num = write(fd, s, strlen(s));
+if (num == −1)
+perror(" write " );
+else 
+printf("wrote %d bytes\n", num); 
+} 
+return 0; 
+} #include <stdio .h> 
+#include <stdlib .h> 
+#include <errno .h> 
+#include <string .h> 
+#include <fcntl .h> 
+#include <sys / types .h> 
+#include <sys/ stat .h> 
+#include <unistd .h> 
+#define FIFO_NAME "fifo" 
+int main ( void ){ 
+char s[300]; 
+int num, fd ; 
+mkno d(FIFO_NAME, S_IFIFO | 0666, 0); 
+printf("waiting for writers ...\n "); 
+fd = open(FIFO_NAME, O_RDONLY); 
+printf("got a writer\n "); 
+do { 
+num = read(fd, s, 300); 
+if (num == −1) 
+perror("read" ); 
+else { 
+s[num] = ’\0’; 
+printf("read %d bytes:\"%s\"\n", 
+num, s); 
+} 
+} while (num > 0); 
+return 0; 
+} 
+15 
+6.087 Lecture 14 – January 29, 2010
+Review 
+Inter process comm unication 
+Signals 
+Fork 
+Pipes 
+FIFO 
+Spotlights 
+16 
+Project spotlights
+•	Face ﬁnding with openCV 
+Barcode scanner • 
+•	ImageIC 
+•	Image2DXF 
+•	Library database 
+•	Simple A udio Visualiz er 
+Non-linear oscillator • 
+NoteDelux e • 
+CUD A • 
+Visual mouse • 
+•	Wallpaper do wnloader 
+16 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare 
+http://ocw.mit.edu 
+6.087  Practical Programming in C 
+January (IAP) 2010 
+ 
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms. 

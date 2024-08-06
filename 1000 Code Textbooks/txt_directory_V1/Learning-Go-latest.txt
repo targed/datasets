@@ -1,0 +1,4218 @@
+Learning Go
+Seehttp://miek.nl/go for a more up to date and online version of this book.
+Author:
+Miek GiebenThanks to:
+Go Authors ,Google
+With the help and contributions from:
+(in alphabetical order )
+Adam J. Gray ,Alex Sychev ,Alexey Chernenkov ,Andrea Spadaccini ,Andrey Mirtchovski ,
+Anthony Magro ,Babu Sreekanth ,Ben Bullock ,Bob Cunningham ,Brian Fallik ,Cecil New ,
+Damian Gryski ,Dan Kortschak ,David Otton ,Fabian Becker ,Filip Zaludek ,Hadi Amiri ,
+Haiping Fan ,Jaap Akkerhuis ,JC van Winkel ,Jeroen Bulten ,Jinpu Hu,John Shahid ,Jonathan
+Kans,Joshua Stein ,Makoto Inoue ,Mayuresh Kathe ,“mem”,Michael Stapelberg ,Olexandr
+Shalakhin ,Paulo Pinto ,Peter Kleiweg ,Philipp Schmidt ,Robert Johnson ,Russel Winder ,Sonia
+Keys,Stefan Schroeder ,Thomas Kapplet ,T.J. Yang,“Cobold”,“Simoc”,“Uriel”y,Xing Xing .
+And with minor contributions from:
+Alexander Katasonov ,Daniele Pala ,Iaroslav Tymchenko ,Nicolas Kaiser ,Marco Ynema .
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License .
+Miek Gieben – ©2010 - 2012
+This work is licensed under the Attribution-NonCommercial-ShareAlike 3.0 Unported Li-
+cense. To view a copy of this license, visit http://creativecommons.org/licenses/
+by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San
+Francisco, California, 94105, USA.
+All example code used in this book is hereby put in the public domain.
+“Learning Go” has been translated into:
+•Chinese,byXingXing, 这里是中文译本 :http://www.mikespook.com/learning-go/
+Learning as we Go (1.0)
+Supports the Go 1.1 release
+Contents
+1 Introduction 2
+Ofﬁcial documentation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+Hello World . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+Compiling and running code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+Settings used in this book . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+Variables, types and keywords . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+Operators and built-in functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+Go keywords . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+Control structures . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+Built-in functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+Arrays, slices and maps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+Answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+2 Functions 24
+Scope. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+Multiple return values . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+Named result parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+Deferred code . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+Variadic parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+Functions as values . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+Callbacks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+Panic and recovering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+Answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+3 Packages 40
+Identiﬁers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+Documenting packages . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+Testing packages . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+Useful packages . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+Answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
+4 Beyond the basics 50
+Allocation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+Deﬁning your own types . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 52
+Conversions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+Answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 59
+5 Interfaces 66
+Methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 68
+Interface names . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 69
+A sorting example . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 69
+Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 73
+Answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 75
+6 Concurrency 78
+More on channels . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
+Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
+Answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 83
+7 Communication 86
+io.Reader . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87
+ii Chapter: Contents
+Some examples . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87
+Command line arguments . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87
+Executing commands . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 88
+Networking . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 88
+Exercises . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 89
+Answers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 93
+A Colophon 100
+Contributors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 100
+License and copyright . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 100
+B Index 102
+C Bibliography 104
+List of Exercises
+1 (1) Documentation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+2 (0) For-loop . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+3 (0) FizzBuzz . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+4 (1) Strings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+5 (1) Average . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+6 (0) Average . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+7 (0) Integer ordering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+8 (1) Scope . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+9 (1) Stack . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+10 (1) Var args . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+11 (1) Fibonacci . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+12 (1) Map function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+13 (0) Minimum and maximum . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+14 (1) Bubble sort . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+15 (1) Functions that return functions . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+16 (0) Stack as package . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+17 (2) Calculator . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+18 (1) Pointer arithmetic . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+19 (2) Map function with interfaces . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+20 (1) Pointers . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+21 (1) Linked List . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+22 (1) Cat . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+23 (2) Method calls . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 57
+24 (1) Interfaces and compilation . . . . . . . . . . . . . . . . . . . . . . . . . . . . 73
+25 (1) Pointers and reﬂection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 73
+26 (2) Interfaces and max() . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 73
+27 (1) Channels . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
+28 (2) Fibonacci II . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
+29 (2) Processes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 89
+30 (0) Word and letter count . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 90
+31 (0) Uniq . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 90
+32 (2) Quine . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 90
+33 (1) Echo server . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 90
+34 (2) Number cruncher . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 91
+35 (1) Finger daemon . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 91
+
+Preface
+“Is Go an object-oriented language? Yes
+and no.”
+Frequently asked questions
+GO AUTHORS
+Audience
+This is an introduction to the Go language from Google. Its aim is to provide a guide to
+this new and innovative language.
+This book assumes you already have Go installed on your system.
+The intended audience of this book is people who are familiar with programming and
+knowsomeprogramminglanguages,beitC[ 3],C++[21],Perl[5],Java[15],Erlang[4],Scala[16]
+orHaskell[ 1]. Thisis notabookthatteachesyouhowtoprogram,thisisabookthatjust
+teaches you how to use Go.
+Aswithlearningnewthings,probablythebestwaytodothisistodiscoveritforyourself
+by creating your own programs. Each chapter therefore includes a number of exercises
+(and answers) to acquaint you with the language. An exercise is numbered as Qn, where
+nis a number. After the exercise number another number in parentheses displays the
+difﬁculty of this particular assignment. This difﬁculty ranges from 0 to 2:
+0.easy;
+1.intermediate;
+2.difﬁcult.
+Then a short name is given, for easier reference. For example:
+Q1. (1) A map function …
+introduces a question numbered Q1of a level 1 difﬁculty, concerning a map()-function.
+The answers are included after the exercises on a new page. The numbering and setup
+of the answers is identical to the exercises, except that an answer starts with An, where
+the number ncorresponds with the number of the exercise. Some exercises don’t have
+an answer; these are marked with an asterisk.
+Book layout
+Chapter1:Introduction
+Describes the basic types, variables and control structures available in the lan-
+guage.
+Chapter2:Functions
+Inthethirdchapterwelookatfunctions,thebasicbuildingblocksofGoprograms.
+Chapter3:Packages
+In chapter 3we see that functions and data can be grouped together in packages.
+You will also see how to document and test your packages.
+Chapter4:Beyond the basics
+Afterthatwelookatcreatingyourowntypesinchapter 4. Italsolooksatallocation
+in Go.
+Chapter5:Interfaces
+Go does not support object orientation in the traditional sense. In Go the central
+concept is interfaces.
+Preface 1
+Chapter6:Concurrency
+With the gokeyword functions can be started in separate routines (called gorou-
+tines). Communication with those goroutines is done via channels.
+Chapter7:Communication
+Inthelastchapterweshowhowtointerfacewiththerestoftheworldfromwithin
+a Go program. How to create ﬁles and read and write from and to them. We also
+brieﬂy look into networking.
+I hope you will enjoy this book and the language Go.
+T ranslations
+The content of this book is freely available. This has already led to translations:
+•Chinese translation by Xing Xing, 这里是中文译本 :http://www.mikespook.
+com/learning-go/ .
+Miek Gieben, 2011, 2012 – miek@miek.nl
+1 Introduction
+“I am interested in this and hope to do
+something.”
+On adding complex numbers to Go
+KEN THOMPSON
+What is Go? From the website [ 13]:
+The Go programming language is an open source project to make programmers
+more productive. Go is expressive, concise, clean, and efﬁcient. Its concurrency
+mechanisms make it easy to write programs that get the most out of multi core
+and networked machines, while its novel type system enables ﬂexible and mod-
+ular program construction. Go compiles quickly to machine code yet has the con-
+venience of garbage collection and the power of run-time reﬂection. It’s a fast,
+staticallytyped,compiledlanguagethatfeelslikeadynamicallytyped,interpreted
+language.
+Go 1 is the ﬁrst stable release of the language Go. This document and all exercises work
+with Go 1 – if not, it’s a bug.
+The following convention is used throughout this book:
+•Code, keywords and comments are displayed in Source Code Pro ;
+•Extra remarks in the code  Are displayed like this ;
+•Longer remarks get a number –..1– with the explanation following;
+•Line numbers (if needed) are printed on the right side;
+•Shell examples use a % as prompt;
+•User entered text in shell examples is in bold , system responses are in a plain
+bold font ;
+•An emphasized paragraph is indented and has a vertical bar on the left.
+Oﬃcial documentation
+ThereisalreadyasubstantialamountofdocumentationwrittenaboutGo. TheGoTutorial When searching on
+the internet use the
+term “golang” in-
+stead of plain “go”.[12], and the Effective Go document [ 8]. The website http://golang.org/doc/ is a
+verygoodstartingpointforreadinguponGoa. Readingthesedocumentsiscertainlynot
+required, but it is recommended.
+Go1comeswithitsowndocumentationintheformofaprogramcalled godoc. Ifyouare
+interested in the documentation for the built-ins (see “ Operators and built-in functions ”
+in the next chapter) you can ﬁre it up, like so:
+%godoc builtin
+How to create your own package documentation is explained in chapter 3.
+There are a few things that make Go different from other languages.
+Clean and Simple
+Gostrivestokeepthingssmallandbeautiful. Youshouldbeabletodoalotinonly
+a few lines of code;
+ahttp://golang.org/doc/ itself is served by godoc.
+Hello World 3
+Concurrent
+Gomakesiteasyto“ﬁreoff”functionstoberunas verylightweightthreads. These
+threads are called goroutinesbin Go;
+Channels
+Communication with these goroutines is done via channels [ 25,18];
+Fast
+Compilation is fast and execution is fast. The aim is to be as fast as C. Compilation
+time is measured in seconds;
+Safe
+Explicit casting and strict rules when converting one type to another. Go has
+garbage collection, no more free()in Go, the language takes care of this;
+Standard format
+A Go program can be formatted in (almost) any way the programmers want, but an
+ofﬁcial format exists. The rule is very simple: The output of the ﬁlter gofmtis the
+ofﬁcially endorsed format .
+Postﬁx types
+Typesaregiven afterthevariablename,thus var a int ,insteadof int a;asone
+would in C;
+UTF-8
+UTF-8 is everywhere, in strings andin the program code. Finally you can use =
++ 1in your source code;
+Open Source
+TheGolicenseiscompletelyopensource,seetheﬁleLICENSEintheGosourcecode
+distribution;
+Fun
+Programming with Go should be fun!
+Erlang [4] also shares some of the features of Go. Notable differences between Erlang
+and Go is that Erlang borders on being a functional language, where Go is an imperative
+one. And Erlang runs in a virtual machine, while Go is compiled. Go also has a much
+more Unix-like feel to it.
+GoistheﬁrstC–likelanguagethatiswidelyavailable,runsonmanydifferentplatforms
+and makes concurrency easy (or easier).
+Hello World
+In the Go tutorial, Go is presented to the world in the typical manner: letting it print
+“Hello World” (Ken Thompson and Dennis Ritchie started this when they presented the
+C language in the 1970s). We don’t think we can do better, so here it is, “Hello World” in
+Go.
+Listing 1.1. Hello world
+package main..0
+import "fmt"..1// Implements formatted I/O.
+/* Print something */..2
+func main() {..3
+..4
+fmt.Printf("Hello, world ;or ϵ  óϵ;orこんにちは世界 ")
+}
+bYes, that sounds a lot like coroutines, but goroutines are slightly different as we will see in chapter 6.
+4 Chapter 1: Introduction
+Lets look at the program line by line.
+..0Thisﬁrstlineisjustrequired. AllGoﬁlesstartwith package <something> ,package
+mainis required for a standalone executable;
+..1Thissaysweneed fmtinadditionto main. Apackageotherthan mainiscommonly
+calledalibrary,afamiliarconceptinmanyprogramminglanguages(seechapter 3).
+The line ends with a comment which is started with //;
+..2This is also a comment, but this one is enclosed in /*and*/;
+..3Just as package mainwas required to be ﬁrst, importmay come next. In Go,
+package is always ﬁrst, then import, then everything else. When your Go pro-
+gram is executed, the ﬁrst function called will be main.main() , which mimics the
+behavior from C. Here we declare that function;
+..4On line 8 we call a function from the package fmtto print a string to the screen.
+The string is enclosed with "and may contain non-ASCII characters. Here we use
+Greek and Japanese.
+Compiling and running code
+The preferred way to build a Go program is to use the gotool. To build helloworld we
+just enter:
+%go build helloworld.go
+This results in an executable called helloworld .
+%./helloworld
+Hello, world; or  ϵ óϵ; orこんにちは世界
+Settings used in this book
+•Go itself is installed in ˜/go, and $GOROOT is set to GOROOT=˜/go ;
+•Go source code we want to compile ourself is placed in ˜/g/src and$GOPATH is
+set to GOPATH=˜/g . This variable comes into play when we start using packages
+(chapter3).
+Variables, types and keywords
+In the next few sections we will look at the variables, basic types, keywords and control
+structures of our new language. Go has a C-like feel when it comes to its syntax. If
+you want to put two (or more) statements on one line, they must be separated with a
+semicolon (’;’). Normally you don’t need the semicolon.
+Goisdifferentfrom(most)otherlanguagesinthatthetypeofavariableisspeciﬁed after
+the variable name. So not: int a, but aint. When declaring a variable it is assigned
+the “natural” null value for the type. This means that after var aint,ahas a value of
+0. With var sstring,sis assigned the zero string, which is "".
+DeclaringandassigninginGoisatwostepprocess,buttheymaybecombined. Compare
+the following pieces of code which have the same effect.
+Variables, types and keywords 5
+Listing 1.2. Declaration with =
+var aint
+var bbool
+a = 15
+b = falseListing 1.3. Declaration with :=
+a := 15
+b := false
+On the left we use the varkeyword to declare a variable and thenassign a value to it.
+The code on the right uses :=to do this in one step (this form may only be used inside
+functions). Inthatcasethevariabletypeis deducedfromthevalue. Avalueof15indicates
+anint,avalueof falsetellsGothatthetypeshouldbe bool. Multiple vardeclarations
+may also be grouped; constandimportalso allow this. Note the use of parentheses:
+var (
+xint
+bbool
+)
+Multiplevariablesofthesametypecanalsobedeclaredonasingleline: var x, y int
+makes xandyboth intvariables. You can also make use of parallel assignment:
+a, b := 20, 16
+Which makes aandbboth integer variables and assigns 20 to aand 16 to b.
+A special name for a variable is _(underscore). Any value assigned to it is discarded. In
+this example we only assign the integer value of 35 to band discard the value 34.
+_, b := 34, 35
+Declared but otherwise unusedvariables are a compiler error in Go. The following code
+generates this error: i declared and not used
+package main
+func main() {
+var iint
+}
+Boolean types
+A boolean type represents the set of boolean truth values denoted by the predeclared
+constants trueandfalse. The boolean type is bool.
+Numerical types
+Go has the well known types such as int. This type has the appropriate length for your
+machine, meaning that on a 32-bit machine it is 32 bits and on a 64-bit machine it is 64
+bits. Note: an intis either 32 or 64 bits, no other values are deﬁned. Same goes for
+uint.
+Ifyouwanttobeexplicitaboutthelengthyoucan havethattoowith int32, oruint32.
+The full list for (signed and unsigned) integers is int8,int16,int32,int64andbyte,
+uint8,uint16,uint32,uint64. With bytebeing an alias for uint8. For ﬂoating point
+valuesthereis float32 andfloat64 (thereisno floattype). A64bitintegerorﬂoating
+point value is always64 bit, also on 32 bit architectures.
+Note however that these types are all distinct and assigning variables which mix these
+types is a compiler error, like in the following code:
+Listing 1.4. Familiar types are still distinct
+1 package main
+3 func main() {
+6 Chapter 1: Introduction
+4 var aint Generic integer type
+5 var bint32 32 bits integer type
+6 a = 15
+7 b = a + a  Illegal mixing of these types
+8 b = b + 5  5 is a constant, so this is OK
+9 }
+Gives the error on the assignment on line 7:
+types.go:7: cannot use a + a (type int) as type int32 in assignment
+The assigned values may be denoted using octal, hexadecimal or the scientiﬁc notation:
+077,0xFF,1e3or6.022e23 are all valid.
+Constants
+Constants in Go are just that — constant. They are created at compile time, and can only
+be numbers, strings or booleans; const x = 42makes xa constant. You can use iota
+cto enumerate values.
+const (
+a = iota
+b = iota
+)
+The ﬁrst use of iotawill yield 0, so ais equal to 0, whenever iotais used again on a
+new line its value is incremented with 1, so bhas a value of 1.
+You can even do the following, let Go repeat the use of = iota:
+const (
+a = iota
+b  Implicitly b = iota
+)
+You may also explicitly type a constant, if you need that:
+const (
+a = 0  Is an intnow
+bstring = "0"
+)
+Strings
+Another important built-in type is string. Assigning a string is as simple as:
+s := "Hello World !"
+StringsinGoareasequenceofUTF-8charactersenclosedindoublequotes(”). Ifyouuse
+the single quote (’) you mean one character (encoded in UTF-8) — which is notastring
+in Go.
+Once assigned to a variable the string can not be changed: strings in Go are immutable.
+For people coming from C; the following is not legal in Go:
+var sstring = "hello"
+s[0] = 'c'  Change ﬁrst char. to ’c’, this is an error
+To do this in Go you will need the following:
+cThe word [iota] is used in a common English phrase, ’not one iota’, meaning ’not the slightest difference’,
+in reference to a phrase in the New Testament: “ until heaven and earth pass away, not an iota, not a dot, will pass
+from the Law .” [27]
+Variables, types and keywords 7
+s := "hello"
+c := [] rune (s)..0
+c[0] = 'c'..1
+s2 := string (c)..2
+fmt.Printf("%s\n", s2)..3
+..0Convert sto an array of runes, see chapter 4section “Conversions ” on page 54;
+..1Change the ﬁrst element of this array;
+..2Create a newstring s2with the alteration;
+..3print the string with fmt.Printf .
+Multi-line strings
+Due to the insertion of semicolons (see [ 8] section “Semicolons”), you need to
+be careful with using multi line strings. If you write:
+s := "Starting part"
++ "Ending part"
+This is transformed into:
+s := "Starting part" ;
++ "Ending part" ;
+Which is not valid syntax, you need to write:
+s := "Starting part" +
+"Ending part"
+Then Go will not insert the semicolons in the wrong places. Another way would be to
+userawstring literals by using backquotes ( `):
+s := `Starting part
+Ending part`
+Beawarethatinthislastexample snowalsocontainsthenewline. Unlike interpreted
+string literals the value of a raw string literalis composed of the uninterpreted charac-
+ters between the quotes.
+Runes
+Runeis an alias for int32. It is an UTF-8 encoded code point. When is this type useful?
+For instance, when iterating over characters in a string. You can loop over each byte
+(which is only equivalent to a character when strings are encoded in 8-bit ASCII, which
+they are notin Go!). So to get the actual characters you should use the runetype.
+Complex numbers
+Go has native support for complex numbers. To use them you need a variable of type
+complex128 (64 bit real and imaginary parts) or complex64 (32 bit real and imaginary
+parts). Complex numbers are written as re + im i, where reis the real part, imis the
+imaginary part and iis the literal ’ i’ (p 1). An example of using complex numbers: The Printf() verb
+%v, means “print
+the value in its
+default format”.var ccomplex64 = 5+5i ;fmt.Printf("Value is: %v", c)
+will print: (5+5i)
+Errors
+Any non-trivial program will have the need for error reporting sooner or later. Because
+of this Go has a builtin type specially for errors, called error.
+8 Chapter 1: Introduction
+var eerrorcreates a variable eof type errorwith the value nil. This error type is
+an interface – in chapter “ Interfaces ” we will explain what this means.
+Operators and built-in functions
+Go supports the normal set of numerical operators. Table 1.1lists the current ones and
+their relative precedence. They all associate from left to right.
+Table 1.1. Operator precedence
+Precedence Operator(s)
+Highest * / % << >> & &^
++ - | ^
+== != < <= > >=
+<-
+&&
+Lowest ||
++ - * / and%all do what you would expect, & | ^and&^are bit operators for bitwise
+and,bitwiseor,bitwisexorandbitclearrespectively. The &&and||operatorsarelogical
+and and logical or. Not listed in the table is the logical not: !
+AlthoughGodoesnotsupportoperatoroverloading(ormethodoverloadingforthatmat-
+ter),someofthebuilt-inoperators areoverloaded. Forinstance, +canbeusedforintegers,
+ﬂoats, complex numbers and strings (adding strings is concatenating them).
+Go keywords
+Table 1.2. Keywords in Go
+break default func interface select
+case defer go map struct
+chan else goto package switch
+const fallthrough if range type
+continue for import return var
+Table1.2lists all the keywords in Go. We will cover them in the following paragraphs
+and chapters. Some of them we have seen already.
+•Forvarandconstsee “Variables, types and keywords ” on page 4;
+•package andimportare brieﬂy touched on in section “ Hello World ”. In chapter 3
+they are documented in more detail.
+Others deserve more text and have their own chapter/section:
+•funcis used to declare functions and methods;
+•returnis used to return from functions, for both funcandreturnsee chapter 2
+for the details;
+•gois used for concurrency, see chapter 6;
+•selectused to choose from different types of communication, see chapter 6;
+•interface see chapter 5;
+•structis used for abstract data types, see chapter 4;
+•typealso see chapter 4.
+Control structures 9
+Control structures
+There are only a few control structures in God. For instance there is no do or while
+loop, only a for. There is a (ﬂexible) switchstatement and ifandswitchaccept an
+optional initialization statement like that of for. There also is something called a type
+switch and a multiway communications multiplexer, select(see chapter 6). The syntax
+is different (from that in C): parentheses are not required and the body must alwaysbe
+brace-delimited.
+If-else
+In Go an iflooks like this:
+ifx > 0 { { is mandatory
+return y
+} else {
+return x
+}
+Mandatory braces encourage writing simple ifstatements on multiple lines. It is good
+style to do so anyway, especially when the body contains a control statement such as a
+returnorbreak.
+Since ifandswitchaccept an initialization statement, it’s common to see one used to
+set up a (local) variable.
+iferr := Chmod(0664) ;err != nil { nilis like C’s NULL
+fmt.Printf(err)  Scope of erris limited to if’s body
+return err
+}
+You can use the logical operators (see table 1.1) as you would normally:
+iftrue && true {
+fmt.Println("true")
+}
+if ! false {
+fmt.Println("true")
+}
+In the Go libraries, you will ﬁnd that when an ifstatement doesn’t ﬂow into the next
+statement – that is, the body ends in break,continue ,goto, orreturn– the unneces-
+saryelseis omitted.
+f, err := os.Open(name, os.O_RDONLY, 0)
+iferr != nil {
+return err
+}
+doSomething(f)
+This is an example of a common situation where code must analyze a sequence of error
+possibilities. The code reads well if the successful ﬂow of control runs down the page,
+eliminatingerrorcasesastheyarise. Sinceerrorcasestendtoendin returnstatements,
+the resulting code needs no elsestatements.
+f, err := os.Open(name, os.O_RDONLY, 0)
+iferr != nil {
+return err
+}
+d, err := f.Stat()
+iferr != nil {
+dThis section is copied from [ 8].
+10 Chapter 1: Introduction
+return err
+}
+doSomething(f, d)
+Syntax-wise the following is illegal in Go:
+iferr != nil
+{  Must be on the same line as the if
+return err
+}
+See [8] section “Semicolons” for the deeper reasons behind this.
+Goto
+Go has a gotostatement — use it wisely. With gotoyou jump to a label which must be
+deﬁned within the current function. For instance, a loop in disguise:
+func myfunc() {
+i := 0
+Here:  First word on a line ending with a colon is a label
+println(i)
+i++
+goto Here Jump
+}
+The name of the label is case sensitive.
+For
+The Go forloop has three forms, only one of which has semicolons.
+for init ;condition ;post { } Like a C for
+for condition { }  Like a while
+for { }  Endless loop
+Short declarations make it easy to declare the index variable right in the loop.
+sum := 0
+for i := 0 ;i < 10 ;i++ {
+sum += i  Short for sum = sum + i
+} iceases to exist afterthe loop
+Finally, since Go has no comma operator and ++ and - - are statements not expressions,
+if you want to run multiple variables in a foryou should use parallel assignment.
+// Reverse a
+for i, j := 0, len(a)-1 ;i < j ;i, j = i+1, j-1 {
+a[i], a[j] = a[j], a[i]  Parallel assignment
+}
+Break and continue
+With breakyou can quit loops early. By itself, breakbreaks the current loop.
+for i := 0 ;i < 10 ;i++ {
+ifi > 5 {
+break Stop this loop, making it only print 0 to 5
+}
+println(i)
+}
+Control structures 11
+With loops within loops you can specify a label after break. Making the label identify
+whichloop to stop:
+J: for j := 0 ;j < 5 ;j++ {
+for i := 0 ;i < 10 ;i++ {
+ifi > 5 {
+break J Now it breaks the j-loop, not the ione
+}
+println(i)
+}
+}
+With continue youbeginthenextiterationoftheloop,skippinganyremainingcode. In
+thesamewayas break,continue alsoacceptsalabel. Thefollowingloopprints0to5.
+for i := 0 ;i < 10 ;i++ {
+ifi > 5 {
+continue Skip the rest of the remaining code in the loop
+}
+println(i)
+}
+Range
+The keyword rangecan be used for loops. It can loop over slices, arrays, strings, maps
+and channels (see chapter 6).rangeis an iterator that, when called, returns the next
+key-value pair from the thing it loops over. Depending on what that is, rangereturns
+different things.
+When looping over a slice or array rangereturns the index in the slice as the key and
+value belonging to that index. Consider this code:
+list := [] string{ "a", "b", "c", "d", "e", "f" }..0
+for k, v := range list {..1
+..2// do what you want with k and v
+}
+..0Create a slice (see “ Arrays, slices and maps ” on page 14) of strings.
+..1Userangeto loop over them. With each iteration rangewill return the index as
+anintand the key as a string, starting with 0 and “a”.
+..2kwill have the value 0…5, and vwill loop through “a”…“f”.
+You can also use rangeon strings directly. Then it will break out the individual Unicode
+characterseand their start position, by parsing the UTF-8. The loop:
+for pos, char := range "ax"{
+fmt.Printf("character '%c' starts at byte position %d\n", char
+, pos)
+}
+prints
+character 'a' starts at byte position 0
+character ' ' starts at byte position 1
+character 'x' starts at byte position 3  took 2 bytes
+eIn the UTF-8 world characters are sometimes called runes. Mostly, when people talk about characters,
+they mean 8 bit characters. As UTF-8 characters may be up to 32 bits the word rune is used. In this case the
+type of charisrune.
+12 Chapter 1: Introduction
+Switch
+Go’sswitchis very ﬂexible. The expressions need not be constants or even integers;
+the cases are evaluated top to bottom until a match is found, and if the switchhas no
+expression it switches on true. It’s therefore possible – and idiomatic – to write an
+if-else-if-else chain as a switch.
+func unhex(c byte )byte {
+switch {
+case '0' <= c && c <= '9':
+return c - '0'
+case 'a' <= c && c <= 'f':
+return c - 'a' + 10
+case 'A' <= c && c <= 'F':
+return c - 'A' + 10
+}
+return 0
+}
+There is no automatic fall through, you can however use fallthrough to do just that.
+Without fallthrough :
+switch i{
+case 0: empty case body
+case 1:
+f() f is not called when i == 0!
+}
+And with:
+switch i{
+case 0: fallthrough
+case 1:
+f() f is called when i == 0!
+}
+With default you can specify an action when none of the other cases match.
+switch i{
+case 0:
+case 1:
+f()
+default :
+g() called when i is not 0 or 1
+Cases can be presented in comma-separated lists.
+func shouldEscape(c byte )bool {
+switch c{
+case ' ', '?', '&', '=', '#', '+':  , as ”or”
+return true
+}
+return false
+}
+Here’s a comparison routine for byte arrays that uses two switchstatements:
+..0
+func Compare(a, b [] byte )int {
+for i := 0 ;i < len(a) && i < len(b);i++ {
+switch {
+case a[i] > b[i]:
+return 1
+Built-in functions 13
+case a[i] < b[i]:
+return -1
+}
+}
+switch {..1
+case len (a) < len(b):
+return -1
+case len (a) > len(b):
+return 1
+}
+return 0..2
+}
+..0Compare returns an integer comparing the two byte arrays lexicographically. The
+result will be 0 if a == b, -1 if a < b, and +1 if a > b ;
+..1Strings are equal except for possible tail;
+..2Strings are equal.
+Built-in functions
+Asmallnumberoffunctionsarepredeﬁned,meaningyou don’thavetoincludeanypack-
+age to get access to them. Table 1.3lists them all.f
+Table 1.3. Pre–deﬁned functions in Go
+close new panic complex
+delete make recover real
+len append print imag
+cap copy println
+These built-in functions are documented in the builtinpseudo package that is included
+in recent Go releases.
+close
+is used in channel communication. It closes a channel, see chapter 6for more on
+this.
+delete
+is used for deleting entries in maps.
+lenandcap
+are used on a number of different types, lenis used for returning the length of
+stringsandthelengthofslicesandarrays. Seesection“ Arrays,slicesandmaps ”for
+the details of slices and arrays and the function cap.
+new
+is used for allocating memory for user deﬁned data types. See section “ Allocation
+with new ” on page 50.
+make
+is used for allocating memory for built-in types (maps, slices and channels). See
+section “Allocation with make ” on page 51.
+fYoucanusethecommand godoc builtin toreadtheonlinedocumentationaboutthebuilt-intypesand
+functions.
+14 Chapter 1: Introduction
+copy
+is used for copying slices. See section “ Slices” in this chapter.
+append
+is for concatenating slices. See section “ Slices” in this chapter.
+panic,recover
+are used for an exception mechanism. See the section “ Panic and recovering ” on
+page29for more.
+print,println
+arelowlevelprintingfunctionsthatcanbeusedwithoutrevertingtothe fmtpack-
+age. These are mainly used for debugging.
+complex ,real,imag
+all deal with complex numbers. Apart from the simple example we gave, we will
+not further explain complex numbers.
+Arrays, slices and maps
+Storing multiple values in a list can be done by utilizing arrays, or their more ﬂexible
+cousin: slices. A dictionary or hash type is also available, it is called a mapin Go.
+Arrays
+An array is deﬁned by: [n]<type> , where nis the length of the array and <type>is the
+stuffyouwanttostore. Assigningorindexinganelementinthearrayisdonewithsquare
+brackets:
+var arr [10] int
+arr[0] = 42
+arr[1] = 13
+fmt.Printf("The first element is %d\n", arr[0])
+Array types like var arr [10] inthave a ﬁxed size. The size is partof the type. They
+can’t grow, because then they would have a different type. Also arrays are values: As-
+signing one array to another copiesall the elements. In particular, if you pass an array to
+a function it will receive a copy of the array, not a pointer to it.
+Todeclareanarrayyoucanusethefollowing: var a [3] int,toinitializeittosomething
+otherthanzerouseacompositeliteral: a := [3] int{ 1, 2, 3 }. Thiscanbeshortened
+toa := [...] int{ 1, 2, 3 }, where Go counts the elements automatically. A composite literal
+allows you to as-
+signavaluedirectly
+to an array, slice or
+map.
+See the section
+“Constructors and
+composite literals ”
+on page 52for
+more.Whendeclaringarraysyou alwayshavetotypesomethinginbetweenthesquarebrackets,
+either a number or three dots ( ...) when using a composite literal.
+When using using multidimensional arrays you can use the following syntax:
+a := [2][2] int{ { 1,2},{3,4} }
+Slices
+Asliceissimilartoanarray,butitcangrowwhennewelementsareadded. Aslicealways
+refers to an underlying array. What makes slices different from arrays is that a slice is a
+pointertoan array; slices are reference types, which means that if you assign one slice Reference types are
+created with make.to another, both refer to the same underlying array. For instance, if a function takes a
+sliceargument,changesitmakestotheelementsoftheslicewillbevisibletothecaller,
+analogous to passing a pointer to the underlying array. With:
+sl := make ([]int, 10)
+you create a slice which can hold ten elements. Note that the underlying array isn’t
+speciﬁed. A slice is always coupled to an array that has a ﬁxed size. For slices we deﬁne
+Arrays, slices and maps 15
+a capacity and a length. Figure 1.1depicts the following Go code. First we create an
+array of melements of the type int:var array[m] int
+Next, we create a slice from this array: slice := array[:n]
+And now we have:
+•len(slice)== n ;
+•cap(slice)== m ;
+•len(array)== cap(array)== m .
+Figure 1.1. Array versus slice
+. . .
+len == cap == marray
+slice0
+0n-1
+n-1m-1
+len == n. . . m-1
+cap == m
+Givenanarray,oranotherslice,anewsliceiscreatedvia a[I:J]. Thiscreatesanewslice
+which refers to the variable a, starts at index I, and ends before index J. It has length
+J - I.
+// array[n:m], create a slice from array with elements n to m-1
+a := [...] int{ 1, 2, 3, 4, 5 }..0
+s1 := a[2:4]..1
+s2 := a[1:5]..2
+s3 := a[:]..3
+s4 := a[:4]..4
+s5 := s2[:]..5
+s6 := a[2:4:5]..6
+..0Deﬁne an array with 5 elements, from index 0 to 4;
+..1Create a slice with the elements from index 2 to 3, this contains: 3, 4;
+..2Create a slice with the elements from index 1 to 4, contains: 2, 3, 4, 5 ;
+..3Create a slice with all the elements of the array in it. This is a shorthand for:
+a[0:len(a)] ;
+..4Create a slice with the elements from index 0 to 3, this is thus short for: a[0:4],
+and yields: 1, 2, 3, 4 ;
+..5Create a slice from the slice s2, note that s5still refers to the array a.
+..6Create a slice with the elements from index 3 to 3 andalso set the cap to 4.
+In the code listed in 1.5we dare to do the impossible on line 8 and try to allocate some-
+thing beyond the capacity (maximum length of the underlying array) and we are greeted
+with aruntimeerror.
+16 Chapter 1: Introduction
+Listing 1.5. Arrays and slices
+package main
+func main() {
+var array [100] int Create array, index from 0 to 99
+slice := array[0:99]  Create slice, index from 0 to 98
+slice[98] = 'a'  OK
+slice[99] = 'a'  Error: ”throw: index out of range”
+}
+Ifyouwanttoextendaslice,thereareacoupleofbuilt-infunctionsthatmakelifeeasier:
+appendandcopy. From [10]:
+The function appendappends zero or more values xto a slice sand returns the
+resulting slice, with the same type as s. If the capacity of sis not large enough
+to ﬁt the additional values, appendallocates a new, sufﬁciently large slice that
+ﬁtsboththeexistingsliceelementsandtheadditionalvalues. Thus,thereturned
+slice may refer to a different underlying array.
+s0 := [] int{ 0, 0 }
+s1 := append (s0, 2)..0
+s2 := append (s1, 3, 5, 7)..1
+s3 := append (s2, s0...)..2
+..0append a single element, s1 == []int{0, 0, 2} ;
+..1append multiple elements, s2 == []int{0, 0, 2, 3, 5, 7} ;
+..2append a slice, s3 == []int{0, 0, 2, 3, 5, 7, 0, 0} . Note the three dots!
+And
+The function copycopies slice elements from a source srcto a destination dst
+and returns the number of elements copied. Source and destination may overlap.
+The number of elements copied is the minimum of len(src)andlen(dst).
+var a = [...] int{ 0, 1, 2, 3, 4, 5, 6, 7 }
+var s = make ([]int, 6)
+n1 := copy (s, a[0:]) n1 == 6,s == []int{0, 1, 2, 3, 4, 5}
+n2 := copy (s, s[2:]) n2 == 4, s == []int{2, 3, 4, 5, 4, 5}
+Maps
+Many other languages have a similar type built-in. For instance, Perl has hashes, Python
+hasitsdictionariesandC++alsohasmaps(aspartofthelibraries). InGowehavethe map
+type. A mapcanbethoughtofasanarrayindexedbystrings(initsmostsimpleform). In
+thefollowinglistingwedeﬁnea mapwhichconvertsfroma string(monthabbreviation)
+to an int– the number of days in that month. The generic way to deﬁne a map is with:
+map[<from type>]<to type>
+monthdays := map[string ]int{
+"Jan": 31, "Feb": 28, "Mar": 31,
+"Apr": 30, "May": 31, "Jun": 30,
+"Jul": 31, "Aug": 31, "Sep": 30,
+"Oct": 31, "Nov": 30, "Dec": 31,  Comma required
+}
+Exercises 17
+Note to use makewhen only declaring a map:monthdays := make (map[string ]int)
+For indexing (searching) in the map, we use square brackets. For example, suppose we
+wanttoprintthenumberofdaysinDecember: fmt.Printf("%d\n", monthdays["Dec
+"])
+If you are looping over an array, slice, string, or map a rangeclause will help you again,
+which returns the key and corresponding value with each invocation.
+year := 0
+for _, days := range monthdays { key unused, hence _, days
+year += days
+}
+fmt.Printf("Numbers of days in a year: %d\n", year)
+Adding elements to the mapwould be done as:
+monthdays["Undecim"] = 30  Add a month
+monthdays["Feb"] = 29  Overwrite entry - for leap years
+To test for existence , you would use the following[ 19]:
+var value int
+var present bool
+value, present = monthdays["Jan"]  If exists present has value true
+ Or better and more Go like
+v, ok := monthdays["Jan"]  Hence, the ”comma ok” form
+And ﬁnally you can remove elements from the map:
+delete(monthdays, "Mar")  Delete ”Mar”, always rainy anyway
+In general the syntax delete(m, x) will delete the map entry retrieved by the expres-
+sion m[x].
+Exercises
+Q1. (1) Documentation
+1.Go’s documentation can be read with the godocprogram, which is included the
+Go distribution.
+godoc hash gives information about the hashpackage:
+%godoc hash
+PACKAGE
+package hash
+...
+...
+...
+SUBDIRECTORIES
+adler32
+crc32
+crc64
+fnv
+With which godoccommand can you read the documentation of fnvcontained in
+hash?
+Q2. (0) For-loop
+18 Chapter 1: Introduction
+1.Create a simple loop with the forconstruct. Make it loop 10 times and print out
+the loop counter with the fmtpackage.
+2.Rewrite the loop from 1. to use goto. The keyword formay not be used.
+3.Rewrite the loop again so that it ﬁlls an array and then prints that array to the
+screen.
+Q3. (0) FizzBuzz
+1.Solve this problem, called the Fizz-Buzz [ 23] problem:
+Write a program that prints the numbers from 1 to 100. But for multiples
+of three print “Fizz” instead of the number and for the multiples of ﬁve
+print “Buzz”. For numbers which are multiples of both three and ﬁve print
+“FizzBuzz”.
+Q4. (1) Strings
+1.Create a Go program that prints the following (up to 100 characters):
+A
+AA
+AAA
+AAAA
+AAAAA
+AAAAAA
+AAAAAAA
+...
+2.Create a program that counts the number of characters in this string:
+asSASA ddd dsjkdsjs dk
+Inaddition,makeitoutputthenumberofbytesinthatstring. Hint: Checkoutthe
+utf8package.
+3.Extend/changetheprogramfromthepreviousquestiontoreplacethethreerunes
+at position 4 with ’abc’.
+4.Write a Go program that reverses a string, so “foobar” is printed as “raboof”. Hint:
+You will need to know about conversion; skip ahead to section “ Conversions ” on
+page54.
+Q5. (1) Average
+1.Writecodetocalculatetheaverageofa float64 slice. Inalaterexercise(Q 6you
+will make it into a function.
+Answers 19
+Answers
+A1. (1) Documentation
+1.Thepackage fnvisinasubdirectory ofhash,soyouwillonlyneed godoc hash/fnv .
+All the built-in functions are also accesible by using godoc builtin .
+A2. (0) For-loop
+1.There are a multitude of possibilities, one of the solutions could be:
+Listing 1.6. Simple for loop
+package main
+import "fmt"
+func main() {
+for i := 0 ;i < 10 ;i++ { See page 10
+fmt.Printf("%d\n", i)
+}
+}
+Let’s compile this and look at the output.
+% go build for.go
+% ./for
+0
+1
+.
+.
+.
+9
+2.Rewritingtheloopresultsincodethatshouldlooksomethinglikethis(onlyshow-
+ing the main-function):
+func main() {
+i := 0 Deﬁne our loop variable
+Loop:  Deﬁne a label
+fmt.Printf("%d\n", i)
+ifi < 10 {
+i++
+goto Loop Jump to the label
+}
+}
+3.The following is one possible solution:
+Listing 1.7. For loop with an array
+func main() {
+var arr [10] int Create an array with 10 elements
+for i := 0 ;i < 10 ;i++ {
+arr[i] = i  Fill it one by one
+}
+fmt.Printf("%v", arr)  With %v Go prints the value for us
+}
+You could even do this in one fell swoop by using a composite literal:
+a := [...] int{ 0,1,2,3,4,5,6,7,8,9 } Let Go count
+fmt.Printf("%v\n", a)
+20 Chapter 1: Introduction
+A3. (0) FizzBuzz
+1.A possible solution to this simple problem is the following program.
+Listing 1.8. Fizz-Buzz
+package main
+import "fmt"
+func main() {
+const (
+FIZZ = 3..0
+BUZZ = 5
+)
+var pbool..1
+for i := 1 ;i < 100 ;i++ {..2;
+p = false
+ifi%FIZZ == 0 {..3
+fmt.Printf("Fizz")
+p = true
+}
+ifi%BUZZ == 0 {..4
+fmt.Printf("Buzz")
+p = true
+}
+if ! p{..5
+fmt.Printf("%v", i)
+}
+fmt.Println()..6
+}
+}
+..0Deﬁnetwoconstantstomakethecodemorereadable. Seesection” Constants ”;
+..1Holds if we already printed something;
+..2for-loop, see section ” For”
+..3If divisible by FIZZ, print ”Fizz”;
+..4And if divisble by BUZZ, print ”Buzz”. Note that we have also taken care of
+the FizzBuzz case;
+..5If neither FIZZ nor BUZZ printed, print the value;
+..6Format each output on a new line.
+A4. (1) Strings
+1.This program is a solution:
+Listing 1.9. Strings
+package main
+import "fmt"
+func main() {
+str := "A"
+for i := 0 ;i < 100 ;i++ {
+fmt.Printf("%s\n", str)
+str = str + "A"  String concatenation
+}
+}
+Answers 21
+2.To answer this question we need some help from the unicode/utf8 package. First
+we check the documentation with godoc unicode/utf8 | less . When we
+read the documentation we notice func RuneCount(p [] byte )int. Secondly
+we can convert stringto abyteslice with
+str := "hello"
+b := [] byte (str) Conversion, see page 54
+Putting this together leads to the following program.
+Listing 1.10. Runes in strings
+package main
+import (
+"fmt"
+"unicode/utf8"
+)
+func main() {
+str := "dsjkdshdjsdh....js"
+fmt.Printf("String %s\nLength: %d, Runes: %d\n", str,
+len([]byte (str)), utf8.RuneCount([] byte (str)))
+}
+3.Somethingalongthelinesof:package main
+import (
+"fmt"
+)
+func main() {
+s := "ðå ぽai no Æl"
+r := [] rune (s)
+copy (r[4:4+3], [] rune ("abc"))
+fmt.Printf("Before: %s\n", s) ;
+fmt.Printf("After : %s\n", string (r))
+}
+4.Reversing a string can be done as follows. We start from the left ( i) and the right
+(j) and swap the characters as we see them:
+Listing 1.11. Reverse a string
+import "fmt"
+func main() {
+s := "foobar"
+a := [] rune (s) Again a conversion
+for i, j := 0, len(a)-1 ;i < j ;i, j = i+1, j-1 {
+a[i], a[j] = a[j], a[i]  Parallel assignment
+}
+fmt.Printf("%s\n", string (a)) Convert it back
+}
+A5. (1) Average
+1.The following code calculates the average.
+sum := 0.0
+22 Chapter 1: Introduction
+switch len (xs) {
+case 0:..0
+avg = 0
+default :..1
+for _, v := range xs{
+sum += v
+}
+avg = sum / float64 (len(xs))..2
+}
+..0If the length is zero, we return 0;
+..1Otherwise we calculate the average;
+..2We have to convert the value to a float64 to make the division work.
+
+2 Functions
+“I’m always delighted by the light touch
+and stillness of early programming
+languages. Not much text; a lot gets done.
+Old programs read like quiet
+conversations between a well-spoken
+research worker and a well- studied
+mechanical colleague, not as a debate
+with a compiler. Who’d have guessed
+sophistication bought such noise?”
+RICHARD P. GABRIEL
+Functions are the basic building blocks of Go programs; all interesting stuff happens in
+them. A function is declared as follows:
+Listing 2.1. A function declaration
+..
+..
+0.
+..
+1.
+..
+2.
+..
+3.
+..
+4.
+..
+5type mytype int New type, see chapter 4
+func (p mytype) funcname(q int) (r,s int){ return 0,0 }
+..0The keyword funcis used to declare a function;
+..1A function can optionally be bound to a speciﬁc type. This is called the receiver. A
+function with a receiver is a method. This will be explored in chapter 5;
+..2funcname is the name of your function;
+..3Thevariable qoftype intistheinputparameter. Theparametersarepassed pass-
+by-valuemeaning they are copied;
+..4Thevariables randsarethenamedreturnparametersforthisfunction. Functions
+inGocanhavemultiplereturnvalues,seesection” Multiplereturnvalues ”onpage
+26. If you want the return parameters not to be named you only give the types:
+(int,int). If you have only one value to return you may omit the parentheses. If
+your function is a subroutine and does not have anything to return you may omit
+this entirely;
+..5This is the function’s body. Note that returnis a statement so the braces around
+the parameter(s) are optional.
+Here are two examples. The ﬁrst is a function without a return value, while the bottom
+one is a simple function that returns its input.
+func subroutine(in int){ return }
+func identity(in int)int { return in}
+Functionscanbedeclaredinanyorderyouwish. Thecompilerscanstheentireﬁlebefore
+execution, so function prototyping is a thing ofthe past in Go. Go disallowsnested func-
+tions,butyoucanworkaroundthiswithanonymousfunctions. Seesection“ Functionsas
+values” on page 28in this chapter.
+Recursive functions work just as in other languages:
+Scope 25
+Listing 2.2. Recursive function
+func rec(i int){
+ifi == 10 {
+return
+}
+rec(i+1)
+fmt.Printf("%d ", i)
+}
+This prints: 9 8 7 6 5 4 3 2 1 0 .
+Scope
+Variables declared outside any functions are global in Go, those deﬁned in functions are
+local to those functions. If names overlap — a local variable is declared with the same
+nameasaglobalone—thelocalvariablehidestheglobalonewhenthecurrentfunction
+is executed.
+Listing 2.3. Local scope
+.
+package main
+var a = 6
+func main() {
+p()
+q()
+p()
+}
+func p() {
+println(a)
+}
+func q() {
+a := 5 Deﬁnition
+println(a)
+}Listing 2.4. Global scope
+.
+package main
+var a = 6
+func main() {
+p()
+q()
+p()
+}
+func p() {
+println(a)
+}
+func q() {
+a = 5 Assignment
+println(a)
+}
+In listing 2.3we introduce a local variable ain the function q(). The local ais only
+visible in q(). This is why the code will print: 656. In listing 2.4no new variables are
+introduced, there is only a global a. Assigning a new value to awill be globally visible.
+This code will print: 655
+In the following example we call g()from f():
+Listing 2.5. Scope when calling functions from functions
+package main
+var aint
+func main() {
+a = 5
+println(a)
+f()
+}
+func f() {
+26 Chapter 2: Functions
+a := 6
+println(a)
+g()
+}
+func g() {
+println(a)
+}
+Theoutputwillbe: 565. Alocalvariableis onlyvalidwhenweareexecutingthefunction
+in which it is deﬁned.
+Multiple return values
+OneofGo’sunusual(forcompiledlanguages)featuresisthatfunctionsandmethodscan
+return multiple values (Python and Perl can do this too). This can be used to improve on
+a couple of clumsy idioms in C programs: in-band error returns (such as -1 for EOF) and
+modifyinganargument. InGo, Writereturnsacountandanerror: “Yes,youwrotesome
+bytes but not all of them because you ﬁlled the device”. The signature of *File.Write
+in package osis:
+func (file *File) Write(b [] byte ) (n int, err error )
+and as the documentation says, it returns the number of bytes written and a non- nil
+errorwhen n!=len(b). This is a common style in Go.
+In the absence of tuples as a native type, multiple return values are the next best thing.
+Youcanreturnpreciselywhatyouwantwithoutoverloadingthedomainspacewithspe-
+cial values to signal errors.
+Named result parameters
+ThereturnorresultparametersofaGofunctioncanbegivennamesandusedasregular
+variables, just like the incoming parameters. When named, they are initialized to the
+zero values for their types when the function begins. If the function executes a return
+statement with no arguments, the current values of the result parameters are returned.
+Using these features enables you (again) to do more with less codea.
+The names are not mandatory but they can make code shorter and clearer: they are doc-
+umentation . If we name the results of nextInt it becomes obvious which returned int
+is which.
+func nextInt(b [] byte , pos int) (value, nextPos int){/* ... */ }
+Becausenamedresultsareinitializedandtiedtoanunadorned return,theycansimplify
+as well as clarify. Here’s a version of io.ReadFull that uses them well:
+func ReadFull(r Reader, buf [] byte ) (n int, err error ){
+for len (buf) > 0 && err == nil {
+var nrint
+nr, err = r.Read(buf)
+n += nr
+buf = buf[nr: len(buf)]
+}
+return
+}
+aThis is a motto of Go; “Do morewithlesscode”
+Deferred code 27
+Deferred code
+Suppose you have a function in which you open a ﬁle and perform various writes and
+readsonit. Insuchafunctionthereareoftenspotswhereyouwanttoreturnearly. Ifyou
+do that, you will need to close the ﬁle descriptor you are working on. This often leads to
+the following code:
+Listing 2.6. Without defer
+func ReadWrite() bool {
+file.Open("file")
+// Do your thing
+iffailureX {
+file.Close()  Close() here
+return false
+}
+iffailureY {
+file.Close()  And here...
+return false
+}
+file.Close()  ...And here
+return true
+}
+Alotofcodeisrepeatedhere. ToovercomethisGohasthe deferstatement. After defer
+you specify a function which is called just beforethe current function exits.
+The code above could be rewritten as follows. This makes the function more readable,
+shorter and puts the Closeright next to the Open.
+Listing 2.7. With defer
+func ReadWrite() bool {
+file.Open("file")
+defer file.Close()  file.Close() is added to defer list
+// Do your thing
+iffailureX {
+return false Close() is now done automatically
+}
+iffailureY {
+return false And here too
+}
+return true  And here
+}
+You can put multiple functions on the “deferred list”, like this example from [ 8]:
+for i := 0 ;i < 5 ;i++ {
+defer fmt.Printf("%d ", i)
+}
+Deferred functions are executed in LIFO order, so the above code prints: 4 3 2 1 0 .
+With deferyoucanevenchangereturnvalues,providedthatyouareusingnamedresult
+parameters and a function literalb, i.e:
+Listing 2.8. Function literal
+defer func (){
+/* ... */
+}()  () is needed here
+bA function literal is sometimes called a closure.
+28 Chapter 2: Functions
+Orthisexamplewhichmakesiteasiertounderstandwhyandwhereyouneedthebraces:
+Listing 2.9. Function literal with parameters
+defer func (xint){
+/* ... */
+}(5) Give the input variable xthe value 5
+In this (unnamed) function you can access any named return parameter:
+Listing 2.10. Access return values within defer
+func f() (ret int){ retis initialized with zero
+defer func (){
+ret++ Increment retwith 1
+}()
+return 0 1not0 will be returned!
+}
+Variadic parameters
+Functions that take a variable number of parameters are known as variadic functions. To
+declare a function as variadic:
+func myfunc(arg ... int){}
+Thearg ... intinstructs Go to see this as a function that takes a variable number of
+arguments. Notethattheseargumentsallhavethetype int. Insideyourfunction’sbody
+the variable argis a slice of ints:
+for _, n := range arg {..0
+fmt.Printf("And the number is: %d\n", n)
+}
+..0We are not interested in the index as returned by range, hence the use of the un-
+derscore here.
+If you don’t specify the type of the variadic argument it defaults to the empty inter-
+face interface{} (see chapter 5). Suppose we have another variadic function called
+myfunc2, the following example shows how to pass variadic arguments to it:
+func myfunc(arg ... int){
+myfunc2(arg...)  Pass it as-is
+myfunc2(arg[:2]...)  Slice it
+}
+Functions as values
+As with almost everything in Go, functions are also justvalues. They can be assigned to
+variables as follows:
+Listing 2.11. Anonymous function
+func main() {
+a := func (){ Deﬁne a nameless function and assign to a
+println("Hello")
+}  No () here
+a()  Call the function
+}
+Callbacks 29
+If we use fmt.Printf("%T\n", a) to print the type of a, it prints func().
+Functions–as–values may be used in other places, for example maps. Here we convert
+from integers to functions:
+Listing 2.12. Functions as values in maps
+var xs = map[int]func ()int{
+1:func ()int { return 10},
+2:func ()int { return 20},
+3:func ()int { return 30}, Mandatory ,
+/* ... */
+}
+Or you can write a function that takes a function as its parameter, for example a Map
+function that works on intslices. This is left as an exercise for the reader (see exercise
+Q12on page31).
+Callbacks
+Because functions are values they are easy to pass to functions, from where they can be
+used as callbacks. First deﬁne a function that does “something” with an integer value:
+func printit(x int){ Function returns nothing
+fmt.Printf("%v\n", x)  Just print it
+}
+The signature of this function is: func printit( int), or without the function name:
+func (int). Tocreateanewfunctionthatusesthisoneasacallbackweneedtousethis
+signature:
+func callback(y int, f func (int)){ fhas the function
+f(y) Call the callback fwith y
+}
+Panic and recovering
+Godoesnothaveanexceptionmechanism,likethatinJavaforinstance: youcannotthrow
+exceptions. Insteaditusesapanic-and-recovermechanism. Itisworthrememberingthat
+you should use this as a last resort, your code will not look, or be, better if it is littered
+with panics. It’s a powerful tool: use it wisely. So, how do you use it?
+The following description was taken from [ 7]:
+Panic
+is a built-in function that stops the ordinary ﬂow of control and begins panicking.
+When the function Fcalls panic, execution of Fstops, any deferred functions in F
+areexecutednormally,andthen Freturnstoitscaller. Tothecaller, Fthenbehaves
+like a call to panic. The process continues up the stack until all functions in the
+current goroutine have returned, at which point the program crashes. Panics can
+be initiated by invoking panicdirectly. They can also be caused by runtime errors ,
+such as out-of-bounds array accesses.
+Recover
+is a built-in function that regains control of a panicking goroutine. Recover is only
+useful inside deferredfunctions. During normal execution, a call to recover will
+return niland have no other effect. If the current goroutine is panicking, a call to
+recover will capture the value given to panicand resume normal execution.
+This function checks if the function it gets as argument will panic when it is executedc:
+cCopied from a presentation of Eleanor McHugh.
+30 Chapter 2: Functions
+func throwsPanic(f func ()) (b bool ){..0
+defer func (){..1
+ifx := recover() ;x!= nil {
+b = true
+}
+}()
+f()..2
+return..3
+}
+..0We deﬁne a new function throwsPanic that takes a function as an argument (see
+“Functions as values ”). It returns true if fpanics when run, else false;
+..1We deﬁne a deferfunction that utilizes recover. If the current goroutine panics,
+thisdeferfunctionwillnoticethat. If recover() returnsnon- nilweset btotrue;
+..2Execute the function we received as the argument;
+..3Return the value of b. Because bis a named return parameter (page 26), we don’t
+specify b.
+Exercises
+Q6. (0) Average
+1.Write a function that calculates the average of a float64 slice.
+Q7. (0) Integer ordering
+1.Write a function that returns its (two) parameters in the right, numerical (ascend-
+ing) order:
+f(7,2)!2,7
+f(2,7)!2,7
+Q8. (1) Scope
+1.What is wrong with the following program?
+1 package main
+3 import "fmt"
+5 func main() {
+6 for i := 0 ;i < 10 ;i++ {
+7 fmt.Printf("%v\n", i)
+8 }
+9 fmt.Printf("%v\n", i)
+10 }
+Q9. (1) Stack
+1.Create a simple stack which can hold a ﬁxed number of ints. It does not have to
+grow beyond this limit. Deﬁne push– put something on the stack – and pop–
+retrieve something from the stack – functions. The stack should be a LIFO (last
+in, ﬁrst out) stack.
+Exercises 31
+Figure 2.1. A simple LIFO stack
+push(k)
+pop() kki
+l
+mi++
+i--
+0
+2.Bonus. Writea Stringmethodwhichconvertsthestacktoastringrepresentation.
+Thiswayyoucanprintthestackusing: fmt.Printf("My stack %v\n", stack
+)
+The stack in the ﬁgure could be represented as: [0:m] [1:l] [2:k]
+Q10. (1) Var args
+1.Write a function that takes a variable number of ints and prints each integer on a
+separate line
+Q11. (1) Fibonacci
+1.TheFibonaccisequencestartsasfollows: 1;1;2;3;5;8;13; : : :Orinmathematical
+terms: x1= 1; x2= 1; xn=xn 1+xn 28n >2.
+Writeafunctionthattakesan intvalueandgivesthatmanytermsoftheFibonacci
+sequence.
+Q12. (1) Map function A map()-function is a function that takes a function and a
+list. The function is applied to each member in the list and a new list containing these
+calculated values is returned. Thus:
+map(f();(a1; a2; : : : ; a n 1; an)) = ( f(a1); f(a2); : : : ; f (an 1); f(an))
+1.Write a simple map()-function in Go. It is sufﬁcient for this function only to work
+for ints.
+2.Expand your code to also work on a list of strings.
+Q13. (0) Minimum and maximum
+1.Write a function that ﬁnds the maximum value in an intslice ( []int).
+2.Write a function that ﬁnds the minimum value in an intslice ( []int).
+Q14. (1) Bubble sort
+1.Write a function that performs a bubble sort on a slice of ints. From [ 24]:
+It works by repeatedly stepping through the list to be sorted, comparing
+each pair of adjacent items and swapping them if they are in the wrong
+order. The pass through the list is repeated until no swaps are needed,
+which indicates that the list is sorted. The algorithm gets its name from
+the way smaller elements “bubble” to the top of the list.
+[24] also gives an example in pseudo code:
+procedure bubbleSort( A : list ofsortable items )
+do
+swapped = false
+for each i in1tolength(A) - 1 inclusive do:
+32 Chapter 2: Functions
+ifA[i-1] > A[i] then
+swap( A[i-1], A[i] )
+swapped = true
+end if
+end for
+while swapped
+end procedure
+Q15. (1) Functions that return functions
+1.Writeafunctionthatreturnsafunctionthatperformsa +2onintegers. Namethe
+function plusTwo. You should then be able do the following:
+p := plusTwo()
+fmt.Printf("%v\n", p(2))
+Whichshouldprint4. Seesection Callbacks onpage29forinformationaboutthis
+topic.
+2.Generalize the function from 1, and create a plusX(x) which returns functions
+that add xto an integer.
+Answers 33
+Answers
+A6. (0) Average
+1.The following function calculates the average:
+Listing 2.13. Average function in Go
+func average(xs [] float64 ) (avg float64 ){..0
+sum := 0.0
+switch len (xs) {
+case 0:..1
+avg = 0
+default :..2
+for _, v := range xs{
+sum += v
+}
+avg = sum / float64 (len(xs))..3
+}
+return..4
+}
+..0We use a named return parameter;
+..1If the length is zero, we return 0;
+..2Otherwise we calculate the average;
+..3We have to convert the value to a float64 to make the division work;
+..4We have an avarage, return it.
+A7. (0) Integer ordering
+1.Herewecanusethemultiplereturnvalues(section“ Multiplereturnvalues ”)from
+Go:
+func order(a, b int) (int,int){
+ifa > b {
+return b,a
+}
+return a,b
+}
+A8. (1) Scope
+1.The program does not even compile, because ion line 9 is not deﬁned: iis only
+deﬁned within the for-loop. To ﬁx this the function main()should become:
+func main() {
+var iint
+for i = 0 ;i < 10 ;i++ {
+fmt.Printf("%v\n", i)
+}
+fmt.Printf("%v\n", i)
+}
+Now iis deﬁned outside the for-loop and still visible afterwards. This code will
+print the numbers 0 through 10.
+A9. (1) Stack
+34 Chapter 2: Functions
+1.First we deﬁne a new type that represents a stack; we need an array (to hold the
+keys) and an index, which points to the last element. Our small stack can only
+hold 10 elements.
+type stack struct { stackis not exported
+i int
+data [10] int
+}
+Nextweneedthe pushandpopfunctionstoactuallyusethething. First we show
+thewrongsolution! In Go data passed to functions is passed-by-value meaning a
+copy is created and given to the function. The ﬁrst stab for the function push
+could be:
+func (s stack) push(k int){ Works on copy of argument
+ifs.i+1 > 9 {
+return
+}
+s.data[s.i] = k
+s.i++
+}
+The function works on the swhich is of the type stack. To use this we just call
+s.push(50) , to push the integer 50 on the stack. But the push function gets a
+copyof s,soitisnotworkingthe realthing. Nothinggetspushedtoourstackthis
+way, for example the following code:
+var s stack make sa simple stackvariable
+s.push(25)
+fmt.Printf("stack %v\n", s) ;
+s.push(14)
+fmt.Printf("stack %v\n", s) ;
+prints:
+stack [0:0]
+stack [0:0]
+Tosolvethisweneedtogivethefunction pushapointertothestack. Thismeans
+we need to change pushfrom
+func (s stack)push(k int)!func (s *stack)push(k int)
+We should now use new()(see “Allocation with new ” in chapter 4) to create a
+pointertoanewlyallocated stack,soline1fromtheexampleaboveneedstobe
+s := new(stack)
+And our two functions become:
+func (s *stack) push(k int){
+s.data[s.i] = k
+s.i++
+}
+func (s *stack) pop() int {
+s.i--
+return s.data[s.i]
+}
+Which we then use as follows
+func main() {
+var s stack
+s.push(25)
+s.push(14)
+fmt.Printf("stack %v\n", s)
+}
+Answers 35
+2.While this was a bonus question, having the ability to print the stack was very
+valuable when writing the code for this exercise. According to the Go documen-
+tation fmt.Printf("%v") can print any value (%v) that satisﬁes the Stringer
+interface. For this to work we only need to deﬁne a String() function for our
+type:
+Listing 2.14. stack.String()
+func (s stack) String() string {
+var str string
+for i := 0 ;i <= s.i ;i++ {
+str = str + "[" +
+strconv.Itoa(i) + ":" + strconv.Itoa
+(s.data[i]) + "]"
+}
+return str
+}
+A10. (1) Var args
+1.Forthisweneedthe ...-syntaxtosignalwedeﬁneafunctionthattakesanarbi-
+trary number of arguments.
+Listing 2.15. A function with variable number of arguments
+package main
+import "fmt"
+func main() {
+prtthem(1, 4, 5, 7, 4)
+prtthem(1, 2, 4)
+}
+func prtthem(numbers... int){ numbers is slice of ints
+for _, d := range numbers {
+fmt.Printf("%d\n", d)
+}
+}
+A11. (1) Fibonacci
+1.The following program calculates Fibonacci numbers:
+Listing 2.16. Fibonacci function in Go
+package main
+import "fmt"
+func fibonacci(value int) [] int {
+x := make ([]int, value)..0
+x[0], x[1] = 1, 1..1
+for n := 2 ;n < value ;n++ {
+x[n] = x[n-1] + x[n-2]..2
+}
+return x..3
+}
+func main() {
+36 Chapter 2: Functions
+for _, term := range fibonacci(10) {..4
+fmt.Printf("%v ", term)
+}
+}
+..0Wecreatean arraytoholdtheintegersuptothevaluegiveninthefunction
+call;
+..1Starting point of the Fibonacci calculation;
+..2xn=xn 1+xn 2;
+..3Return the entirearray;
+..4Using the rangekeyword we “walk” the numbers returned by the Fibonacci
+function. Here up to 10. And we print them.
+A12. (1) Map function
+Listing 2.17. A Map function
+1.
+func Map(f func (int)int, l [] int) [] int {
+j := make ([]int,len(l))
+for k, v := range l{
+j[k] = f(v)
+}
+return j
+}
+func main() {
+m := [] int{ 1, 3, 4 }
+f := func (iint)int {
+return i * i
+}
+fmt.Printf("%v", (Map(f, m)))
+}
+2.Answer to question but now with strings
+A13. (0) Minimum and maximum
+1.This function returns the largest int in the slice l:
+func max(l [] int) (max int){..0
+max = l[0]
+for _, v := range l{..1
+ifv > max {..2
+max = v
+}
+}
+return..3
+}
+..0We use a named return parameter;
+..1Loop over l. The index of the element is not important;
+..2If we ﬁnd a new maximum, remember it;
+..3A “lone” return, the current value of maxis now returned.
+2.This function returns the smallest int in the slice l. It is almost identical to max:
+Answers 37
+func min(l [] int) (min int){
+min = l[0]
+for _, v := range l{
+ifv < min {
+min = v
+}
+}
+return
+}
+Theinterestedreadermaycombine maxandminintoonefunctionwithaselector
+that lets you choose between the minimum or the maximum, or one that returns
+both values.
+A14. (1) Bubble sort
+1.Bubble sort isn’t terribly efﬁcient, for nelements it scales O(n2). See QuickSort
+[17] for a better sorting algorithm.
+But bubble sort is easy to implement:
+Listing 2.18. Bubble sort
+func main() {
+n := [] int{ 5, -1, 0, 12, 3, 5 }
+fmt.Printf("unsorted %v\n", n)
+bubblesort(n)
+fmt.Printf("sorted %v\n", n)
+}
+func bubblesort(n [] int){
+for i := 0 ;i < len(n) - 1 ;i++ {
+for j := i + 1 ;j < len(n);j++ {
+ifn[j] < n[i] {
+n[i], n[j] = n[j], n[i]
+}
+}
+}
+}
+Because a slice is a reference type the bubblesort function works and does not
+need to return a sorted slice.
+A15. (1) Functions that return functions
+1.
+func main() {
+p2 := plusTwo()
+fmt.Printf("%v\n",p2(2))
+}
+func plusTwo() func (int)int {..0
+return func (xint)int { return x + 2 }..1
+}
+..0Deﬁneanewfunctionthatreturnsafunction. Seehowyouyoucanjustwrite
+down what you mean;
+..1Functionliteralsatwork,wedeﬁnethe+2–functionrightthereinthereturn
+statement.
+2.Here we use a closure:
+38 Chapter 2: Functions
+func plusX(x int)func (int)int {..0
+return func (yint)int { return x + y }..1
+}
+..0Again deﬁne a function that returns a function;
+..1Use thelocalvariable xin the function literal.
+
+3 Packages
+“^”
+Answer to whether there is a bit wise
+negation operator.
+KEN THOMPSON
+Apackageisacollectionoffunctionsanddata. Youdeclareapackagewiththe package
+keyword. The ﬁlename does not have to match the package name. The convention for
+packagenamesistouselowercasecharacters. Gopackagesmayconsistofmultipleﬁles,
+buttheysharethe package <name>line. Let’sdeﬁneapackage evenintheﬁle even.go.
+Listing 3.1. A small package
+package even  Start our own namespace
+func Even(i int)bool { Exported function
+return i % 2 == 0
+}
+func odd(i int)bool { Private function
+return i % 2 == 1
+}
+Namesthatstartwithacapitalletterare exported andmaybeusedoutsideyourpackage
+(more on that later).
+Now we just need to build the package. We create a directory under $GOPATH, and copy
+even.go there (see “ Compiling and running code ” in chapter 1).
+%mkdir $GOPATH/src/even
+%cp even.go $GOPATH/src/even
+%go build
+%go install
+Now we can use the package in our own program myeven.go :
+Listing 3.2. Use of the even package
+package main
+import (..0
+"even"..1
+"fmt"..2
+)
+func main() {
+i := 5
+fmt.Printf("Is %d even? %v\n", i, even.Even(i))..3
+}
+..0Import the following packages;
+..1Thelocalpackage evenis imported here;
+..2The ofﬁcial fmtpackage gets imported;
+Identiﬁers 41
+..3Use the function from the evenpackage. The syntax for accessing a function from
+a package is <package >.Function() .
+%go build myeven.go
+%./myeven
+Is 5 even? false
+In Go, a function from a package is exported (visible outside the package, i.e. public)
+when the ﬁrst letter of the function name is a capital, hence the function name Even. If
+we change our myeven.go on line 10 to use the unexported function even.odd :
+fmt.Printf("Is %d even? %v\n", i, even.odd(i))
+We get an error when compiling, because we are trying to use a privatefunction:
+myeven.go:10: cannot refer to unexported name even.odd
+To summarize:
+•Public functions begin with a capitalletter;
+•Private functions begin with a lowercase letter.
+This convention holds true for other labels (new types, global variables) deﬁned in the
+package. Note that the term “capital” is not limited to US-ASCII - it extends to all bicam-
+eral alphabets (Latin, Greek, Cyrillic, Armenian and Coptic).
+Identiﬁers
+Names are as important in Go as in any other language. In some cases they even have
+semantic effect: for instance, the visibility of a name outside its package is determined
+by the case of its ﬁrst character. It’s therefore worth spending a little time talking about
+naming conventions in Go programs.
+The convention is to leave well-known legacy not-quite-words alone rather than try to
+ﬁgure out where the capital letters go: Atoi,Getwd,Chmod. CamelCasing works best
+when you have whole words to work with: ReadFile ,NewWriter ,MakeSlice .
+Package names
+When a package is imported (with import), the package name becomes the accessor for
+the contents. After
+import "bytes"
+the importing package can talk about bytes.Buffer . It’s helpful if everyone using the
+package can use the same name to refer to its contents, so the package name should be
+good: short,conciseandevocative. Byconventionpackagesaregivenlower-casesingle-
+word names; there should be no need for underscores or mixedCaps. Err on the side of
+brevity(sinceeveryoneusingyourpackagewillbetypingitsname),anddon’tworryabout
+collisions a priori.
+The package name is only the default name for imports. You can override the default
+accessor by providing your own name to the import statement:
+import bar "bytes"
+Thefunction Bufferisnowaccessedas bar.Buffer . Thismeansthatthepackagename
+does not need to be globally unique; in the rare case of a collision the importing code
+can choose a different name to use locally. In any case confusion is rare because the ﬁle
+name in the import determines just which package is being used.
+42 Chapter 3: Packages
+Another convention is that the package name is the base name of its source directory;
+the package in src/pkg/compress/gzip is imported as compress/gzip but has name gzip,
+notcompress_gzip and notcompressGzip .
+Theimporterofapackagewillusethenametorefertoitscontents,soexportednamesin
+thepackagecanusethatfacttoavoidstutter. Forinstance,thebufferedreadertypeinthe
+buﬁopackage is called Reader, not BufReader , because users see it as bufio.Reader ,
+whichisaclear,concisename. Moreover,becauseimportedentitiesarealwaysaddressed
+by their package name, bufio.Reader does not conﬂict with io.Reader . Similarly, the
+function to make new instances of ring.Ring (package container/ring ) —which is the
+deﬁnition of a constructor in Go—would normally be called NewRing, but since Ringis
+the only type exported by the package, and since the package is called ring, it’s called
+justNew. Clientsofthepackageseethatas ring.New . Usethepackagestructuretohelp
+you choose good names.
+Another short example is once.Do (see package sync);once.Do(setup) reads well and
+would not be improved by writing once.DoOrWaitUntilDone(setup) . Long names
+don’t automatically make things more readable. If the name represents something in-
+tricateorsubtle,it’susuallybettertowriteahelpfuldoccommentthantoattempttoput
+all the information into the name.
+Finally, the convention in Go is to use MixedCaps or mixedCaps rather than underscores
+to write multi-word names.
+Documenting packages
+This text is copied
+from [8]. Everypackageshouldhavea package comment ,ablockcommentprecedingthe package
+clause. Formulti-ﬁlepackages,thepackagecommentonlyneedstobepresentinoneﬁle,
+and any one will do. The package comment should introduce the package and provide
+information relevant to the package as a whole. It will appear ﬁrst on the go docpage
+andshouldsetupthedetaileddocumentationthatfollows. Anexamplefromtheofﬁcial
+regexppackage:
+/*
+The regexp package implements a simple library for
+regular expressions.
+The syntax of the regular expressions accepted is:
+regexp:
+concatenation '|' concatenation
+*/
+package regexp
+Each deﬁned (and exported) function should have a small line of text documenting the
+behavior of the function. An example from the fmtpackage:
+// Printf formats according to a format specifier and writes to standard
+// output. It returns the number of bytes written and any write error
+// encountered.
+func Printf(format string, a ...interface) (n int, err error)
+T esting packages
+In Go it is customary to write (unit) tests for your package. Writing tests involves the
+testingpackage and the program go test. Both have excellent documentation.
+Thego test program runs all the test functions. Without any deﬁned tests for our even
+package, go test yields:
+T esting packages 43
+%go test
+? even [no test files]
+Letusﬁxthisbydeﬁningatestinatestﬁle. Testﬁlesresideinthepackagedirectoryand
+arenamed *_test.go . ThosetestﬁlesarejustlikeotherGoprograms,but go test will
+only execute the test functions. Each test function has the same signature and its name
+should start with Test:
+func TestXxx(t *testing.T)
+When writing test you will need to tell go test whether a test was successful or not.
+A successful test function just returns. When the test fails you can signal this with the
+following functions [ 11]. These are the most important ones (see go doc testing or
+go help testfunc for more):
+func (t *T) Fail()
+Failmarks the test function as having failed but continues execution.
+func (t *T) FailNow()
+FailNow marksthetestfunctionashavingfailedandstopsitsexecution. Anyremaining
+tests in this ﬁle are skipped, and execution continues with the next test.
+func (t *T) Log(args ... interface{} )
+Logformats its arguments using default formatting, analogous to Print(), and records
+the text in the error log.
+func (t *T) Fatal(args ... interface{} )
+Fatalis equivalent to Log()followed by FailNow() .
+Putting all this together we can write our test. First we pick a name: even_test.go .
+Then we add the following contents:
+Listing 3.3. Test ﬁle for even package
+1 package even
+3 import "testing"
+5 func TestEven(t *testing.T) {
+6 if ! Even(2) {
+7 t.Log("2 should be even !")
+8 t.Fail()
+9 }
+10 }
+Note that we use package evenon line 1 - the tests fall in the same namespace as the
+package we are testing. This is not only convenient, but also allows tests of unexported
+functionsandstructures. Wethenimportthe testingpackage,andonline5wedeﬁnethe
+only test function in this ﬁle. The displayed Go code should not hold any surprises: we
+checkifthe EvenfunctionworksOK.Now,themomentwe’vebeenwaitingfor,executing
+the test:
+%go test
+ok even 0.001s
+Our test ran and reported ok. Success!
+If we redeﬁne our test function, we can see the result of a failed test:
+44 Chapter 3: Packages
+// Entering the twilight zone
+func TestEven(t *testing.T) {
+ifEven(2) {
+t.Log("2 should be odd !")
+t.Fail()
+}
+}
+We now get:
+FAIL even 0.004s
+--- FAIL: TestEven (0.00 seconds)
+2 should be odd!
+FAIL
+And you can act accordingly (by ﬁxing the test for instance).
+Writingnewpackagesshouldgohandinhandwithwriting(some)documentationand
+test functions. It will make your code better and it shows that you really put in the
+effort.
+The Go test suite also allows you to incorperate example functions which serve as docu-
+mentation andas tests. These functions need to start with Example.
+func ExampleEven() {
+ifEven(2) {
+fmt.Printf("Is even\n")
+}
+// Output:
+// Is even
+}
+Thoselasttwocommentslinesarepartoftheexample, go test usesthosetocheckthe
+generated output with the text in the comments. If there is a mismatch the test fails.
+Useful packages
+The standard Go repository includes a huge number of packages and it is even possible
+to install more alongside your current Go installation. It is very enlightening to browse
+the$GOROOT/src/pkg directory and look at the packages. We cannot comment on each
+package, but the following are worth a mention:a
+fmt
+Package fmtimplementsformattedI/OwithfunctionsanalogoustoC’s printfand
+scanf. The format verbs are derived from C’s but are simpler. Some verbs (%-
+sequences) that can be used:
+%v
+The value in a default format. when printing structs, the plus ﬂag (%+v) adds
+ﬁeld names;
+%#v
+a Go-syntax representation of the value;
+%T
+a Go-syntax representation of the type of the value.
+io
+This package provides basic interfaces to I/O primitives. Its primary job is to wrap
+existing implementations of such primitives, such as those in package os, into
+shared public interfaces that abstract the functionality, plus some other related
+primitives.
+aThe descriptions are copied from the packages’ go doc. Extra remarks are type set in italic.
+Exercises 45
+buﬁo
+This package implements buffered I/O. It wraps an io.Reader orio.Writer ob-
+ject, creating another object (Reader or Writer) that also implements the interface
+but provides buffering and some help for textual I/O.
+sort
+Thesortpackageprovidesprimitivesforsortingarraysanduser-deﬁnedcollections.
+strconv
+Thestrconvpackageimplementsconversionstoandfromstringrepresentationsof
+basic data types.
+os
+Theospackage provides a platform-independent interface to operating system
+functionality. The design is Unix-like.
+sync
+The package syncprovides basic synchronization primitives such as mutual exclu-
+sion locks.
+ﬂag
+Theﬂagpackage implements command-line ﬂag parsing. See “Command line argu-
+ments” on page 87.
+encoding/json
+Theencoding/json package implements encoding and decoding of JSON objects as
+deﬁned in RFC 4627 [ 2].
+html/template
+Data-driven templates for generating textual output such as HTML.
+Templates are executed by applying them to a data structure. Annotations in the
+template refer to elements of the data structure (typically a ﬁeld of a struct or a
+keyinamap)tocontrolexecutionandderivevaluestobedisplayed. Thetemplate
+walks the structure as it executes and the “cursor” @ represents the value at the
+current location in the structure.
+net/http
+Thenet/httppackage implements parsing of HTTP requests, replies, and URLs and
+provides an extensible HTTP server and a basic HTTP client.
+unsafe
+TheunsafepackagecontainsoperationsthatsteparoundthetypesafetyofGopro-
+grams.Normally you don’t need this package.
+reﬂect
+Thereﬂectpackage implements run-time reﬂection, allowing a program to manip-
+ulateobjectswitharbitrarytypes. Thetypicaluseistotakeavaluewithstatictype
+interface{} and extract its dynamic type information by calling TypeOf, which
+returns an object with interface type Type.
+See chapter 5, section “ Introspection and reﬂection ”.
+os/exec
+Theos/execpackage runs external commands.
+Exercises
+Q16. (0) Stack as package
+1.SeetheQ 9exercise. Inthisexercisewewanttocreateaseparatepackageforthat
+code. Create a proper package for your stack implementation, Push,Popand the
+Stacktype need to be exported.
+46 Chapter 3: Packages
+2.Writeasimpleunittestforthispackage. Youshouldatleasttestthata Popworks
+after a Push.
+Q17. (2) Calculator
+1.Create a reverse polish calculator. Use your stack package.
+Answers 47
+Answers
+A16. (0) Stack as package
+1.There are a few details that should be changed to make a proper package for
+our stack. First, the exported functions should begin with a capital letter and so
+should Stack. The package ﬁle is named stack-as-package.go and contains:
+Listing 3.4. Stack in a package
+package stack
+// Stack holds the items.
+type Stack struct {
+i int
+data [10] int
+}
+// Push pushes an item on the stack.
+func (s *Stack) Push(k int){
+s.data[s.i] = k
+s.i++
+}
+// Pop pops an item from the stack.
+func (s *Stack) Pop() (ret int){
+s.i--
+ret = s.data[s.i]
+return
+}
+2.To make the unit testing work properly you need to do some preparations. We’ll
+come to those in a minute. First the actual unit test. Create a ﬁle with the name
+pushpop_test.go , with the following contents:
+Listing 3.5. Push/Pop test
+package stack
+import "testing"
+func TestPushPop(t *testing.T) {
+c := new(Stack)
+c.Push(5)
+ifc.Pop() != 5 {
+t.Log("Pop doesn't give 5")
+t.Fail()
+}
+}
+Forgo testtoworkweneedtoputourpackageﬁlesinadirectoryunder $GOPATH/src :
+%mkdir $GOPATH/src/stack
+%cp pushpop_test.go $GOPATH/src/stack
+%cp stack-as-package.go $GOPATH/src/stack
+Yields:
+%go test stack
+ok stack 0.001s
+A17. (2) Calculator
+1.This is one answer:
+48 Chapter 3: Packages
+Listing 3.6. A (rpn) calculator
+package main
+import (
+"bufio"
+"fmt"
+"os"
+"strconv"
+)
+var reader *bufio.Reader = bufio.NewReader(os.Stdin)
+var st = new(Stack)
+type Stack struct {
+i int
+data [10] int
+}
+func (s *Stack) push(k int){
+ifs.i+1 > 9 {
+return
+}
+s.data[s.i] = k
+s.i++
+}
+func (s *Stack) pop() (ret int){
+s.i--
+ifs.i < 0 {
+s.i = 0
+return
+}
+ret = s.data[s.i]
+return
+}
+func main() {
+for {
+s, err := reader.ReadString('\n')
+var token string
+iferr != nil {
+return
+}
+for _, c := range s{
+switch {
+case c >= '0' && c <= '9':
+token = token + string (c)
+case c == ' ':
+r, _ := strconv.Atoi(token)
+st.push(r)
+token = ""
+case c == '+':
+fmt.Printf("%d\n", st.pop()+
+st.pop())
+case c == '*':
+fmt.Printf("%d\n", st.pop()*
+st.pop())
+case c == '-':
+Answers 49
+p := st.pop()
+q := st.pop()
+fmt.Printf("%d\n", q-p)
+case c == 'q':
+return
+default :
+//error
+}
+}
+}
+}
+4 Beyond the basics
+“Go has pointers but not pointer
+arithmetic. You cannot use a pointer
+variable to walk through the bytes of a
+string.”
+Go For C++ Programmers
+GO AUTHORS
+Gohaspointers. Thereishowevernopointerarithmetic,sotheyactmorelikereferences
+than pointers that you may know from C. Pointers are useful. Remember that when you
+callafunctioninGo, thevariablesare pass-by-value . So, forefﬁciencyandthepossibility
+to modify a passed value infunctions we have pointers.
+Youdeclareapointerbypreﬁxingthetypewithan’ *’:var p *int. Now pisapointerto
+an integer value. All newly declared variables are assigned their zero value and pointers
+are no different. A newly declared pointer, or just a pointer that points to nothing, has
+a nil-value. In other languages this is often called a NULL pointer in Go it is just nil.
+To make a pointer point to something you can use the address-of operator ( &), which we
+demonstrate here:
+Listing 4.1. Use of a pointer
+var p *int
+fmt.Printf("%v", p)  Prints nil
+var iint  Declare integer variable i
+p = &i  Make ppoint to i
+fmt.Printf("%v", p)  Prints something like 0x7ff96b81c000a
+De-referencing a pointer is done by preﬁxing the pointer variable with ’ *’:
+Listing 4.2. Dereferencing a pointer
+p = &i  Take the address of i
+*p = 8  Change the value of i
+fmt.Printf("%v\n", *p)  Prints 8
+fmt.Printf("%v\n", i)  Idem
+As said, there is no pointer arithmetic, so if you write: *p++, it is interpreted as (*p)++:
+ﬁrst reference and then increment the value.a
+Allocation
+Go also has garbage collection, meaning that you don’t have to worry about memory
+deallocation.
+To allocate memory Go has two primitives, newandmake. They do different things and
+apply to different types, which can be confusing, but the rules are simple. The follow-
+ing sections show how to handle allocation in Go and hopefully clariﬁes the somewhat
+artiﬁcial distinction between newandmake.
+Allocation with new
+The built-in function newis essentially the same as its namesakes in other languages:
+new(T)allocateszeroedstorageforanewitemoftype Tandreturnsitsaddress,avalue
+aSee exercise 18.
+Allocation 51
+of type *T. In Go terminology, it returns a pointer to a newly allocated zero value of type
+T. This is important to remember.
+Thismeansauserofthedatastructurecancreateonewith newandgetrighttowork. For
+example,thedocumentationfor bytes.Buffer statesthat“thezerovalueforBufferisan
+empty buffer ready to use.” Similarly, sync.Mutex does not have an explicit constructor
+or Init method. Instead, the zero value for a sync.Mutex is deﬁned to be an unlocked
+mutex.
+The zero-value-is-useful property works transitively. Consider this type declaration. See
+section “Deﬁning your own types ” on page 52.
+type SyncedBuffer struct {
+lock sync.Mutex
+buffer bytes.Buffer
+}
+Values of type SyncedBuffer are also ready to use immediately upon allocation or just
+declaration. Inthissnippet,both pandvwillworkcorrectlywithoutfurtherarrangement.
+p := new(SyncedBuffer)  Type *SyncedBuffer, ready to use
+var v SyncedBuffer  Type SyncedBuffer, idem
+Allocation with make
+Backtoallocation. Thebuilt-infunction make(T, args) servesapurposedifferentfrom
+new(T). It creates slices, maps, and channels only, and it returns an initialized (not zero)
+valueoftype T,not *T.Thereasonforthedistinctionisthatthesethreetypesare, under
+the covers, references to data structures that must be initialized before use. A slice, for
+example, is a three-item descriptor containing a pointer to the data (inside an array), the
+length, and the capacity; until those items are initialized, the slice is nil. For slices,
+maps, and channels, makeinitializes the internal data structure and prepares the value
+for use.
+For instance, make ([]int, 10, 100) allocates an array of 100 ints and then creates a
+slice structure with length 10 and a capacity of 100 pointing at the ﬁrst 10 elements of
+the array. In contrast, new([]int)returns a pointer to a newly allocated, zeroed slice
+structure, that is, a pointer to a nilslice value. These examples illustrate the difference
+between newandmake.
+var p *[] int =new([]int) Allocates slice structure;rarely useful
+var v [] int =make ([]int, 100) vrefers to a new array of 100 ints
+var p *[] int =new([]int) Unnecessarily complex
+*p = make ([]int, 100, 100)
+v := make ([]int, 100)  Idiomatic
+Remember that makeapplies only to maps, slices and channels and does not return a
+pointer. To obtain an explicit pointer allocate with new.
+new allocates; make initializes
+The above two paragraphs can be summarized as:
+•new(T)returns *Tpointing to a zeroed T
+•make (T)returns an initialized T
+And of course makeis only used for slices, maps and channels.
+52 Chapter 4: Beyond the basics
+Constructors and composite literals
+Sometimes the zero value isn’t good enough and an initializing constructor is necessary,
+as in this example taken from the package os.
+func NewFile(fd int, name string ) *File {
+iffd < 0 {
+return nil
+}
+f := new(File)
+f.fd = fd
+f.name = name
+f.dirinfo = nil
+f.nepipe = 0
+return f
+}
+There’s a lot of boiler plate in there. We can simplify it using a composite literal, which
+is an expression that creates a new instance each time it is evaluated.
+func NewFile(fd int, name string ) *File {
+iffd < 0 {
+return nil
+}
+f := File {fd, name, nil, 0 } Create a new File
+return &f Return the address of f
+}
+ItisOKtoreturntheaddressofalocalvariable; thestorageassociatedwiththevariable
+survives after the function returns.
+In fact, taking the address of a composite literal allocates a fresh instance each time it is
+evaluated, so we can combine these last two lines.b
+return &File {fd, name, nil, 0 }
+Theitems(calledﬁelds)ofacompositeliteralarelaidoutinorderandmustallbepresent.
+However, by labeling the elements explicitly as ﬁeld:value pairs, the initializers can ap-
+pear in any order, with the missing ones left as their respective zero values. Thus we
+could say
+return &File {fd: fd, name: name }
+As a limiting case, if a composite literal contains no ﬁelds at all, it creates a zero value
+for the type. The expressions new(File)and&File {}are equivalent.
+Composite literals can also be created for arrays, slices, and maps, with the ﬁeld labels
+being indices or map keys as appropriate. In these examples, the initializations work
+regardless of the values of Enone, and Einval, as long as they are distinct.
+ar := [...] string{ Enone: "no error", Einval: "invalid argument" }
+sl := [] string{ Enone: "no error", Einval: "invalid argument" }
+ma := map[int]string { Enone: "no error", Einval: "invalid argument
+"}
+Deﬁning your own types
+Of course Go allows you to deﬁne new types, it does this with the typekeyword:
+type foo int
+bTaking the address of a composite literal tells the compiler to allocate it on the heap, not the stack.
+Deﬁning your own types 53
+Createsanewtype foowhichactslikean int. Creatingmoresophisticatedtypesisdone
+withthe structkeyword. Anexamplewouldbewhenwewantrecordsomebody’sname
+(string) and age ( int) in a single structure and make it a new type:
+Listing 4.3. Structures
+package main
+import "fmt"
+type NameAge struct {
+name string  Not exported
+age int  Not exported
+}
+func main() {
+a := new(NameAge)
+a.name = "Pete" ;a.age = 42
+fmt.Printf("%v\n", a)
+}
+Apropos, the output of fmt.Printf("%v\n", a) is
+&{Pete 42}
+That is nice! Go knows how to print your structure. If you only want to print one, or a
+few, ﬁelds of the structure you’ll need to use .<field name> . For example to only print
+the name:
+fmt.Printf("%s", a.name)  %s formats a string
+More on structure ﬁelds
+As said each item in a structure is called a ﬁeld. A struct with no ﬁelds: struct {}
+Or one with fourcﬁelds:
+struct {
+x, y int
+A *[] int
+Ffunc ()
+}
+If you omit the name for a ﬁeld, you create an anonymous ﬁeld, for instance:
+struct {
+T1 Field name is T1
+*T2 Field name is T2
+P.T3 Field name is T3
+x, y int Field names are xandy
+}
+Note that ﬁeld names that start with a capital letter are exported, i.e. can be set or read
+from other packages. Field names that start with a lowercase are private to the current
+package. The same goes for functions deﬁned in packages, see chapter 3for the details.
+Methods
+If you create functions that work on your newly deﬁned type, you can take two routes:
+1.Create a function that takes the type as an argument.
+cYes, four (4).
+54 Chapter 4: Beyond the basics
+func doSomething(n1 *NameAge, n2 int){/* */ }
+This is (you might have guessed) a function call .
+2.Create a function that works on the type (see receiverin listing 2.1):
+func (n1 *NameAge) doSomething(n2 int){/* */ }
+This is a method call , which can be used as:
+var n *NameAge
+n.doSomething(2)
+Whethertouseafunctionormethodisentirelyuptotheprogrammer,butifyouwantto
+satisfyaninterface(seethenextchapter)youmustusemethods. Ifnosuchrequirement
+exists it is a matter of taste whether to use functions or methods.
+But keep the following in mind, this is quoted from [ 10]:
+Ifxisaddressableand &x’smethodsetcontains m,x.m()isshorthandfor (&x).m() .
+In the above case this means that the following is notan error:
+var n NameAge  Not a pointer
+n.doSomething(2)
+Here Go will search the method list for nof type NameAge, come up empty and will then
+alsosearch the method list for the type *NameAge and will translate this call to (&n).
+doSomething(2) .
+There is a subtle but major difference between the following type declarations. Also see
+[10, section “Type Declarations”]. Suppose we have:
+// A Mutex is a data type with two methods, Lock and Unlock.
+type Mutex struct {/* Mutex fields */ }
+func (m *Mutex) Lock() {/* Lock impl. */ }
+func (m *Mutex) Unlock() {/* Unlock impl. */ }
+We now create two types in two different manners:
+•type NewMutex Mutex ;
+•type PrintableMutex struct{ Mutex }.
+NewMutex is equal to Mutex, but itdoes not haveanyof the methods of Mutex. In other
+words its method set is empty. But PrintableMutex has inherited the method set from
+Mutex. The Go term for this is embedding . In the words of [ 10]:
+The method set of *PrintableMutex contains the methods LockandUnlock
+bound to its anonymous ﬁeld Mutex.
+Conversions
+Sometimes you want to convert a type to another type. This is possible in Go, but there
+are some rules. For starters, converting from one value to another is done by operators
+(that look like functions: byte()) and not all conversions are allowed.
+Conversions 55
+Table 4.1. Valid conversions, float64 works the same as float32 . Note that ﬂoat32 has
+been abbreviated to ﬂt32 in this table to make it ﬁt on the page.
+From b []byte i []int r []rune s string f flt32 i int
+To
+[]byte × []byte(s)
+[]int × []int(s)
+[]rune × []rune(s)
+string string(b) string(i) string(r) ×
+ftl32 × flt32(i)
+int int(f) ×
+•From a stringto a slice of bytes or runes.
+mystring := "hello this is string"
+byteslice := [] byte (mystring)
+Convertstoa byteslice,each bytecontainstheintegervalueofthecorresponding
+byteinthestring. NotethatasstringsinGoareencodedinUTF-8somecharacters
+in the string may end up in 1, 2, 3 or 4 bytes.
+runeslice := [] rune (mystring)
+Convertstoan runeslice,each runecontainsaUnicodecodepoint. Everycharacter
+from the string corresponds to one rune.
+•From a slice of bytes or runes to a string.
+b := [] byte{ 'h','e','l','l','o' } Composite literal
+s := string (b)
+i := [] rune{ 257,1024,65 }
+r := string (i)
+For numeric values the following conversions are deﬁned:
+•Convert to an integer with a speciﬁc (bit) length: uint8 (int);
+•From ﬂoating point to an integer value: int(float32 ). This discards the fraction
+part from the ﬂoating point value;
+•The other way around: float32 (int);
+User deﬁned types and conversions
+How can you convert between the types youhave deﬁned yourself? We createtwo types
+here FooandBar, where Baris an alias for Foo:
+type foo struct { int }  Anonymous struct ﬁeld
+type bar foo  bar is an alias for foo
+Then we:
+var b bar = bar {1} Declare bto be a bar
+var f foo = b  Assign btof
+Which fails on the last line with:
+cannot use b (type bar) as type foo in assignment
+This can be ﬁxed with a conversion:
+var f foo = foo(b)
+Notethatconvertingstructuresthatarenotidenticalintheirﬁeldsismoredifﬁcult. Also
+note that converting bto a plain intalso fails; an integer is not the same as a structure
+containing an integer.
+56 Chapter 4: Beyond the basics
+Exercises
+Q18. (1) Pointer arithmetic
+1.In the main text on page 50there is the following text:
+…there is no pointer arithmetic, so if you write: *p++, it is interpreted as
+(*p)++: ﬁrst dereference and then increment the value.
+When you increment a value like this, for which types will it work?
+2.Why doesn’t it work for all types?
+Q19. (2) Map function with interfaces
+1.UsetheanswerfromexerciseQ 12,butnowmakeitgenericusinginterfaces. Make
+it at least work for ints and strings.
+Q20. (1) Pointers
+1.Suppose we have deﬁned the following structure:
+type Person struct {
+name string
+age int
+}
+What is the difference between the following two lines?
+var p1 Person
+p2 := new(Person)
+2.What is the difference between the following two allocations?
+func Set(t *T) {
+x = t
+}
+and
+func Set(t T) {
+x= &t
+}
+Q21. (1) Linked List
+1.Make use of the package container/list to create a (doubly) linked list. Push the
+values 1, 2 and 4 to the list and then print it.
+2.Create your own linked list implementation. And perform the same actions as in
+question 1
+Q22. (1) Cat
+1.Write a program which mimics the Unix program cat. For those who don’t know
+this program, the following invocation displays the contents of the ﬁle blah:
+% cat blah
+2.Make it support the n ﬂag, where each line is numbered.
+3.The solution to the above question given in 1contains a bug. Can you spot and
+ﬁx it?
+Exercises 57
+Q23. (2) Method calls
+1.Suppose we have the following program. Note the package container/vector was
+once part of Go, but has been removed when the appendbuilt-in was introduced.
+However,forthisquestionthisisn’timportant. Thepackageimplementedastack-
+like structure, with push and pop methods.
+package main
+import "container/vector"
+func main() {
+k1 := vector.IntVector {}
+k2 := &vector.IntVector {}
+k3 := new(vector.IntVector)
+k1.Push(2)
+k2.Push(3)
+k3.Push(4)
+}
+What are the types of k1,k2andk3?
+2.Now, this program compiles and runs OK. All the Pushoperations work even
+though the variables are of a different type. The documentation for Pushsays:
+func (p *IntVector) Push(x int) Push appends x to the end of the vector.
+Sothereceiverhastobeoftype *IntVector ,whydoesthecodeabove(thePush
+statements) work correct then?
+
+Answers 59
+Answers
+A18. (1) Pointer arithmetic
+1.This will only work for pointers to point to numerical ( int, uint , etc) values.
+2.The++isonlydeﬁnedfornumericaltypesandbecausethereisnooperatorover-
+loading in Go it fails (compilation error) otherwise.
+A19. (2) Map function with interfaces
+Listing 4.4. A generic map function in Go
+1.
+package main
+import "fmt"
+//* define the empty interface as a type
+type einterface{}
+func mult2(f e) e {
+switch f.(type ){
+case int :
+return f.(int) * 2
+case string :
+return f.(string ) + f.( string ) + f.( string )
++ f.( string )
+}
+return f
+}
+func Map(n []e, f func (e) e) []e {
+m := make ([]e, len(n))
+for k, v := range n{
+m[k] = f(v)
+}
+return m
+}
+func main() {
+m := []e {1, 2, 3, 4 }
+s := []e {"a", "b", "c", "d" }
+mf := Map(m, mult2)
+sf := Map(s, mult2)
+fmt.Printf("%v\n", mf)
+fmt.Printf("%v\n", sf)
+}
+A20. (1) Pointers
+1.In ﬁrst line: var p1 Person allocates a Person-valuetop1. The type of p1is
+Person.
+Thesecond line: p2 := new(Person) allocates memory and assigns a pointerto
+p2. The type of p2is*Person.
+2.In the second function, xpoints to a new (heap-allocated) variable twhich con-
+tains a copy of whatever the actual argument value is.
+60 Chapter 4: Beyond the basics
+In the ﬁrst function, xpoints to the same thing that tdoes, which is the same
+thing that the actual argument points to.
+So in the second function, we have an “extra” variable containing a copy of the
+interesting value.
+A21. (1) Linked List
+1.The following is the implementation of a program using doubly linked lists from
+container/list .
+Listing 4.5. Doubly linked list using container/list
+package main
+import (
+"fmt"
+"container/list"
+)
+func main() {
+l := list.New()
+l.PushBack(1)
+l.PushBack(2)
+l.PushBack(4)
+for e := l.Front() ;e!= nil ;e = e.Next() {
+fmt.Printf("%v\n", e.Value)
+}
+}
+2.The following is a program implementing a simple doubly linked list supporting
+intvalues.
+Listing 4.6. Doubly linked list
+package main
+..0
+import (
+"errors"
+"fmt"
+)
+type Value int..1
+type Node struct {..2
+Value
+prev, next *Node
+}
+type List struct {
+head, tail *Node
+}
+..3
+func (l *List) Front() *Node {
+return l.head
+}
+func (n *Node) Next() *Node {
+Answers 61
+return n.next
+}
+func (l *List) Push(v Value) *List {
+n := &Node {Value: v }..4
+ifl.head == nil {..5
+l.head = n
+} else {
+l.tail.next = n..6
+n.prev = l.tail..7
+}
+l.tail = n..8
+return l
+}
+var errEmpty = errors.New("List is empty")
+func (l *List) Pop() (v Value, err error ){
+ifl.tail == nil {..9
+err = errEmpty
+} else {
+v = l.tail.Value..10
+l.tail = l.tail.prev..11
+ifl.tail == nil {
+l.head = nil..12
+}
+}
+return v, err
+}
+func main() {
+l := new(List)
+l.Push(1)
+l.Push(2)
+l.Push(4)
+for n := l.Front() ;n!= nil ;n = n.Next() {
+fmt.Printf("%v\n", n.Value)
+}
+fmt.Println()
+for v, err := l.Pop() ;err == nil ;v, err = l.Pop()
+{
+fmt.Printf("%v\n", v)
+}
+}
+..0Include all the packages we need.
+..1Declare a type for the value our list will contain;
+..2declare a type for the each node in our list;
+..3Mimic the interface of container/list.
+62 Chapter 4: Beyond the basics
+..4When pushing, create a new Node with the provided value;
+..5if the list is empty, put the new node at the head;
+..6otherwise put it at the tail;
+..7make sure the new node points back to the previously existing one;
+..8point tail to the newly inserted node.
+..9When popping, return an error if the list is empty;
+..10otherwise save the last value;
+..11discard the last node from the list;
+..12and make sure the list is consistent if it becomes empty;
+A22. (1) Cat
+1.Thefollowingisimplementionof catwhichalsosupportsanﬂagtonumbereach
+line.
+Listing 4.7. A cat program
+package main
+..0
+import (
+"io"
+"os"
+"fmt"
+"bufio"
+"flag"
+)
+var numberFlag = flag.Bool("n", false, "number each line")..1
+..2
+func cat(r *bufio.Reader) {
+i := 1
+for {
+buf, e := r.ReadBytes('\n')..3
+ife == io.EOF {..4
+break
+}
+if*numberFlag {..5
+fmt.Fprintf(os.Stdout, "%5d %s", i,
+buf)
+i++
+} else {..6
+fmt.Fprintf(os.Stdout, "%s", buf)
+}
+}
+return
+}
+func main() {
+flag.Parse()
+ifflag.NArg() == 0 {
+cat(bufio.NewReader(os.Stdin))
+}
+for i := 0 ;i < flag.NArg() ;i++ {
+Answers 63
+f, e := os.Open(flag.Arg(i))
+ife!= nil {
+fmt.Fprintf(os.Stderr, "%s: error
+reading from %s: %s\n",
+os.Args[0], flag.Arg(i), e.
+Error())
+continue
+}
+cat(bufio.NewReader(f))
+}
+}
+..0Include all the packages we need;
+..1Deﬁne a new ﬂag ”n”, which defaults to off. Note that we get the help for
+free;
+..2Start the function that actually reads the ﬁle’s contents and displays it;
+..3Read one line at the time;
+..4Or stop if we hit the end;
+..5Ifweshouldnumbereachline,printthelinenumberandthenthelineitself;
+..6Otherwise we could just print the line.
+2.The bug show itself when the last line of the input does not contain a newline.
+Or worse, when the input contains one line without a closing newline nothing is
+shown at all. A better solution is the following program.
+Listing 4.8. A better cat program
+package main
+import (
+"bufio"
+"flag"
+"fmt"
+"io"
+"os"
+)
+var numberFlag = flag.Bool("n", false, "number each line")
+func cat(r *bufio.Reader) {
+i := 1
+for {
+buf, e := r.ReadBytes('\n')
+ife == io.EOF {
+break
+}
+if*numberFlag {
+fmt.Fprintf(os.Stdout, "%5d %s", i,
+buf)
+i++
+} else {
+fmt.Fprintf(os.Stdout, "%s", buf)
+}
+}
+return
+}
+func main() {
+64 Chapter 4: Beyond the basics
+flag.Parse()
+ifflag.NArg() == 0 {
+cat(bufio.NewReader(os.Stdin))
+}
+for i := 0 ;i < flag.NArg() ;i++ {
+f, e := os.Open(flag.Arg(i))
+ife!= nil {
+fmt.Fprintf(os.Stderr, "%s: error
+reading from %s: %s\n",
+os.Args[0], flag.Arg(i), e.
+Error())
+continue
+}
+cat(bufio.NewReader(f))
+}
+}
+A23. (2) Method calls
+1.The type of k1isvector.IntVector . Why? We use a composite literal (the {}),
+so we get a value of that type back. The variable k2is of *vector.IntVector ,
+because we take the address ( &) of the composite literal. And ﬁnally k3has also
+the type *vector.IntVector , because newreturns a pointer to the type.
+2.Theanswerisgivenin[ 10]inthesection“Calls”,whereamongotherthingsitsays:
+A method call x.m()is valid if the method set of (the type of) xcontains
+mand the argument list can be assigned to the parameter list of m. Ifx
+is addressable and &x’s method set contains m,x.m()is shorthand for
+(&x).m() .
+Inotherwordsbecause k1isaddressableand *vector.IntVector doeshavethe
+Pushmethod,thecall k1.Push(2) istranslatedbyGointo (&k1).Push(2) which
+makes the type system happy again (and you too — now you know this).d
+dAlso see section “ Methods” in this chapter.
+
+5 Interfaces
+I have this phobia about having my body
+penetrated surgically. You know what I
+mean?
+eXistenZ
+TED PIKUL
+In Go, the word interface is overloaded to mean several different things. Every type has The following text
+is partly from [ 22].an interface, which is the set of methods deﬁned for that type. This bit of code deﬁnes a
+struct type Swith one ﬁeld, and deﬁnes two methods for S.
+Listing 5.1. Deﬁning a struct and methods on it
+type Sstruct { iint }
+func (p *S) Get() int { return p.i }
+func (p *S) Put(v int){p.i = v }
+You can also deﬁne an interface type, which is simply a set of methods. This deﬁnes an
+interface Iwith two methods:
+type Iinterface {
+Get() int
+Put( int)
+}
+Sis a valid implementation for interface I, because it deﬁnes the two methods which
+Irequires. Note that this is true even though there is no explicit declaration that S
+implements I.
+AGoprogramcanusethisfactviayetanothermeaningofinterface,whichisaninterface
+value:
+func f(p I) {..0
+fmt.Println(p.Get())..1
+p.Put(1)..2
+}
+..0Declare a function that takes an interface type as the argument;
+..1Aspimplements interface Iitmusthave the Get()method;
+..2Same holds for the Put()method.
+Here the variable pholds a value of interface type. Because Simplements I, we can call
+fpassing in a pointer to a value of type S:
+var s S;f(&s)
+Thereasonweneedtotaketheaddressof s,ratherthanavalueoftype S,isbecausewe
+deﬁned the methods on sto operate on pointers, see the code above in listing 5.1. This
+isnotarequirement—wecouldhavedeﬁnedthemethodstotakevalues—butthenthe
+Putmethod would not work as expected.
+The fact that you do not need to declare whether or not a type implements an interface
+means that Go implements a form of duck typing[ 26]. This is not pure duck typing, be-
+cause when possible the Go compiler will statically check whether the type implements
+the interface. However, Go does have a purely dynamic aspect, in that you can convert
+fromoneinterfacetypetoanother. Inthegeneralcase,thatconversionischeckedatrun
+Interfaces 67
+time. Iftheconversionisinvalid—ifthetypeofthevaluestoredintheexistinginterface
+valuedoesnotsatisfytheinterfacetowhichitisbeingconverted—theprogramwillfail
+with a run time error.
+Interfaces in Go are similar to ideas in several other programming languages: pure ab-
+stract virtual base classes in C++, typeclasses in Haskell or duck typing in Python. How-
+ever there is no other language which combines interface values, static type checking,
+dynamicruntimeconversion,andnorequirementforexplicitlydeclaringthatatypesat-
+isﬁes an interface. The result in Go is powerful, ﬂexible, efﬁcient, and easy to write.
+Which is what?
+Let’s deﬁne another type that also implements the interface I:
+type Rstruct { iint }
+func (p *R) Get() int { return p.i }
+func (p *R) Put(v int){p.i = v }
+The function fcan now accept variables of type RandS. Suppose you need to know the
+actual type in the function f. In Go you can ﬁgure that out by using a type switch.
+func f(p I) {
+switch t := p.( type ){..0
+case *S:..1
+case *R:..2
+case S:..3
+case R:..4
+default :..5
+}
+}
+..0The type switch. Use (type)in a switchstatement. We store the type in the
+variable t;
+..1The actual type of pis a pointer to S;
+..2The actual type of pis a pointer to R;
+..3The actual type of pis aS;
+..4The actual type of pis aR;
+..5It’s another type that implements I.
+Using (type)outside a switchis illegal. A type switch isn’t the only way to discover
+the type at run-time. You can also use a “comma, ok” form to see if an interface type
+implements a speciﬁc interface:
+ift, ok := something.(I) ;ok{
+// something implements the interface I
+// t is the type it has
+}
+When you are sure a variable implements an interface you can use:
+t := something.(I)
+68 Chapter 5: Interfaces
+Empty interface
+Since every type satisﬁes the empty interface: interface{} . We can create a generic
+function which has an empty interface as its argument:
+Listing 5.2. A function with an empty interface argument
+func g(something interface{} )int {
+return something.(I).Get()
+}
+Thereturn something.(I).Get() isthetrickybitinthisfunction. Thevalue something
+hastype interface{} ,meaningnoguaranteeofanymethodsatall: itcouldcontainany
+type. The .(I)is a type assertion which converts something to an interface of type I.
+Ifwehavethattypewecaninvokethe Get()function. So ifwecreateanewvariableof
+the type *S, we can just call g(), because *Salso implements the empty interface.
+s = new(S)
+fmt.Println(g(s)) ;
+The call to gwill work ﬁne and will print 0. If we however invoke g()with a value that
+does not implement Iwe have a problem:
+Listing 5.3. Failing to implement an interface
+i := 5  Make i a “lousy” int
+fmt.Println(g(i))
+This compiles, but when we run this we get slammed with:
+panic: interface conversion: int is not main.I: missing method Get
+Which is completely true, the built-in type intdoes not have a Get()method.
+Methods
+Methods are functions that have a receiver (see chapter 2). You can deﬁne methods on
+any type (except on non-local types, this includes built-in types: the type intcan not
+have methods). You can however make a new integer type with its own methods. For
+example:
+type Foo int
+func (self Foo) Emit() {
+fmt.Printf("%v", self)
+}
+type Emitter interface {
+Emit()
+}
+Doing this on non-local (types deﬁned in other packages) types yields:
+Listing 5.4. Failure extending built-in types
+func (iint) Emit() {
+fmt.Printf("%d", i)
+}
+cannot define new methods
+on non-local type intListing 5.5. Failure extending non-local types
+func (a *net.AddrError) Emit() {
+fmt.Printf("%v", a)
+}
+cannot define new methods
+on non-local type net.AddrError
+Interface names 69
+Methods on interface types
+Aninterfacedeﬁnesasetofmethods. Amethodcontainstheactualcode. Inotherwords,
+an interface is the deﬁnition and the methods are the implementation. So a receiver can
+not be an interface type, doing so results in a invalid receiver type ... compiler
+error. The authoritative word from the language spec [ 10]:
+The receiver type must be of the form Tor*Twhere Tis a type name. Tis called
+the receiver base type or just base type. The base type must not be a pointer or
+interface type and must be declared in the same package as the method.
+Pointers to interfaces
+Creating a pointer to an interface value is a useless action in Go. It is in fact
+illegal to create a pointer to an interface value. The release notes for the release
+2010-10-13 that made them illegal leave no room for doubt:
+The language change is that uses of pointers to interface values no longer
+automatically de-reference the pointer. A pointer to an interface value is more
+often a beginner’s bug than correct code.
+From the [ 9]. If not for this restriction, this code:
+var buf bytes.Buffer
+io.Copy(buf, os.Stdin)
+would copy standard input into a copy of buf, not into bufitself. This is almost never
+the desired behavior.
+Interface names
+Byconvention,one-methodinterfacesarenamedbythemethodnameplusthe -ersufﬁx:
+Reader, Writer, Formatt eretc.
+There are a number of such names and it’s productive to honor them and the function
+names they capture. Read,Write,Close,Flush,Stringand so on have canonical sig-
+natures and meanings. To avoid confusion, don’t give your method one of those names
+unless it has the same signature and meaning. Conversely, if your type implements a
+method with the same meaning as a method on a well-known type, give it the same
+name and signature; call your string-converter method StringnotToString . Text copied from
+[8].
+A sorting example
+Recall the Bubblesort exercise (Q 14), where we sorted an array of integers:
+func bubblesort(n [] int){
+for i := 0 ;i < len(n)-1 ;i++ {
+for j := i + 1 ;j < len(n);j++ {
+ifn[j] < n[i] {
+n[i], n[j] = n[j], n[i]
+}
+}
+}
+}
+A version that sorts strings is identical except for the signature of the function:
+func bubblesortString(n [] string ){/* ... */ }
+Using this approach would lead to two functions, one for each type. By using interfaces
+we can make this more generic. Let’s create a new function that will sort both strings
+and integers, something along the lines of this non-working example:
+70 Chapter 5: Interfaces
+func sort(i [] interface{} ){..0
+switch i.(type ){..1
+case string :..2
+// ...
+case int :
+// ...
+}
+return /* ... */..3
+}
+..0Our function will receive a slice of empty interfaces;
+..1Using a type switch we ﬁnd out what the actual type is of the input;
+..2And then sort accordingly;
+..3Return the sorted slice.
+But when we call this function with sort([] int{ 1, 4, 5 }), it fails with:
+cannot use i (type []int) as type []interface in function argument
+This is because Go can not easily convert to a sliceof interfaces. Just converting to an
+interface is easy, but to a slice is much more costly. To keep a long story short: Go does The full mailing
+list discussion on
+this subject can be
+found at [ 14].not (implicitly) convert slices for you.
+So what is the Go way of creating such a “generic” function? Instead of doing the type
+inferenceourselveswithatypeswitch,weletGodoitimplicitly: Thefollowingstepsare
+required:
+1.Deﬁneaninterfacetype(called Sorterhere)withanumberofmethodsneededfor
+sorting. We will at least need a function to get the length of the slice, a function
+to compare two values and a swap function;
+type Sorter interface {
+Len() int  len()as a method
+Less(i, j int)bool p[j]<p[i]as a method
+Swap(i, j int) p[i], p[j] = p[j], p[i] as a method
+}
+2.Deﬁne new types for the slices we want to sort. Note that we declare slice types;
+type Xi [] int
+type Xs [] string
+3.Implementation of the methods of the Sorterinterface. For integers:
+func (p Xi) Len() int {return len (p)}
+func (p Xi) Less(i int, j int)bool {return p[j] < p[i] }
+func (p Xi) Swap(i int, j int) {p[i], p[j] = p[j], p[i] }
+And for strings:
+func (p Xs) Len() int {return len (p)}
+func (p Xs) Less(i int, j int)bool {return p[j] < p[i] }
+func (p Xs) Swap(i int, j int) {p[i], p[j] = p[j], p[i] }
+4.Write agenericSort function that works on the Sorterinterface.
+func Sort(x Sorter) {..0
+for i := 0 ;i < x.Len() - 1 ;i++ {..1
+for j := i + 1 ;j < x.Len() ;j++ {
+ifx.Less(i, j) {
+A sorting example 71
+x.Swap(i, j)
+}
+}
+}
+}
+..0xis now of the Sortertype;
+..1Using the deﬁned functions, we implement Bubblesort.
+We can now use your generic Sortfunction as follows:
+ints := Xi {44, 67, 3, 17, 89, 10, 73, 9, 14, 8 }
+strings := Xs {"nut", "ape", "elephant", "zoo", "go" }
+Sort(ints)
+fmt.Printf("%v\n", ints)
+Sort(strings)
+fmt.Printf("%v\n", strings)
+Listing interfaces in interfaces
+Takealookatthefollowingexampleofaninterfacedeﬁnition,thisoneisfromthepack-
+agecontainer/heap :
+type Interface interface {
+sort.Interface
+Push(x interface{} )
+Pop() interface{}
+}
+Here another interface is listed inside the deﬁnition of heap.Interface , this may look
+odd, but is perfectly valid, remember that on the surface an interface is nothing more
+than a listing of methods. sort.Interface is also such a listing, so it is perfectly legal
+to include it in the interface.
+Introspection and reﬂection
+In the following example we want to look at the “tag” (here named “namestr”) deﬁned in
+the type deﬁnition of Person. To do this we need the reﬂectpackage (there is no other
+way in Go). Keep in mind that looking at a tag means going back to the typedeﬁnition.
+So we use the reﬂectpackage to ﬁgure out the type of the variable and thenaccess the
+tag.
+Listing 5.6. Introspection using reﬂection
+..
+..
+0.
+..
+1.
+..
+2type Person struct {
+name string "namestr" "namestr" is the tag
+age int
+}
+func ShowTag(i interface{} ){ Called with *Person
+switch t := reflect.TypeOf(i) ;t.Kind() {
+case reflect.Ptr:  A pointer, thus reflect.Ptr
+tag := t.Elem().Field(0).Tag
+..0We are dealing with a Typeand according to the documentationa:
+ago doc reflect
+72 Chapter 5: Interfaces
+// Elem returns a type’s element type.
+// It panics if the type’s Kind is not Array, Chan, Map, Ptr, or Slice.
+Elem() Type
+So on twe use Elem()to get the value the pointer points to;
+..1We have now dereferenced the pointer and are ”inside” our structure. We now use
+Field(0) to access the zeroth ﬁeld;
+..2Thestruct StructField hasa Tagmemberwhichreturnsthetag-nameasastring.
+So on the 0thﬁeld we can unleash .Tagto access this name: Field(0).Tag . This
+gives us namestr.
+Tomakethedifferencebetweentypesandvaluesmoreclear,takealookatthefollowing
+code:
+Listing 5.7. Reﬂection and the type and value
+func show(i interface{} ){
+switch t := i.( type ){
+case *Person:
+t := reflect.TypeOf(i)  Type meta data
+v := reflect.ValueOf(i)  Actual values
+tag := t.Elem().Field(0).Tag..0
+name := v.Elem().Field(0).String()..1
+}
+}
+..0Herewewanttogettothe“tag”. Soweneed Elem()toredirectthepointer,access
+the ﬁrst ﬁeld and get the tag. Note we operate on tareflect.Type ;
+..1Now we want to get access to the valueof one of the members and we employ
+Elem()onvto do the redirection. Now we have arrived at the structure. Then we
+go to the ﬁrst ﬁeld Field(0) and invoke the String() method on it.
+Figure 5.1. Peeling away the layers using reﬂection. Going from
+a*Person viaElem()using the methods described in go doc
+reflect to get the actual stringcontained within.
+reflect.Ptr
+.Elem()
+reflect.Value
+.Field(0)
+reflect.StructField
+.String()
+"Albert Einstein""Albert Einstein"
+Setting a value works similarly as getting a value, but only works on exported members.
+Again some code:
+Exercises 73
+Listing 5.8. Reﬂect with private member
+type Person struct {
+name string name
+age int
+}
+func Set(i interface{} ){
+switch i.(type ){
+case *Person:
+r := reflect.ValueOf(i)
+r.Elem(0).Field(0).SetString("
+Albert Einstein")
+}
+}Listing 5.9. Reﬂect with public member
+type Person struct {
+Name string Name
+age int
+}
+func Set(i interface{} ){
+switch i.(type ){
+case *Person:
+r := reflect.ValueOf(i)
+r.Elem().Field(0).SetString("
+Albert Einstein")
+}
+}
+Thecodeontheleftcompilesandruns,butwhenyourunit,youaregreetedwithastack
+trace and a run timeerror:
+panic: reflect.Value.SetString using value obtained using unexported
+field
+ThecodeontherightworksOKandsetsthemember Nameto“AlbertEinstein”. Ofcourse
+this only works when you call Set()with a pointer argument.
+Exercises
+Q24. (1) Interfaces and compilation
+1.The code in listing 5.3on page68compiles OK — as stated in the text. But when
+you run it you’ll get a runtime error, so something iswrong. Why does the code
+compile cleanly then?
+Q25. (1) Pointers and reﬂection
+1.One of the last paragraphs in section “ Introspection and reﬂection ” on page 71,
+has the following words:
+The code on the right works OK and sets the member Nameto “Albert Ein-
+stein”. Of course this only works when you call Set()with a pointer argu-
+ment.
+Why is this the case?
+Q26. (2) Interfaces and max()
+1.In exercise Q 13we created a max function that works on a slice of integers. The
+question now is to create a program that shows the maximum number and that
+worksforbothintegersandﬂoats. Trytomakeyourprogramasgenericaspossible,
+although that is quite difﬁcult in this case.
+
+Answers 75
+Answers
+A24. (1) Interfaces and compilation
+1.The code compiles because an integer type implements the empty interface and
+that is the check that happens at compile time.
+Aproperwaytoﬁxthisistotestifsuchanemptyinterfacecanbeconvertedand,if
+so,calltheappropriatemethod. TheGocodethatdeﬁnesthefunction ginlisting
+5.2– repeated here:
+func g(any interface{} )int { return any.(I).Get() }
+Should be changed to become:
+func g(any interface{} )int {
+ifv, ok := any.(I) ;ok{ Check if any can be converted
+return v.Get()  If so invoke Get()
+}
+return -1  Just so we return anything
+}
+Ifg()iscallednowtherearenorun-timeerrorsanymore. Theidiomusediscalled
+“comma ok” in Go.
+A25. (1) Pointers and reﬂection
+1.When called with a non-pointer argument the variable is a copy (call-by-value).
+So you are doing the reﬂection voodoo on a copy. And thus you are notchanging
+the original value, but only this copy.
+A26. (2) Interfaces and max()
+1.Thefollowingprogramcalculatesamaximum. Itisasgenericasyoucangetwith
+Go.
+Listing 5.10. Generic way of calculating a maximum
+package main
+func Less(l, r interface{} )bool {..0
+switch l.(type ){
+case int :
+if_, ok := r.( int);ok{
+return l.(int) < r.( int)..1
+}
+case float32 :
+if_, ok := r.( float32 );ok{
+return l.(float32 ) < r.( float32 )..2
+}
+}
+return false
+}
+func main() {
+var a, b, c int = 5, 15, 0
+var x, y, z float32 = 5.4, 29.3, 0.0
+ifc = a ;Less(a, b) {..3
+c = b
+}
+76 Chapter 5: Interfaces
+ifz = x ;Less(x, y) {..4
+z = y
+}
+println(c, z)
+}
+..0Wecouldhavechosentomakethereturntypeofthisfunctionan interface{} ,
+but that would mean that a caller would always have to do a type assertion
+to extract the actual type from the interface;
+..1All parameters are conﬁrmed to be integers. Now perform the comparison;
+..2Parameters are float32;
+..3Get the maximum of aandb;
+..4Same for the ﬂoats.
+
+6 Concurrency
+•“Parallelism is about performance;
+•Concurrency is about program
+design.”
+Google IO 2010
+ROB PIKE
+In this chapter we will show off Go’s ability for concurrent programming using channels
+andgoroutines. GoroutinesarethecentralentityinGo’sabilityforconcurrency. Butwhat
+isa goroutine? From [ 8]:
+They’re called goroutines because the existing terms — threads, coroutines, pro-
+cesses, and so on — convey inaccurate connotations. A goroutine has a simple
+model:itisafunctionexecutinginparallelwithothergoroutinesinthesame
+address space . It is lightweight, costing little more than the allocation of stack
+space. And the stacks start small, so they are cheap, and grow by allocating (and
+freeing) heap storage as required.
+A goroutine is a normal function, except that you start it with the keyword go.
+ready("Tea", 2)  Normal function call
+goready("Tea", 2)  ready() started as goroutine
+The following idea for a program was taken from [ 20]. We run a function as two gorou-
+tines, the goroutines wait for an amount of time and then print something to the screen.
+On the lines 14 and 15 we start the goroutines. The mainfunction waits long enough,
+so that both goroutines will have printed their text. Right now we wait for 5 seconds on
+line 17, but in fact we have no idea how long we should wait until all goroutines have
+exited.
+Listing 6.1. Go routines in action
+8 func ready(w string , sec int){
+9 time.Sleep(time.Duration(sec) * time.Second)
+10 fmt.Println(w, "is ready !")
+11 }
+13 func main() {
+14 goready("Tea", 2)
+15 goready("Coffee", 1)
+16 fmt.Println("I'm waiting")
+17 time.Sleep(5 * time.Second)
+18 }
+Listing6.1outputs:
+I'm waiting  Right away
+Coffee is ready!  After 1 second
+Tea is ready!  After 2 seconds
+If we did not wait for the goroutines (i.e. remove line 17) the program would be termi-
+natedimmediatelyandanyrunninggoroutineswould diewithit . Toﬁxthisweneedsome
+kind of mechanism which allows us to communicate with the goroutines. This mecha-
+nismisavailabletousintheformofchannels. Achannelcanbecomparedtoatwo-way
+pipeinUnixshells: youcansendtoandreceivevaluesfromit. Thosevaluescanonlybe
+of a speciﬁc type: the type of the channel. If we deﬁne a channel, we must also deﬁne
+Concurrency 79
+thetypeofthevalueswecansendonthechannel. Notethatwemustuse maketocreate
+a channel:
+ci := make (chan int )
+cs := make (chan string )
+cf := make (chan interface{} )
+Makes cia channel on which we can send and receive integers, makes csa channel for
+stringsand cfachannelfortypesthatsatisfytheemptyinterface. Sendingonachannel
+and receiving from it, is done with the same operator: <-. Depending on the operands it
+ﬁgures out what to do:
+ci<-1 Sendthe integer 1 to the channel ci
+<-ci Receivean integer from the channel ci
+i := <-ci Receivefrom the channel ciand store it in i
+Let’s put this to use.
+Listing 6.2. Go routines and a channel
+var cchan int..0
+func ready(w string , sec int){
+time.Sleep(time.Duration(sec) * time.Second)
+fmt.Println(w, "is ready !")
+c<-1..1
+}
+func main() {
+c = make (chan int )..2
+goready("Tea", 2)..3
+goready("Coffee", 1)
+fmt.Println("I'm waiting, but not too long")
+<-c..4
+<-c..5
+}
+..0Declare cto be a variable that is a channel of ints. That is: this channel can move
+integers. Note that this variable is global so that the goroutines have access to it;
+..1Send the integer 1 on the channel c;
+..2Initialize c;
+..3Start the goroutines with the keyword go;
+..4Wait until we receive a value from the channel. Note that the value we receive is
+discarded;
+..5Two goroutines, two values to receive.
+There is still some remaining ugliness; we have to read twice from the channel (lines
+14 and 15). This is OK in this case, but what if we don’t know how many goroutines
+we started? This is where another Go built-in comes in: select. With selectyou can
+(among other things) listen for incoming data on a channel.
+Using selectin our program does not really make it shorter, because we run too few
+goroutines. We remove the lines 14 and 15 and replace them with the following:
+Listing 6.3. Using select
+14 L:for {
+15 select {
+80 Chapter 6: Concurrency
+16 case <- c:
+17 i++
+18 ifi > 1 {
+19 break L
+20 }
+21 }
+22 }
+We will now wait as long as it takes. Only when we have received more than one reply
+on the channel cwill we exit the loop L.
+Make it run in parallel
+Whileourgoroutineswererunningconcurrently,theywerenotrunninginparallel. When
+you do not tell Go anything there can only be one goroutine running at a time. With
+runtime.GOMAXPROCS(n) youcansetthenumberofgoroutinesthatcanruninparallel.
+From the documentation:
+GOMAXPROCSsetsthemaximumnumberofCPUsthatcanbeexecutingsimulta-
+neously and returns the previous setting. If n < 1, it does not change the current
+setting.This call will go away when the scheduler improves.
+If you do not want to change any source code you can also set an environment variable
+GOMAXPROCS to the desired value.
+More on channels
+WhenyoucreateachannelinGowith ch := make (chan bool ),anunbufferedchannel
+for bools is created. What does this mean for your program? For one, if you read ( value
+:=<-ch)itwillblockuntilthereisdatatoreceive. Secondlyanythingsending( ch<-5)
+will block until there is somebody to read it. Unbuffered channels make a perfect tool
+for synchronizing multiple goroutines.
+But Go allows you to specify the buffer size of a channel, which is quite simply how
+many elements a channel can hold. ch := make (chan bool , 4), creates a buffered
+channel of bools that can hold 4 elements. The ﬁrst 4 elements in this channel are
+writtenwithoutanyblocking. Whenyouwritethe5thelement,yourcode willblock,until
+another goroutine reads some elements from the channel to make room.
+In conclusion, the following is true in Go:
+ch := make (chan type , value){value == 0!unbuffered)
+value > 0!buffervalueelements
+Closing channels
+When a channel is closed the reading side needs to know this. The following code will
+check if a channel is closed.
+x, ok = <-ch
+Where okis set to truethe channel is not closed andwe’ve read something. Otherwise
+okis set to false. In that case the channel was closed.
+Exercises
+Q27. (1) Channels
+1.Modify the program you created in exercise Q 2to use channels, in other words,
+the function called in the body should now be a goroutine and communication
+Exercises 81
+shouldhappenviachannels. Youshouldnotworryyourselfonhowthegoroutine
+terminates.
+2.Thereareafewannoyingissuesleftifyouresolvequestion 1. Oneoftheproblems
+isthatthegoroutineisn’tneatlycleanedupwhen main.main() exits. Andworse,
+due to a race condition between the exit of main.main() andmain.shower()
+not all numbers are printed. It should print up until 9, but sometimes it prints
+only to 8. Adding a second quit-channel you can remedy both issues. Do this.a
+Q28. (2) Fibonacci II
+1.This is the same exercise as the one given page 31in exercise 11. For complete-
+ness the complete question:
+The Fibonacci sequence starts as follows: 1;1;2;3;5;8;13; : : :Or in math-
+ematical terms: x1= 1; x2= 1; xn=xn 1+xn 28n >2.
+Write a function that takes an intvalue and gives that many terms of the
+Fibonacci sequence.
+Butnow the twist: You must use channels.
+aYou will need the selectstatement.
+
+Answers 83
+Answers
+A27. (1) Channels
+1.A possible program is:
+Listing 6.4. Channels in Go
+1 package main
+3 import "fmt"
+5 func main() {
+6 ch := make (chan int )
+7 goshower(ch)
+8 for i := 0 ;i < 10 ;i++ {
+9 ch<-i
+10 }
+11 }
+13 func shower(c chan int ){
+14 for {
+15 j := <-c
+16 fmt.Printf("%d\n", j)
+17 }
+18 }
+Westartofintheusualway,thenatline6wecreateanewchannelofints. Inthe
+next line we ﬁre off the function showerwith the chvariable as it argument, so
+that we may communicate with it. Next we start our for-loop (lines 8-10) and in
+theloopwesend(with <-)ournumbertothefunction(nowagoroutine) shower.
+In the function showerwe wait (as this blocks) until we receive a number (line
+15). Any received number is printed (line 16) and then continue the endless loop
+started on line 14.
+2.An answer is
+Listing 6.5. Adding an extra quit channel
+1 package main
+3 import "fmt"
+5 func main() {
+6 ch := make (chan int )
+7 quit := make (chan bool )
+8 goshower(ch, quit)
+9 for i := 0 ;i < 10 ;i++ {
+10 ch<-i
+11 }
+12 quit <-false // or true, does not matter
+13 }
+15 func shower(c chan int , quit chan bool ){
+16 for {
+17 select {
+18 case j := <-c:
+19 fmt.Printf("%d\n", j)
+20 case <- quit:
+21 break
+22 }
+84 Chapter 6: Concurrency
+23 }
+24 }
+On line 20 we read from the quit channel and we discard the value we read. We
+could have used q := <-quit, but then we would have used the variable only
+once—whichisillegalinGo. Anothertrickyoumighthavepulledoutofyourhat
+may be: _ = <-quit. This is valid in Go, but the Go idiom favors the one given
+on line 20.
+A28. (2) Fibonacci II
+1.The following program calculates the Fibonacci numbers using channels.
+Listing 6.6. A Fibonacci function in Go
+package main
+import "fmt"
+func dup3(in <-chan int ) (<-chan int ,<-chan int ,<-chan int
+){
+a, b, c := make (chan int , 2), make (chan int , 2),
+make (chan int , 2)
+go func (){
+for {
+x := <-in
+a<-x
+b<-x
+c<-x
+}
+}()
+return a, b, c
+}
+func fib() <-chan int {
+x := make (chan int , 2)
+a, b, out := dup3(x)
+go func (){
+x<-0
+x<-1
+<-a
+for {
+x<- <- a+<-b
+}
+}()
+return out
+}
+func main() {
+x := fib()
+for i := 0 ;i < 10 ;i++ {
+fmt.Println( <-x)
+}
+}
+// See sdh33b.blogspot.com/2009/12/fibonacci-in-go.html
+
+7 Communication
+“Good communication is as stimulating as
+black coffee, and just as hard to sleep
+after.”
+ANNE MORROW LINDBERGH
+In this chapter we are going to look at the building blocks in Go for communicating
+with the outside world. We will look at ﬁles, directories, networkingand executing other
+programs. Central to Go’s I/O are the interfaces io.Reader andio.Writer .
+Reading from (and writing to) ﬁles is easy in Go. This program only uses the ospackage
+to read data from the ﬁle /etc/passwd .
+Listing 7.1. Reading from a ﬁle (unbuffered)
+package main
+import "os"
+func main() {
+buf := make ([]byte , 1024)
+f, _ := os.Open("/etc/passwd")..0
+defer f.Close()..1
+for {
+n, _ := f.Read(buf)..2
+ifn == 0 { break }..3
+os.Stdout.Write(buf[:n])..4
+}
+}
+The following is happening here:
+..0Open the ﬁle, os.Open returns a *os.File , which implements io.Reader and
+io.Writer ;
+..1Make sure we close fagain;
+..2Read up to 1024 bytes at the time;
+..3We have reached the end of the ﬁle;
+..4Write the contents to os.Stdout
+If you want to use buffered IO there is the buﬁopackage:
+Listing 7.2. Reading from a ﬁle (buffered)
+package main
+import ( "os" ;"bufio")
+func main() {
+buf := make ([]byte , 1024)
+f, _ := os.Open("/etc/passwd")..0
+defer f.Close()
+r := bufio.NewReader(f)..1
+w := bufio.NewWriter(os.Stdout)
+defer w.Flush()
+for {
+io.Reader 87
+n, _ := r.Read(buf)..2
+ifn == 0 { break }
+w.Write(buf[0:n])
+}
+}
+..0Open the ﬁle;
+..1Turn finto a buffered Reader.NewReader expects an io.Reader , so you might
+think this will fail. But it does not. Anything that has such a Read()function
+implements this interface. And from listing 7.1we can see that *os.File indeed
+does so;
+..2Read from the Reader and write to the Writer, and thus print the ﬁle to the screen.
+io.Reader
+As mentioned above the io.Reader is an important interface in the language Go. A lot (if
+notall)functionsthatneedtoreadfromsomethingtakean io.Reader asinput. Tofulﬁll
+the interface a type needs to implement only one method: Read(p []byte) (n int,
+err error) . The writing side is (you may have guessed) an io.Writer , which has the
+Writemethod.
+Ifyouthinkofanewtypeinyourprogramorpackageandyoumakeitfulﬁllthe io.Reader
+orio.Writer interface, the whole standard Go library can be used on that type!
+Some examples
+Thepreviousprogramreadsaﬁleinitsentirety,butamorecommonscenarioisthatyou
+want to read a ﬁle on a line-by-line basis. The following snippet shows a way to do just
+that:
+f, _ := os.Open("/etc/passwd") ; defer f.Close()
+r := bufio.NewReader(f)  Make it a buﬁo to access the ReadString method
+s, ok := r.ReadString('\n')  Read a line from the input
+// ... sholds the string, with the strings package you can parse it
+A more robust method (but slightly more complicated) is ReadLine , see the documenta-
+tion of the buﬁopackage.
+A common scenarioin shell scripting is that you want tocheck if a directory exists and if
+not, create one.
+Listing 7.3. Create a directory with the shell
+if[!-e name ] ; then
+mkdir name
+else
+# error
+fiListing 7.4. Create a directory with Go
+iff, e := os.Stat("name") ;e!=
+nil {
+os.Mkdir("name", 0755)
+} else {
+// error
+}
+The similarity between these two examples have prompted comments that Go has a
+“script”-like feel to it, i.e. programming in Go can be compared to programming in an
+interpreted language (Python, Ruby, Perl or PHP).
+Command line arguments
+Arguments from the command line are available inside your program via the string slice
+os.Args, provided you have imported the package os. Theﬂagpackage has a more
+sophisticated interface, and also provides a way to parse ﬂags. Take this example from a
+DNS query tool:
+88 Chapter 7: Communication
+dnssec := flag.Bool("dnssec", false, "Request DNSSEC records")..0
+port := flag.String("port", "53", "Set the query port")..1
+flag.Usage = func (){..2
+fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] [name ...]\n", os.
+Args[0])
+flag.PrintDefaults()..3
+}
+flag.Parse()..4
+..0Deﬁnea boolﬂag, -dnssec. Thevariablemustbeapointerotherwisethepackage
+can not set its value;
+..1Idem, but for a portoption;
+..2Slightly redeﬁne the Usagefunction, to be a little more verbose;
+..3For every ﬂag given, PrintDefaults will output the help string;
+..4Parse the ﬂags and ﬁll the variables.
+After the ﬂags have been parsed you can used them:
+if*dnssec { Dereference the dnssecﬂag variable
+// do something
+}
+Executing commands
+Theos/execpackage has functions to run external commands, and is the premier way to
+executecommandsfromwithinaGoprogram. Itworksbydeﬁninga *exec.Cmd structure
+for which it deﬁnes a number of methods. Let’s execute ls -l:
+import "os/exec"
+cmd := exec.Command("/bin/ls", "-l")  Create a *cmd
+err := cmd.Run()  Run()it
+The above example just runs “ls -l” without doing anything with the returned data, cap-
+turing the standard output from a command is done as follows:
+import "os/exec"
+cmd := exec.Command("/bin/ls", "-l")
+buf, err := cmd.Output()  bufis a ( []byte)
+Networking
+Allnetworkrelatedtypesandfunctionscanbefoundinthepackage net. Oneofthemost
+important functions in there is Dial. When you Dialinto a remote system the function
+returns a Conninterface type, which can be used to send and receive information. The
+function Dialneatly abstracts away the network family and transport. So IPv4 or IPv6,
+TCP or UDP can all share a common interface.
+Dialing a remote system (port 80) over TCP, then UDP and lastly TCP over IPv6 looks like
+thisa:
+aIn case you are wondering, 192.0.32.10 and 2620:0:2d0:200::10 are www.example.org .
+Exercises 89
+conn, e := Dial("tcp", "192.0.32.10:80")
+conn, e := Dial("udp", "192.0.32.10:80")
+conn, e := Dial("tcp", "[2620:0:2d0:200::10]:80")
+ Mandatory brackets
+Iftherewerenoerrors(returnedin e),youcanuse conntoreadandwrite. Theprimitives
+deﬁned in the package netare:
+//Readreads data from the connection.
+Read(b [] byte )(n int, err error )
+This makes connanio.Reader .
+//Writewrites data to the connection.
+Write(b [] byte )(n int, err error )
+This makes connalso an io.Writer , in fact connis an io.ReadWriter .b
+But these are the low level nooks and cranniesc, you will almost always use higher level
+packages. Such as the httppackage. For instance a simple Get for http:
+package main
+import ( "io/ioutil" ;"http" ;"fmt" )..0
+func main() {
+r, err := http.Get("http://www.google.com/robots.txt")..1
+iferr != nil {fmt.Printf("%s\n", err.String()) ; return }
+..2
+b, err := ioutil.ReadAll(r.Body)..3
+r.Body.Close()
+iferr == nil {fmt.Printf("%s", string (b)) }..4
+}
+..0The imports needed;
+..1Use http’s Getto retrieve the html;
+..2Error handling;
+..3Read the entire document into b;
+..4If everything was OK, print the document.
+Exercises
+Q29. (2) Processes
+1.Write a program that takes a list of all running processes and prints how many
+child processes each parent has spawned. The output should look like:
+Pid 0 has 2 children: [1 2]
+Pid 490 has 2 children: [1199 26524]
+Pid 1824 has 1 child: [7293]
+•Foracquiringtheprocesslist,you’llneedtocapturetheoutputof ps -e -opid,ppid,comm .
+This output looks like:
+PID PPID COMMAND
+9024 9023 zsh
+19560 9024 ps
+bThe variable connalso implements a closemethod, this really makes it an io.ReadWriteCloser .
+cExercise Q 33is about using these.
+90 Chapter 7: Communication
+•Ifaparenthasonechildyoumustprint child,ifthereismorethanoneprint
+children ;
+•Theprocesslistmustbenumericallysorted,soyoustartwithpid0andwork
+your way up.
+Here is a Perl version to help you on your way (or to create complete and utter
+confusion).
+Listing 7.5. Processes in Perl
+#!/usr/bin/perl -l
+my (%child, $pid, $parent) ;
+my @ps=`ps -e -opid,ppid,comm` ; capture the output from ‘ps‘
+foreach (@ps[1..$#ps]) {  discard the header line
+($pid, $parent, undef) = split ; split the line, discard ’comm’
+push @ {$child {$parent }}, $pid ; save the child PIDs on a list
+}
+# Walk through the sorted PPIDs
+foreach (sort {$a <=> $b }keys %child) {
+print "Pid ", $_, " has ", @ {$child {$_}}+0, " child",
+@{$child {$_}}== 1 ? ": " : "ren: ", "[@ {$child {$_}}]";
+}
+Q30. (0) Word and letter count
+1.Write a small program that reads text from standard input and performs the fol-
+lowing actions:
+1.Count the number of characters (including spaces);
+2.Count the number of words;
+3.Count the numbers of lines.
+Inotherwordsimplement wc(1)(checkyoulocalmanualpage),howeveryouonly
+have to read from standard input.
+Q31. (0) Uniq
+1.Write a Go program that mimics the function of the Unix uniqcommand. This
+program should work as follows, given a list with the following items:
+'a' 'b' 'a' 'a' 'a' 'c' 'd' 'e' 'f' 'g'
+it should print only those item which don’t have the same successor:
+'a' 'b' 'a' 'c' 'd' 'e' 'f'
+Listing7.8is a Perl implementation of the algorithm.
+Listing 7.8. uniq(1) in Perl
+#!/usr/bin/perl
+my@a = qw/a b a a a c d e f g/ ;
+print my $first = shift @a;
+foreach (@a) {
+if($first ne $_) { print; $first = $_ ; }
+}
+Q32. (2) Quine A Quineis a program that prints itself.
+1.Write a Quine in Go.
+Q33. (1) Echo server
+Exercises 91
+1.Write a simple echo server. Make it listen to TCP port number 8053 on localhost.
+It should be able to read a line (up to the newline), echo back that line and then
+close the connection.
+2.Make the server concurrent so that every request is taken care of in a separate
+goroutine.
+Q34. (2) Number cruncher
+•Pick six (6) random numbers from this list:
+1;2;3;4;5;6;7;8;9;10;25;50;75;100
+Numbers may be picked multiple times;
+•Pick one (1) random number ( i) in the range: 1: : :1000;
+•Tell how, by combining the ﬁrst 6 numbers (or a subset thereof) with the operators
++, ,and/, you can make i;
+An example. We have picked the numbers: 1, 6, 7, 8, 8 and 75. And iis 977. This can be
+done in many different ways, one way is:
+((((16)8) + 75)8) 7 = 977
+or
+(8(75 + (86))) (7/1) = 977
+1.Implementanumbercruncherthatworkslikethat. Makeitprintthesolutionina
+similar format (i.e. output should be inﬁx with parenthesis) as used above.
+2.Calculate allpossiblesolutionsandshowthem(oronlyshowhowmanythereare).
+In the example above there are 544 ways to do it.
+Q35. (1) Finger daemon
+1.Write a ﬁnger daemon that works with the ﬁnger(1) command.
+From the Debian package description:
+FingerdisasimpledaemonbasedonRFC1196[ 28]thatprovidesaninter-
+facetothe“ﬁnger”programatmostnetworksites. Theprogramissupposed
+to return a friendly, human-oriented status report on either the system at
+the moment or a particular person in depth.
+Sticktothebasicsandonlysupportausernameargument. Iftheuserhasa .plan
+ﬁleshowthecontentsofthatﬁle. Soyourprogramneedstobeabletoﬁgureout:
+•Does the user exist?
+•If the user exists, show the contents of the .planﬁle.
+
+Answers 93
+Answers
+A29. (2) Processes
+1.There is lots of stuff to do here. We can divide our program up in the following
+sections:
+1.Starting psand capturing the output;
+2.Parsing the output and saving the child PIDs for each PPID;
+3.Sorting the PPID list;
+4.Printing the sorted list to the screen
+Inthesolutionpresentedbelow,we’veuseda map[int][]int ,i.e. amapindexed
+withintegers,pointingtoasliceofints–whichholdsthePIDs. Thebuiltin append
+is used to grow the integer slice.
+A possible program is:
+Listing 7.6. Processes in Go
+package main
+import ( "fmt" ;"os/exec" ;"sort" ;"strconv" ;"strings")
+func main() {
+ps := exec.Command("ps", "-e", "-opid,ppid,comm")
+output, _ := ps.Output()
+child := make (map[int][]int)
+for i, s := range strings.Split( string (output), "\n"
+){
+ifi == 0 { continue }  kill ﬁrst line
+if len (s) == 0 { continue }  kill last line
+f := strings.Fields(s)
+fpp, _ := strconv.Atoi(f[1])  parent’s pid
+fp, _ := strconv.Atoi(f[0])  child’s pid
+child[fpp] = append (child[fpp], fp)
+}
+schild := make ([]int,len(child))
+i := 0
+for k, _ := range child {schild[i] = k ;i++ }
+sort.Ints(schild)
+for _, ppid := range schild {
+fmt.Printf("Pid %d has %d child", ppid, len(
+child[ppid]))
+if len (child[ppid]) == 1 {
+fmt.Printf(": %v\n", child[ppid])
+continue
+}
+fmt.Printf("ren: %v\n", child[ppid])
+}
+}
+A30. (0) Word and letter count
+1.The following program is an implementation of wc(1).
+Listing 7.7. wc(1) in Go
+package main
+import (
+94 Chapter 7: Communication
+"os"
+"fmt"
+"bufio"
+"strings"
+)
+func main() {
+var chars, words, lines int
+r := bufio.NewReader(os.Stdin)..0
+for {
+switch s, ok := r.ReadString('\n') ;true {..1
+case ok!= nil:..2
+fmt.Printf("%d %d %d\n", chars,
+words, lines) ;
+return
+default :..3
+chars += len(s)
+words += len(strings.Fields(s))
+lines++
+}
+}
+}
+..0Start a new reader that reads from standard input;
+..1Read a line from the input;
+..2If we received an error, we assume it was because of a EOF. So we print the
+current values;
+..3Otherwise we count the charaters, words and increment the lines.
+A31. (0) Uniq
+1.The following is a uniq implementation in Go.
+Listing 7.9. uniq(1) in Go
+package main
+import "fmt"
+func main() {
+list := [] string{ "a", "b", "a", "a", "c", "d", "e",
+"f"}
+first := list[0]
+fmt.Printf("%s ", first)
+for _, v := range list[1:] {
+iffirst != v {
+fmt.Printf("%s ", v)
+first = v
+}
+}
+}
+A32. (2) Quine
+This solution is from Russ Cox. It was posted to the Go Nuts mailing list.
+Answers 95
+Listing 7.10. A Go quine
+1.
+/* Go quine */
+package main
+import "fmt"
+func main() {
+fmt.Printf("%s%c%s%c\n", q, 0x60, q, 0x60)
+}
+var q = `/* Go quine */
+package main
+import "fmt"
+func main() {
+fmt.Printf("%s%c%s%c\n", q, 0x60, q, 0x60)
+}
+var q = `
+A33. (1) Echo server
+1.A simple echo server might be:
+Listing 7.11. A simple echo server
+package main
+import ( "net" ;"fmt" ;"bufio" )
+func main() {
+l, err := net.Listen("tcp", "127.0.0.1:8053")
+iferr != nil {
+fmt.Printf("Failure to listen: %s\n", err.
+Error())
+}
+for {
+ifc, err := l.Accept() ;err == nil {Echo(c
+)}
+}
+}
+func Echo(c net.Conn) {
+defer c.Close()
+line, err := bufio.NewReader(c).ReadString('\n')
+iferr != nil {
+fmt.Printf("Failure to read: %s\n", err.
+Error())
+return
+}
+_, err = c.Write([] byte (line))
+iferr != nil {
+fmt.Printf("Failure to write: %s\n", err.
+Error())
+return
+}
+}
+When started you should see the following:
+%nc 127.0.0.1 8053
+Go is *awesome*
+Go is *awesome*
+2.To make the connection handling concurrent we only need to change one line in
+our echo server, the line:
+96 Chapter 7: Communication
+ifc, err := l.Accept() ;err == nil {Echo(c) }
+becomes:
+ifc, err := l.Accept() ;err == nil { go Echo(c) }
+A34. (2) Number cruncher
+1.The following is one possibility. It uses recursion and backtracking to get an an-
+swer.
+Listing 7.12. Number cruncher
+package main
+import ( "fmt" ;"strconv" ;"flag")
+const (
+_ = 1000 * iota
+ADD
+SUB
+MUL
+DIV
+MAXPOS = 11
+)
+var mop = map[int]string{ ADD: "+", SUB: "-", MUL: "*", DIV:
+"/"}
+var (
+ok bool
+value int
+)
+type Stack struct {
+i int
+data [MAXPOS] int
+}
+func (s *Stack) Reset() {s.i = 0 }
+func (s *Stack) Len() int { return s.i }
+func (s *Stack) Push(k int){s.data[s.i] = k ;s.i++ }
+func (s *Stack) Pop() int { s.i-- ; return s.data[s.i] }
+var found int
+var stack = new(Stack)
+func main() {
+flag.Parse()
+list := [] int{ 1, 6, 7, 8, 8, 75, ADD, SUB, MUL, DIV }
+magic, ok := strconv.Atoi(flag.Arg(0)) // Arg0 is i
+ifok!= nil { return }
+f := make ([]int, MAXPOS)
+solve(f, list, 0, magic)
+}
+func solve(form, numberop [] int, index, magic int){
+var tmp int
+for i, v := range numberop {
+ifv == 0 { goto NEXT }
+ifv < ADD {// it's a number, save it
+Answers 97
+tmp = numberop[i]
+numberop[i] = 0
+}
+form[index] = v
+value, ok = rpncalc(form[0 : index+1])
+ifok && value == magic {
+ifv < ADD {
+numberop[i] = tmp // reset
+and go on
+}
+found++
+fmt.Printf("%s = %d #%d\n", rpnstr(
+form[0:index+1]), value, found)
+}
+ifindex == MAXPOS-1 {
+ifv < ADD {
+numberop[i] = tmp // reset
+and go on
+}
+goto NEXT
+}
+solve(form, numberop, index+1, magic)
+ifv < ADD {
+numberop[i] = tmp // reset and go on
+}
+NEXT:
+}
+}
+func rpnstr(r [] int) (ret string ){ // Convert rpn to
+infix notation
+s := make ([]string , 0) // Still memory intensive
+for k, t := range r{
+switch t{
+case ADD, SUB, MUL, DIV:
+a, s := s[ len(s)-1], s[: len(s)-1]
+b, s := s[ len(s)-1], s[: len(s)-1]
+ifk == len(r)-1 {
+s = append (s, b+mop[t]+a)
+} else {
+s = append (s, "("+b+mop[t]+a
++")")
+}
+default :
+s = append (s, strconv.Itoa(t))
+}
+}
+for _, v := range s{ret += v }
+return
+}
+func rpncalc(r [] int) (int,bool ){
+stack.Reset()
+for _, t := range r{
+switch t{
+case ADD, SUB, MUL, DIV:
+ifstack.Len() < 2 { return 0, false
+98 Chapter 7: Communication
+}
+a := stack.Pop()
+b := stack.Pop()
+ift == ADD {stack.Push(b + a) }
+ift == SUB {
+// disallow negative
+subresults
+ifb-a < 0 {
+return 0, false
+}
+stack.Push(b - a)
+}
+ift == MUL {stack.Push(b * a) }
+ift == DIV {
+ifa == 0 {
+return 0, false
+}
+// disallow fractions
+ifb%a != 0 {
+return 0, false
+}
+stack.Push(b / a)
+}
+default :
+stack.Push(t)
+}
+}
+ifstack.Len() == 1 {// there is only one!
+return stack.Pop(), true
+}
+return 0, false
+}
+2.When starting permrec we give 977 as the ﬁrst argument:
+% ./permrec 977
+1+(((6+7)*75)+(8/8)) = 977 #1
+... ...
+((75+(8*6))*8)-7 = 977 #542
+(((75+(8*6))*8)-7)*1 = 977 #543
+(((75+(8*6))*8)-7)/1 = 977 #544
+A35. (1) Finger daemon
+This solution is from Fabian Becker.
+Listing 7.13. A ﬁnger daemon
+1.
+package main
+import (
+"bufio"
+"errors"
+"flag"
+"io/ioutil"
+"net"
+"os/user"
+"strconv"
+)
+Answers 99
+func main() {
+flag.Parse()
+ln, err := net.Listen("tcp", ":79")
+iferr != nil {
+panic(err)
+}
+for {
+conn, err := ln.Accept()
+iferr != nil {
+continue
+}
+gohandleConnection(conn)
+}
+}
+func handleConnection(conn net.Conn) {
+defer conn.Close()
+reader := bufio.NewReader(conn)
+usr, _, _ := reader.ReadLine()
+ifinfo, err := getUserInfo( string (usr)) ;err != nil
+{
+conn.Write([] byte (err.Error()))
+} else {
+conn.Write(info)
+}
+}
+func getUserInfo(usr string ) ([] byte ,error ){
+u, e := user.Lookup(usr)
+ife!= nil {
+return nil, e
+}
+data, err := ioutil.ReadFile(u.HomeDir + ".plan")
+iferr != nil {
+return data, errors.New("User doesn't have a
+.plan file !\n")
+}
+return data, nil
+}
+A Colophon
+This work was created with L ATEX. The main text is set in the Google Droid fonts. All
+typewriter text is typeset in DejaVu Mono.
+Contributors
+The following people have helped to make this book what it is today.
+•Miek Gieben <miek@miek.nl> ;
+•JC van Winkel;
+•Xing Xing, Chinese translation, 这里是中文译本 :http://www.mikespook.com/
+learning-go/ .
+Help with proof reading, checking exercises and text improvements (no particular order
+and either real name or an alias): Adam J. Gray ,Alex Sychev ,Alexey Chernenkov ,Andrea
+Spadaccini ,Andrey Mirtchovski ,Anthony Magro ,Babu Sreekanth ,Ben Bullock ,Bob Cunning-
+ham,Brian Fallik ,Cecil New ,Damian Gryski ,Dan Kortschak ,David Otton ,Fabian Becker ,Filip
+Zaludek,HadiAmiri ,HaipingFan ,JaapAkkerhuis ,JCvanWinkel ,JeroenBulten ,JinpuHu,John
+Shahid,Jonathan Kans ,Joshua Stein ,Makoto Inoue ,Mayuresh Kathe ,“mem”,Michael Stapel-
+berg,OlexandrShalakhin ,PauloPinto ,PeterKleiweg ,PhilippSchmidt ,RobertJohnson ,Russel
+Winder,Sonia Keys ,Stefan Schroeder ,Thomas Kapplet ,T.J. Yang,“Cobold”,“Simoc”,“Uriel”y,
+Xing Xing .
+The following people provided smaller improvements, like nits, typos and other tweaks:
+Alexander Katasonov ,Daniele Pala ,Iaroslav Tymchenko ,Nicolas Kaiser ,Marco Ynema .
+Miek Gieben
+MiekGiebenhasamaster’sdegreeinComputerSciencefrom
+the Radboud University Nijmegen (Netherlands). He is in-
+volved in the development and now the deployment of the
+DNSSEC protocol – the successor of the DNS and as such
+co-authored [ 6].
+AfterplayingwiththelanguageErlang,Gowastheﬁrstcon-
+current language that actually stuck with him.
+He ﬁlls his spare time with coding in, and writing of Go. He
+is the maintainer of the Go DNS library: https://github.
+com/miekg/dns . He maintains a personal blog on http:
+//www.miek.nl and tweets under the name @miekg. The
+postings and tweets may sometimes actually have to do something with Go.
+License and copyright
+This work is licensed under the Attribution-NonCommercial-ShareAlike 3.0 Unported Li-
+cense. To view a copy of this license, visit http://creativecommons.org/licenses/
+by-nc-sa/3.0/ orsendalettertoCreativeCommons,171SecondStreet,Suite300,San
+Francisco, California, 94105, USA.
+All example code used in this book is hereby put in the public domain.
+©Miek Gieben – 2010, 2011.
+
+B Index
+array
+capacity, 14
+length,14
+multidimensional, 14
+buffered, 86
+built-in
+append,14,16
+cap,13
+close,13
+complex, 14
+copy,14,16
+delete,13
+imag,14
+len,13
+make,13,50
+new,13,50
+panic,14
+print,14
+println,14
+real,14
+recover,14
+channel, 78
+blocking read, 80
+blocking write, 80
+non-blocking read, 80
+non-blocking write, 80
+unbuffered, 80
+channels, 3,78
+closure,27
+complex numbers, 14
+deferred list, 27
+duck typing, 66
+ﬁeld,53
+anonymous, 53
+ﬁelds,52
+function
+as values, 28
+call,54
+literal,27
+literals,28
+generic,69
+goroutine, 78
+goroutines, 3
+interface, 66
+set of methods, 66
+type,66
+value,66
+io.Reader, 87
+keywordbreak,9,10
+continue, 11
+default,12
+defer,27
+else,9
+fallthrough, 12
+for,10
+go,78
+goto,10
+if,9
+import,41
+iota,6
+map,16
+add elements, 17
+existence, 17
+remove elements, 17
+package, 40
+range,11,17
+on maps, 11,17
+on slices, 11
+return,9
+select,79
+struct,53
+switch,12
+type,52
+label,10
+literal
+composite, 14,52
+method,24
+method call, 54
+methods
+inherited, 54
+MixedCaps, 42
+named return parameters, 24
+networking
+Dial,88
+nil,50
+operator
+address-of, 50
+and,8
+bit wise xor, 8
+bitwise
+and,8
+clear,8
+or,8
+channel, 79
+increment, 50
+not,8
+or,8
+package
+buﬁo,42,45,86
+Index 103
+builtin,13
+bytes,41
+compress/gzip, 42
+encoding/json, 45
+even,40
+ﬂag,45
+fmt,14,44
+html/template, 45
+io,44,87
+net/http, 45
+os,45
+os/exec,45,88
+reﬂect,45,71
+ring,42
+sort,45
+strconv,45
+sync,45
+unsafe,45
+parallel assignment, 5,10
+pass-by-value, 24
+private,41
+public,41
+receiver,24
+reference types, 14
+runes,11
+scope
+local,25
+slice
+capacity, 14
+length,14
+string literal
+interpreted, 7
+raw,7
+structures
+embed,54
+tooling
+go,4
+build,4
+test,42
+type assertion, 68
+type switch, 67
+variables
+_,5
+assigning, 4
+declaring, 4
+underscore, 5
+C Bibliography
+[1]Haskell Authors. Haskell. http://www.haskell.org/ , 1990.
+[2]D. Crockford. The application/json media type for javascript object notation (json).
+http://www.ietf.org/rfc/rfc4627.txt , 2006.
+[3]Brian Kernighan Dennis Ritchie. The C programming language, 1975.
+[4]Ericsson Cooperation. Erlang. http://www.erlang.se/ , 1986.
+[5]Larry Wall et al. Perl. http://perl.org/ , 1987.
+[6]Kolkman & Gieben. Dnssec operational practices. http://www.ietf.org/rfc/
+rfc4641.txt , 2006.
+[7]Go Authors. Defer, panic, and recover. http://blog.golang.org/2010/08/
+defer-panic-and-recover.html , 2010.
+[8]Go Authors. Effective Go. http://golang.org/doc/effective_go.html , 2010.
+[9]Go Authors. Go faq. http://golang.org/doc/go_faq.html , 2010.
+[10]GoAuthors. Golanguagespeciﬁcation. http://golang.org/doc/go_spec.html ,
+2010.
+[11]Go Authors. Go package documentation. http://golang.org/doc/pkg/ , 2010.
+[12]Go Authors. Go tutorial. http://golang.org/doc/go_tutorial.html , 2010.
+[13]Go Authors. Go website. http://golang.org/ , 2010.
+[14]Go Community. Function accepting a slice of interface types. http:
+//groups.google.com/group/golang-nuts/browse_thread/thread/
+225fad3b5c6d0321 , 2010.
+[15]James Gosling et al. Java. http://oracle.com/java/ , 1995.
+[16]LAMP Group at EPFL. Scala. http://www.scala-lang.org/ , 2003.
+[17]C. A. R. Hoare. Quicksort. http://en.wikipedia.org/wiki/Quicksort , 1960.
+[18]C.A.R.Hoare. Communicatingsequentialprocesses(csp). http://www.usingcsp.
+com/cspbook.pdf , 1985.
+[19]Rob Pike. The Go programming language, day 2. http://golang.org/doc/
+{G}oCourseDay2.pdf , 2010.
+[20]Rob Pike. The Go programming language, day 3. http://golang.org/doc/
+{G}oCourseDay3.pdf , 2010.
+[21]Bjarne Stroustrup. The C++ programming language, 1983.
+[22]Ian Lance Taylor. Go interfaces. http://www.airs.com/blog/archives/277 ,
+2010.
+[23]Imran On Tech. Using ﬁzzbuzz to ﬁnd developers... http://imranontech.com/
+2007/01/24/using-fizzbuzz-to-find-developers-who-grok-coding/ ,
+2010.
+[24]Wikipedia. Bubble sort. http://en.wikipedia.org/wiki/Bubble_sort , 2010.
+[25]Wikipedia. Communicating sequential processes. http://en.wikipedia.org/
+wiki/Communicating_sequential_processes , 2010.
+Bibliography 105
+[26]Wikipedia. Duck typing. http://en.wikipedia.org/wiki/Duck_typing , 2010.
+[27]Wikipedia. Iota. http://en.wikipedia.org/wiki/Iota , 2010.
+[28]D.Zimmerman. Theﬁngeruserinformationprotocol. http://www.ietf.org/rfc/
+rfc1196.txt , 1990.
+This page is intentionally left blank.

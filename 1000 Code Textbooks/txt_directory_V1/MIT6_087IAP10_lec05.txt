@@ -1,0 +1,514 @@
+6.087 Lecture 5 – January 15, 2010
+Review 
+Pointers and Memor y Addresses 
+Physical and Vir tual Memor y 
+Addressing and Indirection 
+Functions with Multiple Outputs 
+Arrays and P ointer Ar ithmetic 
+Strings 
+String Utility Functions 
+Searching and Sor ting Algor ithms 
+Linear Search 
+A Simple Sor t 
+Faster Sor ting 
+Binar y Search 
+1 
+Review: Unconditional jumps
+• goto keyword: jump some where else in the same function 
+• Position identiﬁed using labels 
+• Example ( for loop) using goto: 
+{
+int i=0, n=20; / ∗ initialization ∗ /
+goto loop_cond ;
+loop_body : 
+/ ∗ body of loop here ∗ / 
+i ++;
+loop_cond :
+if (i <n) / ∗ loop condition ∗ /
+goto loop_body ;
+}
+• Excessiv e use of goto results in “spaghetti” code 
+1 
+Review: I/O Functions
+•	I/O pro vided b y stdio.h, not language itself 
+•	Char acter I/O: putchar(), getchar(), getc(), 
+putc(), etc. 
+•	String I/O: puts(), gets(), fgets(), fputs(), etc. 
+•	Formatted I/O: fprintf(), fscanf(), etc. 
+•	Open and close ﬁles: fopen(), fclose() 
+•	File read/wr ite position: feof(), fseek(), ftell(), etc. 
+... • 
+2 
+Review: printf() and scanf()
+•	Formatted output: 
+int printf (char format[], arg1, arg2, ...) 
+•	Takes variable number of arguments 
+•	Format speciﬁcation: 
+%[flags][width][.precision][length]<type> 
+•	types: d, i (int), u, o , x, X (unsigned int), e , E, f, F, g, G 
+(doub le), c (char), s (str ing) 
+•	ﬂags , width, precision, length -modify meaning and number 
+of char acters pr inted 
+•	Formatted input: scanf() -similar f orm, tak es pointers to 
+arguments (e xcept str ings), ignores whitespace in input 
+3 
+Review: Strings and character arrays
+•	Strings represented in C as an arr ay of char acters ( char []) 
+•	String m ust be n ull-ter minated (’\0’ at end) 
+Declar ation: • 
+char str[] = "I am a string."; or
+char str[20] = "I am a string.";
+•	strcpy() -function f or cop ying one str ing to another 
+•	More about str ings and str ing functions toda y. . . 
+4 
+6.087 Lecture 5 – January 15, 2010
+Review 
+Pointers and Memor y Addresses 
+Physical and Vir tual Memor y 
+Addressing and Indirection 
+Functions with Multiple Outputs 
+Arrays and P ointer Ar ithmetic 
+Strings 
+String Utility Functions 
+Searching and Sor ting Algor ithms 
+Linear Search 
+A Simple Sor t 
+Faster Sor ting 
+Binar y Search 
+5 
+Pointer s and addresses
+•	Pointer : memor y address of a v ariable 
+•	Address can be used to access/modify a v ariable from 
+anywhere 
+•	Extremely useful, especially f or data str uctures 
+•	Well kno wn for obfuscating code 
+5 
+Physical and virtual memor y
+•	Physical memor y: physical resources where data can be 
+stored and accessed b y your computer
+cache
+• 
+RAM• 
+hard disk • 
+•	remo vable stor age 
+•	Virtual memor y: abstr action b y OS , addressab le space 
+accessib le by your code 
+6 
+Physical memor y considerations
+•	Different siz es and access speeds 
+•	Memor y management – major function of OS 
+•	Optimization – to ensure y our code mak es the best use of 
+physical memor y availab le 
+•	OS mo ves around data in ph ysical memor y dur ing 
+execution 
+•	Embedded processors – ma y be v ery limited 
+7 
+Virtual memor y
+•	How much ph ysical memor y do I ha ve? 
+Answer: 2 MB (cache) + 2 GB (RAM) + 100 GB (hard 
+drive) + . .. 
+•	How much vir tual memor y do I ha ve? 
+Answer: <4 GB (32-bit OS), typically 2 GB f or Windo ws, 
+3-4 GB f or lin ux 
+•	Virtual memor y maps to diff erent par ts of ph ysical memor y 
+•	Usab le par ts of vir tual memor y: stack and heap 
+•	stack: where declared v ariables go 
+•	heap: where dynamic memor y goes 
+8 
+Addressing variab les
+•	Every variable residing in memor y has an address! 
+What doesn’t ha ve an address? • 
+•	register v ariables 
+•	constants/liter als/preprocessor deﬁnes 
+•	expressions (unless result is a v ariable) 
+•	How to ﬁnd an address of a v ariable? The & operator 
+int n= 4;
+double pi = 3.14159;
+int ∗pn =&n; / ∗ address of integer n ∗ /
+double ∗ ppi =&pi; / ∗ address of double pi ∗ /
+•	Address of a v ariable of type t has type t * 
+9 
+Deref erencing pointer s
+•	I have a pointer – no w what? 
+•	Accessing/modifying addressed v ariable: 
+deref erencing/indirection oper ator * 
+/ ∗ prints "pi = 3.14159\n " ∗ / 
+printf ( "pi = %g\n" ,∗ ppi ); 
+/ ∗ pi now equals 7.14159 ∗ / 
+∗ ppi = ∗ ppi + ∗pn ; 
+•	Deref erenced pointer lik e any other v ariable 
+•	null pointer , i.e. 0(NULL): pointer that does not ref erence 
+anything 
+10 
+Casting pointer s
+•	Can e xplicitly cast an y pointer type to an y other pointer 
+type 
+ppi =(doub le ∗)pn; /∗ pn originally of type ( int ∗) ∗/ 
+•	Implicit cast to/from void * also possib le (more ne xt 
+week. . . ) 
+•	Deref erenced pointer has ne w type , regardless of real type 
+of data 
+•	Possib le to cause segmentation f aults , other 
+difﬁcult-to-identify errors 
+•	What happens if w e deref erence ppi now? 
+11 
+Functions with multiple outputs
+•	Consider the Extended Euclidean algor ithm 
+ext_euclid(a,b) function from W ednesda y’s lecture 
+•	Retur ns gcd(a, b), x and y s.t. ax + by = gcd(a, b) 
+•	Used global v ariables for x and y 
+•	Can use pointers to pass bac k multiple outputs: 
+int ext_euclid (int a, int b, int ∗x, int ∗y); 
+•	Calling ext_euclid(), pass pointers to v ariables to 
+receiv e x and y:
+int x, y, g;
+/ ∗ assume a, b declared previously ∗ / 
+g	= ext _euclid(a,b,&x,&y); 
+•	Warning about x and y being used bef ore initializ ed 
+12 
+Accessing caller’ s variab les
+• Want to wr ite function to s wap tw o integers 
+• Need to modify v ariables in caller to s wap them 
+• Pointers to v ariables as arguments 
+void swap( int ∗x, int ∗y) {
+int temp = ∗x;
+∗x= ∗y;
+∗y = temp ;
+} 
+• Calling swap() function: 
+int a= 5, b= 7;
+swap(&a, &b);
+/ ∗ now, a=7, b=5 ∗ / 
+13 
+•Pointer invalidafter variablepasses outofscope
+Variab les passing out of scope
+•	What is wrong with this code? 
+#include <stdio .h> 
+char get_message ( ) { ∗ 
+char msg[] = "Aren’t pointers fun?" ; 
+return msg; 
+} 
+int main ( void ){
+char string = get_message();
+ ∗ 
+puts(string );
+return 0;
+}
+14 
+Variab les passing out of scope
+• What is wrong with this code? 
+#include <stdio .h>
+char get_message ( ) {
+ ∗ 
+char msg[] = "Aren’t pointers fun?" ; 
+return msg; 
+} 
+int main ( void ){
+char string = get_message();
+ ∗ 
+puts(string );
+return 0;
+} 
+• Pointer in valid after v ariable passes out of scope 
+14 
+6.087 Lecture 5 – January 15, 2010
+Review 
+Pointers and Memor y Addresses 
+Physical and Vir tual Memor y 
+Addressing and Indirection 
+Functions with Multiple Outputs 
+Arrays and P ointer Ar ithmetic 
+Strings 
+String Utility Functions 
+Searching and Sor ting Algor ithms 
+Linear Search 
+A Simple Sor t 
+Faster Sor ting 
+Binar y Search 
+15 
+Arrays and pointer s
+•	Primitiv e arrays implemented in C using pointer to b lock of 
+contiguous memor y 
+•	Consider arr ay of 8 ints: 
+int arr [8]; 
+•	Accessing arr using arr ay entr y oper ator: 
+int a = arr [0]; 
+•	arr is like a pointer to element 0 of the arr ay: 
+int ∗pa = arr; int ∗pa = &arr [0]; ⇔ 
+•	Not modiﬁab le/reassignab le like a pointer 
+15 
+The sizeof() operator
+•	For primitiv e types/v ariables, size of type in b ytes: 
+int s= sizeof(c har); /∗ == 1 ∗/ 
+doub le f; /∗ sizeof(f) ==8 ∗/(64-bit OS) 
+•	For primitiv e arrays, size of arr ay in b ytes: 
+int arr [8]; /∗ sizeof(arr) == 32 ∗/(64-bit OS) 
+long arr [5]; /∗ sizeof(arr) == 40 ∗/(64-bit OS) 
+•	Array length: 
+/ ∗ needs to be on one line when implemented ∗ / 
+#define array _length(arr) ( sizeof (arr) == 0? 
+0	: sizeof ( arr )/ sizeof ((arr )[0])) 
+•	More about sizeof() next week. . . 
+16 
+•i=12
+Pointer arithmetic
+•	Suppose int ∗pa = arr; 
+•	Pointer not an int, b ut can add or subtr act an int from a 
+pointer : 
+pa + i points to arr[i] 
+•	Address v alue increments b y i times siz e of data type 
+Suppose arr[0] has address 100. Then arr[3] has 
+address 112. 
+•	Suppose char ∗ pc= (char ∗)pa; What v alue of i satisﬁes 
+(int ∗)(pc+i) == pa + 3 ? 
+17 
+Pointer arithmetic
+•	Suppose int ∗pa = arr; 
+•	Pointer not an int, b ut can add or subtr act an int from a 
+pointer : 
+pa + i points to arr[i] 
+•	Address v alue increments b y i times siz e of data type 
+Suppose arr[0] has address 100. Then arr[3] has 
+address 112. 
+•	Suppose char ∗ pc= (char ∗)pa; What v alue of i satisﬁes 
+(int ∗)(pc+i) == pa + 3 ? 
+i = 12 • 
+17 
+6.087 Lecture 5 – January 15, 2010
+Review 
+Pointers and Memor y Addresses 
+Physical and Vir tual Memor y 
+Addressing and Indirection 
+Functions with Multiple Outputs 
+Arrays and P ointer Ar ithmetic 
+Strings 
+String Utility Functions 
+Searching and Sor ting Algor ithms 
+Linear Search 
+A Simple Sor t 
+Faster Sor ting 
+Binar y Search 
+18 
+Strings as arrays
+•	Strings stored as n ull-ter minated char acter arr ays (last 
+character == ’\0’) 
+•	Suppose char str[] = "This is a string."; and 
+char ∗ pc= str; 
+•	Manipulate str ing as y ou w ould an arr ay 
+∗(pc+10) = ’S’; 
+puts(str ); /∗ prints "This is a String ." ∗/ 
+18 
+String utility functions
+•	String functions in standard header string.h 
+•	Copy functions: strcpy(), strncpy() 
+char ∗ strcp y(strto,strfrom ); –copy strfrom to strto 
+char ∗ strncpy(strto,strfrom ,n); –copy n chars from strfrom 
+to strto 
+•	Compar ison functions: strcmp(), strncmp() 
+int strcmp(str1 ,str2); – compare str1, str2; retur n 0 if 
+equal, positiv e if str1>str2, negativ e if str1<str2 
+int strncmp(str1, str2,n); – compare ﬁrst n chars of str1 and 
+str2 
+•	String length: strlen() 
+int strlen ( str ); – get length of str 
+19 
+More string utility functions
+•	Concatenation functions: strcat(), strncat() 
+char ∗ strcat (strto,strfrom ); –add strfrom to end of strto 
+char ∗ strncat(strto,strfrom ,n); –add n chars from strfrom to 
+end of strto 
+•	Search functions: strchr(), strrchr() 
+char ∗ strchr (str,c); – ﬁnd char c in str, retur n pointer to 
+ﬁrst occurrence , or NULL if not f ound 
+char ∗ strrchr (str,c); –ﬁndchar c in str, retur n pointer to 
+last occurrence , or NULL if not f ound 
+•	Many other utility functions e xist. . . 
+20 
+6.087 Lecture 5 – January 15, 2010
+Review 
+Pointers and Memor y Addresses 
+Physical and Vir tual Memor y 
+Addressing and Indirection 
+Functions with Multiple Outputs 
+Arrays and P ointer Ar ithmetic 
+Strings 
+String Utility Functions 
+Searching and Sor ting Algor ithms 
+Linear Search 
+A Simple Sor t 
+Faster Sor ting 
+Binar y Search 
+21 
+Sear ching and sorting
+• Basic algor ithms 
+• Can mak e good use of pointers 
+• Just a f ew examples; not a course in algor ithms 
+• Big-O notation 
+21 
+Sear ching an array
+•	Suppose w e have an arr ay of int’ s 
+int arr [100]; /∗ array to search ∗/ 
+•	Let’s write a simple search function: 
+int linear _search ( int val) { ∗ 
+int parr, parrend = arr + array _length(arr); ∗ ∗ 
+for (parr = arr; parr < parrend; parr++) { 
+if (∗ parr == val ) 
+return parr ;
+}
+return NULL;
+} 
+22 
+A simple sort
+•	A simple inser tion sor t: O(n2) 
+•	iterate through arr ay until an out-of-order element f ound 
+inser t out-of-order element into correct location • 
+•	repeat until end of arr ay reached 
+•	Split into tw o functions f or ease-of-use 
+int arr [100]; / ∗ array to sort ∗ / 
+void shift _element ( unsigned i n t i) { 
+/ ∗ do insertion of out−of−order element ∗ / 
+} 
+void insertion _sort () { 
+/ ∗ main insertion sort loop ∗ /
+/ ∗ call shift _element () for
+each out−of−order element ∗ /
+} 
+23 
+Shifting out-of-or der elements
+• Code f or shifting the element 
+/ ∗ move previous elements down until
+insertion point reached ∗ /
+void shift _element ( unsigned i n t i) {
+int ivalue ;
+/ ∗ guard against going outside array ∗ / 
+for (ivalue = arr[i]; i && arr[i −1] > ivalue; i −−) 
+arr[i] = arr[i −1]; / ∗ move element down ∗ / 
+arr[i] = ivalue; / ∗ insert element ∗ / 
+} 
+24 
+Inser tion sort
+•	Main inser tion sor t loop 
+/ ∗	iterate until out−of−order element found ; 
+shift the element , and continue iterating ∗ / 
+void insertion _sort ( void ){
+unsigned i n t i, len = array _length(arr);
+for (i =1; i<len; i++)
+if (arr[i] < arr[i −1])
+shift _element(i );
+}
+•	Can y ou re write using pointer ar ithmetic instead of 
+indexing? 
+25 
+Quic ksor t
+•	Many faster sor ts availab le (shellsor t, mergesor t, 
+quicksort, . . . ) 
+•	Quicksort: O(n log n) average; O (n2) worst case 
+•	choose a piv ot element 
+•	move all elements less than piv ot to one side , all elements 
+greater than piv ot to other 
+•	sort sides individually (recursiv e algor ithm) 
+•	Implemented in C standard libr ary as qsort() in 
+stdlib.h 
+26 
+Quic ksor t implementation
+• Select the piv ot; separ ate the sides: 
+void quick_sort ( unsigned i n t left , 
+unsigned i n t right ) {
+unsigned i n t i , mid;
+int pivot ;
+if (left >= right)
+return ;/ ∗ nothing to sort ∗ /
+/ ∗ pivot is midpoint; move to left side ∗ /
+swap(arr+left ,arr + (left+right)/2);
+pivot = arr[mid = left ];
+/ ∗	separate into side < pivot (left+1 to mid) 
+and side >= pivot (mid+1 to right ) ∗ / 
+for (i = left+1; i <= right; i++)
+if (arr[i] < pivot)
+swap(arr + ++mid,arr + i);
+[Kernighan and Ritchie . The C Prog ramming Language . 2nd ed. Prentice 
+Hall, 1988.]	© Prentice Hall. All rights reserved. This content is excluded from our Creative Commons license. 
+For more information, see http://ocw.mit.edu/fairuse. 
+27 
+Quic ksor t implementation
+•	Restore the piv ot; sor t the sides separ ately: 
+/ ∗ restore pivot position ∗ / 
+swap(arr+left , arr+mid); 
+/ ∗ sort two sides ∗ / 
+if (mid > left) 
+quick _sort(left , mid −1); 
+if (mid < right ) 
+quick _sort(mid+1,right ); 
+} 
+•	Starting the recursion:
+quick_sor t(0, array_length( arr) − 1);
+[Kernighan and Ritchie . The C Prog ramming Language . 2nd ed. Prentice 
+Hall, 1988.] 
+© Prentice Hall. All rights reserved. This content is excluded from our Creative Commons license. 
+For more information, see http://ocw.mit.edu/fairuse. 
+28 
+Discussion of quicksor t
+•	Not stab le (equal-v alued elements can get s witched) in 
+present f orm 
+•	Can sor t in-place – especially desir able for low-memor y 
+environments 
+•	Choice of piv ot inﬂuences perf ormance; can use r andom 
+pivot 
+•	Divide and conquer algor ithm; easily par alleliz eable 
+•	Recursiv e; in w orst case , can cause stac k overﬂow on 
+large arr ay 
+29 
+Sear ching a sorted array
+•	Searching an arbitr ary list requires visiting half the 
+elements on a verage 
+•	Suppose list is sor ted; can mak e use of sor ting 
+information: 
+•	if desired v alue g reater than v alue and current inde x, only 
+need to search after inde x 
+•	each compar ison can split list into tw o pieces 
+•	solution: compare against middle of current piece; then 
+new piece guar anteed to be half the siz e 
+•	divide and conquer! 
+•	More searching ne xt week. . . 
+30 
+Binar y search
+•	Binar y search: O(log n) average, worst case: 
+int binary_search ( int val) { ∗ 
+unsigned i n t L = 0, R = array _length(arr), M; 
+while (L <R) { 
+M = (L+R− 1)/2; 
+if (val == arr [M]) 
+return arr+M; / ∗ found ∗ / 
+else if (val < arr [M]) 
+R=M; / ∗ in first half ∗ / 
+else 
+L	= M+1; / ∗ in second half ∗ / 
+} 
+return NULL; / ∗ not found ∗ / 
+} 
+31 
+Binar y search
+•	Worst case: logar ithmic time 
+•	Requires r andom access to arr ay memor y 
+• on sequential data, lik e hard dr ive, can be slo w 
+•	seeking bac k and f orth in sequential memor y is w asteful 
+•	better off doing linear search in some cases 
+•	Implemented in C standard libr ary as bsearch() in 
+stdlib.h 
+32 
+Summar y
+Topics co vered: 
+• Pointers: addresses to memor y 
+• physical and vir tual memor y 
+• arrays and str ings 
+• pointer ar ithmetic 
+• Algor ithms 
+• searching: linear , binar y 
+• sorting: inser tion, quic k 
+33 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

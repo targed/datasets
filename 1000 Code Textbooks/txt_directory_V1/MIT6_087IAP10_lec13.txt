@@ -1,0 +1,481 @@
+6.087 Lecture 13 – January 28, 2010
+Review 
+Multithreaded Prog ramming 
+Race Conditions 
+Semaphores 
+Thread Saf ety, Deadloc k, and Star vation 
+Sockets and Asynchronous I/O 
+Sockets 
+Asynchronous I/O 
+1 
+Review: Multithreaded programming
+•	Thread: abstr action of par allel processing with shared 
+memor y 
+•	Prog ram organiz ed to e xecute m ultiple threads in par allel 
+•	Threads spa wned by main thread, comm unicate via 
+shared resources and joining 
+•	pthread library implements m ultithreading 
+int pthread_create ( pthread_t thread , const pthread _attr _t attr , ∗	 ∗ •	
+void ∗(∗ start _routine )( void ∗), void ∗ arg ); 
+•	void pthread_e xit(void ∗value_ptr); 
+•	int pthread_join (pthread_t thread , void ∗∗value_ptr); 
+•	pthread_t pthread_self (void); 
+1 
+Review: Resour ce sharing
+Access to shared resources need to be controlled to • 
+ensure deter ministic oper ation 
+•	Synchronization objects: mutexes, semaphores , read/wr ite 
+locks, barr iers 
+•	Mute x: simple single loc k/unloc k mechanism 
+•	int pthread_m utex_init(pthread_m utex_t ∗mutex, const pthread_m utexattr_t ∗ attr); 
+•	int pthread_m utex_destro y(pthread_m utex_t ∗mutex); 
+•	int pthread_m utex_loc k(pthread_m utex_t ∗mutex); 
+•	int pthread_m utex_trylock(pthread_m utex_t ∗mutex); 
+•	int pthread_m utex_unloc k(pthread_m utex_t ∗mutex); 
+2 
+Review: Condition variab les
+• Lock/unloc k (with m utex) based on r un-time condition 
+variable
+Allows thread to w ait for condition to be tr ue
+ • 
+• Other thread signals w aiting thread(s), unb locking them 
+• int pthread_cond_init(pthread_cond_t ∗cond, const pthread_condattr_t ∗attr); 
+• int pthread_cond_destro y(pthread_cond_t ∗cond); 
+• int pthread_cond_w ait(pthread_cond_t ∗cond, pthread_m utex_t ∗mutex); 
+• int pthread_cond_broadcast(pthread_cond_t ∗cond); 
+• int pthread_cond_signal(pthread_cond_t ∗cond); 
+3 
+6.087 Lecture 13 – January 28, 2010
+Review 
+Multithreaded Prog ramming 
+Race Conditions 
+Semaphores 
+Thread Saf ety, Deadloc k, and Star vation 
+Sockets and Asynchronous I/O 
+Sockets 
+Asynchronous I/O 
+4 
+Multithreaded programming
+•	OS implements scheduler – deter mines which threads 
+execute when 
+•	Scheduling ma y execute threads in arbitr ary order 
+•	Without proper synchronization, code can e xecute 
+non-deter ministically 
+•	Suppose w e have two threads: 1 reads a v ariable, 2 
+modiﬁes that v ariable 
+•	Scheduler ma y execute 1, then 2, or 2 then 1 
+Non-deter minism creates a r ace condition – where the • 
+beha vior/result depends on the order of e xecution 
+4 
+Race conditions
+•	Race conditions occur when m ultiple threads share a 
+variable, without proper synchronization 
+•	Synchronization uses special v ariables, like a m utex, to 
+ensure order of e xecution is correct 
+•	Example: thread T 1 needs to do something bef ore thread 
+T2 
+•	condition v ariable forces thread T 2 to wait for thread T 1 
+•	producer-consumer model prog ram 
+•	Example: two threads both need to access a v ariable and 
+modify it based on its v alue
+surround access and modiﬁcation with a m utex
+ • 
+•	mutex groups oper ations together to mak e them atomic – 
+treated as one unit 
+5 
+Race conditions in assemb ly
+Consider the f ollowing prog ram race.c: 
+unsigned i n t cnt = 0; 
+void ∗count ( void ∗arg) {/∗ thread body ∗/ 
+int i; 
+for ( i = 0; i < 100000000; i ++) 
+cnt++; 
+return NULL ; 
+} 
+int main ( void ){ 
+pthread_t tids [4]; 
+int i; 
+for (i =0; i<4; i++) 
+pthread_create(&tids[i], NULL, count, NULL);
+for (i =0; i<4; i++)
+pthread _join(tids[i], NULL);
+printf ("cnt=%u\n " ,cnt );
+return 0;
+} 
+What is the v alue of cnt? 
+[Bryant and O’Hallor an. Computer Systems: A Prog rammer’ s Perspectiv e. 
+Prentice Hall, 2003.] 
+ © Prentice Hall. All rights reserved. This content is excluded from our Creative Commons license. 
+For more information, see http://ocw.mit.edu/fairuse. 
+6
+Race conditions in assemb ly
+Ideally , should increment cnt 4 × 100000000 times , so 
+cnt = 400000000. However, running our code giv es: 
+athena% ./race.o 
+cnt=137131900 
+athena% ./race.o 
+cnt=163688698 athena% ./race.o 
+cnt=163409296 athena% ./race.o 
+cnt=170865738 
+athena% ./race.o 
+cnt=169695163 
+So, what happened? 
+Athena is MIT's UNIX-based computing environment. OCW does not provide access to it. 
+7 1
+1
+Race conditions in assemb ly
+•	C not designed f or multithreading 
+•	No notion of atomic oper ations in C 
+•	Increment cnt++; maps to three assemb ly oper ations: 
+1. load cnt into a register 
+2. increment v alue in register 
+3.	save new register v alue as ne w cnt 
+•	So what happens if thread interr upted in the middle? 
+Race condition! • 
+8 
+Race conditions in assemb ly
+Let’s ﬁx our code: 
+pthread_mutex_t mutex; 
+unsigned i n t cnt = 0; 
+void ∗count ( void ∗arg) {/∗ thread body ∗/ 
+int i; 
+for ( i = 0; i < 100000000; i ++) { 
+pthread_mutex_lock(&mutex );
+cnt++;
+pthread_mutex_unlock(&mutex );
+} 
+return NULL ; 
+} 
+int main ( void ){ 
+pthread_t tids [4]; 
+int i; 
+pthread_mutex_init(&mutex, NULL); 
+for (i =0; i<4; i++) 
+pthread_create(&tids[i], NULL, count, NULL); 
+for (i =0; i<4; i++) 
+pthread _join(tids[i], NULL);
+pthread_mutex_destroy(&mutex );
+printf ("cnt=%u\n " ,cnt );
+return 0;
+} 
+9 
+Race conditions
+•	Note that ne w code functions correctly , but is m uch slo wer 
+•	C statements not atomic – threads ma y be interr upted at 
+assemb ly level, in the middle of a C statement 
+•	Atomic oper ations lik e mutex locking m ust be speciﬁed as 
+atomic using special assemb ly instr uctions 
+•	Ensure that all statements accessing/modifying shared 
+variables are synchroniz ed 
+10 
+Semaphores
+•	Semaphore – special nonnegativ e integer v ariable s, 
+initially 1, which implements tw o atomic oper ations: 
+•	P(s) – wait until s > 0, decrement s and retur n 
+•	V(s) – increment s by 1, unb locking a w aiting thread 
+•	Mute x – loc king calls P(s) and unloc king calls V(s) 
+•	Implemented in <semaphore.h>, par t of libr ary rt, not 
+pthread 
+11 
+Using semaphores
+•	Initializ e semaphore to value: 
+int sem_init(sem_t ∗sem, int pshared, unsigned int value); 
+•	Destro y semaphore: 
+int sem_destro y(sem_t ∗sem); 
+•	Wait to loc k, blocking: 
+int sem_w ait(sem_t ∗sem); 
+•	Try to loc k, retur ning immediately (0 if now loc ked, −1 
+otherwise): 
+int sem_tr ywait(sem_t ∗sem); 
+•	Increment semaphore , unb locking a w aiting thread: 
+int sem_post(sem_t ∗sem); 
+12 
+Producer and consumer revisited
+•	Use a semaphore to tr ack availab le slots in shared b uffer 
+•	Use a semaphore to tr ack items in shared b uffer 
+•	Use a semaphore/m utex to mak e buffer oper ations 
+synchronous 
+13 
+Producer and consumer revisited
+#include <stdio .h> for (i = 0; i <ITEMS; i++) {
+#include <pthread.h> sem_wait(&items);
+#include <semaphore.h> sem_wait(&mutex);
+printf (" consumed(%ld):%d\n " , 
+sem_t mutex, slots , items; pthread_self(), i+1); 
+sem_post(&mutex ); 
+#define SLOTS 2 sem_post(&slots); 
+#define ITEMS 10 } 
+return NULL; 
+void∗ produce ( void∗ arg) } 
+{ 
+int i; int main ()
+for (i = 0; i <ITEMS; i++) {
+{ pthread_t tcons , tpro ;
+sem_wait(&slots );
+sem_wait(&mutex); sem_init(&mutex, 0, 1);
+printf("produced(%ld):%d\n ", sem_init(&slots , 0, SLOTS);
+pthread_self () , i +1); sem_init(&items , 0, 0); 
+sem_post(&mutex ); 
+sem_post(&items ); pthread_create(&tcons ,NULL,consume,NULL); 
+} pthread_create(&tpro,NULL,produce,NULL); 
+return NULL; pthread_join(tcons,NULL); 
+} pthread_join(tpro ,NULL); 
+void∗ consume ( void∗ arg) sem_destroy(&mutex); 
+{ sem_destroy(&slots); 
+int i ; sem_destroy(&items ); 
+return 0; 
+} 
+[Bryant and O’Hallor an. Computer Systems: A Prog rammer’ s Perspectiv e. 
+Prentice Hall, 2003.] © Prentice Hall. All rights reserved. This content is excluded from our Creative Commons license. 
+For more information, see http://ocw.mit.edu/fairuse. 14
+Other challeng es
+•	Synchronization objects help solv e race conditions 
+•	Improper use can cause other prob lems 
+Some common issues: • 
+•	thread saf ety and reentr ant functions
+deadloc k
+ • 
+starvation • 
+15 
+Thread safety
+•	Function is thread safe if it alw ays beha ves correctly when 
+called from m ultiple concurrent threads 
+•	Unsaf e functions f al in se veral categor ies: 
+•	accesses/modiﬁes unsynchroniz ed shared v ariables 
+•	functions that maintain state using static v ariables – lik e 
+rand(), strtok() 
+•	functions that retur n pointers to static memor y – lik e 
+gethostbyname() 
+•	functions that call unsaf e functions ma y be unsaf e 
+16 
+Reentrant functions
+•	Reentr ant function – does not ref erence an y shared data 
+when used b y multiple threads 
+•	All reentr ant functions are thread-saf e (are all thread-saf e 
+functions reentr ant?) 
+•	Reentr ant v ersions of man y unsaf e C standard libr ary 
+functions e xist: 
+Unsaf e function 
+rand()
+strtok()
+asctime()
+ctime()
+gethostbyaddr()
+gethostbyname()
+inet_ntoa()
+localtime()
+Reentr ant v ersion
+rand_r() strtok_r() asctime_r() ctime_r() gethostbyaddr_r() 
+gethostbyname_r() 
+(none) 
+localtime_r() 
+17 
+Thread safety
+To mak e your code thread-saf e: 
+• Use synchronization objects around shared v ariables 
+Use reentr ant functions • 
+•	Use synchronization around functions retur ning pointers to 
+shared memor y (loc k-and-cop y): 
+1. lock mutex for function 
+2. call unsaf e function 
+3. dynamically allocate memor y for result; (deep) cop y result 
+into ne w memor y 
+4. unloc k mutex 
+18 
+Deadloc k
+•	Deadloc k – happens when e very thread is w aiting on 
+another thread to unb lock 
+•	Usually caused b y improper order ing of synchronization 
+objects 
+•	Tricky bug to locate and reproduce , since 
+schedule-dependent 
+•	Can visualiz e using a prog ress g raph – tr aces prog ress of 
+threads in ter ms of synchronization objects 
+19 
+Deadloc k
+20 Figure removed due to copyright restrictions. Please see
+http://csapp.cs.cmu.edu/public/1e/public/figures.html,Figure 13.39, Progress graph for a program that can deadlock.
+Deadloc k
+•	Defeating deadloc k extremely difﬁcult in gener al 
+•	When using only m utexes, can use the “m utex lock
+order ing rule” to a void deadloc k scenar ios:
+A program is deadloc k-free if, for each pair of mutexes (s, t) 
+in the program, each thread that uses both s and t 
+simultaneously locks them in the same order . 
+[Bryant and O’Hallor an. Computer Systems: A Prog rammer’ s Perspectiv e 
+Prentice Hall, 2003.] 
+21 
+Starvation and priority inversion
+Starvation similar to deadloc k • 
+•	Scheduler ne ver allocates resources (e .g. CPU time) f or a 
+thread to complete its task 
+•	Happens dur ing pr iority inversion 
+•	example: highest pr iority thread T 1 waiting f or low priority 
+thread T 2 to ﬁnish using a resource , while thread T 3, which 
+has higher pr iority than T 2, is allo wed to r un indeﬁnitely 
+•	thread T 1 is considered to be in star vation 
+22 
+6.087 Lecture 13 – January 28, 2010
+Review 
+Multithreaded Prog ramming 
+Race Conditions 
+Semaphores 
+Thread Saf ety, Deadloc k, and Star vation 
+Sockets and Asynchronous I/O 
+Sockets 
+Asynchronous I/O 
+23 
+Sockets
+Socket – abstr action to enab le comm unication across a • 
+netw ork in a manner similar to ﬁle I/O 
+•	Uses header <sys/socket.h> (extension of C standard 
+library) 
+•	Netw ork I/O, due to latency , usually implemented 
+asynchronously , using m ultithreading 
+•	Sockets use client/ser ver model of estab lishing 
+connections 
+23 
+Creating a socket
+•	Create a soc ket, getting the ﬁle descr iptor f or that soc ket: 
+int socket(int domain, int type, int protocol ); 
+•	domain – use constant AF_INET, so w e’re using the 
+internet; might also use AF_INET6 for IPv6 addresses 
+•	type – use constant SOCK_STREAM for connection-based 
+protocols lik e TCP/IP; use SOCK_DGRAM for connectionless 
+datag ram protocols lik e UDP (w e’ll concentr ate on the 
+former) 
+•	protocol – specify 0 to use def ault protocol f or the soc ket 
+type (e .g. TCP) 
+•	returns nonnegativ e integer f or ﬁle descr iptor, or −1 if 
+couldn’t create soc ket 
+•	Don’t f orget to close the ﬁle descr iptor when y ou’re done! 
+24 
+Connecting to a server
+•	Using created soc ket, w e connect to ser ver using: 
+int connect(int fd, struct sockaddr ∗addr, int addr_len); 
+•	fd – the soc ket’s ﬁle descr iptor 
+•	addr – the address and por t of the ser ver to connect to; f or 
+internet addresses , cast data of type struct 
+sockaddr_in, which has the f ollowing members: 
+•	sin_family – address f amily; alw ays AF_INET 
+•	sin_port – por t in netw ork byte order (use htons() to 
+convert to netw ork byte order) 
+•	sin_addr.s_addr – IP address in netw ork byte order (use 
+htonl() to con vert to netw ork byte order) 
+•	addr_len – size of sockaddr_in structure
+returns 0 if successful
+ • 
+25 
+Associate server socket with a port
+•	Using created soc ket, w e bind to the por t using: 
+int bind(int fd, struct sockaddr ∗addr, int addr_len); 
+•	fd, addr, addr_len – same as f or connect() 
+note that address should be IP address of desired interf ace • 
+(e.g. eth0) on local machine 
+•	ensure that por t for ser ver is not tak en (or y ou ma y get 
+“address already in use” errors) 
+•	return 0 if soc ket successfully bound to por t 
+26 
+Listening for clients
+•	Using the bound soc ket, star t listening: 
+int listen (int fd, int backlog); 
+•	fd – bound soc ket ﬁle descr iptor 
+•	backlog – length of queue f or pending TCP/IP 
+connections; nor mally set to a large n umber , like 1024 
+returns 0 if successful • 
+27 
+Accepting a client’ s connection
+•	Wait for a client’ s connection request (ma y already be 
+queued): 
+int accept(int fd, struct sockaddr ∗addr, int ∗addr_len); 
+•	fd – soc ket’s ﬁle descr iptor 
+•	addr – pointer to str ucture to be ﬁlled with client address 
+info (can be NULL) 
+•	addr_len – pointer to int that speciﬁes length of str ucture 
+pointed to b y addr; on output, speciﬁes the length of the 
+stored address (stored address ma y be tr uncated if bigger 
+than supplied str ucture) 
+•	returns (nonnegativ e) ﬁle descr iptor f or connected client 
+socket if successful 
+28 
+Reading and writing with sockets
+•	Send data using the f ollowing functions: 
+int write(int fd, const void ∗buf, siz e_t len ); 
+int send(int fd, const void ∗buf, siz e_t len, int ﬂags ); 
+•	Receiv e data using the f ollowing functions: 
+int read( int fd, void ∗buf, size_t len ); 
+int recv(int fd, void ∗buf, size_t len, int ﬂags ); 
+•	fd – soc ket’s ﬁle descr iptor
+buf – buffer of data to read or wr ite
+ • 
+•	len – length of b uffer in b ytes 
+•	flags – special ﬂags; w e’ll just use 0 
+•	all these retur n the n umber of b ytes read/wr itten (if 
+successful) 
+29 
+Async hronous I/O
+•	Up to now, all I/O has been synchronous – functions do not 
+return until oper ation has been perf ormed 
+•	Multithreading allo ws us to read/wr ite a ﬁle or soc ket 
+without b locking our main prog ram code (just put I/O 
+functions in a separ ate thread) 
+•	Multiple xed I/O – use select() or poll() with m ultiple 
+ﬁle descr iptors 
+30 
+I/O multiple xing with select()
+•	To chec k if m ultiple ﬁles/soc kets ha ve data to 
+read/wr ite/etc: (include <sys/select.h>) 
+int select (int nfds, fd_set ∗readfds, fd_set ∗writefds , fd_set ∗errorfds , struct timeval ∗timeout); 
+•	nfds – speciﬁes the total r ange of ﬁle descr iptors to be 
+tested (0 up to nfds −1) 
+•	readfds, writefds, errorfds – if not NULL, pointer to 
+set of ﬁle descr iptors to be tested f or being ready to read, 
+write, or ha ving an error ; on output, set will contain a list of 
+only those ﬁle descr iptors that are ready 
+•	timeout – if no ﬁle descr iptors are ready immediately , 
+maxim um time to w ait for a ﬁle descr iptor to be ready 
+•	returns the total n umber of set ﬁle descr iptor bits in all the 
+sets 
+•	Note that select() is a b locking function 
+31 
+I/O multiple xing with select()
+•	fd_set – a mask f or ﬁle descr iptors; bits are set (“1”) if in 
+the set, or unset (“0”) otherwise 
+•	Use the f ollowing functions to set up the str ucture: 
+•	FD_ZER O(&fdset) – initializ e the set to ha ve bits unset f or all ﬁle 
+descr iptors 
+•	FD_SET(fd, &fdset) – set the bit f or ﬁle descr iptor fd in the set 
+•	FD_CLR(fd, &fdset) – clear the bit f or ﬁle descr iptor fd in the set 
+•	FD_ISSET(fd, &fdset) – retur ns nonz ero if bit f or ﬁle descr iptor fd is 
+set in the set 
+32 
+I/O multiple xing using poll()
+•	Similar to select(), b ut speciﬁes ﬁle descr iptors 
+differently: (include <poll.h>) 
+int poll (struct pollfd fds [], nfds_t nfds, int timeout ); 
+•	fds – an arr ay of pollfd structures , whose members fd, 
+events, and revents, are the ﬁle descr iptor, events to 
+chec k (OR-ed combination of ﬂags lik e POLLIN, POLLOUT, 
+POLLERR, POLLHUP), and result of polling with that ﬁle 
+descr iptor f or those e vents, respectiv ely 
+•	nfds – number of str uctures in the arr ay 
+•	timeout – number of milliseconds to w ait; use 0 to retur n 
+immediately , or −1 to block indeﬁnitely 
+33 
+Summar y
+•	Multithreaded prog ramming 
+race conditions • 
+•	semaphores 
+•	thread saf ety 
+deadloc k and star vation • 
+•	Sockets, asynchronous I/O 
+•	client/ser ver soc ket functions 
+•	select() and poll() 
+34 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare 
+http://ocw.mit.edu 
+6.087  Practical Programming in C 
+January (IAP) 2010 
+ 
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms. 

@@ -1,0 +1,344 @@
+6.087 Lecture 2 – Jan uary 12, 2010
+Review 
+Variables and data types 
+Oper ators 
+Epilogue 
+1 
+Review: C Programming langua ge
+•	C is a f ast, small,gener al-pur pose ,platf orm independent 
+programming language . 
+•	C is used f or systems prog ramming (e .g., compilers and 
+interpreters , oper ating systems , database systems , 
+microcontrollers etc.) 
+•	C is static (compiled), typed, str uctured and imper ative. 
+•	"C is quir ky, ﬂawed, and an enor mous success ."–Ritchie 
+1 
+Review: Basics
+• Variable declar ations: int i; ﬂoat f; 
+• Intialization: char c=’A’; int x=y=10; 
+• Oper ators: +,−,∗,/,% 
+• Expressions: int x,y,z; x=y∗2+z∗3; 
+• Function: int factor ial (int n); /∗function takes int , returns int ∗/ 
+2 
+6.087 Lecture 2 – Jan uary 12, 2010
+Review 
+Variables and data types 
+Oper ators 
+Epilogue 
+3 
+Deﬁnitions
+Datatypes: 
+•	The datatype of an object in memor y deter mines the set 
+of values it can ha ve and what oper ations that can be 
+performed on it. 
+•	Cis a weakly typed language . It allows implicit conversions 
+as well as f orced (potentially dangerous) casting. 
+Oper ators: 
+•	Operator s specify ho w an object can be manipulated
+(e.g.,, n umer ic vs. string oper ations).
+•	operators can be unar y(e.g., -,++),binar y (e.g.,
++,-,*,/),ter nary (?:)
+3 
+Deﬁnitions (contd.)
+Expressions: 
+•	An expression in a prog ramming language is a 
+combination of v alues , variables, oper ators , and functions 
+Variables: 
+•	A variable is as named link/ref erence to a v alue stored in 
+the system’ s memor y or an e xpression that can be 
+evaluated. 
+Consider : int x=0,y=0; y=x+2; . 
+•	x, y are v ariables 
+• y = x +2 is an e xpression
+• + is an oper ator.
+4 
+Variab le names
+Naming r ules: 
+•	Variable names can contain letters ,digits and _
+Variable names should star t with letters .
+ • 
+•	Keywords (e .g., for,while etc.) cannot be used as v ariable 
+names 
+•	Variable names are case sensitiv e. int x; int X declares 
+two diff erent v ariables. 
+Pop quiz (correct/incorrect): 
+•	int mone y$owed; (incorrect: cannot contain $) 
+•	int total_count (correct) 
+•	int score2 (correct) 
+•	int 2ndscore (incorrect: must star t with a letter) 
+•	int long (incorrect: cannot use k eyword) 
+5 
+Data types and siz es
+C has a small f amily of datatypes . 
+• Numer ic (int,ﬂoat,doub le) 
+• Char acter (char) 
+• User deﬁned (str uct,union) 
+6 
+Numeric data types
+Depending on the precision and r ange required, y ou can use 
+one of the f ollowing datatypes . 
+signed unsigned 
+short shor t int x;shor t y; unsigned shor t x;unsigned shor t int y; 
+default int x; unsigned int x; 
+long long x; unsigned long x; 
+ﬂoat ﬂoat x; N/A 
+doub le doub le x; N/A 
+char char x; signed c har x; unsigned c har x; 
+•	The unsigned v ersion has roughly doub le the r ange of its 
+signed counter parts. 
+•	Signed and unsigned char acters diff er only when used in 
+arithmetic e xpressions . 
+•	Titbit: Flickr changed from unsigned long (232 − 1) to str ing 
+two years ago . 
+7 
+Big endian vs. little endian
+The individual siz es are machine/compiler dependent. 
+However, the f ollowing is guar anteed: 
+sizeof(c har)<siz eof(shor t)<=siz eof(int)<=siz eof(long) and 
+sizeof(c har)<siz eof(shor t)<=siz eof(ﬂoat)<=siz eof(doub le) 
+"NUXI" prob lem: For numer ic data types that span m ultiple 
+bytes, the order of arr angement of the individual b ytes is 
+impor tant. Depending on the de vice architecture , we have "big 
+endian" and "little endian" f ormats . 
+8 
+Big endian vs. little endian (cont.)
+•	Big endian: the most signiﬁcant bits (MSBs) occup y the 
+lower address . This representation is used in the po werpc 
+processor . Netw orks gener ally use big-endian order , and 
+thus it is called netw ork or der. 
+•	Little endian : the least signﬁcant bits (LSBs) occup y the 
+lower address . This representation is used on all x86 
+compatib le processors . 
+Figure: (from http://en.wikipedia.org/wiki/Little_endian) 
+9 
+Constants
+Constants are liter al/ﬁxed values assigned to v ariables or used 
+directly in e xpressions . 
+Datatype example meaning 
+int i=3; integer 
+long l=3; long integer 
+integer unsigned long ul= 3UL; unsigned long 
+int i=0xA; hexadecimal 
+int i=012; octal n umber 
+ﬂoat pi=3.14159 ﬂoat 
+ﬂoating point ﬂoat pi=3.141F ﬂoat 
+doub le pi=3.1415926535897932384L doub le 
+10 
+Constants (contd.)
+Datatype example meaning 
+character ’A’ 
+’\x41’ 
+’\0101’ character 
+speciﬁed in he x 
+speciﬁed in octal 
+string "hello world" 
+"hello""world" string liter al 
+same as "hello w orld" 
+enumer ation enum BOOL {NO,YES} 
+enum COLOR {R=1,G,B,Y=10} NO=0,YES=1 
+G=2,B=3 
+11 
+Declarations
+The gener al format f or a declar ation is
+type variable-name [=value] .
+Examples:
+• char x; /∗ uninitializ ed ∗/ 
+• char x=’A’; /∗ intializ ed to ’A’∗/ 
+• char x=’A’,y=’B’; /∗multiple v ariables initialized ∗/ 
+• char x=y=’Z’;/ ∗multiple initializations ∗/ 
+12 
+Pop quiz II
+• int x=017;int y=12; /∗is x>y?∗/ 
+• shor t int s=0xFFFF12; / ∗correct? ∗/ 
+• char c= −1;unsigned c har uc= −1; /∗correct? ∗/ 
+• puts("hel"+"lo");puts("hel""lo");/ ∗which is correct? ∗/ 
+• enum sz{S=0,L=3,XL}; / ∗what is the v alue of XL? ∗/ 
+• enum sz{S=0,L= −3,XL}; / ∗what is the v alue of XL? ∗/ 
+13 
+6.087 Lecture 2 – Jan uary 12, 2010
+Review 
+Variables and data types 
+Oper ators 
+Epilogue 
+14 
+Arithmetic operator s
+operator meaning examples 
++ addition x=3+2; /∗constants∗/ 
+y+z; /∗variables∗/ 
+x+y+2; /∗both∗/ 
+- subtr action 3−2; /∗constants∗/ 
+int x=y−z; /∗v ariables∗/ 
+y−2−z; /∗both∗/ 
+* multiplication int x=3∗2; /∗constants∗/ 
+int x=y∗z; /∗variables∗/ 
+x∗y∗2; /∗both∗/ 
+14 
+Arithmetic operator s (contd.)
+operator meaning examples 
+/ division ﬂoat x=3/2; /∗produces x=1 (int /) ∗/ 
+ﬂoat x=3.0/2 /∗produces x=1.5 ( ﬂoat /) ∗/ 
+int x=3.0/2; /∗produces x=1 (int conversion)∗/ 
+% modulus 
+(remainder) int x=3%2; /∗produces x=1∗/ 
+int y=7;int x=y%4; /∗produces 3∗/ 
+int y=7;int x=y%10; /∗produces 7∗/ 
+15 
+Relational Operator s
+Relational oper ators compare tw o oper ands to produce a 
+’boolean’ result. In C an y non-z ero v alue (1 b y con vention) is 
+considered to be ’tr ue’ and 0 is considered to be f alse. 
+operator meaning examples 
+> greater than 3>2; /∗evaluates to 1 ∗/ 
+2.99>3 /∗e valuates to 0 ∗/ 
+>= greater than or 
+equal to 3>=3; /∗e valuates to 1 ∗/ 
+2.99>=3 /∗e valuates to 0 ∗/ 
+< lesser than 3<3; /∗evaluates to 0 ∗/ 
+’A’<’B’/∗e valuates to 1∗/ 
+<= lesser than or equal 
+to 3<=3; /∗e valuates to 1 ∗/ 
+3.99<3 /∗e valuates to 0 ∗/ 
+16 
+Relational Operator s
+Testing eq uality is one of the most commonly used relational
+operator 
+== operator. 
+!= 
+Gotchas: meaning 
+equal to 
+not equal to examples
+3==3; / ∗evaluates to 1 ∗/
+’A’==’a’/ ∗evaluates to 0 ∗/
+3!=3; /∗evaluates to 0 ∗/
+2.99!=3 /∗evaluates to 1 ∗/
+Note that the "==" equality oper ator is diff erent from the • 
+"=", assignment oper ator.
+Note that the "==" oper ator on ﬂoat v ariables is tr icky
+ • 
+because of ﬁnite precision. 
+17 
+Logical operator s
+operator meaning examples 
+&& AND ((9/3)==3) && (2∗3==6); /∗e valuates to 1 ∗/ 
+(’A’==’a’) && (3==3) /∗e valuates to 0 ∗/ 
+|| OR 2==3 || ’A’==’A’; /∗e valuates to 1 ∗/ 
+2.99>=3 || 0 /∗evaluates to 0 ∗/ 
+! NOT !(3==3); /∗evaluates to 0 ∗/ 
+!(2.99>=3) /∗evaluates to 1 ∗/ 
+Shor t circuit: The e valuation of an e xpression is discontin ued if
+the v alue of a conditional e xpression can be deter mined ear ly.
+Be careful of an y side eff ects in the code .
+Examples:
+•	(3==3) || ((c=getchar())==’y’) . The second e xpression is not 
+evaluated. 
+•	(0) && ((x=x+1)>0) . The second e xpression is not e valuated. 
+18 
+Increment and decrement operator s
+Increment and decrement are common ar ithmetic oper ation. C 
+provides tw o shor t cuts f or the same . 
+Postﬁx 
+x++ is a shor t cut f or x=x+1 • 
+•	x−− is a shor t cut f or x=x−1 
+•	y=x++ is a shor t cut f or y=x;x=x+1 . x is evaluated bef ore it is 
+incremented. 
+•	y=x−− is a short cut for y=x;x=x −1. x is evaluated before it is 
+decremented. 
+19 
+Increment and decrement operator s
+Preﬁx: 
+++x is a shor t cut f or x=x+1 • 
+•	−−x is a shor t cut f or x=x−1 
+•	y=++x is a shor t cut f or x=x+1;y=x; . x is evaluate after it is 
+incremented. 
+•	y=−−x is a shor t cut f or x=x−1;y=x; . x is evaluate after it is 
+decremented. 
+20 
+Bitwise Operator s
+operator meaning examples 
+& AND 0x77 & 0x3; /∗e valuates to 0x3 ∗/ 
+0x77 & 0x0; /∗e valuates to 0 ∗/ 
+| OR 0x700 | 0x33; /∗evaluates to 0x733 ∗/ 
+0x070 | 0 /∗evaluates to 0x070 ∗/ 
+ˆ XOR 0x770 ^ 0x773; /∗e valuates to 0x3 ∗/ 
+0x33 ^ 0x33; /∗evaluates to 0 ∗/ 
+« left shift 0x01<<4; /∗e valuates to 0x10 ∗/ 
+1<<2; /∗e valuates to 4 ∗/ 
+» right shift 0x010>>4; /∗e valuates to 0x01 ∗/ 
+4>>1 /∗e valuates to 2 ∗/ 
+Notes: 
+• AND is tr ue only if both oper ands are tr ue. 
+• OR is tr ue if an y oper and is tr ue. 
+• XOR is tr ue if onl y one of the oper and is tr ue. 
+21 
+Assignment Operator s
+Another common e xpression type f ound while prog ramming in 
+C is of the type var = var (op) expr 
+x=x+1• 
+• x=x∗10 
+• x=x/2 
+C pro vides compact assignment oper ators that can be used 
+instead. 
+• x+=1 / ∗is the same as x=x+1 ∗/ 
+• x−=1 /∗is the same as x=x −1∗/ 
+• x∗=10 / ∗is the same as x=x ∗10 ∗/ 
+• x/=2 /∗ is the same as x=x/2 
+• x%=2 / ∗is the same as x=x%2 
+22 
+Conditional Expression
+A common patter n in C (and in most prog ramming) languages 
+is the f ollowing: 
+if ( cond ) 
+x=<expra >; 
+else 
+x=<exprb >; 
+C pro vides syntactic sugar to express the same using the 
+ternary oper ator ’?:’ 
+sign=x>0?1:−1; isodd=x%2==1?1:0; 
+if (x>0) if ( x%2==1) 
+sign =1 isodd=1 
+else else 
+sign=−1 isodd=0 
+Notice ho w the ter nary oper ator mak es the code shor ter and 
+easier to understand (syntactic sugar). 
+23 
+6.087 Lecture 2 – Jan uary 12, 2010
+Review 
+Variables and data types 
+Oper ators 
+Epilogue 
+24 
+Type Con versions
+When v ariables are promoted to higher precision, data is 
+preser ved. This is automatically done b y the compiler f or mix ed 
+data type e xpressions . 
+int i;
+float f;
+f=i +3.14159; / ∗ i is promoted to float , f=(float)i+3.14159 ∗ /
+Another con version done automatically b y the compiler is ’char’ 
+’int’. This allo ws compar isons as w ell as man upilations of →
+character v ariables. 
+isupper =(c>=’A’ && c<=’Z’ )?1:0; / ∗ c and literal constants 
+are converted to int ∗ / 
+if (! isupper ) 
+c=c−’a’+’A’ ;/ ∗ subtraction is possible 
+because of integer conversion ∗ / 
+As a r ule (with e xceptions), the compiler promotes each ter m in 
+an binar y expression to the highest precision oper and. 
+24 
+Precedence and Or der of Ev aluation
+• ++,–,(cast),siz eof ha ve the highest pr iority
+• *,/,% ha ve higher pr iority than +,­
+• ==,!= ha ve higher pr iority than &&,|| 
+• assignment oper ators ha ve very low priority 
+Use () generously to a void ambiguities or side eff ects 
+associated with precendence of oper ators . 
+• y=x∗3+2 / ∗same as y=(x ∗3)+2∗/ 
+• x!=0 && y==0 / ∗same as (x!=0) && (y==0) ∗/ 
+• d= c>=’0’&& c<=’9’/ ∗same as d=(c>=’0’) && (c<=’9’) ∗/ 
+25 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+IAP 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

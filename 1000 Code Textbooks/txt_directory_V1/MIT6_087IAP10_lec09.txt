@@ -1,0 +1,484 @@
+6.087 Lecture 9 – Jan uary 22, 2010
+Review 
+Using Exter nal Libr aries 
+Symbols and Linkage 
+Static vs . Dynamic Linkage 
+Linking Exter nal Libr aries 
+Symbol Resolution Issues 
+Creating Libr aries 
+Data Str uctures 
+B-trees 
+Priority Queues 
+1 
+Review: Void pointer s
+•	Void pointer – points to an y data type: 
+int x; void ∗ px=&x; /∗ implicit cast to (void ∗) ∗/ 
+ﬂoat f; void ∗ pf =&f; 
+•	Cannot be deref erenced directly; v oid pointers m ust be 
+cast pr ior to deref erencing:
+printf ( "%d %f\n" , ∗ ( int ∗ )px , ∗ ( float ∗ )pf );
+1 
+Review: Function pointer s
+•	Functions not v ariables, but also reside in memor y (i.e . 
+have an address) – w e can tak e a pointer to a function 
+•	Function pointer declar ation: 
+int (∗cmp)(v oid ∗, void ∗); 
+•	Can be treated lik e any other pointer 
+•	No need to use & operator (b ut you can) 
+•	Similar ly, no need to use * operator (b ut you can) 
+2 
+Review: Function pointer s
+int strcmp_wrapper ( void pa , void pb) { ∗ ∗ 
+return strcmp (( const char ∗ )pa, ( const char ∗)pb ); 
+} 
+•	Can assign to a function pointer :
+int (∗fp )(void ∗, void ∗) = strcmp_wr apper; or
+int (∗fp )(void ∗, void ∗) = &strcmp_wr apper;
+•	Can call from function pointer : (str1 and str2 are 
+strings) 
+int ret =fp(str1, str2); or 
+int ret =(∗fp )( str1 , str2 ); 
+3 
+Review: Hash tab les
+•	Hash tab le (or hash map): array of link ed lists f or stor ing 
+and accessing data efﬁciently 
+•	Each element associated with a k ey (can be an integer , 
+string, or other type) 
+•	Hash function computes hash v alue from k ey (and tab le 
+size); hash v alue represents inde x into arr ay 
+•	Multiple elements can ha ve same hash v alue – results in 
+collision; elements are chained in link ed list 
+4 
+6.087 Lecture 9 – Jan uary 22, 2010
+Review 
+Using Exter nal Libr aries 
+Symbols and Linkage 
+Static vs . Dynamic Linkage 
+Linking Exter nal Libr aries 
+Symbol Resolution Issues 
+Creating Libr aries 
+Data Str uctures 
+B-trees 
+Priority Queues 
+5 
+Symbols and libraries
+•	Exter nal libr aries pro vide a w ealth of functionality – 
+example: C standard libr ary 
+•	Prog rams access libr aries’ functions and v ariables via 
+identiﬁers kno wn as symbols 
+•	Header ﬁle declar ations/prototypes mapped to symbols at 
+compile time 
+•	Symbols link ed to deﬁnitions in e xternal libr aries dur ing 
+linking 
+•	Our o wn prog ram produces symbols , too 
+5 
+msg, main(), puts(), others instdio.h
+Functions and v ariab les as symbols
+• Consider the simple hello w orld prog ram wr itten belo w: 
+#include <stdio .h> 
+const char msg[] = "Hello, world." ; 
+int main ( void ){
+puts (msg);
+return 0;
+} 
+• What v ariables and functions are declared globally? 
+6 
+Functions and v ariab les as symbols
+•	Consider the simple hello w orld prog ram wr itten belo w: 
+#include <stdio .h> 
+const char msg[] = "Hello, world." ; 
+int main ( void ){
+puts (msg);
+return 0;
+} 
+•	What v ariables and functions are declared globally? 
+msg, main(), puts(), others in stdio.h 
+6 
+Functions and v ariab les as symbols
+•	Let’s compile , but not link, the ﬁle hello .c to create hello .o: 
+athena% gcc -Wall -c hello.c -o hello.o 
+•	-c: compile , but do not link hello .c; result will compile the 
+code into machine instr uctions b ut not mak e the prog ram 
+executab le 
+•	addresses f or lines of code and static and global v ariables 
+not y et assigned 
+•	need to perf orm link step on hello.o (using gcc or ld) to 
+assign memor y to each symbol 
+•	linking resolv es symbols deﬁned else where (lik e the C 
+standard libr ary) and mak es the code e xecutab le 
+7 1
+Athena is MIT's UNIX-based computing environment. OCW does not provide access to it.1
+Functions and v ariab les as symbols
+•	Let’s look at the symbols in the compiled ﬁle hello .o: 
+athena% nm hello.o 
+•	Output: 
+0000000000000000 T main
+0000000000000000 R msg
+U puts
+•	’T’ – (te xt) code; ’R’ – read-only memor y; ’U’ - undeﬁned 
+symbol 
+•	Addresses all z ero bef ore linking; symbols not allocated 
+memor y yet 
+•	Undeﬁned symbols are deﬁned e xternally, resolv ed dur ing 
+linking 
+8 Athena is MIT's UNIX-based computing environment. OCW does not provide access to it. . 1
+1
+Functions and v ariab les as symbols
+•	Why aren’t symbols listed f or other declar ations in 
+stdio.h? 
+•	Compiler doesn’t bother creating symbols f or un used 
+function prototypes (sa ves space) 
+•	What happens when w e link? 
+athena% gcc -Wall hello.o -o hello 
+•	Memor y allocated f or deﬁned symbols 
+•	Undeﬁned symbols located in e xternal libr aries (lik e libc 
+for C standard libr ary) 
+9 Athena is MIT's UNIX-based computing environment. OCW does not provide access to it.1
+1
+Functions and v ariab les as symbols
+•	Let’s look at the symbols no w: 
+athena% nm hello 
+•	Output: 
+(other def ault symbols)
+.
+. . 
+0000000000400524 T main 
+000000000040062c R msg 
+U	puts@@GLIBC_2.2.5 
+•	Addresses f or static (allocated at compile time) symbols 
+•	Symbol puts located in shared libr ary GLIBC_2.2.5 (GNU 
+C standard libr ary) 
+•	Shared symbol puts not assigned memor y until r un time 
+10 Athena is MIT's UNIX-based computing environment. OCW does not provide access to it.1
+1
+Static and d ynamic linka ge
+•	Functions , global v ariables m ust be allocated memor y 
+before use 
+•	Can allocate at compile time (static) or at r un time (shared) 
+•	Advantages/disadv antages to both 
+•	Symbols in same ﬁle , other .o ﬁles, or static libr aries 
+(archiv es, .a ﬁles) – static linkage 
+•	Symbols in shared libr aries (.so ﬁles) – dynamic linkage 
+•	gcc links against shared libr aries b y def ault, can f orce 
+static linkage using -static ﬂag 
+11 
+Static linka ge
+•	What happens if w e statically link against the libr ary? 
+athena% gcc -Wall -static hello.o -o hello 
+•	Our e xecutab le no w contains the symbol puts: 
+. . . 
+00000000004014c0 W puts 
+. . . 
+0000000000400304 T main 
+. . . 
+000000000046cd04 R msg 
+. . . 
+•	’W’: link ed to another deﬁned symbol 
+12 Athena is MIT's UNIX-based computing environment. OCW does not provide access to it.1
+1
+Static linka ge
+•	At link time , statically link ed symbols added to e xecutab le 
+•	Results in m uch larger e xecutab le ﬁle (static – 688K, 
+dynamic – 10K) 
+•	Resulting e xecutab le does not depend on locating e xternal 
+library ﬁles at r un time 
+•	To use ne wer version of libr ary, have to recompile 
+13 
+Dynamic linka ge
+•	Dynamic linkage occurs at r un-time 
+•	During compile , linker just looks f or symbol in e xternal 
+shared libr aries 
+•	Shared libr ary symbols loaded as par t of prog ram star tup 
+(before main()) 
+•	Requires e xternal libr ary to deﬁne symbol e xactly as 
+expected from header ﬁle declar ation 
+•	changing function in shared libr ary can break y our prog ram 
+•	version inf ormation used to minimiz e this prob lem 
+•	reason wh y common libr aries lik e libc rarely modify or 
+remo ve functions , even brok en ones lik e gets() 
+14 
+Linking e xternal libraries
+•	Prog rams link ed against C standard libr ary by def ault 
+•	To link against libr ary libnamespec.so or 
+libnamespec.a, use compiler ﬂag -lnamespec to link 
+against libr ary 
+•	Library must be in libr ary path (standard libr ary director ies 
++ director ies speciﬁed using -L directory compiler ﬂag 
+•	Use -static for force static linkage 
+•	This is enough f or static linkage; libr ary code will be added 
+to resulting e xecutab le 
+15 
+Loading shared libraries
+•	Shared libr ary located dur ing compile-time linkage , but 
+needs to be located again dur ing run-time loading 
+•	Shared libr aries located at r un-time using link er libr ary 
+ld.so 
+•	Whene ver shared libr aries on system change , need to r un 
+ldconfig to update links seen b y ld.so 
+•	During loading, symbols in dynamic libr ary are allocated 
+memor y and loaded from shared libr ary ﬁle 
+16 
+Loading shared libraries on demand
+•	In Lin ux, can load symbols from shared libr aries on 
+demand using functions in dlfcn.h 
+•	Open a shared libr ary for loading: 
+void ∗ dlopen(const c har ∗ﬁle, int mode); 
+values f or mode: combination of RTLD_LAZY (lazy loading 
+of libr ary), RTLD_NOW (load no w), RTLD_GLOBAL (mak e 
+symbols in libr ary availab le to other libr aries yet to be 
+loaded), RTLD_LOCAL (symbols loaded are accessib le 
+only to y our code) 
+17 
+Loading shared libraries on demand
+•	Get the address of a symbol loaded from the libr ary: 
+void ∗ dlsym(v oid ∗ handle, const c har ∗ symbol_name); 
+handle from call to dlopen; retur ned address is pointer to 
+variable or function identiﬁed b y symbol_name 
+•	Need to close shared libr ary ﬁle handle after done with 
+symbols in libr ary: 
+int dlclose (void ∗ handle); 
+•	These functions are not par t of C standard libr ary; need to 
+link against libr ary libdl: -ldl compiler ﬂag 
+18 
+•Ourputs() gets used since ours isstatic ,andputs() in
+Cstandard librarynotresolv eduntil run-time
+•Ifstatically linkedagainst Cstandard library,linkerﬁnds
+twoputs() deﬁnitions andaborts(multiple deﬁnitions not
+allowed)
+Symbol resolution issues
+• Symbols can be deﬁned in m ultiple places 
+• Suppose w e deﬁne our o wn puts() function 
+• But, puts() deﬁned in C standard libr ary 
+• When w e call puts(), which one gets used? 
+19 
+Symbol resolution issues
+•	Symbols can be deﬁned in m ultiple places 
+•	Suppose w e deﬁne our o wn puts() function 
+•	But, puts() deﬁned in C standard libr ary 
+•	When w e call puts(), which one gets used? 
+•	Our puts() gets used since ours is static , and puts() in 
+C standard libr ary not resolv ed until r un-time 
+•	If statically link ed against C standard libr ary, linker ﬁnds 
+two puts() deﬁnitions and abor ts (m ultiple deﬁnitions not 
+allowed) 
+19 
+Symbol resolution issues
+•	How about if w e deﬁne puts() in a shared libr ary and 
+attempt to use it within our prog rams? 
+•	Symbols resolv ed in order the y are loaded 
+•	Suppose our libr ary containing puts() is libhello.so, 
+located in a standard libr ary director y (like /usr/lib), 
+and w e compile our hello.c code against this libr ary: 
+athena% gcc -g -Wall hello.c -lhello -o 
+hello.o 
+•	Libraries speciﬁed using -l ﬂag are loaded in order 
+speciﬁed, and bef ore C standard libr ary 
+•	Which puts() gets used here? 
+athena% gcc -g -Wall hello.c -lc -lhello -o 
+hello.o 
+20 Athena is MIT's UNIX-based computing environment. OCW does not provide access to it.1
+1
+6.087 Lecture 9 – Jan uary 22, 2010
+Review 
+Using Exter nal Libr aries 
+Symbols and Linkage 
+Static vs . Dynamic Linkage 
+Linking Exter nal Libr aries 
+Symbol Resolution Issues 
+Creating Libr aries 
+Data Str uctures 
+B-trees 
+Priority Queues 
+21 
+Creating libraries
+•	Libraries contain C code lik e any other prog ram 
+•	Static or shared libr aries compiled from (un-link ed) object 
+ﬁles created using gcc 
+•	Compiling a static libr ary: 
+•	compile , but do not link source ﬁles: 
+athena% gcc -g -Wall -c infile.c -o 
+outfile.o 
+•	collect compiled (unlink ed) ﬁles into an archiv e: 
+athena% ar -rcs libname.a outfile1.o 
+outfile2.o ... 
+21 Athena is MIT's UNIX-based computing environment. OCW does not provide access to it.1
+1
+Creating shared libraries
+•	Compile and do not link ﬁles using gcc: 
+athena% gcc -g -Wall -fPIC -c infile.c -o 
+outfile.o 
+•	-fPIC option: create position-independent code , since 
+code will be repositioned dur ing loading 
+•	Link ﬁles using ld to create a shared object (.so) ﬁle: 
+athena% ld -shared -soname libname.so -o 
+libname.so.version -lc outfile1.o 
+outfile2.o ... 
+•	If necessar y, add director y to LD_LIBRARY_PATH 
+environment v ariable, so ld.so can ﬁnd ﬁle when loading 
+at run-time 
+•	Conﬁgure ld.so for ne w (or changed) libr ary: 
+athena% ldconfig -v 
+22 Athena is MIT's UNIX-based computing environment. OCW does not provide access to it.1
+1
+6.087 Lecture 9 – Jan uary 22, 2010
+Review 
+Using Exter nal Libr aries 
+Symbols and Linkage 
+Static vs . Dynamic Linkage 
+Linking Exter nal Libr aries 
+Symbol Resolution Issues 
+Creating Libr aries 
+Data Str uctures 
+B-trees 
+Priority Queues 
+23 
+Data structures
+•	Many data str uctures designed to suppor t certain 
+algor ithms 
+•	B-tree -gener alized binar y search tree, used for databases 
+and ﬁle systems 
+•	Priority queue - order ing data b y “priority,” used f or sor ting, 
+event sim ulation, and man y other algor ithms 
+23 
+B-tree structure
+•	Binar y search tree with v ariable number of children (at 
+least t, up to 2t) 
+Tree is balanced – all lea ves at same le vel • 
+•	Node contains list of “k eys” – divide r ange of elements in 
+children 
+[Cormen, Leiserson, Riv est, and Stein. Introduction to Algor ithms, 2nd ed. 
+MIT Press , 2001.]	Courtesy of MIT Press. Used with permission. 
+24 
+Initializing a B-tree
+•	Initially , B-tree contains root node with no children (leaf 
+node), no k eys 
+•	Note: root node e xempt from minim um children 
+requirement 
+25 
+Inser ting elements
+•	Inser tion complicated due to maxim um n umber of k eys 
+•	At high le vel: 
+1. traverse tree do wn to leaf node 
+2. if leaf already full, split into tw o lea ves: 
+(a)	move median k ey element into parent (splitting parent 
+already full) 
+(b) split remaining k eys into tw o lea ves (one with lo wer, one with 
+higher elements) 
+3. add element to sor ted list of k eys 
+•	Can accomplish in one pass , splitting full parent nodes 
+during tr aversal in step 1 
+26 
+Inser ting elements
+B-tree with t =3 (nodes ma y have 2–5 keys):
+[Cormen, Leiserson, Riv est, and Stein. Introduction to Algor ithms, 2nd ed. 
+MIT Press , 2001.] Courtesy of MIT Press. Used with permission. 
+27 
+Inser ting elements
+More inser tion e xamples:
+[Cormen, Leiserson, Riv est, and Stein. Introduction to Algor ithms, 2nd ed. 
+MIT Press , 2001.] Courtesy of MIT Press. Used with permission. 
+28 
+Sear ching a B-tree
+• Search lik e searching a binar y search tree: 
+1. start at root. 
+2. if node empty , element not in tree 
+3. search list of k eys for element (using linear or binar y 
+search) 
+4. if element in list, retur n element 
+5. otherwise , element betw een k eys, and repeat search on 
+child node f or that r ange 
+• Tree is balanced – search tak es O(log n) time 
+29 
+Deletion
+•	Deletion complicated b y minim um children restr iction 
+•	When tr aversing tree to ﬁnd element, need to ensure child 
+nodes to be tr aversed ha ve enough k eys 
+•	if adjacent child node has at least t keys, move separ ating 
+key from parent to child and closest k ey in adjacent child to 
+parent 
+•	if no adjacent child nodes ha ve extra keys, merge child 
+node with adjacent child 
+•	When remo ving a k ey from a node with children, need to 
+rearr ange k eys again 
+•	if child bef ore or after remo ved key has enough k eys, move 
+closest k ey from child to parent 
+•	if neither child has enough k eys, merge both children 
+•	if child not a leaf , have to repeat this process 
+30 
+Deletion e xamples
+[Cormen, Leiserson, Riv est, and Stein. Introduction to Algor ithms, 2nd ed. 
+MIT Press , 2001.] 
+Courtesy of MIT Press. Used with permission. 
+31 
+Deletion e xamples
+[Cormen, Leiserson, Riv est, and Stein. Introduction to Algor ithms, 2nd ed. 
+MIT Press , 2001.] 
+Courtesy of MIT Press. Used with permission. 
+32 
+Deletion e xamples
+[Cormen, Leiserson, Riv est, and Stein. Introduction to Algor ithms, 2nd ed. 
+MIT Press , 2001.] Courtesy of MIT Press. Used with permission. 
+33 
+Priority queue
+•	Abstr act data str ucture order ing elements b y priority 
+•	Elements enqueued with pr iority, dequeued in order of 
+highest pr iority 
+•	Common implementations: heap or binar y search tree 
+•	Oper ations: inser tion, peek/e xtract max-pr iority element, 
+increase element pr iority 
+34 
+Heaps
+•	Heap - tree with heap-order ing proper ty: priority(child) ≤
+priority(parent) 
+•	More sophisticated heaps e xist – e .g. binomial heap , 
+Fibonacci heap 
+•	We’ll focus on simple binar y heaps 
+•	Usually implemented as an arr ay with top element at 
+beginning 
+•	Can sor t data using a heap – O(n log n) worst case 
+in-place sor t! 
+35 
+Extracting data
+Heap-order ing proper ty maxim um pr iority element at •	 ⇒
+top of heap 
+•	Can peek b y looking at top element 
+•	Can remo ve top element, mo ve last element to top , and 
+swap top element do wn with its children until it satisﬁes 
+heap-order ing proper ty: 
+1. start at top 
+2. ﬁnd largest of element and left and r ight child; if element is 
+largest, w e are done 
+3. otherwise , swap element with largest child and repeat with 
+element in ne w position 
+36 
+Inser ting data/increasing priority
+• Inser t element at end of heap , set to lo west pr iority −∞ 
+• Increase pr iority of element to real pr iority: 
+1. start at element 
+2. if new priority less than parent’ s, we are done 
+3. otherwise , swap element with parent and repeat 
+37 
+Example of inser ting data
+[Cormen, Leiserson, Riv est, and Stein. Introduction to Algor ithms, 2nd ed. 
+MIT Press , 2001.] 
+Courtesy of MIT Press. Used with permission. 
+38 
+Summar y
+Topics co vered: 
+• Using e xternal libr aries 
+•	symbols and linkage 
+•	static vs . dynamic linkage 
+•	linking to y our code 
+•	symbol clashing 
+•	Creating libr aries
+Data str uctures
+• 
+B-tree• 
+•	priority queue 
+39 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

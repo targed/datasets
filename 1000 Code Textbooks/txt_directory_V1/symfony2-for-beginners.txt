@@ -1,0 +1,907 @@
+Symfony2 for Beginners
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Hi, my name is …
+Julius Beckmann
+and i work at
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+… and i do:
+•PHP , Symfony2
+•Erlang, Elixir
+•NodeJS
+•DevOps + Continuous Everything!
+(github|twitter).com/h4cc
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Agenda
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Agenda 1/2
+•What is Symfony?•Howto
+• Install
+• Develop
+• Deploy
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Agenda 1/2
+•What is Symfony?
+•Howto
+• Install
+• Develop
+• Deploy
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Agenda 2/2
+• Plain PHP to Symfony
+• Starting Point
+• Dispatching
+• Routing
+• Symfony HTTP F oundation
+• Symfony HTTP Kernel
+• Symfony Routing
+• Symfony Controller• Extending Symfony Kernel
+• Kernel Events
+• Request/Response Flow
+• (Subrequests)
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Agenda 2/2
+• Plain PHP to Symfony
+• Starting Point
+• Dispatching
+• Routing
+• Symfony HTTP F oundation
+• Symfony HTTP Kernel
+• Symfony Routing
+• Symfony Controller
+• Extending Symfony Kernel
+• Kernel Events
+• Request/Response Flow
+• (Subrequests)
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+What is Symfony?
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+What is Symfony?
+•Abstract:
+• PHP W eb Application F ramework
+• At least PHP 5.3.3
+• By F abien Potencier (fabpot)•V ersions:
+• v1 since 2005 (legacy)
+• v2 since 2011
+• v3 in November 2015
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+What is Symfony?
+•Abstract:
+• PHP W eb Application F ramework
+• At least PHP 5.3.3
+• By F abien Potencier (fabpot)
+•V ersions:
+• v1 since 2005 (legacy)
+• v2 since 2011
+• v3 in November 2015
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+•Patterns:
+• F ramework Components
+• Modular design (Bundles)
+• Dependency Injection
+• Event Dispatcher•Used by:
+• Drupal 8
+• eZPublish 5
+• Contao 4
+• phpBB 3
+• …
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+•Patterns:
+• F ramework Components
+• Modular design (Bundles)
+• Dependency Injection
+• Event Dispatcher
+•Used by:
+• Drupal 8
+• eZPublish 5
+• Contao 4
+• phpBB 3
+• …
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Installing Symfony
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Installer
+A tool for bootstrapping new Symfony projects..Installing the installer..
+..
+.
+.
+.
+.
+curl-LsS http://symfony.com/installer -o symfony.phar
+chmoda+x symfony.phar
+.Using the installer..
+..
+.
+.
+.
+.
+phpsymfony.phar new blog
+phpsymfony.phar new blog 2.3
+phpsymfony.phar new blog 2.5.2
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Installer
+A tool for bootstrapping new Symfony projects.
+.Installing the installer..
+..
+.
+.
+.
+.
+curl-LsS http://symfony.com/installer -o symfony.phar
+chmoda+x symfony.phar.Using the installer..
+..
+.
+.
+.
+.
+phpsymfony.phar new blog
+phpsymfony.phar new blog 2.3
+phpsymfony.phar new blog 2.5.2
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Installer
+A tool for bootstrapping new Symfony projects.
+.Installing the installer..
+..
+.
+.
+.
+.
+curl-LsS http://symfony.com/installer -o symfony.phar
+chmoda+x symfony.phar
+.Using the installer..
+..
+.
+.
+.
+.
+phpsymfony.phar new blog
+phpsymfony.phar new blog 2.3
+phpsymfony.phar new blog 2.5.2
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Composer
+Manual way of bootstrapping symfony projects.
+phpcomposer.phar create-project \
+symfony/framework-standard-edition \
+blog"2.3.*"This will do:
+..1git clone https://github.com/symfony/symfony-standard blog
+..2cd blog
+..3git checkout v2.3.X
+..4rm -rf .git
+..5composer install
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Composer
+Manual way of bootstrapping symfony projects.
+phpcomposer.phar create-project \
+symfony/framework-standard-edition \
+blog"2.3.*"
+This will do:
+..1git clone https://github.com/symfony/symfony-standard blog
+..2cd blog
+..3git checkout v2.3.X
+..4rm -rf .git
+..5composer install
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Development
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Development
+.Using the PHP >=5.4 internal W ebserver..
+..
+.
+.
+.
+.
+phpapp/console server:run
+# or
+php-S 127.0.0.1:8080 -t web/.F rontend T ools..
+..
+.
+.
+.
+.
+•php app/console assets:install
+•php app/console assetic:dump
+• Grunt, Gulp, Brunch
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Development
+.Using the PHP >=5.4 internal W ebserver..
+..
+.
+.
+.
+.
+phpapp/console server:run
+# or
+php-S 127.0.0.1:8080 -t web/
+.F rontend T ools..
+..
+.
+.
+.
+.
+•php app/console assets:install
+•php app/console assetic:dump
+• Grunt, Gulp, Brunch
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Deployment
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Deployment
+Poor-Man example :
+.Initial..
+..
+.
+.
+.
+.
+gitclone git@github.com:your/project.git /var/www
+cd/var/www
+# ensure correct permissions on app/cache and app/logs.Deploy..
+..
+.
+.
+.
+.
+gitpull
+rm-f web/app_*.php
+composer install
+phpapp/console cache:clear --env=prod
+# ... more needed commands like "doctrine"
+T ools: Capifony , Ansible, SaltStack, Puppet, Chef.
+Automation with: Jenkins .
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Deployment
+Poor-Man example :
+.Initial..
+..
+.
+.
+.
+.
+gitclone git@github.com:your/project.git /var/www
+cd/var/www
+# ensure correct permissions on app/cache and app/logs
+.Deploy..
+..
+.
+.
+.
+.
+gitpull
+rm-f web/app_*.php
+composer install
+phpapp/console cache:clear --env=prod
+# ... more needed commands like "doctrine"
+T ools: Capifony , Ansible, SaltStack, Puppet, Chef.
+Automation with: Jenkins .
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+F rom plain PHP to Symfony
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Starting point
+GET /post.php?id=1
+<?php// post.php
+$postId =(int) $_GET ['id' ];
+$posts =array (1=> 'My first post' );
+if(!isset ($posts [$postId ])) {
+header ("HTTP/1.0 404 Not Found" );
+die ('Post not found' );
+}
+$post =$posts [$postId ];
+echo '<h1>Post #' ,$postId ,'</h1>
+<p>' ,$post ,'</p>' ;
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+W ebserver Rewrites
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Using rewrites
+GET /post/1
+..htaccess Conﬁguration..
+..
+.
+.
+.
+.
+RewriteEngine on
+RewriteRule ^post/([0-9]+)$ post.php?id=$1.Problems..
+..
+.
+.
+.
+.
+• Depends on W ebserver
+• Static conﬁguration
+• Outside of Application
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Using rewrites
+GET /post/1
+..htaccess Conﬁguration..
+..
+.
+.
+.
+.
+RewriteEngine on
+RewriteRule ^post/([0-9]+)$ post.php?id=$1
+.Problems..
+..
+.
+.
+.
+.
+• Depends on W ebserver
+• Static conﬁguration
+• Outside of Application
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Dispatcher and Routing
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Using dispatcher
+..htaccess Conﬁguration..
+..
+.
+.
+.
+.
+RewriteEngine On
+RewriteRule ^(.*)$ /index.php [QSA].index.php with Routing..
+..
+.
+.
+.
+.
+<?php// index.php
+$path= $_SERVER ['PATH_INFO' ];
+// Routing
+if(preg_match ("@^/post/(?P<id>[0-9]+)@" , $path, $m)){
+$_GET['id']=$m['id'];
+require('controller/post.php' );
+}else{
+require('controller/index.php' );
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Using dispatcher
+..htaccess Conﬁguration..
+..
+.
+.
+.
+.
+RewriteEngine On
+RewriteRule ^(.*)$ /index.php [QSA]
+.index.php with Routing..
+..
+.
+.
+.
+.
+<?php// index.php
+$path= $_SERVER ['PATH_INFO' ];
+// Routing
+if(preg_match ("@^/post/(?P<id>[0-9]+)@" , $path, $m)){
+$_GET['id']=$m['id'];
+require('controller/post.php' );
+}else{
+require('controller/index.php' );
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony HTTP F oundation
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony HTTP F oundation
+..1Using HTTP as a Interface..2Hiding PHP-ServerAPI
+! $_GET, $_POST, $_SER VER, echo(), header(), die() …
+..3Providing Request/Response Objects
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony HTTP F oundation
+..1Using HTTP as a Interface
+..2Hiding PHP-ServerAPI
+! $_GET, $_POST, $_SER VER, echo(), header(), die() …..3Providing Request/Response Objects
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony HTTP F oundation
+..1Using HTTP as a Interface
+..2Hiding PHP-ServerAPI
+! $_GET, $_POST, $_SER VER, echo(), header(), die() …
+..3Providing Request/Response Objects
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Request Class
+<?php
+useSymfony\Component\HttpFoundation\Request ;
+$_GET['foo']=42;
+$_POST['bar']=1337;
+$request = Request::createFromGlobals ();
+$request ->query->get ('foo');// from _GET
+$request ->request->get ('bar');// from _POST
+$request ->get('foo');// from any source.
+Encapsulates $_GET, $_POST, $_COOKIE, $_FILES and $_SERVER
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Response Class
+<?php
+useSymfony\Component\HttpFoundation\Response ;
+return newResponse ('Hello World' ,200);• Capsules response content, status and headers.
+• Some Helper:
+•JsonResponse(array('answer' => 42))
+•RedirectResponse('http://example.com/', 302)
+•StreamedResponse(function() {...})
+•BinaryFileResponse('images/42.jpg')
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Response Class
+<?php
+useSymfony\Component\HttpFoundation\Response ;
+return newResponse ('Hello World' ,200);
+• Capsules response content, status and headers.
+• Some Helper:
+•JsonResponse(array('answer' => 42))
+•RedirectResponse('http://example.com/', 302)
+•StreamedResponse(function() {...})
+•BinaryFileResponse('images/42.jpg')
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Beneﬁts
+..1Reproducible ! T estable..2Common Interface ! Reuseable
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Beneﬁts
+..1Reproducible ! T estable
+..2Common Interface ! Reuseable
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony HTTP Kernel
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Http Kernel Interface
+<?php
+interface Symfony\Component\HttpKernel\HttpKernelInterface {
+const MASTER_REQUEST = 1;// External request (from browser).
+const SUB_REQUEST = 2;// Internal request.
+/** @return Response */
+public function handle (Request $request ,$type =1, $catch =true );
+}
+A HttpKernel has to transform Request toResponse .
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+HTTP Kernel
+<?php// index.php
+class ExampleKernel implements HttpKernelInterface {
+public function handle (Request $req ) {
+// Step 1: Routing
+$controller =$this ->routeRequestToController ($req );
+// Step 2: ?
+$response = $this ->callRequestOnController ($controller , $req );
+// PROFIT!!!
+return $response ;
+}
+// ...
+}
+$kernel =new ExampleKernel ();
+$response = $kernel ->handle (Request::createFromGlobals ());
+$response ->send ();
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Routing
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Routing
+.Goal..
+..
+.
+.
+.
+.
+Find Control ler and Action for given Request..Example Blog Post Route..
+..
+.
+.
+.
+.
+# app/config/routing.yml
+blog_post_show: # Name of route
+path:/post/{id} # Pattern with placeholders
+defaults:
+_controller: BlogBundle:Post:show
+requirements:
+id:\d+ # Regex possible
+_method: GET # Ensure used method
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Routing
+.Goal..
+..
+.
+.
+.
+.
+Find Control ler and Action for given Request.
+.Example Blog Post Route..
+..
+.
+.
+.
+.
+# app/config/routing.yml
+blog_post_show: # Name of route
+path:/post/{id} # Pattern with placeholders
+defaults:
+_controller: BlogBundle:Post:show
+requirements:
+id:\d+ # Regex possible
+_method: GET # Ensure used method
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Routing - Generate URLs
+.F rom PHP using “router”..
+..
+.
+.
+.
+.
+<?php
+$router =$this->get('router' );
+$path=$router->generate ('blog_post_show' ,['id'=>42]);
+$url=$router->generate ('blog_post_show' ,['id'=>42], true);.F rom T wig using helper..
+..
+.
+.
+.
+.
+<a href="{{ path('blog_post_show', {'id': 42}) }}">
+Relative URL
+</a>
+<a href="{{ url('blog_post_show', {'id': 42}) }}">
+Absolute URL
+</a>
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Routing - Generate URLs
+.F rom PHP using “router”..
+..
+.
+.
+.
+.
+<?php
+$router =$this->get('router' );
+$path=$router->generate ('blog_post_show' ,['id'=>42]);
+$url=$router->generate ('blog_post_show' ,['id'=>42], true);
+.F rom T wig using helper..
+..
+.
+.
+.
+.
+<a href="{{ path('blog_post_show', {'id': 42}) }}">
+Relative URL
+</a>
+<a href="{{ url('blog_post_show', {'id': 42}) }}">
+Absolute URL
+</a>
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Routing - Tipps
+.Routing to static page..
+..
+.
+.
+.
+.
+imprint:
+path:/imprint
+defaults:
+_controller: FrameworkBundle:Template:template
+template: static/imprint.html.twig.Routing to static redirect..
+..
+.
+.
+.
+.
+admin_shortcut:
+path:/admin
+defaults:
+_controller: FrameworkBundle:Redirect:urlRedirect
+path: /backend/administration/login
+permanent: false
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Routing - Tipps
+.Routing to static page..
+..
+.
+.
+.
+.
+imprint:
+path:/imprint
+defaults:
+_controller: FrameworkBundle:Template:template
+template: static/imprint.html.twig
+.Routing to static redirect..
+..
+.
+.
+.
+.
+admin_shortcut:
+path:/admin
+defaults:
+_controller: FrameworkBundle:Redirect:urlRedirect
+path: /backend/administration/login
+permanent: false
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Controller
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Controller
+Request! Controller ! Response<?php
+classHelloController {
+public function worldAction (Request $request ){
+// Translate Request to application logic here ...
+$content ='Hello ' .$request ->get('name','World');
+// ... and create Response for result.
+return newResponse ($content ,200);
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Controller
+Request! Controller ! Response
+<?php
+classHelloController {
+public function worldAction (Request $request ){
+// Translate Request to application logic here ...
+$content ='Hello ' .$request ->get('name','World');
+// ... and create Response for result.
+return newResponse ($content ,200);
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+post.php as Symfony Controller
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+PostController
+<?php// src/BlogBundle/Controller/PostController.php
+class PostController extends Controller {
+public function showAction (Request $request ) {
+$id =$request ->get ('id' );
+$post = $this ->getDoctrine ()
+->getRepository ('BlogBundle:Post' )
+->find ($id );
+if(!$post ) {
+// Using exceptions here.
+throw $this ->createNotFoundException ('Post not found' );
+}
+return new Response ('<h1>Post #' . $post ->getId (). '</h1>
+<p>' . $post ->getContent () .'</p>' , 200 );
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Parameter injection
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Parameter injection
+<?php// src/BlogBundle/Controller/PostController.php
+class PostController extends Controller {
+public function showAction ($id ){// <-- Parameter from route
+$post = $this ->getDoctrine ()
+->getRepository ('BlogBundle:Post' )
+->find ($id );
+if(!$post ) {
+throw $this ->createNotFoundException ('Post not found' );
+}
+return new Response ('<h1>Post #' . $post ->getId (). '</h1>
+<p>' . $post ->getContent () .'</p>' , 200 );
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+T emplating
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+T emplating
+<?php// src/BlogBundle/Controller/PostController.php
+class PostController extends Controller {
+public function showAction ($id ){
+$post = $this ->getDoctrine ()
+->getRepository ('BlogBundle:Post' )
+->find ($id );
+if(!$post ) {
+throw $this ->createNotFoundException ('Post not found' );
+}
+// Using template system
+return $this ->render ('post/show.html.twig' , ['post' => $post ]);
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+ParamConverter Annotation
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+ParamConverter Annotation
+<?php// src/BlogBundle/Controller/PostController.php
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter ;
+class PostController extends Controller {
+/**
+* @ParamConverter()
+*/
+public function showAction (Post $post ) {// Post from DB or 404
+return $this ->render ('post/show.html.twig' , ['post' => $post ]);
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+T emplate Annotation
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+T emplate Annotation
+<?php// src/BlogBundle/Controller/PostController.php
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter ;
+class PostController extends Controller {
+/**
+* @ParamConverter()
+* @Template("post/show.html.twig")
+*/
+public function showAction (Post $post ) {
+return ['post' => $post ];
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+T emplate Annotation
+<?php// src/BlogBundle/Controller/PostController.php
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter ;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template ;
+class PostController extends Controller {
+/**
+* @ParamConverter()
+* @Template("post/show.html.twig", vars={"post"})
+*/
+public function showAction (Post $post ) {}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Route Annotation
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Route Annotation
+<?php// src/BlogBundle/Controller/PostController.php
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter ;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template ;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route ;
+class PostController extends Controller {
+/**
+* @Route("/show/{id}", requirements={"id"=" \d+","_method"="GET"})
+* @ParamConverter()
+* @Template(vars={"post"})
+*/
+public function showAction (Post $post ) {}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Extending the Symfony Kernel
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Kernel Events
+Symfony is using Events to process Requests..Every Request..
+..
+.
+.
+.
+.
+• kernel.request
+• kernel.controller
+• kernel.response
+.Optional..
+..
+.
+.
+.
+.
+• kernel.view
+• kernel.exception
+• kernel.terminate
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Kernel Events
+Symfony is using Events to process Requests.
+.Every Request..
+..
+.
+.
+.
+.
+• kernel.request
+• kernel.controller
+• kernel.response.Optional..
+..
+.
+.
+.
+.
+• kernel.view
+• kernel.exception
+• kernel.terminate
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Kernel Events
+Symfony is using Events to process Requests.
+.Every Request..
+..
+.
+.
+.
+.
+• kernel.request
+• kernel.controller
+• kernel.response
+.Optional..
+..
+.
+.
+.
+.
+• kernel.view
+• kernel.exception
+• kernel.terminate
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Event kernel.request
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Resolve Controller
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Event kernel.controller
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Controller Arguments
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Call Controller
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Call Controller
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Event kernel.view
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Event kernel.exception
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony HttpKernel Events
+<?php// Example implementation of symfony kernel-events.
+class HttpKernel implements HttpKernelInterface , TerminableInterface {
+public function handle (Request $req ) {
+try {
+$gre = $this ->dispatch ('kernel.request' , new GetResponseEvent ($req ));
+if ($gre ->hasResponse ()) {
+$resp = $gre ->getResponse ();
+goto response ;
+}
+$this ->resolveController ($req );
+$controller = $this ->dispatch ('kernel.controller' , new FilterControllerEvent ($req ));
+$this ->resolveArguments ($req );
+$resp = $this ->callController ($controller , $req );
+if (!$resp instanceof Response ) {
+$grfcre = new GetResponseForControllerResultEvent ($req , $resp );
+$resp = $this ->dispatch ('kernel.view' , $grfcre )->getResponse ();
+}
+}catch (Exception $e ) {
+$resp = $this ->dispatch ('kernel.exception' , new GetResponseForExceptionEvent ($req , $e )) ->getResponse ();
+}
+response:
+return $this ->dispatch ('kernel.response' , new FilterResponseEvent ($req , $resp )) ->getResponse ();
+}
+public function terminate (Request $req , Response $resp ) {
+$this ->dispatch ('kernel.terminate' , new PostResponseEvent ($req , $resp ));
+}
+}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Questions?
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Symfony Sub-Requests
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Sub-Requests: Flow
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Sub-Requests: Example
+.F orwarding
+..
+..
+.
+.
+.
+.
+<?php
+public function impressumAction ($name ) {
+$response = $this ->forward ('ExampleContentBundle:Static:imprint' );
+}.Rendering T emplates
+..
+..
+.
+.
+.
+.
+{{ render(url('/partial/footer.html')) }}
+{# ... or ... #}
+{{ render(controller('ExampleContentBundle:Partial:footer')) }}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+Sub-Requests: Example
+.F orwarding
+..
+..
+.
+.
+.
+.
+<?php
+public function impressumAction ($name ) {
+$response = $this ->forward ('ExampleContentBundle:Static:imprint' );
+}
+.Rendering T emplates
+..
+..
+.
+.
+.
+.
+{{ render(url('/partial/footer.html')) }}
+{# ... or ... #}
+{{ render(controller('ExampleContentBundle:Partial:footer')) }}
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+The end!
+Symfony2 for Beginners Julius Beckmann - @h4cc Silpion IT-Solutions
+

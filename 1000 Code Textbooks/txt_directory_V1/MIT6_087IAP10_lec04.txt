@@ -1,0 +1,354 @@
+6.087 Lecture 4 – Jan uary 14, 2010
+Review 
+Control ﬂo w 
+I/O 
+Standard I/O 
+String I/O 
+File I/O 
+1 
+Bloc ks
+• Blocks combine m ultiple statements into a single unit. 
+• Can be used when a single statement is e xpected. 
+• Creates a local scope (v ariables declared inside are local 
+to the b lock).
+Blocks can be nested.
+ • 
+{ 
+int x=0; 
+{ 
+int y=0; / ∗ both x and y visible ∗ /
+}
+/ ∗ only x visible ∗ / 
+} 
+1 
+Conditional b locks
+if ... else..else if is used f or conditional br anching of e xecution 
+if ( cond ) 
+{ 
+/ ∗ code executed if cond is true ∗ / 
+} 
+else 
+{ 
+/ ∗ code executed if cond is false ∗ / 
+} 
+2 
+Conditional b locks
+switch..case is used to test m ultiple conditions (more efﬁcient 
+than if else ladders). 
+switch ( opt ) 
+{ 
+case ’A’ : 
+/ ∗ execute if opt == ’A’ ∗ / 
+break ;
+case ’B’ :
+case ’C’ :
+/ ∗ execute if opt == ’B’ || opt == ’C’ ∗ / 
+default : 
+} 
+3 
+Iterative b locks
+• while loop tests condition bef ore e xecution of the b lock. 
+• do..while loop tests condition after e xecution of the b lock. 
+• for loop provides initialization, testing and iteration together . 
+4 
+6.087 Lecture 4 – Jan uary 14, 2010
+Review 
+Control ﬂo w 
+I/O 
+Standard I/O 
+String I/O 
+File I/O 
+5 
+goto
+•	goto allows you to jump unconditionall y to arbitr ary part of 
+your code (within the same function). 
+•	the location is identiﬁed using a label. 
+a label is a named location in the code . It has the same • 
+form as a v ariable followed by a ’:’ 
+start : 
+{ 
+if ( cond ) 
+goto outside ; 
+/ ∗ some code ∗ / 
+goto start ; 
+} 
+outside : 
+/ ∗ outside block ∗ / 
+5 
+Spaghetti code
+Dijkstr a. Go To Statement Considered Harmful. 
+Comm unications of the A CM 11(3),1968 
+• Excess use of goto creates sphagetti code. 
+• Using goto makes code harder to read and deb ug. 
+• Any code that uses goto can be wr itten without using one . 
+6 
+error handling 
+Language lik e C++ and J ava pro vide e xception mechanism to 
+recover from errors . In C, goto provides a convenient way to exit 
+from nested b locks. 
+cont _flag =1; 
+for (..) 
+for ( . . ) { 
+{ for ( i n i t ; c o n t _ f l a g ; i t e r ) 
+for ( . . ) { 
+{ i f ( error_cond ) 
+i f ( error_cond ) { 
+goto e r r o r ; c o n t _ f l a g =0; 
+/ ∗ skips 2 blocks ∗ / break ; 
+} } 
+} / ∗ i n n er loop ∗ / 
+e r r o r : } 
+i f ( ! c o n t _ f l a g ) break ; 
+/ ∗ outer loop ∗ / 
+} 
+7 
+6.087 Lecture 4 – Jan uary 14, 2010
+Review 
+Control ﬂo w 
+I/O 
+Standard I/O 
+String I/O 
+File I/O 
+8 
+Preliminaries
+•	Input and output f acilities are pro vided b y the standard 
+library <stdio .h> and not b y the language itself . 
+•	A text stream consists of a ser ies of lines ending with ’\n’. 
+The standard libr ary tak es care of con version from 
+’\r\n’ −’\n’ 
+•	A binar y stream consists of a ser ies of r aw bytes. 
+•	The streams pro vided b y standard libr ary are b uffered. 
+8 
+Standar d input and output
+int putchar( int) 
+•	putchar(c) puts the char acter c on the standard output. 
+• it retur ns the char acter pr inted or EOF on error . 
+int getchar () 
+•	returns the ne xt char acter from standard input.
+it retur ns EOF on error .
+ • 
+9 
+Standar d input and output
+What does the f ollowing code do? 
+int main () 
+{ 
+char c; 
+while ((c=getchar ())!= EOF) 
+{ 
+if ( c>=’A’ && c<=’Z’ )
+c=c−’A’+’a’ ;
+putchar (c );
+}
+return 0;
+} 
+To use a ﬁle instead of standard input, use ’<’ oper ator (*nix). 
+•	Normal in vocation: ./a.out 
+•	Input redirection: a.out < ﬁle .txt. Treats ﬁle .txt as source of 
+standard input.This is an OS f eature , not a language 
+feature . 
+10 
+Standar d output:f ormatted
+int printf (char format[],arg1,arg2 ,...) 
+•	printf() can be used f or formatted output. 
+•	It tak es in a v ariab le number of arguments . 
+•	It retur ns the n umber of char acters pr inted. 
+•	The f ormat can contain liter al str ings as w ell as f ormat 
+speciﬁers (star ts with %). 
+Examples: 
+printf ( "hello world\n" ); 
+printf ( "%d\n" ,10); / ∗ format: %d (integer),argument:10 ∗ / 
+printf ( "Prices:%d and %d\n" ,10 ,20); 
+11 
+printf f ormat speciﬁcation
+The f ormat speciﬁcation has the f ollowing components 
+%[ﬂags ][width ][. precision ][length ]<type> 
+type: 
+type meaning example 
+d,i integer printf ("%d",10); /∗ prints 10∗/ 
+x,X integer (he x) printf ("%x",10); /∗ print 0xa∗/ 
+u unsigned integer printf ("%u",10); /∗ prints 10∗/ 
+c character printf ("%c",’A’); /∗pr ints A∗/ 
+s string printf ("%s","hello"); /∗pr ints hello∗/ 
+f ﬂoat printf ("%f",2.3); /∗ prints 2.3∗/ 
+d doub le printf ("%d",2.3); /∗ prints 2.3∗/ 
+e,E ﬂoat(e xp) 1e3,1.2E3,1E−3 
+% literal % printf ("%d %%",10); /∗pr ints 10%∗/ 
+12 
+printf f ormat speciﬁcation (cont.)
+%[ﬂags ][width ][. precision ][modiﬁer ]<type> 
+width: 
+format output 
+printf ("%d",10) "10" 
+printf ("%4d",10) bb10 (b:space) 
+printf ("%s","hello") hello 
+printf ("%7s","hello") bbhello 
+13 
+printf f ormat speciﬁcation (cont.)
+%[ﬂags ][width ][. precision ][modiﬁer ]<type> 
+ﬂag: 
+format output 
+printf ("%d,%+d,%+d",10,−10) 10,+10,-10 
+printf ("%04d",10) 0010 
+printf ("%7s","hello") bbhello 
+printf ("%-7s","hello") hellob b 
+14 
+printf f ormat speciﬁcation (cont.)
+%[ﬂags ][width ][. precision ][modiﬁer ]<type> 
+precision: 
+format output 
+printf ("%.2f,%.0f,1.141,1.141) 1.14,1 
+printf ("%.2e,%.0e,1.141,100.00) 1.14e+00,1e+02 
+printf ("%.4s","hello") hell 
+printf ("%.1s","hello") h 
+15 
+printf f ormat speciﬁcation (cont.)
+%[ﬂags ][width ][. precision ][modiﬁer ]<type> 
+modiﬁer: 
+modiﬁer meaning 
+h interpreted as shor t. Use with i,d,o ,u,x 
+l interpreted as long. Use with i,d,o ,u,x 
+L interpreted as doub le. Use with e ,f,g 
+16 
+Digression: character arra ys
+Since w e will be reading and wr iting str ings, here is a br ief 
+digression 
+• strings are represented as an arr ay of char acters 
+• C does not restr ict the length of the str ing. The end of the 
+string is speciﬁed using 0. 
+For instance , "hello" is represented using the arr ay 
+{’h’,’e’,’l’,’l’,’\0’} . 
+Declar ation e xamples: 
+• char str []="hello"; /∗compiler tak es care of siz e∗/ 
+• char str[10]="hello"; /∗make sure the arr ay is large enough ∗/ 
+• char str []={ ’h’,’e’,’l’,’l’,0}; 
+Note: use \" if y ou w ant the str ing to contain ". 
+17 
+Digression: character arra ys
+Compar ing str ings: the header ﬁle <string.h> provides the 
+function int strcmp(c har s [],char t []) that compares tw o strings in 
+dictionar y order (lo wer case letters come after capital case). 
+the function retur ns a v alue <0 if s comes bef ore t • 
+the function retur n a v alue 0 if s is the same as t • 
+the function retur n a v alue >0 if s comes after t • 
+• strcmp is case sensitiv e 
+Examples 
+• strcmp("A","a") /∗<0∗/ 
+• strcmp("IRONMAN","BATMAN") /∗>0∗/ 
+• strcmp("aA","aA") /∗==0∗/ 
+• strcmp("aA","a") /∗>0∗/ 
+18 
+Formatted input
+int scanf(c har∗ format ,...) is the input analog of pr intf. 
+•	scanf reads char acters from standard input, inter preting 
+them according to f ormat speciﬁcation 
+•	Similar to printf , scanf also tak es variable number of
+arguments .
+•	The f ormat speciﬁcation is the same as that f or printf 
+•	When m ultiple items are to be read, each item is assumed 
+to be separ ated b y white space .
+It retur ns the n umber of items read or EOF .
+ • 
+•	Impor tant: scanf ignores white spaces . 
+•	Impor tant: Arguments ha ve to be address of v ariables 
+(pointers). 
+19 
+Formatted input
+int scanf(c har∗ format ,...) is the input analog of pr intf. 
+Examples: 
+printf ("%d",x) scanf("%d",&x) 
+printf ("%10d",x) scanf("%d",&x) 
+printf ("%f",f) scanf("%f",&f) 
+printf ("%s",str) scanf("%s",str) /∗note no & required∗/ 
+printf ("%s",str) scanf("%20s",str) /∗note no & required∗/ 
+printf ("%s %s",fname,lname) scanf("%20s %20s",fname,lname) 
+20 
+String input/output
+Instead of writing to the standard output, the formatted data can
+be wr itten to or read from char acter arr ays.
+int sprintf (char string [], char format[],arg1,arg2)
+•	The f ormat speciﬁcation is the same as pr intf. 
+•	The output is wr itten to str ing (does not chec k size). 
+•	Retur ns the n umber of char acter wr itten or negativ e value 
+on error . 
+int sscanf(c har str [], char format[],arg1,arg2) 
+•	The f ormat speciﬁcation is the same as scanf; 
+•	The input is read from str v ariable. 
+•	Retur ns the n umber of items read or negativ e value on 
+error. 
+21 
+File I/O
+So far, we have read from the standard input and wr itten to the
+standard output. C allo ws us to read data from te xt/binar y ﬁles
+using fopen ().
+FILE∗ fopen(c har name[],c har mode[])
+•	mode can be "r" (read only),"w" (wr ite only),"a" (append) 
+among other options . "b" can be appended f or binar y ﬁles . 
+•	fopen retur ns a pointer to the ﬁle stream if it e xists or
+NULL otherwise .
+•	We don’t need to kno w the details of the FILE data type . 
+•	Impor tant: The standard input and output are also FILE* 
+datatypes (stdin,stdout). 
+•	Impor tant: stderr corresponds to standard error
+output(diff erent from stdout).
+22 
+File I/O(cont.)
+int fclose (FILE∗ fp) 
+•	closes the stream (releases OS resources). 
+•	fclose() is automatically called on all open ﬁles when 
+program ter minates . 
+23 
+File input
+int getc(FILE∗ fp) 
+•	reads a single char acter from the stream. 
+•	returns the char acter read or EOF on error/end of ﬁle . 
+Note: getchar simply uses the standard input to read a 
+character . We can implement it as f ollows: 
+#deﬁne getchar() getc(stdin ) 
+char[] fgets (char line [], int maxlen,FILE ∗ fp) 
+•	reads a single line (upto maxlen char acters) from the input 
+stream (including linebreak). 
+•	returns a pointer to the char acter arr ay that stores the line 
+(read-only)
+return NULL if end of stream.
+ • 
+24 
+File output
+int putc(int c,FILE∗ fp) 
+• writes a single char acter c to the output stream. 
+returns the char acter wr itten or EOF on error . • 
+Note: putchar simply uses the standard output to wr ite a 
+character . We can implement it as f ollows: 
+#deﬁne putchar(c) putc (c,stdout ) 
+int fputs (char line [], FILE∗ fp) 
+• writes a single line to the output stream. 
+• returns zero on success , EOF otherwise . 
+int fscanf (FILE∗ fp,char format[],arg1,arg2) 
+• similar to scanf ,sscanf 
+• reads items from input stream fp . 
+25 
+Command line input
+•	In addition to taking input from standard input and ﬁles, you 
+can also pass input while in voking the prog ram. 
+•	Command line parameters are v ery common in *nix 
+environment. 
+•	So far, we have used int main() as to in voke the main 
+function. However, main function can tak e arguments that 
+are populated when the prog ram is in voked. 
+26 
+Command line input (cont.)
+int main(int argc,char∗ argv[]) 
+•	argc: count of arguments . 
+•	argv[]: an arr ay of pointers to each of the arguments 
+•	note: the arguments include the name of the prog ram as 
+well. 
+Examples: 
+•	./cat a.txt b .txt (argc=3,argv[0]="cat" argv[1]="a.txt"
+argv[2]="b .txt"
+•	./cat (argc=1,argv[0]="cat") 
+27 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

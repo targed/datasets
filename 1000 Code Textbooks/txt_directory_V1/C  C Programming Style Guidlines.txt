@@ -1,0 +1,715 @@
+C/C++ ProgrammingStyle
+Guidelines
+Fred Richards
+Styleguidelinesandprogrammingpracticesfor C/C++code for
+DynamicSoftwareSolutions. Usethechecklistatthe endof this
+documentpriorto submittingcodeforpeerreview.
+“Degustibus nonestdisputandum. ”
+1. Introduction
+ThisdocumentcontainstheguidelinesforwritingC/C++code forDynamicSoftware
+Solutions. The pointofa styleguideis togreateruniformityin theappearanceof
+sourcecode. Thebeneﬁtis enhancedreadabilityandhencemaintainabilityforthe
+code. Whereverpossible,weadoptstylisticconventionsthathave beenprovedto
+contributepositively toreadabilityand/ormaintainability.
+Beforecodecanbe consideredforpeer reviewthe authormustcheckthatitadheresto
+theseguidelines. Thismay beconsidereda prerequisiteforthe reviewprocess. A
+checklistisprovidedatthe endofthis documentto aidinvalidatingthesourcecode’s
+style. Wherecodefailsto adheretotheconventionsprescribedheremaybeconsidered
+a defectduringthereview process.
+If youhave not already, pleasestudy CodeComplete by Steve McConnell. Thisbook
+providesadetaileddiscussionon allthingsrelatedtobuildingsoftwaresystems. Italso
+includesreferencestostatisticalstudieson many ofthe stylisticelementsthataffect
+programmaintainability. Anothervaluablesourceofsolidprogrammingpracticetipsis
+ThePracticeofProgramming byBrianW. KernighanandRobPike. ScottMeyers’
+1
+C/C++StyleGuide
+books,EffectiveC++ andMore EffectiveC++ shouldbe consideredrequiredreading
+for any C++programmer.
+Andwhatpersonwouldbe consideredcompletewithouthavingread TheElementsof
+Styleby Strunkand White?
+2. File Contents
+Useﬁles togroupfunctionality. Eachﬁleshouldcontainonlyonecohesive setof
+functions. Avoidduplicatingfunctionalityin separateﬁles. If differentﬁlescontain
+similarfunctions,considergeneralizingthe functionsufﬁcientlyand puttingit intoits
+ownﬁle sothatboth functiongroupscanuse theonesource. ForC++code,put only
+oneclassor closelyrelatedset ofclassesin eachﬁle.
+Avoidstrongcouplingbetweenfunctionsandclassesimplementedinseparateﬁles. If
+twoobjectsareso stronglycoupledthatone canonlybe usedinconjunctionwiththe
+otherthenthey belongin thesameﬁle.
+Useheaderﬁles( .hsufﬁx)todeclarepublicinterfaces,usecodeﬁles( .c,.ccor.cpp
+sufﬁx)todeﬁneimplementations. Typicallyeachcohesiveset offunctionsyouwritein
+a singleﬁlewillhaveone accompanyingheader/interfaceﬁle pair. Codethatusesyour
+implementationwill #include theheaderﬁle.
+Be precisewith #include statements. Explicitlyincludethe .hﬁlesyourequire,and
+onlywhereyourequirethem. If, forexample,your codecallsa functiondeﬁned
+externally, includethatfunction’sassociated .hinyour implementationﬁlenot inyour
+code’s associated .hﬁle. Youshouldonlyneedto includeotherﬁlesin your .hﬁleif
+yourpublicfunctioninterfaceor datatypedeﬁnitionsrequirethedeﬁnitionscontained
+therein.
+Avoidusingheaderﬁlesto containa setof #include directivessimplyfor
+convenience. This“nesting”of #include constructsobscuresﬁledependenciesfrom
+thereader. It alsocreatesa couplingbetweenmodulesincludingthe top-levelheader
+ﬁle. Unlessthemodulesarecohesivelycoupledfunctionally, andeachrequires allthe
+.hﬁlesincludedinthe convenienceheader,it is preferabletoinsteadincludeallthe
+2
+C/C++StyleGuide
+individual .hﬁleseverywheretheyare required.
+2.1. Header(Interface)FileContent
+Headerﬁlesshouldcontainthe followingitemsin thegivenorder.
+1.Copyrightstatementcomment
+2.Moduleabstractcomment
+3.Revision-stringcomment
+4.Multipleinclusion #ifdef (a.k.a. "includeguard")
+5.Otherpreprocessordirectives, #include and#define
+6.C/C++ #ifdef
+7.Datatypedeﬁnitions(classesandstructures)
+8.typedef s
+9.Functiondeclarations
+10.C/C++ #endif
+11.Multipleinclusion #endif
+Example1. Standard(C) headerﬁle layout
+/*
+* Copyright (c) 1999 Fred C. Richards.
+* All rights reserved.
+*
+* Module for computing basic statistical measures on
+* an array of real values.
+*
+* $Id$
+*/
+3
+C/C++StyleGuide
+#ifndef STATISTICS_H
+#define STATISTICS_H
+#include <math.h>
+#include <values.h>
+#define MAXCOMPLEX { MAXINT, MAXINT }
+#ifdef _cplusplus
+extern "C" {
+#endif
+struct complex {
+int r; /* real part */
+int i; /* imaginary part */
+};
+typedef struct complex Complex;
+...
+/*
+* Compute the average of a given set.
+* Input - array of real values, array length.
+* Output - average, 0 for empty array.
+*/
+float
+ave(float* v, unsigned long length);
+...
+#ifdef _cplusplus
+}
+#endif
+#endif /* STATUS_H */
+4
+C/C++StyleGuide
+2.2. Code Files
+C andC++codeﬁlesfollowa similarstructureto theheaderﬁles. Theseﬁlesshould
+containthefollowinginformationin thegivenorder.
+1.Copyrightstatementcomment
+2.Moduleabstractcomment
+3.Preprocessordirectives, #include and#define
+4.Revision-stringvariable
+5.Othermodule-speciﬁcvariabledeﬁnitions
+6.Localfunctioninterfaceprototypes
+7.Class/functiondeﬁnitions
+Unlike inthe headerﬁle,theimplementation-ﬁlerevisionstringshouldbe storedasa
+programvariableratherthanin a comment. Thisway identwillbe abletoidentifythe
+sourceversionfromthecompiledobjectﬁle. For Cﬁles use:
+static const char rcs_id[] __attribute__ ((unused)) =
+"$Id$";
+The__attribute__ modiﬁerisa GNUC featurethat keepsthecompilerfrom
+complainingabouttheunusedvariable. This maybeomittedfornon-GNUprojects.
+ForC++ ﬁles,usethefollowingformforthe revisionstring:
+namespace { const char rcs_id[] = "$Id$"; }
+Precedeeachfunctionor classmethodimplementationwitha form-feedcharacter
+(Ctrl-L)sothatwhenprintedthe functionstartsat thestartof anew page.
+5
+C/C++StyleGuide
+Example2. Standard(C++)implementation/codeﬁle
+//
+// Copyright (c) 1999 Fred C. Richards.
+// All rights reserved.
+//
+// Module for computing basic statistical measures on
+// an array of real values.
+//
+#include "Class.h"
+#include <string>
+namespace {
+const char rcs_id[] = "$Id$";
+}
+// Utility for prompting user for input.
+string
+get_user_response();
+^L
+Class::Class(const int len)
+{
+private_array_ = new[len];
+}
+Class::~Class()
+{
+delete private_array_;
+}
+^L
+...
+6
+C/C++StyleGuide
+3. File Format
+Theformattingstyle presentedhereis essentiallythatusedby Stroustrupin TheC++
+ProgrammingLanguage . If youuseEmacsyoucan make thisyourdefaultediting
+modeby addingthe followingto your .emacsﬁle:
+(defun my-c-mode-common-hook ()
+(c-set-style "stroustrup"))
+(add-hook ’c-mode-common-hook ’my-c-mode-common-hook)
+Formatyourcodeso thatthespatialstructureillustratesthelogicalstructure. Useblank
+linesto helpseparatedifferentideas,useindentationto show logicalrelationships,and
+usespacesto separatefunctionality. Eachblockof codeshoulddoexactlyonething.
+Startall functiondeﬁnitionsand declarationsin columnzero. Putthereturnvaluetype,
+thefunctioninterfacesignature(nameandargumentlist),and thefunctionbodyopen
+bracket eachona separateline. Forfunctionsthat aremorethana fewlineslong,put
+thefunctionnameafterthe closingbracket ina comment.
+Example3. Formattingfunctiondeclarationsanddeﬁnitions
+void
+debug(const string& message);
+int
+Class::method(const int x, const string& str)
+{
+.
+.
+.
+} // method
+7
+C/C++StyleGuide
+Usea singlespacetoseparatealloperatorsfromtheiroperands. The exceptionstothis
+ruleare the“ ->”, “.”, “()” and“ []”operators. Leaveno spacebetweenthese
+operatorsand theiroperands. Whenbreakingoperationsacrosslines,puttheoperator
+at theendof thebrokenlineratherthanat thestart ofthe continuationline.
+Usefour spacesfor eachlevel of indentation. Avoidmakinglineslongerthan80
+characters. Whenbreakinglines,usethenaturallogicalbreakstodeterminewherethe
+newlinegoes. Indentthecontinuationlineto illustrateitslogicalrelationshipto therest
+of thecodein theline. For functions,forexample,thismeansaligningargumentswith
+theopeningparenthesisof theargumentlist.
+Example4. Breakingstatementsacrossmultiplelines
+new_shape = affine_transform(coords, translation,
+rotation);
+if ( ( (new_shape.x > left_border) &&
+(new_shape.x < right_border) ) &&
+( (new_shape.y > bottom_border) &&
+(new_shape.y < top_border) ) )
+{
+draw(new_shape);
+}
+Usea pure-block,fullybracketedstyle forblocksofcode. Thismeansput brackets
+aroundallconditionalcodeblocks,evenone-lineblocks,andputtheopeningbracketat
+theend ofthe linewiththe openingstatement. The exceptiontothis ruleis for
+conditionsthat arebroken acrossmultiplelines. In thiscaseputthe openbracket ona
+lineby itselfalignedwiththestartof theopeningstatement(asshownabove).
+Example5. Fullybracketed,pure blockstyle
+if (value < max) {
+if (value != 0) {
+func(value);
+}
+8
+C/C++StyleGuide
+} else {
+error("The value is too big.");
+}
+Althoughthe bracketsmay seemtediousfor one-lineblocks,they greatlyreducethe
+probabilityof errorsbeingintroducedwhentheblockis expandedlaterin thecode’s
+life.
+3.1. Uniqueto C++
+Startpublic,protected ,private , andfriendlabelsincolumnzeroof class
+declarations. Useexplicit publiclabelsforall structpublicﬁeldsanduse explicit
+private labelsforall private classmembers.
+Themembersofa classshouldbedeclaredinthe followingorder. Declareallpublic
+datamembersandtypedeﬁnitionsﬁrst. Declareprivate orprotecteddatamembersor
+typedeﬁnitionsused infunctionmemberinitializationlistsor inlineimplementations
+next. Declareallpublicmemberfunctionsnext,startingwiththeconstructorsand
+destructor. Declareallremainingprivateorprotecteddatamembersandtypedeﬁnitions
+next. Declareallprivateor protectedfunctionmembersnext. Declareall friendslast.
+Putsimpleinlinefunctiondeﬁnitionsonthe samelineastheir declaration. For inline
+functionsspanningmultiplelines,use apure-blockstyle withfour-spaceindentation.
+In general,avoidputtingcomplexfunctionimplementations .hﬁles.
+Example6. Classdeclarationformat
+class Type : public Parent {
+private:
+int x_;
+int y_;
+public:
+Type();
+Type(int x) : x_(x) { }
+~Type();
+9
+C/C++StyleGuide
+int get_x() const { return x_; }
+void set_x(const int new_x) { x_ = new_x; }
+...
+void display() {
+...
+}
+}
+4. Choosing MeaningfulNames
+4.1. VariableNames
+Thenameformattingconventionsdescribedhereareessentiallythe GNUcoding
+standards. Theseare availableonlineusing info.
+Uselowercasefor allvariablenames. For multi-wordnames,usean underscoreasthe
+separator. Useallcapitalsforthenamesofconstants(i.e. variablesdeclared constand
+enumeratedtypes). Usean underscoreasa wordseparator.
+Choosevariablenamescarefully. Whilestudiesshow thatthe choiceofvariablenames
+hasa stronginﬂuenceon thetimerequiredtodebugcode,thereare unfortunatelyno
+clearandﬁxed rulesforhowto choosegoodnames. Review Chapter9of Code
+Complete periodically. In themeantime,hereare somegeneralguidelinestofollow:
+•Beconsistent! Themost importantthingisto establisha clear, easilyrecognizable
+patternto yourcodeso thatotherswillbe abletounderstandyourimplementation
+andintentasquicklyandreliablyas possible.
+•Usesimilarnamesfor similardatatypes,dissimilarnamesfordissimilartypes.
+10
+C/C++StyleGuide
+•Avoid namesthat arehomophones: e.g., foo,fu,phoo, etc. Also,don’t relyon
+capitalizationto distinguishbetweenvariables.
+•Usenamesthatsay whatthe variablerepresents ratherthanhow it isused(i.e. use
+nounsforvariablenames);use terminologyfromthe applicationdomainandavoid
+computerjargonthatreﬂectsprogrammingdetails.
+•Avoid genericnamessuchas tmp,buf,reg.
+•Avoid intentionallymisspelledwordssuchas loorlite.
+In general,shortnamesare acceptableforvariablesthat serve ashort-lived purposeor
+thathave acommonusageinC/C++(e.g.,index variablescalled i,j,k, etc.). Being
+concisecancontributeto thereadabilityof code. However, for variablesthatservea
+uniqueandimportantpurpose,orvariablesthatpersistovera signiﬁcantregionofyour
+code,usedescriptive andcompletenames. Studieshave shown thatminimaldebugging
+timecorrelateswithaveragevariablenamelengthsof10-16characters.
+4.2. FunctionNames
+Uselower-caselettersfor publicfunctionnames. Usean underscoreasa word
+separator.
+Forfunctionsthatreturnnovalues(i.e. returntype void),usestrongverbsthatindicate
+thefunction’s purpose. Typicallyyouwillwantto includethe objectofthe verb inthe
+name. Forexample,
+void
+remove_dc_offset(short *signal, const unsigned long length);
+void
+set_output_gain(const float gain);
+Becausefunctionstendto serve amorecomplex purposethanvariables,longernames
+aremore acceptable.
+11
+C/C++StyleGuide
+If afunctionreturnsavalueit is sometimesbettertouse anamethat indicatesthe
+meaningofthe value returned. Forinstance,
+/*
+* Compute the DC offset of the given signal.
+*/
+float
+dc_offset(const short * const signal,
+const unsigned long length);
+/*
+* Poll the D/A and return the current gain setting.
+*/
+float
+gain(void);
+In general,be consistentandbe informative. Choosenamesthatmakeyour codeeasy
+to readandunderstand.
+4.3. Classes,StructuresandTypeDeﬁnitions
+Thenameformattingconventionsdescribedhereareessentiallythoseused by
+Stroustrupin hisbookon C++.
+Capitalizetheﬁrstletterofthenameofeachdatatypethatyoudeﬁne. Thisincludesall
+struct,class,typedef andenumtypes. Useanunderscoreasawordseparator,just
+as forC variablesandfunctionnames.
+Forclass instancevariables,startall nameswithlower-caseletters. Again,usean
+underscoreas aword separator. Applythesamerulesto publicandprotected
+members,both variablesandfunctions. Add atrailingunderscoreto private member
+names.
+12
+C/C++StyleGuide
+Example7. Capitalizationof user-deﬁnedtypes
+/* Straight C */
+struct complex {
+int r; /* real */
+int i; /* imaginary */
+};
+typedef struct complex Complex;
+// C++ interface example
+class Canvas {
+public:
+enum Pen_style {
+NONE = 0,
+PENCIL,
+BRUSH,
+BUCKET
+};
+Canvas();
+~Canvas();
+void set_pen_style(Pen_style p);
+...
+private:
+int cached_x_; // to avoid recomputing coordinates
+int cached_y_;
+};
+// C++ usage example
+Canvas sketch_pad;
+sketch_pad.set_pen_style(Canvas::BRUSH);
+13
+C/C++StyleGuide
+WhenworkingwithC++classesandobjectsbemindfulofredundantnameelements.
+Rememberthatclass membersareidentiﬁedbytheirclassinstancename. Thusyoudo
+nothave torepeatinformationabouttheclassin thememberelement’s names.
+Example8. Poorvariablenames
+// Notice how redundant "stack" becomes.
+template <Type>
+class Stack {
+public:
+int stack_size;
+add_item_to_stack(Type item);
+...
+};
+Stack my_stack;
+my_stack.add_item_to_stack(4);
+int tmp = my_stack.stack_size;
+5. Comments
+In general,wellwrittencodeshoulddocumentitself. Clear, concisevariableand
+functionnames,consistentformattingandspatialstructure,andcleansyntactical
+structureallcontributeto readablecode. Occasionally, however,complex logicwill
+beneﬁtfromexplicitdescription. Becarefulnotto usecommentsto compensatefor
+poorlywrittencode. Ifyou ﬁndthatyourcoderequiresmany commentsor isoften
+difﬁculttodescribe,perhapsyou shouldbe rewritingthe codetomakeit simplerand
+clearer.
+14
+C/C++StyleGuide
+5.1. Style
+ForstraightC code,use /* ... */ stylecomments. For C++code,use // ...
+stylecomments. Adheringtotheseconventions,youcan quicklyestimatethenumber
+of linesofcommentsin yourcodewiththe followingcommands:
+%grep "^[ \t]*\* "
+%grep "^[ \t]*\/\/"
+Toofew ortoo many commentsisan indicatorof codethatis likely tobe difﬁcultto
+maintain.
+Avoidtheuse ofend-linecommentsexceptforvariabledeclarationsandformarking
+#if/#endif statements. Make commentsbethe onlythingon aline. For longer
+commentsdescribingmorecomplex logic,usea blockstyletooffsetthemfromthe
+codebetter. Useblock-stylecommentstodescribefunctions. Use boldcommentsto
+delimitmajorsectionsof yourcodeﬁle. Prefaceallbold commentsandblock
+commentsthat introducefunctionswitha form-feedcharactersothatthey appearat the
+startof theprintedpage. Thefollowingexampleshows thevariouscommenttypesin
+theC style.
+Example9. C commenttypes
+^L
+/*
+* ************************************************
+* Bold comment.
+* ************************************************
+*/
+/*
+* Block comment.
+*/
+/* Short (single-line) comment. */
+15
+C/C++StyleGuide
+int i; /* end-line comment */
+5.2. Content
+End-linecommentsareacceptablefor describingvariabledeclarations. Usea comment
+to describeany variablewhosepurposeis notobviousfromits name.
+Usecommentstodocumentyour intent. Do notdescribe howyourcodeworks,that
+shouldbeobviousfromtheimplementation. Insteaddescribe whyyourcodedoeswhat
+it does. Avoid explainingespeciallytricky codein comments. Instead,rewritethecode
+to make itintrinsicallymoreobvious. Usecompletesentenceswithproperspellingand
+punctuationin allcomments.
+Writeyourcommentsbeforeand asyouwriteyour code,notafter. If youstartby
+writingcommentsyougiveyourselfa low-level designforthe implementation. When
+youare ﬁnishedtestingyourcode,go backandreview allcommentstomake surethey
+arestill accurate.
+Commentthingsthathave wideimpact. If a functionmakes assumptionsaboutthe
+conditionof variableoninput,documentthat. If a requiredspeedoptimizationmakes
+thecode difﬁcultto read,explaintheneedforthe codein acomment. If yourcodeuses
+or changesany globalvariables,commentthat.
+Useboldcommentsto delimitmajorsectionsinyourcode ﬁle. Youmay, for instance,
+implementa numberofprivate utilityfunctions. Usea boldcommentto markthestart
+of thatcode. Preface eachfunctionwitha blockcommentdescribingthefunction’s
+purpose,themeaningofanyinputvariables,andthesigniﬁcanceofanyreturnvalue(s).
+Thereis noneedto includethe functionnamesinceit immediatelyfollows the
+comment.
+Example10. Commentingfunctionsandfunctiongroups
+^L
+16
+C/C++StyleGuide
+/*
+* ****************************************
+* Statistics utilities used to
+* optimize performance on the fly.
+* ****************************************
+*/
+/*
+* Compute the standard deviation or "variance"
+* for a set.
+*
+* Input: v - set of values and set size.
+* len - size of input set.
+* Output: Dev = Expect (x - x_ave)^2
+* 0 for the empty set
+*/
+static float
+std_dev(const float *v, const unsigned long len)
+{
+...
+}
+Usean end-linecommenttomarkthe endof particularlylongblocksofcode. This
+appliestofunctionsandconditionalcode. Includethecontrolconditionthatterminates
+controlfor if/else branchesand for/while/do loops.
+Usean end-linecommentalsoto identifywhich #ifor#ifdefstatementa particular
+#endifstatementcloses. Includetheconditioninthe commentforblocksof code
+spanningmorethanafew lines. Whenusing #elseconditions,markboththe #else
+andthe #endifstatementswith thenegatedcondition(i.e. prefaceit with“not”).
+Example11. Commentinglong codeblocks
+#ifdef DEBUG
+.
+.
+17
+C/C++StyleGuide
+.
+#else // not DEBUG
+void
+function()
+{
+if (position != END)
+.
+.
+.
+} // position != END
+.
+.
+.
+} // function()
+#endif // not DEBUG
+6. Syntax andLanguage Issues
+Thefollowingsectionsoutlinesomegeneralpracticesof gooddefensive programming.
+Always assumethat otherswillhave toread andmaintainyour code,andtryto assist
+themas youwrite. Also,assumethaterrorsanddefectsareinevitable,and writesoas
+to isolatethem andlimittheireffectas quicklyas possible. Thislatterpracticesis
+sometimesreferredtoas"ﬁre-walling"code. Beliberalincheckingthevalidityofinput
+argumentswithinfunctions,and alwayscheckvaluesreturnedbyfunctionsyoucall.
+18
+C/C++StyleGuide
+6.1. General
+Avoidputtingmultipleinstructionson thesameline. Eachline shoulddo exactlyone
+thing. Thisis appliesin particularto controlstatementsforbranchandloopstructures.
+Considerthe following:
+/* Bad practice! */
+if (!eof && ((count = get_more()) > min_required) {
+...
+}
+Thisshouldbe rewrittensothat theact ofgettingmoredatais separatefromthe taskof
+checkingthatmoredataremainstobe processed:
+/* Safer version */
+if (!eof) {
+count = get_more();
+if (count > min_required) {
+...
+}
+}
+Avoidtheuse ofside-effects. Thefollowinginnocuouslinemayactuallyproduce
+differentdependingonwhichcompilerisused:
+a[i] = i++; /* a[0] or a[1] == 1 ? */
+Again,eachlineshouldcontainasinglestatement,andeachstatementshoulddo
+exactlyonething.
+19
+C/C++StyleGuide
+Avoidtypecastsand never castpointersto void*. Oneofthe strengthsof C++isits
+strongtypingandabilitytosupportarbitraryusertypes. Ifyoufeeltheneedtocastdata
+to othertypesinC++,perhapsyoushouldbe consideringdeﬁningan inheritance
+relationshipor usingtemplates.
+Do notdeﬁneany typesfrompointers(e.g., typedef char* String ).
+Avoidusingpreprocessorconstants(i.e. #define s). Insteaddeclarevariablesof the
+appropriateC/C++typeas constanduse them. For relatedsetsofintegerconstants,
+deﬁnean enum. Bothof thesetechniqueslet thecompilerperformtypecheckingwhere
+thepreprocessor #define swouldnot.
+Limitvariablescopeasmuchas possible. In C++,usebracketsto groupfunctionality
+andtemporaryvariables. Declarea variablejustpriorto usingitand destroyit when
+youare ﬁnishedwith it.
+Useparenthesesto grouplogicinbranchand loopcontrolstructures. Mostpeopleare
+notintimatelyfamiliarwithoperatorprecedence,andparenthesescanmakelogic
+operationsmucheasierfor peopleto parseandunderstand. Withouttheadditional
+parenthesesitisnotobviousthattheﬁrstcasebelowdiffersfromtheotherthree(which
+areequivalent)foronlyoneof theeightcombinationsof thebooleans x,yandz:
+Example12. Oneof thesethingsis notlikethe other
+(x || y && y || z)
+(x && y || z)
+( (x && y) || z )
+( (x || z) && (y || z) )
+6.2. StructuredProgramming
+Keepthe structureof yourcodeasclearas possible. Do notcall exit() fromlibrary
+functions. Instead returnwithan appropriateerrorcondition. Call returnonlyonce
+20
+C/C++StyleGuide
+for eachfunctionlongerthana fewlines. Avoidusing breakandcontinue to escape
+loopand branchcode. Considerinsteadaddingor changingthe exit conditionsof the
+thecontrolstatement. Do notuse goto.
+Preferusing if/else/else/... overthe switch/case/case/... withnon-trivial
+branchconditions. Forbothconstructsusedefault conditionsonlyto detectlegitimate
+defaults,orto generatean errorconditionwhenthereis nodefaultbehavior. Usinga
+switch/case blockwithoverlappingconditionsonlywhenthecaseshaveidentical
+codeso thatfall-throughis obvious.
+Preferusing while() { ... } insteadof do { ... } while(); . Itiseasierfor
+humanstoparsethe controlstructureifthey know theexitconditionuponenteringthe
+blockof code. The do { ... } while(); formburiestheexit criterionat theend
+of theloop.
+Avoidoverlylongcontrolstructures. If youﬁndloopor branchconstructsspanning
+severalprintedpagesorscreens,considerrewritingthe structureor creatinga new
+function. At thevery leastplaceacommentatthe endof thestructureto indicatethe
+exitconditions.
+Avoiddeeplynestedcode. Humanshavea hardtimekeepingtrackof morethanthree
+or fourthingsata time. Tryto avoidcodestructurethatrequiresmorethan threeor
+fourlevelsof indentationasa generalrule. Again,considercreatinganew functionif
+youhave toomany embeddedlevelsof logicinyourcode.
+Avoidtheuse ofglobalvariables. Theymakeyour codehardtosupportin a
+multi-threadedenvironment. If youdo useglobalvariables,understandhowthey affect
+theabilityof yourmoduletobe reentrant.
+6.3. FunctionsandError Checking
+Donot usepreprocessorfunctionmacros. Therearetoo many possibleproblems
+associatedwiththemand moderncomputerspeedsandcompileroptimizationsobviate
+anybeneﬁttheyoncemay have had. Deﬁnea functioninstead.
+Writefunctiondeclarations/prototypesforallfunctionsandputthemeitherin the
+21
+C/C++StyleGuide
+module .hﬁleforpublicfunctionsorat thestartof the .cﬁlefor private,internal
+functions. The functiondeclarationlistshouldreadlike atable ofcontentsforyour
+code.
+Make explicitallassumptionsabouttheconditionofinputdatato yourroutines. Use
+assertionsto testfor programmingerrors,useexceptions(C++)or returnvalues(C)to
+reporterrorconditionsdetectedinnormaluse. Do notputany implementationlogicin
+yourassertionssince oftenthey willnotremainin thedeployedcode (especiallylibrary
+functions). Whena libraryfunctionmustreportbotha computedvalueand adistinct
+errorvalue,passthe computedvaluethroughavariableand returntheerrorvalue.
+Checkthereturnvaluesof alllibraryfunctioncalls. This isespeciallyimportantfor
+functionsprovidingaccesstosystemresources(e.g., malloc() ,fopen() ,etc.).
+Generateinformativeerror messages. Writemessagesthatare understandableto the
+user. Be completeandconciseandavoidusingcomputerjargon. Suggestpossible
+causesofthe errorcondition.
+7. Conclusion
+Theguidelinespresentedhereshouldbefollowedwhenwritingall newcode. When
+workingwithsomeoneelse’s codeit is moreimportantthatyouadhereto the
+conventionsusedthere. Onlyif thecodingstyleis adhocshouldyou imposeyourown
+(or these)conventions.
+A checklistis includedat theendof thisdocument. It coversmostof theitems
+discussed. Applythe checklisttoyour codepriortosubmittingitfor peerreview. Any
+unaddressedissueis consideredacodingdefectduringthereview process.
+Obviouslya styleguidecannotdictategoodprogrammingpractices. Itcan onlyward
+off someofthemore ﬂagrantproblems. Withluck, agoodstyleguidecan encourage
+betterprogramminghabits. To thatend,all C++programmersshouldread Effective
+C++, by ScottMeyers. It covers farmoreconcernsandgoesintofar greaterdetailon
+C++thanis appropriatehere. It iscriticalforC++ programmersto understandthese
+22
+C/C++StyleGuide
+issueswhenwritingnew code.
+Appendix A. Review Checklist
+Filecontents.
+•Doall ﬁlescontain:
+•a copyrightstatement?
+•an abstract/synopsiscomment?
+•a revisionstring?
+•Doall headerﬁles containa multipleinclude #ifdef?
+•Areallnecessary #include s madeexplicitly(i.e. thecodedoesnot relyonnested
+#include s)?
+•Areallpublicfunctions declaredin themodule’s .hﬁle?
+•Dofunctiondeclarations/prototypesexist forall functions?
+•Doeseachcodeﬁlecontainexactlyonecohesive setofclassesor functions?
+•Arefunctionsfromdifferentﬁlessufﬁcientlyuncoupledfromone another?
+Fileformat.
+•Doall functiondeclarationsanddeﬁnitionsbeginin columnzero? Arethereturn
+type,functionnameand openbracketeach ona separateline,each beginningin
+columnzero?
+•Dofunctionslongerthanatypicalscreen/pagehavecommentswiththeirnameatthe
+closebracket?
+23
+C/C++StyleGuide
+•Isfour-spaceindentationused throughout?
+•Areallcontrolstructuresin a pure-blockstyleandfullybracketed?
+•Istherea singlespacesurroundingalloperators,except .,->,[]and()?
+•DotheC++ keywords public,private ,protected , andfriendallstartin
+columnzero?
+•AreC++classinternalsdeclaredin theproperorder?
+1.publicdata andtypes
+2.privateor protecteddataand typesusedin theclassdeclaration
+3.publicmemberfunctions,startingwithconstructorsandthe destructor
+4.otherprivateor protecteddata members
+5.otherprivateor protectedfunctions
+6.friends
+Variableand functionnames.
+•AreallC variableandfunctionnameslowercase,withan underscoreas aword
+separator?
+•AreallC++ variableandfunctionnameslower case,withcapitalizationratherthan
+anunderscoreindicatingword boundaries?
+•Doall privateclassmembernamesendwithan underscore?
+•Doall programmer-deﬁnedtypes/classesstartwitha capitalletter?
+•Areallconstantsandenumeratedtypesall capitalletters?
+•Areallvariablenamessufﬁcientlyinformative andmeaningfulgiventheirscope?
+•Dovariablenamesmatchthe problemdomain?
+•Arevariablenamesnouns?
+24
+C/C++StyleGuide
+•Arefunctionnamesstrongverbs(or nounsforfunctionswhosesolepurposeis to
+computea value)?
+Comments.
+•Areboldcommentsusedto dividecodeintomajorsections? Are blockcomments
+usedtomarksigniﬁcantpoints? Are end-linecommentsusedonly forvariable
+declarationsandtomarklong blocksof code?
+•DoesC++codeuse // ...stylecomments(not /* ... */ )?
+•Doall commentscontaincompletesentences,withproperpunctuationandspelling?
+•Docommentsdescribeintentratherthanimplementationdetails?
+•Isall subtlecodesufﬁcientlyexplainedin comments?
+•Doall but thesimplestfunctionshavecommentsdescribingwhatthey do,whatdata
+they operateonandany impactthey have onthe restofthe application?
+Languageusage.
+•General
+•Doeseachline ofcodedo exactlyone thing?
+•Areall constantsdeclaredas constand notas #define s?
+•Doesthe codeavoid castingvariablesandreturnvaluestodifferentdatatypes?
+Arethereno caststo void*?
+•Areno typedef smadefrompointers(e.g., typedef char* Str ?)
+•Arethereno preprocessormacrosdeﬁned?
+•Areparenthesesusedto groupitemsin allbutthe simplestlogicconstructs?
+•Areall private classmembersexplicitlydeclaredsuch?
+•Programstructure
+25
+C/C++StyleGuide
+•Doeseachfunctioncall returnfromonlyoneplace?
+•Isexit() calledonlyfromwithin main(), andonly once?
+•Do ﬁnal elseblocksof if/else branchesand default blocksof
+switch/case brancheshandledefaultconditionsor errorconditionsonly?
+•Do alloverlapping switch/case conditions(i.e. fall-throughs)use identical
+code?
+•Hasthe useof globalvariablesbeenavoided?
+•Do mostcontrolstructuresspannomorethana pageor two? Isthe closebracket
+of alllongercontrolsstructurescommentedwiththeexit criteriafor theblockof
+code?
+•Doesnestedconditionalcodego nomorethanthreeor fourlevels?
+•Hasthe useof structure-breakingdirectives suchas goto,continue andbreak
+beenavoided?
+•Functionsanderror-checking
+•Arefunctionsusedalways insteadof preprocessormacros?
+•Areall assumptionsabouttheconditionof inputdatatestedexplicitlywith
+assert() ?
+•Willthe codeperformthe sameway if assertionsareremoved?
+•Do libraryfunctionsreturnerrorvaluesor throw exceptions(C++)wherever
+possible?
+•Areall functionreturnvaluestestedor exceptionscaught?
+•Areall errormessagesinformativeto a typicaluser? Are messagescomplete
+sentences,withproperpunctuationand spelling?
+26
+C/C++StyleGuide
+References
+TheC++ProgrammingLanguage , BjarneStroustrup,0-201-88954-4,
+Addison-Wesley,1997.
+CodeComplete: A PracticalHandbookof SoftwareConstruction , CodeComplete,
+Steve McConnell,1-55615-484-4,MicrosoftPress,1993.
+EffectiveC++: 50 SpeciﬁcWays toImprove YourProgramsandDesigns , Effective
+C++,ScottMeyers,0-201-92488-9,Addison-Wesley,1998.
+TheElementsofStyle , WilliamStrunk,Jr. and E.B. White,0-02-418200-1,MacMillan
+PublishingCo.,Inc., 1979.
+More EffectiveC++: 35 New Waysto ImproveYourPrograms andDesigns , More
+Effective C++,ScottMeyers,0-201-63371-X,1996,Addison-Wesley,1998.
+ThePracticeofProgramming , BrianW. Kernighanand RobPike, 0-201-61586-X,
+Addison-Wesley,1999.
+27
+

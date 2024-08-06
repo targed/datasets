@@ -1,0 +1,2847 @@
+ 
+  
+
+Docker  
+i 
+ 
+ 
+About the T utorial  
+This tutorial explains the various aspects o f the Docker Container service . Starting with 
+the basics of Docker which focuses on the installation and configuration of Docker , it 
+gradually moves on to advanced topics such as Network ing and Registries. The last few 
+chapters of this tutorial cover the development aspect s of Docker and how you can get up 
+and running on the development environments using Docker Containers.  
+ 
+Audience  
+This tutorial is meant for those who are interested in learning Docker as a container 
+service. This product has spread like wildfire across the industry and is really making an 
+impact on the development of new generation applications. So anyone who is interested 
+in learning all the aspects of Docker should go through this tutorial.  
+ 
+Prerequisites  
+The pre requisite is that the readers should be familiar with the basic concepts of Windows 
+and the various programs that are already available on the Windows o perating system . In 
+addition, it would help if the readers have some exposure to Linux.  
+ 
+Copyright & Disclaimer   
+© Copyright 2017 by Tutorials Point (I) Pvt. Ltd.    
+All the content and graphics published in this e -book are the property of Tutorials Point (I) 
+Pvt. Ltd.  The user of this e -book is prohibited to r euse, retain, copy, distribute or republish 
+any contents or a part of contents of this e -book in any manner without written consent 
+of the publisher.     
+We strive to update the contents of our website and tutorials as timely and as precisely as 
+possible, however, the contents may contain inaccuracies or errors. Tutorials Point (I) Pvt. 
+Ltd. provides no guarantee regarding the accuracy, timeliness or completeness of our 
+website or its contents including this tutorial. If you discover any errors on our websi te or 
+in this tutorial, please notify us at contact@tutorialspoint.com.  
+ 
+ 
+ 
+ 
+Docker  
+ii 
+ 
+T able of Contents  
+About the Tutorial  ................................ ................................ ................................ ................................ .... i 
+Audience  ................................ ................................ ................................ ................................ ..................  i 
+Prerequisites  ................................ ................................ ................................ ................................ ............  i 
+Copyright & Disclaimer  ................................ ................................ ................................ .............................  i 
+Table of Contents  ................................ ................................ ................................ ................................ .... ii 
+1. DOCKER ─ OVERVIEW  ................................ ................................ ................................ ..........  1 
+2. DOCKER – INSTALLING DOCKER ON LINUX  ................................ ................................ ..........  3 
+Docker Version  ................................ ................................ ................................ ................................ ...... 10 
+Docker Info  ................................ ................................ ................................ ................................ ...........  11 
+Docker for Windows ................................ ................................ ................................ ..............................  12 
+Docker ToolBox  ................................ ................................ ................................ ................................ ..... 13 
+3. DOCKER ─ INSTALLATIO N ................................ ................................ ................................ .. 15 
+Docker for Windows ................................ ................................ ................................ ..............................  15 
+Docker ToolBox  ................................ ................................ ................................ ................................ ..... 16 
+Working with Docker Toolbox  ................................ ................................ ................................ ...............  19 
+4. DOCKER – DOCKER HUB  ................................ ................................ ................................ .... 22 
+5. DOCKER ─ IMAGES  ................................ ................................ ................................ .............  26 
+Displaying Docker Images ................................ ................................ ................................ ......................  26 
+Downloading Docker Images  ................................ ................................ ................................ .................  27 
+Removing Docker Images  ................................ ................................ ................................ ......................  28 
+docker images -q ................................ ................................ ................................ ................................ ... 29 
+docker inspect  ................................ ................................ ................................ ................................ .......  30 
+6. DOCKER – CONTAINERS  ................................ ................................ ................................ ..... 31 
+Running a Container  ................................ ................................ ................................ ..............................  31 
+Docker  
+iii 
+ 
+Listing of Containers  ................................ ................................ ................................ ..............................  31 
+docker ps -a ................................ ................................ ................................ ................................ ...........  32 
+docker history  ................................ ................................ ................................ ................................ .......  33 
+7. DOCKER – WORKING WIT H CONTAINERS  ................................ ................................ ..........  34 
+docker top  ................................ ................................ ................................ ................................ .............  34 
+docker stop  ................................ ................................ ................................ ................................ ...........  35 
+docker rm  ................................ ................................ ................................ ................................ ..............  35 
+docker stats  ................................ ................................ ................................ ................................ ...........  36 
+docker attach  ................................ ................................ ................................ ................................ ........  37 
+docker pause  ................................ ................................ ................................ ................................ .........  38 
+docker unpa use ................................ ................................ ................................ ................................ ..... 39 
+docker kill ................................ ................................ ................................ ................................ ..............  39 
+Docker – Container Lifecycle  ................................ ................................ ................................ .................  40 
+8. DOCKER – DOCKER ARCH ITECTURE  ................................ ................................ ...................  42 
+9. DOCKER – CONTAINER A ND HOSTS  ................................ ................................ ...................  44 
+Docker Images  ................................ ................................ ................................ ................................ .......  44 
+Running a Container  ................................ ................................ ................................ ..............................  44 
+Listing All Containers  ................................ ................................ ................................ .............................  45 
+Stopping a Container  ................................ ................................ ................................ .............................  45 
+10. DOCKER – CONFIGURING  DOCKER  ................................ ................................ ....................  46 
+service docker stop  ................................ ................................ ................................ ...............................  46 
+service docker start  ................................ ................................ ................................ ...............................  46 
+11. DOCKER – CONTAINERS AND SHELLS  ................................ ................................ .................  48 
+nsenter  ................................ ................................ ................................ ................................ ..................  49 
+12. DOCKER – DOCKER FILE  ................................ ................................ ................................ ..... 51 
+Docker  
+iv 
+ 
+13. DOCKER – BUILDING DO CKER FILES  ................................ ................................ ...................  53 
+docker build  ................................ ................................ ................................ ................................ ..........  53 
+14. DOCKER – PUBLIC REPO SITORIES ................................ ................................ .......................  56 
+docker tag  ................................ ................................ ................................ ................................ .............  58 
+docker push ................................ ................................ ................................ ................................ ...........  59 
+15. DOCKER – MANAGING PO RTS ................................ ................................ ...........................  61 
+docker inspect  ................................ ................................ ................................ ................................ .......  63 
+16. DOCKER – PRIVATE REG ISTRIES  ................................ ................................ .........................  66 
+17. DOCKER – BUILDING A WEB SERVER DOCKER FI LE ................................ ............................  70 
+18. DOCKER – INSTRUCTION  COMM ANDS  ................................ ................................ ..............  73 
+CMD Instruction  ................................ ................................ ................................ ................................ .... 73 
+ENTRYPOINT  ................................ ................................ ................................ ................................ .........  74 
+ENV  ................................ ................................ ................................ ................................ .......................  75 
+WORKDIR  ................................ ................................ ................................ ................................ ..............  77 
+19. DOCKER – CONTAINER L INKING  ................................ ................................ .........................  79 
+20. DOCKER – DOCKER STOR AGE ................................ ................................ ............................  81 
+Data Volumes  ................................ ................................ ................................ ................................ ........  83 
+Changing the Storage Driver for a Container  ................................ ................................ .........................  85 
+Creating a Volume  ................................ ................................ ................................ ................................ . 86 
+Listing all the Volumes  ................................ ................................ ................................ ..........................  87 
+21. DOCKER ─ DOCKER NETW ORKING  ................................ ................................ .....................  88 
+Listing All Docker Net works ................................ ................................ ................................ ...................  88 
+Inspecting a Docker network  ................................ ................................ ................................ .................  89 
+Creating Your Own New Network  ................................ ................................ ................................ .........  91 
+Docker  
+v 
+ 
+22. DOCKER – SETTING NOD E.JS ................................ ................................ ..............................  93 
+23. DOCKER – SETTING MON GODB  ................................ ................................ .........................  96 
+24. DOCKER – SETTING NGI NX................................ ................................ ...............................  101 
+25. DOCKER – DOCKER TOOL BOX ................................ ................................ ..........................  105 
+Running in Powershell  ................................ ................................ ................................ .........................  106 
+Pulling Images and Running Containers ................................ ................................ ...............................  106 
+Kitematic  ................................ ................................ ................................ ................................ .............  107 
+26. DOCKER – SETTING ASP .NET  ................................ ................................ ............................  112 
+Prerequisites  ................................ ................................ ................................ ................................ .......  112 
+Installing the ASP.Net Container  ................................ ................................ ................................ .........  114 
+27. DOCKER – DOCKER CLOU D ................................ ................................ ..............................  117 
+Getting started  ................................ ................................ ................................ ................................ .... 117 
+Connecting to the Cloud Provider  ................................ ................................ ................................ ........  118 
+Setting Up Nodes  ................................ ................................ ................................ ................................  125 
+Deploying a Service  ................................ ................................ ................................ .............................  127 
+28. DOCKER – LOGGING  ................................ ................................ ................................ ........  129 
+Daemon Logging ................................ ................................ ................................ ................................ .. 129 
+Container Logging  ................................ ................................ ................................ ...............................  131 
+29. DOCKER – DOCKER COMP OSE ................................ ................................ .........................  132 
+Docker Compose ─ Installation  ................................ ................................ ................................ ............  132 
+Creating Your First Docker -Compose File  ................................ ................................ ............................  133 
+30. DOCKER – CONTINUOU S INTEGRATION ................................ ................................ ...........  136 
+31. DOCKER – KUBERNETES ARCHITECTURE  ................................ ................................ ..........  140 
+32. DOCKER – WORKING OF KUBERNETES  ................................ ................................ ............  142 
+Docker  
+1 
+ 
+Docker is a container management service. The keywords of Docker are develop , ship 
+and run anywhere . The whole idea of D ocker is for developers to easily develop 
+applications, ship them into containers whi ch can then be deployed anywhere.  
+The initial release of Docker was in March 2013 and since then , it has become the buzzword 
+for modern world development , especially in the face of Agile -based projects.  
+ 
+Features of Docker  
+ Docker has the ability to reduc e the size of development by providing a smaller 
+footprint of the operating system via containers.  
+ 
+ With containers , it becomes easier for teams across different units, such as 
+development, QA and Operations to work seamlessly across applications.  
+ 
+ You can  deploy D ocker containers anywhere, on any physical and virtual machines 
+and even on the cloud.  
+ 
+ Since D ocker containers are pretty lightweight, they are very easily scalable.  
+Components of Docker  
+Docker has the following components  
+ Docker for Mac  – It allows one to run Docker  containers on the Mac O S. 
+ 
+ Docker for Linux  - It allows one to run Docker  containers on the Linux O S.  
+ 
+1.  Docker  ─ Overview  
+Docker  
+2 
+ 
+ Docker for Windows  - It allows one to run Docker  containers on the Windows 
+OS. 
+ 
+ Docker Engine  – It is used for building Docker  images and creating Docker  
+containers.  
+ 
+ Docker Hub  – This is the registry which is used to host various Docker  images.  
+ 
+ Docker Compose  – This is used to define applications using multiple Docker  
+containers.  
+We will discuss all these components in detail  in the subsequent chapters.   
+The official site for Docker  is https://www.docker.com/  The site has all information and 
+documentation about the Docker  software. It also has the download links for various 
+operating systems.  
+ 
+Docker  
+3 
+ 
+To start the installation of Docker, we are going to use an Ubuntu instance. You can use 
+Oracle Virtual Box to setup a virtual Linux instance, in  case you don’t have it already.  
+The following screenshot shows a simple  Ubuntu server which has been installed on Oracle 
+Virtual Box. There is an OS user named demo  which has been defined on the system 
+having entire root access to the sever.  
+ 
+To install Docker , we need to follow the steps  given below.  
+Step 1 : Before installi ng Docker , you first have to ensure that you have the right Linux 
+kernel version running. Docker is only designed to run on Linux kernel version 3.8 and 
+higher. We can do this by running the following command :  
+uname  
+This method returns the system informat ion about the Linux system.  
+Syntax  
+uname -a 
+Options  
+a – This is used to ensure that the system information is returned.  
+Return Value  
+This method returns the following information on the Linux system : 
+ kernel name  
+ node name  
+ kernel release  
+ kernel version  
+ mach ine 
+ processor  
+ hardware platform  
+ operating system  
+Example  
+uname –a  
+2.  Docker – Installing Docker on Linux  
+Docker  
+4 
+ 
+Output  
+When we run above command , we will get the following result : 
+ 
+From the output, we can see that the Linux  kernel version is 4.2.0 -27 which is higher than 
+version 3.8, so we are good to go.  
+Step 2 : You need to update the OS with the latest packages, which can be done via the 
+following command : 
+apt-get 
+This method installs packages from the Internet on to the Linux system.  
+Syntax  
+sudo apt -get update  
+Options  
+ sudo  - The sudo  command is us ed to ensure that the command runs with root 
+access.  
+ 
+ update  - The update  option is used ensure that all packages are updated on the 
+Linux system.  
+Return Value  
+None 
+Example  
+sudo apt -get update  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+5 
+ 
+Output  
+When we run the above command , we will get the f ollowing result : 
+ 
+This command will connect to the internet and download the latest system packages for 
+Ubuntu.  
+Step 3 : The next step is to install the necessary certificates that will be required to work 
+with the Docker  site later on to download the nece ssary Docker  packages. It can be done 
+with the following command : 
+sudo apt -get install apt -transport -https ca -certificates  
+
+Docker  
+6 
+ 
+ 
+Step 4 : The next step is to add the new GPG key. This key is required to ensure that all 
+data is encrypted when downloading the nec essary packages for Docker .  
+The following  command will download the key with the ID 
+58118E89F3A912897C070ADBF76221572C52609D from the keyserver  
+hkp://ha.pool.sks -keyservers.net:80 and adds it to the adv keychain. Please note that 
+this particular key is re quired to download the necessary Docker  packages .  
+sudo apt -key adv \ 
+               --keyserver hkp://ha.pool.sks -keyservers.net:80 \ 
+               --recv-keys 58118E89F3A912897C070ADBF76221572C52609D  
+ 
+
+Docker  
+7 
+ 
+Step 5 : Next, depending on the version of Ubuntu yo u have, you will need to add the 
+relevant site to the docker.list  for the apt package manager , so that it will be able to 
+detect the Docker  packages from the Docker  site and download them accordingly.  
+ Precise 12.04 (LTS)  ─ deb https://apt.dockerproject.org/repo ubuntu -precise main  
+ Trusty 14.04 (LTS)  ─ deb https://apt.dockerproject.org/repo ubuntu -trusty main  
+ Wily 15.10  ─ deb https://apt.dockerproject.org/repo ubuntu -wily main  
+ Xenial 16.04 (LTS) ─ deb https://apt.dockerpro ject.org/repo ubuntu -xenial main  
+Since our OS is Ubuntu 14.04, we will use the Repository name as “ deb 
+https://apt.dockerproject.org/repo ubuntu -trusty main ” 
+And then , we will need to add this repository to the docker.list  as mentioned above.  
+echo "deb htt ps://apt.dockerproject.org/repo ubuntu -trusty main” | sudo tee 
+/etc/apt/sources.list.d/docker.list  
+ 
+Step 6 : Next, we issue the apt-get update command  to update the packages on the 
+Ubuntu system.  
+ 
+
+Docker  
+8 
+ 
+Step 7 : If you want to verify that the package manager is pointing to the right repository,  
+you can do it by issuing the apt-cache command . 
+apt-cache policy docker -engine 
+In the output,  you will get the link to https://apt.dockerproject.org/repo/   
+ 
+Step 8 : Issue the apt-get update command  to ensure all the packages on the local 
+system are up to date.  
+ 
+
+Docker  
+9 
+ 
+Step 9 : For Ubuntu Trusty, Wily, and Xenial, we have to install the linux -image -extra-* 
+kernel packages, which allows one to use the aufs storage  driver . This dri ver is used by 
+the newer versions of Docker.  
+It can be done by using the following command : 
+sudo apt -get install linux -image-extra-$(uname -r) linux -image-extra-virtual 
+ 
+Step 10: The final step is to install Docker  and we can do this with the following  command : 
+sudo apt-get install –y docker -engine 
+Here, apt-get uses the install option to download the Docker -engine  image from the 
+Docker  website and get Docker  installed.  
+The Docker -engine  is the official package from the Docker Corporation for Ubuntu -based 
+systems.  
+ 
+ 
+
+Docker  
+10 
+ 
+ 
+In the next section, we will see how to check for the version of Docker  that was installed.  
+Docker Version  
+To see the version of Docker  running, you can issue the following  command : 
+Syntax  
+docker version  
+Options  
+ version  – It is used to ensure  the Docker  command returns the Docker  version 
+installed.  
+Return Value  
+The output will provide the various details of the Docker  version installed on the system.  
+Example  
+sudo docker version  
+ 
+ 
+
+Docker  
+11 
+ 
+Output  
+When we run the above program , we will get the following result : 
+ 
+Docker Info  
+To see more information on the Docker  running on the system , you can issue the following 
+command : 
+Syntax  
+docker info 
+Options  
+ info – It is used to ensure that the Docker  command returns the detailed 
+information on the Docker  service i nstalled.  
+Return Value  
+The output will provide the various details of the Docker  installed on the system such as  
+ Number of containers  
+ Number of i mages  
+ The storage driver used by Docker  
+ The root directory used by Docker  
+ The execution driver used by Docker  
+Example  
+sudo docker info 
+
+Docker  
+12 
+ 
+Output  
+When we run the above command , we will get the following result : 
+ 
+Docker for Windows  
+Docker  has out -of-the-box support for Windows, but you need to have the following 
+configuration in order t o install Docker for W indows . 
+System Requirements  
+Windows OS  Windows 10 64 bit  
+Memory  2 GB RAM (recommended)  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+13 
+ 
+You can download Docker for Windows from: https://docs.docker.com/docker -for-windows/  
+ 
+Docker T oolBox  
+Docker ToolBox has been designed for older versions of Windows, such as Windows 8.1 
+and Windows 7. You need to have the following configuration in order to install Docker for 
+Windows . 
+System Requirements  
+Windows OS  Windows 7 , 8, 8.1  
+Memory  2 GB RAM (recomme nded)  
+Virtualization  This should be enabled.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+14 
+ 
+You can download Docker ToolBox from: https://www.docker.com/products/docker -
+toolbox  
+ 
+
+Docker  
+15 
+ 
+Let’s go through the installation of each product.  
+Docker for Windows  
+Once the installer has been downloaded, double -click it to start the installer and then 
+follow the steps given below.  
+Step 1 : Click on the Agreement terms and then  the Install button to proceed ahead with 
+the installation.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+3.  Docker ─ Installation  
+Docker  
+16 
+ 
+Step 2 : Once complete, click the Finish button to complete the installation.  
+ 
+Docker T oolBox  
+Once the installer has been downloaded, double -click it to start the installer and then 
+follow the steps given below .  
+Step 1 : Click the Next button on the start screen.  
+ 
+
+Docker  
+17 
+ 
+Step 2 : Keep the default location on the next screen and click the Next button.  
+ 
+ 
+Step 3 : Keep the default components and click the Next button to proceed . 
+ 
+
+Docker  
+18 
+ 
+Step 4 : Keep th e Additional Tasks as they are and then click the Next button . 
+ 
+ 
+Step 5 : On the final screen,  click the Install button . 
+ 
+
+Docker  
+19 
+ 
+Working with Docker T oolbox  
+Let’s now look at how Docker Toolbox can be used to work with Docker containers on 
+Windows. The first ste p is to launch the Docker Toolbox application for which the shortcut 
+is created on the desktop when the installation of Docker toolbox is carried out.  
+ 
+Next, you will see the configuration being carried out when Docker toolbox is launched.  
+ 
+ 
+ 
+
+Docker  
+20 
+ 
+Once done, you will see Docker configured and launched.  You will get an interactive shell 
+for Docker . 
+ 
+To test that Docker  runs properly, we can use the Docker  run command  to download and 
+run a simple HelloWorld Docker container . 
+The working of the Docker  run comman d is given below : 
+docker run  
+This command is used to run a command in a Docker  container.  
+Syntax  
+docker run image  
+Options  
+ Image – This is the name of the image which is used to run the container.  
+Return Value  
+The output will run the command in the desired container.  
+Example  
+sudo docker run hello -world 
+This command will download the hello -world  image , if it is not already present , and run 
+the hello -world  as a container.  
+ 
+ 
+ 
+ 
+
+Docker  
+21 
+ 
+Output  
+When we run the above command , we will get the following result : 
+ 
+If you want  to run the Ubuntu OS on Windows,  you can download the Ubuntu Image using  
+the following command : 
+Docker run –it Ubuntu bash  
+Here you are telling Docker  to run the command in the interactive mode via the –it option.  
+ 
+In the output you can see that the Ubun tu image is downloaded and run and the n you will 
+be logged in as a root user in the Ubuntu container.  
+
+Docker  
+22 
+ 
+Docker Hub is a registry service on the cloud that allows you to download Docker  images 
+that are built by other communities . You can a lso upload your own Docker  built images to 
+Docker  hub. In this chapter,  we will see how to download and the use the Jenkins Docker  
+image from Docker  hub. 
+The official site for Docker  hub is : https:/ /www.docker.com/products/docker -hub 
+Step 1 : First you need to do a simple sign -up on Docker hub . 
+ 
+Step 2 : Once you have signed up, you will be logged into Docker Hub . 
+ 
+4.  Docker – Docker Hub  
+Docker  
+23 
+ 
+Step 3 : Next, let’s browse and find the Jenkins image.  
+ 
+ 
+Step 4 : If you scroll down on the same page , you can see the Docker  pull command . This 
+will be used to download the Jenkins i mage onto the local Ubuntu server.  
+ 
+ 
+ 
+ 
+
+Docker  
+24 
+ 
+Step 5 : Now, go to the Ubuntu server and run the following command :  
+sudo docker pull jenkins  
+ 
+To run Jenkins, you ne ed to run the following command : 
+sudo docker run -p 8080:8080 -p 50000:50000 jenkins  
+Note the following points about the above sudo  command : 
+ We are using the sudo  command to ensure it runs with root access . 
+ 
+ Here, jenkins  is the name of the image we want t o download from Docker  hub and 
+install on our Ubuntu machine . 
+ 
+ -p is used to map the port number of the internal Docker  image to our main Ubuntu 
+server so that we can access the container accordingly.  
+
+Docker  
+25 
+ 
+ 
+You will then have Jenkins successfully running as a container on the Ubuntu machine.  
+
+Docker  
+26 
+ 
+In Docker,  everything is based on Images. An image is a combination of a file system and 
+parameters. Let’s take an example of the following command in Docker.  
+docker run hello -world 
+ 
+ The Docker  command is sp ecific and tells the Docker  program on the Operating 
+System that something needs to be done.  
+ 
+ The run command is used to mention that we want to create an instance of an 
+image, which is then called a container . 
+ 
+ Finally , "hello-world " represents the image from which the container is made.  
+Now let’s look at how we can use the CentOS image available in Docker Hub to run CentOS 
+on our Ubuntu machine.  We can do this by executing the following  command on our 
+Ubuntu machine : 
+sudo docker run centos –it /bin/bash  
+Note the following points about the above sudo  command : 
+ We are using the sudo  command to ensure that it runs with root access . 
+ 
+ Here, centos  is the name of the image we want to download from Docker  Hub and 
+install on our Ubuntu machine . 
+ 
+ ─it is used to mention that we want to run in interactive mode . 
+ 
+ /bin/bash  is used t o run the bash shell once CentOS  is up and running . 
+Displaying Docker Images  
+To see the list of Docker images on the system, you can issue the following  command.  
+docker images  
+This command is  used to display all the images currently installed on the system.  
+Syntax  
+docker images  
+Options  
+None 5.  Docker ─ Images  
+Docker  
+27 
+ 
+Return Value  
+The output will provide the list of images on the system.  
+Example  
+sudo docker images  
+Output  
+When we run the above command , it will produce the following result : 
+ 
+From the above output,  you can see that the server has three  images : centos , 
+newcentos , and jenkins . Each image has the following attributes : 
+ TAG – This is used to logically tag images . 
+ Image ID  – This is used to uniquely identify the image . 
+ Created  – The number of days since the image was created.  
+ Virtual Size  – The size of the i mage.  
+Downloading Docker Images  
+Images  can be downloaded from Docker H ub using the Docker run command. Let’s see in 
+detail how we can do this.  
+Syntax  
+The follo wing syntax is used to run a command in a Docker container.  
+docker run image  
+Options  
+ Image  – This is the name of the image which is used to run the container.  
+Return Value  
+The output will run the command in the desired container.  
+
+Docker  
+28 
+ 
+Example  
+sudo docker run ce ntos 
+This command will download the centos  image , if it is not already present , and run the 
+OS as a container.  
+Output  
+When we run the above command , we will get the following result : 
+ 
+You will now see the CentOS Docker  image downloaded . Now , if we run the  Docker  images  
+command to see the list of images on the system,  we should be able to see the centos  
+image as well . 
+ 
+Removing Docker Images  
+The Docker  images on the system can be removed via the docker rmi  command. Let’s 
+look at this command in more detail . 
+docker rmi  
+This command is used to remove Docker  images.  
+
+Docker  
+29 
+ 
+Syntax  
+docker rmi ImageID  
+Options  
+ ImageID  – This is the ID of the image which needs to be removed.  
+Return Value  
+The output will provide the Image ID of the deleted Image.  
+Example  
+sudo docker rmi 7a86f8ffcb25  
+Here, 7a86f8ffcb25  is the Image ID of the newcentos  image.  
+Output  
+When we run the above command , it will produce the following result : 
+ 
+Let’s see some more Docker  commands on images . 
+docker images -q 
+This command is used to ret urn only the Imag e ID’s of the i mages . 
+Syntax  
+docker images -q 
+Options  
+ q – It tells the Docker  command to return the I mage ID’s  only. 
+Return Value  
+The output will show only the Image ID’s of the images on the Docker  host. 
+Example  
+sudo docker images -q 
+Output  
+When we run the above command , it will produce the following result : 
+
+Docker  
+30 
+ 
+ 
+docker inspect  
+This command is used see the details of an image or container . 
+Syntax  
+docker inspect Repository  
+Options  
+ Repository  – This is the name of the Image.  
+Return Value  
+The output will show de tailed information on the Image.  
+Example  
+sudo docker inspect jenkins  
+Output  
+When we run the above command , it will produce the following result : 
+ 
+
+Docker  
+31 
+ 
+Containers are instances of Docker  images  that can be run using the Docker  run 
+command. T he basic purpose of Docker  is to run containers.  Let’s discuss how to work 
+with containers.  
+Running a Container  
+Running of containers is managed with the Docker  run command. To run a container in 
+an interactive mode,  first launch the Docker  container .  
+sudo docker run –it centos /bin/bash  
+Then hit Crtl+p and you will return to your OS shell.  
+ 
+You will the n be running in the instance of the CentOS system on the Ubuntu server.  
+Listing of C ontainers  
+One can list all of the containers on the machine via the docker ps  command. This 
+command is used to return the currently running containers.  
+docker ps 
+Syntax  
+docker ps  
+Options  
+None 
+Return Value  
+The output will show the currently running containers.  
+Example  
+sudo docker ps  
+ 
+ 
+6.  Docker – Containers  
+Docker  
+32 
+ 
+Output  
+When we run the above command , it will produce the following result:  
+ 
+Let’s see some more variations of the docker ps  command.  
+docker ps -a 
+This command is used to list all of the containers on the system . 
+Syntax  
+docker ps -a 
+Options  
+ ─a – It tells the docker ps  command to list all of the containers on the system.  
+Return Value  
+The output will show all containers.  
+Example  
+sudo docker ps  -a 
+Output  
+When we run the above command , it will produce the following result : 
+ 
+
+Docker  
+33 
+ 
+docker history  
+With t his command , you can see all the commands that were run with an image via a 
+container.  
+Syntax  
+docker history ImageID  
+Options  
+ ImageID  – This is the Image ID for which you want to see all the commands that 
+were run against it.  
+Return Value  
+The output will s how all the commands run against that image.  
+Example  
+sudo docker history centos  
+The above command will show all the commands that were run against the centos  image.  
+Output  
+When we run the above command , it will produce the following result : 
+ 
+ 
+
+Docker  
+34 
+ 
+In this chapter,  we will explore in detail what we can do with containers.  
+docker top 
+With this command , you can see the top processes within a container.  
+Syntax  
+docker top ContainerID  
+Options  
+ ContainerID – This is the Container  ID for  which you want to see the top processes.  
+Return Value  
+The output will show the top -level processes within a container.  
+Example  
+sudo docker top 9f215ed0b0d3  
+The above command will show the top -level processes within a container.  
+Output  
+When we run the above command , it will produce the following result : 
+ 
+ 
+ 
+ 
+7.  Docker – Wor king with Containers  
+Docker  
+35 
+ 
+docker stop   
+This command is used to stop a running container.  
+Syntax  
+docker stop ContainerID  
+Options  
+ ContainerID  – This is the Container ID which needs to be stopped.  
+ 
+Return Value  
+The output will give  the ID of the stopped container.  
+Example  
+sudo docker stop 9f215ed0b0d3  
+The above command will stop the Docker  container 9f215ed0b0d3 . 
+Output  
+When we run the above command , it will produce the following result : 
+ 
+docker rm 
+This command is used to delete  a container.  
+Syntax  
+docker rm ContainerID  
+Options  
+ ContainerID  – This is the Container ID which needs to be removed . 
+ 
+
+Docker  
+36 
+ 
+Return Value  
+The output will give the ID of the removed  container.  
+Example  
+sudo docker rm 9f215ed0b0d3  
+The above command will remove the Docker container 9f215ed0b0d3 . 
+Output  
+When we run the above command , it will produce the following result : 
+ 
+docker stats  
+This command is used to provide the statistics of a running container.  
+Syntax  
+docker stats ContainerID  
+Options  
+ ContainerID  – This is the C ontainer ID for which the stats need to be provided.  
+Return Value  
+The output will show the CPU and Memory utilization of the Container.  
+Example  
+sudo docker rm 9f215ed0b0d3  
+The abov e command will provide CPU and m emory utilization of the Container 
+9f215ed0b 0d3. 
+ 
+ 
+
+Docker  
+37 
+ 
+Output  
+When we run the above command , it will produce the following result : 
+ 
+docker attach  
+This command is used to attach to a running container.  
+Syntax  
+docker attach ContainerID  
+Options  
+ ContainerID  – This is the Container ID to which you need to a ttach.  
+Return Value  
+None 
+Example  
+sudo docker attach 07b0b6f434fe  
+The above command will attach to the Docker  container 07b0b6f434fe . 
+Output  
+When we run the above command , it will produce the following result : 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+38 
+ 
+Once you have attached to the Docker  container,  you can run the above  command to see 
+the process utilization in that Docker  container . 
+ 
+docker pause  
+This command is used to pause the processes in a running container.  
+Syntax  
+docker pause ContainerID  
+Options  
+ ContainerID  – This is the Container ID to which you need to pause the processes 
+in the container.  
+Return Value  
+The ContainerID of the paused container.  
+Example  
+sudo docker pause 07b0b6f434fe  
+The above command will pause the p rocesses in a running container 07b0b6f434fe . 
+Output  
+When we run the above command , it will produce the following result : 
+ 
+
+Docker  
+39 
+ 
+docker unpause  
+This command is used to unpause  the processes in a running container.  
+Syntax  
+docker unpause ContainerID  
+Options  
+ ContainerID  – This is the Container ID to which you need to unpause the 
+processes in the container.  
+Return Value  
+The ContainerID of the running  container.  
+Example  
+sudo docker unpause 07b0b6f434fe  
+The above command will unpause the p rocesses in a running container: 07b0b6f434fe  
+Output  
+When we run the above command , it will produce  the following result : 
+ 
+docker kill  
+This command is used to kill the processes in a running container.  
+Syntax  
+docker kill ContainerID  
+Options  
+ ContainerID  – This is the Container ID to which you need to kill the processes in 
+the container.  
+Return Value  
+The ContainerID of the running container.  
+ 
+ 
+
+Docker  
+40 
+ 
+Example  
+sudo docker kill 07b0b6f434fe  
+The above command will kill the processes in the running container  07b0b6f434fe . 
+Output  
+When we run the above command , it will produce the following result:  
+ 
+Docker – Containe r Lifecycle  
+The following illustration explains the entire lifecycle of a Docker  container.  
+ 
+ Initially , the Docker  container will be in the created  state.  
+ 
+ Then the Docker  container goes into the running state when the Docker  run 
+command is used.  
+ 
+ The Docker kill command is used to kill an existing Docker  container . 
+ 
+ The Docker  pause  command is used to pause an existing Docker  container . 
+
+Docker  
+41 
+ 
+ 
+ The Docker  stop command is used to pause an existing Docker  container . 
+ 
+ The Docker  run command is used to put a contai ner back from a stopped  state to 
+a running  state.  
+ 
+Docker  
+42 
+ 
+The following image shows the standard and traditional architecture of virtualization . 
+ 
+ The server is the physical server that is used to host multiple virtual machines . 
+ 
+ The Host OS is the base machine such as Linux or Windows . 
+ 
+ The Hypervisor is either VMWare or Windows Hyper V that is used to host virtual 
+machines . 
+ 
+ You would then install multiple operating system s as virtual machines on top of the 
+existing hypervisor as Gue st OS.  
+ 
+ You would then host your applications on top of each Guest OS.  
+The following  image shows the new generation of virtualization that is enabled via Dockers . 
+Let’s have a look at the various layers.  
+ 
+8.  Docker – Docker Architecture  
+Docker  
+43 
+ 
+ The server is the physical server that is used to host multiple virtual machines. So 
+this layer remains the same.  
+ 
+ The Host OS is the base machine such as Linux or Windows. So this layer remains 
+the same.  
+ 
+ Now comes the new generation which is the Docker  engine. This is used to run the 
+operating system wh ich earlier used to be virtual machines as Docker  containers.  
+ 
+ All of the Apps now run as Docker  containers.  
+The clear advantage in this architecture is that you don’t need to have extra hardware for 
+Guest OS . Everything works as Docker  containers.  
+ 
+Docker  
+44 
+ 
+The good thing about the Docker  engine is that it is designed to work on various operating 
+systems. We have already seen the installation on Windows and seen all the Docker  
+commands on Linux systems. Now let’s see the various Docker  commands on the Windows 
+OS. 
+Docker I mages  
+Let’s run the Docker  images  command on the Windows host . 
+ 
+From here, we can see that we have two images : ubuntu  and hello -world .  
+Running a C ontainer  
+Now let’s run a container in the Windows Docker  host. 
+ 
+9.  Docke r – Container and H osts 
+Docker  
+45 
+ 
+We can  see that by running the container,  we can now run the Ubuntu co ntainer on a 
+Windows host.  
+Listing All C ontainers  
+Let’s list all the containers on the W indows host . 
+ 
+Stopping a C ontainer  
+Let’s now s top a running container on the W indows host . 
+ 
+So you can  see that the Docker  engine is pretty consistent when it comes to different 
+Docker  hosts and it works on Windows in the same way it works on Linux.  
+
+Docker  
+46 
+ 
+In this chapter,  we will look at the different options to configure Docker.  
+service docker stop  
+This command is used to stop the Docker  daemon  process.  
+Syntax  
+service docker stop  
+Options  
+None 
+Return Value  
+A message showing that the Docker  process has stopped.  
+Example  
+sudo service docker stop  
+Output  
+When we run the above command , it wi ll produce the following result : 
+ 
+service docker start 
+This command is used to start the Docker  daemon process.  
+Syntax  
+service docker start  
+Options  
+None 
+ 
+10.  Docker – Configuring Docker  
+Docker  
+47 
+ 
+Return Value  
+A message showing that the Docker  process has started.  
+Example  
+sudo service docker start  
+Output  
+When we run the above command , it will produce the following result:  
+ 
+ 
+
+Docker  
+48 
+ 
+By default, when you launch a container, you will also use a shell  command  while 
+launching the container as shown below. This is what we have se en in the earlier chapters 
+when we were working with containers.  
+ 
+In the above screenshot, you can observe that we have issued the following command:  
+sudo docker run –it centos /bin/bash  
+We used this command t o create a new container and then use d the Ct rl+P+Q command 
+to exit out of the container. It ensures that the container still exists even after we exit 
+from the container.  
+We can verify that the container still exists with the Docker  ps command.  If we had to exit 
+out of the container directly, then the container itself would be destroyed.   
+Now there is an easier way to attach to containers and exit them cleanly without the need 
+of destroying them. One way of achieving this is by using the nsenter  command.  
+Before we run the nsenter  command, you need t o first install the nsenter  image. It can 
+be done by using the following command : 
+docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter  
+ 
+11.  Docker – Containers and Shells  
+Docker  
+49 
+ 
+Before we use the nsenter  command, we need to get the Process ID of the container, 
+because this is required by th e nsenter  command. We can get the Process ID via the 
+Docker  inspect  command  and filtering it via the Pid 
+ 
+As seen in the above screenshot, we have  first used the docker ps  command to see the 
+running containers. We can see that there is one running contain er with the ID of 
+ef42a4c5e663.  
+We then use the Docker  inspect  command to inspect the configuration of this container 
+and then use the grep command to just filter the Process ID.  And from the output, we 
+can see that the Process ID is 2978.  
+Now that we hav e the process ID, we can proceed forward and use the nsenter  command 
+to attach to the Docker  container.  
+nsenter  
+This method allows one to attach to a container without exiting the container.  
+Syntax  
+nsenter –m –u –n –p –i –t containerID command  
+Options  
+ -u is used to mention  the Uts namespace  
+ -m is used to mention the mount  namespace  
+ -n is used to mention the network  namespace  
+ -p is used to mention the process  namespace  
+ -i is to make the container run in interactive mode.  
+ -t is used to connect the I/O streams  of the container to the host OS.  
+ containerID  – This is the ID of the container.  
+ Command  – This is the command to run within the container.  
+Return Value  
+None 
+ 
+
+Docker  
+50 
+ 
+Example  
+sudo nsenter –m –u –n –p –i –t 2978 /bin/bash  
+Output  
+ 
+From the output, we can observe th e following points:  
+ The prompt changes to the bash  shell  directly when we issue the nsenter  
+command . 
+ 
+ We then issue the exit command. Now normally if you did not use the nsenter  
+command, the container would be destroyed. But you would notice that when we 
+run the nsenter  command, the container is still up and running.  
+
+Docker  
+51 
+ 
+In the earlier chapters, we have seen the various Image files such as Centos which get 
+downloaded from Docker  hub from which you can spin up containers. An example is again  
+shown below.  
+ 
+If we use the Docker  images  command, we can see the existing images in our system. 
+From the above screenshot, we can see that there are two images: centos  and nsenter . 
+But Docker  also gives you the capability to create your own Docker  image s, and it can be 
+done w ith the help of Docker  Files. A Docker F ile is a simple text file with instructions on 
+how to build your images.  
+The following steps explain how you should go about creating a Docker File.  
+Step 1 : Create a file called Docker  File and edit it using vim. Please note that the name 
+of the file has to be " Dockerfile " with " D" as capital.  
+ 
+Step 2 : Build your Docker  File using the following instructions:  
+#This is a sample Image  
+FROM ubuntu  
+MAINTAINER demousr@gmail.com  
+RUN apt-get update  
+RUN apt-get install –y nginx 
+CMD [“echo”,”Image created”]  
+The following points need to be noted about the above file : 
+ The first line "#This is a sample Image " is a comment. You can add comments to 
+the Docker  File with the help of the # command.  
+ 
+ The next line has to start with the FROM  keyword. It tells docker, from which base 
+image you want to base your image from. In our example, we are creating an 
+image from the ubuntu  image.  
+12.  Docker – Docker  File 
+Docker  
+52 
+ 
+ 
+ The next command is the person who i s going to maintain this image. Here you 
+specify the MAINTAINER  keyword and just mention the email ID.  
+ 
+ The RUN command is used to run instructions against the image. In our case , we 
+first update our Ubuntu system and then install the nginx  server on our ubuntu  
+image.  
+ 
+ The last command is used to display a message to the user.  
+Step 3 : Save the file. In the next chapter, we will discuss how to build the image.  
+ 
+
+Docker  
+53 
+ 
+We created our Docker  File in the last chapter. It’s now time to build the Docker F ile. The 
+Docker  File can be built with the following command : 
+docker build  
+Let’s learn more about this command.  
+docker build  
+This method allows the users to build their own Docker  images.  
+Syntax  
+docker build  -t ImageName:TagName dir  
+Options 
+ -t is to mention a tag to the image  
+ ImageName  – This is the name you want to give to your image  
+ TagName  – This is the tag you want to give to your image  
+ Dir – The directory where the Docker  File is present.  
+Return Value  
+None 
+Example  
+sudo docker build –t myimage:0.1 .  
+Here,  myimage  is the name we are giving to the Image and 0.1 is the tag number we 
+are giving to our image.  
+Since the Docker  File is in the present working directory, we used " ." at the end of the 
+command to signify the present working dire ctory.  
+ 
+ 
+ 
+ 
+ 
+ 13.  Docker – Building Docker Files  
+Docker  
+54 
+ 
+Output  
+From the output , you will first see that the Ubuntu Image will be downloaded from Docker 
+Hub, because there is no image available locally on the machine.  
+ 
+Finally , when the build is complete, all the necessary commands would have run o n the 
+image.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+55 
+ 
+You will then see the successfully built message and the ID of the new Image. When you 
+run the Docker  images  command , you would then be able to see your new image.  
+ 
+You can now build containers from your new Image.  
+
+Docker  
+56 
+ 
+Public repositories can be used to host Docker  images which can be used by everyone 
+else. An example is the images which are available in Docker Hub. Most of the images 
+such as Centos, Ubuntu, and Jenkins are all publicly available for all. We can also make 
+our images available by publishing it to the public r epository on Docker H ub.  
+For our example, we will use the myimage  repository built in the "Building Docker Files " 
+chapter a nd upload that image to Docker H ub. Let’s first review the images o n our Docker  
+host to see what we can push to the Docker  registry . 
+ 
+Here, we have our myimage:0.1  image which was created as a part of the “Building 
+Docker Files” chapter. Let’s use this to upload to the Docker public repository.  
+The following steps explai n how you can upload an image to public repository.  
+Step 1 : Log into Docker H ub and create your repository. This is the repository where your 
+image will be stored.  Go to https://hub.docker.com/  and log in with your credentials . 
+ 
+14.  Docker – Public Rep ositories  
+Docker  
+57 
+ 
+Step 2 : Click the button  "Create Repository " on the above screen and create a repository 
+with the name demorep . Make sure that the visibility of the repository is public.  
+ 
+Once the repository is created, make a note of the pull command whi ch is attached to the 
+repository.  
+ 
+The pull command which will be used in our repository is as follows:   
+docker pull demousr/demorep  
+
+Docker  
+58 
+ 
+Step 3 : Now go back to the Docker H ost. Here we need to tag our myimage  to the new 
+repository created in Docker  Hub. We can do this via the D ocker tag command . 
+We will learn more about this tag command later in this chapter.  
+Step 4 : Issue the Docker  login command to login into the Docker H ub repository from the 
+command prompt. The Docker  login c ommand will prompt you for t he username and 
+password to the D ocker Hub repository.  
+ 
+Step 5 : Once the image has been tagged, it’s now time to push the image to the Docker 
+Hub repository. We can do this via the Docker  push  command.  We will learn more about 
+this command later in this c hapter.  
+docker tag  
+This method allows one to tag an image to the relevant repository.  
+Syntax  
+docker tag imageID Repositoryname  
+Options  
+ imageID  – This is the ImageID which needs to be tagged to the repository.  
+ 
+ Repositoryname  – This is the repository name t o which the ImageID needs to be 
+tagged to.  
+Return Value  
+None 
+Example  
+sudo docker tag ab0c1d3744dd demousr/demorep:1.0  
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+59 
+ 
+Output  
+A sample output of the above example is given below.  
+ 
+docker push  
+This method allows one to push images to the D ocker Hub. 
+Syntax 
+docker push Repositoryname  
+Options  
+ Repositoryname  – This is the repository name which needs to be pushed to the 
+Docker Hub. 
+Return Value  
+The long ID of the repository pushed to Docker H ub. 
+Example  
+sudo docker push demousr/demorep:1.0  
+Output  
+ 
+
+Docker  
+60 
+ 
+If you g o back to the D ocker Hub page and go to your repository, you will see the tag 
+name in the repository . 
+ 
+Now let’s try to pull the repository we uploaded onto our Docker  host. Let’s first delete the 
+images, myimage:0.1  and demousr/demorep:1.0 , from the loca l Docker  host. Let’s 
+use the D ocker pull command  to pull the repository from the Docker H ub. 
+ 
+From the above screenshot, you can see that the D ocker pull command has taken our 
+new repository from the D ocker Hub and placed it on our machine.  
+ 
+ 
+
+Docker  
+61 
+ 
+In Docker , the containers themselves can have applications running on ports. When you 
+run a container, if you want to access the application in the container via a port number, 
+you need to map the port number of the container to the port number  of the Docker  host. 
+Let’s look at an example of how this can be achieved.  
+In our example, we are going to download the Jenkins container from Docker H ub. We are 
+then going to map the Jenkins port number to the port number on the Docker  host. 
+Step 1 : First, you need to d o a simple sign -up on Docker H ub. 
+ 
+Step 2 : Once you have signed up, you will be logged into Docker Hub . 
+ 
+15.  Docker – Man aging Ports  
+Docker  
+62 
+ 
+Step 3 : Next, let’s browse and find the Jenkins image.  
+ 
+Step 4 : If you scroll down on the same page , you can see the Docker  pull comm and. This 
+will be used to download the Jenkins Image onto the local Ubuntu server.  
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+63 
+ 
+Step 5 : Now go to the Ubuntu server and run the command :  
+sudo docker pull jenkins  
+ 
+Step 6 : To understand what ports are exposed by the container, you should use the 
+Docker  inspect  command  to inspect the image.  
+Let’s now learn more about this inspect  command.  
+docker inspect  
+This method allows one to return low -level information on the container or image.  
+Syntax  
+docker inspect Container/Image  
+Options  
+ Container/Image – The container or image to inspect.  
+ 
+ 
+ 
+
+Docker  
+64 
+ 
+Return Value  
+The low -level information of the image or container in JSON format.  
+Example  
+sudo docker inspect jenkins  
+Output  
+ 
+The output of the inspect  command gives a JSON output. If we observe the output, we 
+can see that there is a section of "ExposedPorts " and see that there are two ports 
+mentioned. One is the data port  of 8080 and the other is the control port  of 50000.  
+To run Jenkins  and map the ports, you need to change the Docker  run command and add 
+the ‘p’ optio n which specifies the port mapping.  So, you need to run the following  
+command : 
+sudo docker run -p 8080:8080 -p 50000:50000 jenkins  
+The left -hand side of the port number mapping is the Docker host port to map to and the 
+right-hand side is the Docker contain er port number.  
+ 
+ 
+ 
+
+Docker  
+65 
+ 
+When you open the browser and navigate to the Docker  host on port 8080, you will see 
+Jenkins up and running.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+66 
+ 
+You might have the need to have your own private repositories. You may not want to host 
+the repositories on Docker H ub. For this, there is a re pository container itself from D ocker. 
+Let’s see how we can download and use the container for registry.  
+Step 1 : Use the D ocker run command to download the private registry. This can be done 
+using the f ollowing command : 
+sudo docker run –d –p 5000:5000 –-name registry registry:2  
+The following points need to be noted about the above command : 
+ Registry  is the container managed by D ocker which can be used to host private 
+repositories . 
+ 
+ The port number exposed  by the container is 5000. Hence with the –p command , 
+we are mapping the same port n umber  to the 500 0 port number on our local host. 
+ 
+ We are just tagging the registry container as “2”, to differentiate it on the Docker 
+host. 
+ 
+ The –d option is used to run th e container in detached mode. This is so that the 
+container can run in the background.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+16.  Docker – Private Registries  
+Docker  
+67 
+ 
+Step 2 : Let’s do a docker ps  to see that the registry container is indeed running.  
+ 
+We have now confirmed that the registry container is indeed running.  
+Step 3: Now let’s tag one of our existing images so that we can push it to our local 
+repository. In our example, since we have the centos  image available locally, we are going 
+to tag it to our private repository and add a tag name of centos . 
+sudo docker tag 675 91570dd29 localhost:5000/centos  
+The following points need to be noted about the above command : 
+ 67591570dd29  refers to the I mage ID for the centos  image . 
+ localhost:5000  is the location of our private repository.  
+ We are tagging the repository name as centos  in our private repository.  
+ 
+Step 4 : Now let’s use the D ocker push  command to push the repository to our private 
+repository . 
+sudo docker push localhost:5000/centos  
+Here, we are pushing the centos  image to the private repository hosted at 
+localhost:5000 . 
+
+Docker  
+68 
+ 
+ 
+Step 5 : Now let’s delete the local images we have for centos  using the docker rmi  
+commands. We can then download the required centos  image from our private repository.  
+sudo docker rmi centos:latest  
+sudo docker rmi 67591570dd29  
+ 
+Step 6 : Now that we don’t h ave any centos  images on our local machine, we can now 
+use the following D ocker pull command to pull the centos  image from our private 
+repository . 
+sudo docker pull localhost:5000/centos  
+ 
+
+Docker  
+69 
+ 
+Here, w e are pulling the centos  image to the private repository hoste d at 
+localhost:5000 . 
+ 
+If you now see the images on your system, you will see the centos  image as well.  
+
+Docker  
+70 
+ 
+We have already learnt how to use Docker File to build our own custom images. Now let’s 
+see how we can build a web server image which can be used to build containers.  
+In our example, we are going to use the Apache W eb Server on Ubuntu to build our image. 
+Let’s follow the steps given below, to build our web server Docker file.  
+Step 1 : The first step is to build o ur Docker  File. Let’s use vim and create a Docker  File 
+with the following information . 
+FROM ubuntu  
+RUN apt-get update  
+RUN apt-get install –y apache2  
+RUN apt-get install –y apache2 -utils 
+RUN apt-get clean  
+EXPOSE 80  
+CMD [“apache2ctl”, “ -D”, “FOREGROUND”]  
+The following points need to be noted about the above statements : 
+ We are first creating our image to be from the Ubuntu base image . 
+ 
+ Next, we are going to use the RUN command to update all the packages on the 
+Ubuntu system.  
+ 
+ Next, we use the RUN command to in stall apache2 on our image.  
+ 
+ Next, we use the RUN command to install the necessary utility apache2 packages 
+on our image.  
+ 
+ Next, we use the RUN command to clean any unnecessary files from the system.  
+ 
+ The EXPOSE command is used to expose port 80 of Apache in the container to the 
+Docker host.  
+ 
+ Finally , the CMD command is used to run apache2 in the background.  
+ 
+Now that the file details have been entered, just save the file.  
+17.  Docker – Building a Web Server Docker  File 
+Docker  
+71 
+ 
+Step 2 : Run the D ocker build  command to build the D ocker file. It can be done using  the 
+following command : 
+sudo docker build –t=”mywebserver” .  
+We are tagging our image as mywebserver . Once the image is built, you will get a 
+successful message that the file has been built.  
+ 
+Step 3 : Now that the web server file has been built, it’s now t ime to create a container 
+from the image. We can do this with the Docker  run command.  
+sudo docker run –d –p 80:80 mywebserver  
+ 
+
+Docker  
+72 
+ 
+The following points need to be noted about the above command : 
+ The port number exposed by the container is 80. Hence with the –p command, we 
+are mapping the same port n umber to the 80 port number on our local host. 
+ 
+ The –d option is used to run the container in detached mode. This is so that the 
+container can run in the background.  
+If you go to port 80 of the D ocker host in your web  browser, you will now see that Apache 
+is up and running.  
+ 
+
+Docker  
+73 
+ 
+Docker has a host of instruction commands. These are commands that are put in the 
+Docker  File. Let’s look at the ones which are available . 
+CMD Instruction  
+This comman d is used to execute a command at runtime when the container is executed.  
+Syntax  
+CMD command param1  
+Options  
+ command  – This is the command to run when the container is launched.  
+ param1  – This is the parameter entered to the command.  
+Return Value  
+The command  will execute accordingly.  
+Example  
+In our example, we will enter a simple Hello World  echo in our Docker  File and create an 
+image and launch a container from it.  
+Step 1 : Build the Docker  File with the following commands : 
+FROM ubuntu  
+MAINTAINER demousr@gmail.com  
+CMD [“echo” , “hello world”]  
+Here, the CMD is just used to print hello world . 
+ 
+ 
+ 
+ 
+18.  Docker – Instruction C ommands  
+Docker  
+74 
+ 
+Step 2 : Build the image using the D ocker build  command . 
+ 
+Step 3 : Run a container from the image . 
+ 
+ENTRYPOINT  
+This command can also be used to execute commands at runtime for the container. But 
+we can be more flexible with the ENTRYPOINT command.  
+Syntax  
+ENTRYPOINT command param1  
+Options  
+ command  – This is the command to run when the container is launched.  
+ param1  – This is the p arameter entered into the command.  
+Return Value  
+The command will execute accordingly.  
+Example  
+Let’s take a look at an example to understand more about ENTRYPOINT. In our example, 
+we will enter a simple echo  command in our Docker  File and create an image an d launch 
+a container from it.  
+Step 1 : Build the Docker  File with the following  commands : 
+FROM ubuntu  
+MAINTAINER demousr@gmail.com  
+ENTRYPOINT [“echo”]  
+
+Docker  
+75 
+ 
+ 
+Step 2 : Build the image using the Docker  build  command . 
+ 
+Step 3: Run a container from the image . 
+ 
+ENV 
+This command is used to set environment variables in the container.  
+Syntax  
+ENV key value  
+Options  
+ Key – This is the key for the environment variable.  
+ value  – This is the value for the environment variable.  
+
+Docker  
+76 
+ 
+Return V alue 
+The command will execute accordingly.  
+Example  
+In our example, we will enter a simple echo  command in our Docker  File and create an 
+image and launch a container from it.  
+Step 1 : Build the Docker  File with the following commands : 
+FROM ubuntu  
+MAINTAINER  demousr@gmail.com  
+ENV var1=Tutorial var2=point  
+ 
+Step 2 : Build the image using the D ocker build  command . 
+ 
+Step 3 : Run a container from the image . 
+ 
+ 
+
+Docker  
+77 
+ 
+Step 4 : Finally , execute the env command to see the environment variables . 
+ 
+WORKDIR  
+This command is used to set the working directory of the container.  
+Syntax  
+WORKDIR dirname  
+Options  
+ dirname  – The new working directory. If the directory does not exist, it will be 
+added.  
+Return Value  
+The command will execute accordingl y. 
+Example  
+In our example, we will enter a simple echo  command in our Docker  File and create an 
+image and launch a container from it.  
+ 
+ 
+
+Docker  
+78 
+ 
+Step 1 : Build the Docker  File with the following commands : 
+FROM ubuntu  
+MAINTAINER demousr@gmail.com  
+WORKDIR /newtemp  
+CMD pwd 
+ 
+Step 2 : Build the image using the D ocker build  command . 
+ 
+Step 3 : Run a container from the image . 
+ 
+
+Docker  
+79 
+ 
+Container Linking allows multiple containers to link with each other. It is a better option 
+than exposing ports. Let’s go step by step and learn how it works.  
+Step 1 : Download the Jenkins image , if it is not already present , using the Jenkins pull 
+command . 
+ 
+Step 2 : Once the image is available, run the container, but this time , you c an specify a 
+name to the container by using the –-name  option. This will be our source container . 
+ 
+Step 3 : Next, it is time to launch the destination container, but this time , we will link it 
+with our source container.  For our destination container, we wi ll use the standard Ubuntu 
+image . 
+ 
+When you do a docker  ps, you will see both the containers running . 
+Step 4 : Now, attach to the receiving container . 
+ 
+ 
+19.  Docker – Container Linking  
+Docker  
+80 
+ 
+Then run the env command. You will notice new variables for linking with the source 
+container . 
+ 
+ 
+
+Docker  
+81 
+ 
+Storage Drivers  
+Docker has multiple storage drivers that allow one to work with the underlying storage 
+devices. The following table shows the different storage drivers along with the technology 
+used for the storage drivers .  
+Technology  Storage Driver  
+OverlayFS  overlay or overlay2  
+AUFS  aufs 
+Btrfs brtfs 
+Device Manager  devicemanager  
+VFS vfs 
+ZFS zfs 
+ 
+Let us now discuss some of the instances in which you would use the various storage 
+drivers : 
+AUFS  
+ This is a stable driver ; can be used for production -ready applications . 
+ 
+ It has good memory usage and is good for ensuring a smooth Docker experience 
+for containers . 
+ 
+ There is a high -write activity associated with this driver which should be considered.  
+ 
+ It’s good for systems which are of Pla tform as a service type work . 
+Devicemapper  
+ This is a stable driver ; ensures a smooth Docker  experience . 
+ 
+ This driver is good for testing applications in the lab . 
+ 
+ This driver is in line with the main Linux  kernel functionality.  
+Btrfs  
+ This driver is in line  with the main Linux  kernel functionality.  
+ 
+ There is a high -write activity associated with this driver which should be considered.  
+ 
+ This driver is good for instances where you maintain multiple build pools.  
+ 20.  Docker – Docker Storage  
+Docker  
+82 
+ 
+Ovelay  
+ This is a stable driver  and it is in line  with the mai n Linux kernel functionality.  
+ 
+ It has a good memory usage . 
+ 
+ This driver is good for testing applications in the lab . 
+ZFS 
+ This is a stable driver  and it is good for testing applications in the lab . 
+ 
+ It’s good for syst ems which are of Platform -as-a-Service type work . 
+To see the storage driver being used , issue the docker  info command . 
+Syntax  
+docker info  
+Options  
+None 
+Return Value  
+The command will provide a ll relative information on the D ocker component installed on 
+the Docker Host. 
+Example  
+sudo docker info  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Docker  
+83 
+ 
+Output  
+The following output shows that the main driver used is the aufs driver and that the root 
+directory is stored in /var/lib/docker/aufs . 
+ 
+Data V olumes  
+In Docker , you have a separate volume that can shared across containers. The se are 
+known as data volumes . Some of the features of data volume are : 
+ They are initialized when the container is created.  
+ They can be shared and also reused amongst many containers . 
+ Any changes to the volume itself can be made directly . 
+ They exist  even af ter the container is deleted.  
+Let’s look at our Jenkins container. Let’s do a docker  inspect  to see the details of this 
+image.  We can issue the following  command to write the output of the docker  inspect  
+command to a text file and then view the file accord ingly.  
+sudo docker inspect Jenkins > tmp.txt  
+When you view the text file using the more  command , you will see an entry as 
+JENKINS_HOME=/var/Jenkins_home . 
+ 
+ 
+
+Docker  
+84 
+ 
+This is the mapping that is done within the container via the Jenkins image.  
+ 
+Now suppose you wante d to map the volume in the container to a local volume, then you 
+need to specify the –v option when launching the container.  An example is shown below : 
+sudo docker run –d –v /home/demo:/var/jenkins_home –p 8080:8080 –p 50000:50000 
+jenkins 
+The –v option is used to map the volume in the container which is /var/jenkins_home  
+to a location on our D ocker Host which is /home/demo . 
+ 
+Now if you go to the /home/demo  location on your D ocker Host after launching your 
+container, you will see all the container files pre sent there.  
+ 
+
+Docker  
+85 
+ 
+Changing the Storage Driver for a C ontainer  
+If you wanted to change to the storage driver used for a container, you can do so when 
+launching the container.  This can be done by using the –volume -driver  parameter when 
+using the docker  run comma nd. An example is given below : 
+sudo docker run –d –volume-driver=flocker –v /home/demo:/var/jenkins_home –p 
+8080:8080 –p 50000:50000 jenkins  
+The –volume -driver  option is used to specify another storage driver for the container.  
+ 
+To confirm that the driver  has been changed, first let’s use the docker  ps command to 
+see the running containers and get the container ID.  So, issue the following command 
+first: 
+sudo docker ps  
+Then issue a docker  inspect  against the container and put the output in a text file using  
+the command . 
+sudo docker inspect 9bffb1bfebee > temp.txt  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+86 
+ 
+If you browse through the text file and go to the line which says VolumeDriver , you will 
+see that the driver name has been changed.  
+ 
+Creating a V olume  
+A volume can be created beforehand using the docker  command. Let’s learn more about 
+this command.  
+Syntax  
+docker volume create –-name=volumename –-opt options  
+Options  
+ name  – This is the name of the volume which needs to be created.  
+ opt – These are options you can provide while creating the volume.  
+Return Value  
+The command will output the name of the volume created.  
+Example  
+sudo docker volume create –-name=demo –opt o=size=100m  
+
+Docker  
+87 
+ 
+In the above command , we are creating a volume of size 100MB and with a name of demo.  
+Output  
+The output of the above  command is shown below : 
+ 
+Listing all the V olumes  
+You can also list all the docker  volumes  on a docker  host. More details on this command 
+is given below : 
+Syntax  
+docker volume ls  
+Options  
+None 
+Return Value  
+The command will output all the volumes on the dock er host. 
+Example  
+sudo docker volume ls  
+Output  
+The output of the above command is shown below : 
+ 
+ 
+
+Docker  
+88 
+ 
+Docker takes care of the networking aspects so that the containers can communicate with 
+other containers and also with the Docker  Host. If you do an ifconfig  on the Docker  Host, 
+you will see the Docker  Ethernet adapter . This adapter is created when Docker  is installed 
+on the Docker H ost. 
+ 
+This is a bridge between the Docker  Host and the Linux  Host. Now let’s look at some 
+commands asso ciated with networking in Docker . 
+Listing A ll Docker N etworks  
+This command can be used to list all the networks associated with Docker  on the host.  
+Syntax  
+docker network ls  
+Options  
+None 
+21.  Docker ─ Docker Networking  
+Docker  
+89 
+ 
+Return Value  
+The command will output all the networks on the Docker H ost. 
+Example  
+sudo docker network ls  
+Output  
+The output of the above command is shown below  
+ 
+Inspecting a Docker  network  
+If you want to see more details on the network associated with Docker , you can use the 
+Docker  network  inspect  command . 
+Syntax  
+docker netw ork inspect networkname  
+Options  
+ networkname  – This is the name of the network you need to inspect.  
+Return Value  
+The command will output all the details about the network.  
+Example  
+sudo docker network inspect bridge  
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+90 
+ 
+Output  
+The output of the above comma nd is shown below : 
+ 
+Now let’s run a container and see what happens when we inspect the network again.  Let’s 
+spin up an Ubuntu container with the following command : 
+sudo docker run –it ubuntu:latest /bin/bash  
+ 
+Now if we inspect our network name via the fo llowing command , you will now see that the 
+container is attached to the bridge . 
+sudo docker network inspect bridge  
+ 
+
+Docker  
+91 
+ 
+ 
+Creating Y our Own New N etwork  
+One can create a network in Docker  before launching containers. This can be done with 
+the following command : 
+Syntax  
+docker network create –-driver drivername name  
+Options  
+ drivername  – This is the name used for the network driver .  
+ 
+ name  – This is the name given  to the network.  
+Return Value  
+The command will output the long ID for the new network.  
+Example  
+sudo doc ker network create –-driver bridge new_nw  
+
+Docker  
+92 
+ 
+Output  
+The output of the above command is shown below : 
+ 
+You can now attach the new network when launching the container . So let’s spin up an 
+Ubuntu container with the following command : 
+sudo docker run –it –network=new_nw ubuntu:latest /bin/bash  
+ 
+And now when you inspect the network via the following command, you will see the 
+container attached to the ne twork. 
+sudo docker network inspect new_nw  
+ 
+
+Docker  
+93 
+ 
+Node.js is a JavaScript  framework that is u sed for developing server -side applications. It 
+is an open source framework that is developed to run on a variety of operating systems. 
+Since Node.js is a popular framework for development, Docker has also ensured it has 
+support for Node.js applications.  
+We will now see the various steps for getting the Docker container for Node.js up and 
+running.  
+Step 1 : The first step is to pull the image from Docker  Hub. When you log into Docker 
+Hub, you will be able to search and see the image for Node.js as shown below . Just type 
+in Node in the search box and click on the node (official) link which comes up in the search 
+results.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+22.  Docker – Setting Node.js  
+Docker  
+94 
+ 
+Step 2 : You will see that the Docker  pull command for node in the details of the repository 
+in Docker H ub. 
+ 
+Step 3 : On the Docker H ost, use the Docker  pull command as shown above to download 
+the latest node image from Docker H ub. 
+ 
+Once the pull is complete, we can then proceed with the next step.  
+ 
+
+Docker  
+95 
+ 
+Step 4 : On the Docker Host, let’s use the vim editor and create one Node.j s example file . 
+In this file, we will add a simple command to display “HelloWorld” to the command prompt.  
+ 
+In the Node.js file, let’s add the following statement : 
+Console.log(‘Hello World’);  
+This will output the “Hello World” phrase when we run it through Node.js.  
+ 
+Ensure t hat you  save the file and then proceed to the next step.  
+Step 5 : To run our Node.js script using the Node Docker  container, we need to execute 
+the following statement : 
+sudo docker run –it –rm –name=HelloWorld –v “$PWD”:/usr/src/app –w /usr/src/app 
+node node HelloWorld.js  
+The following points need to be noted about the above command : 
+ The –rm option is used to remove the container after it is run.  
+ 
+ We are giving a name to the container called “HelloWorld”  
+ 
+ We are mentioning to map the volume in the con tainer which is /usr/src/app  to 
+our current present working directory. This is done so that the node container will 
+pick up our HelloWorld.js script which is present in our working directory on the 
+Docker  Host. 
+ 
+ The –w option is used to specify the working  directory used by Node.js . 
+ 
+ The first node option is used to specify to run the node image . 
+ 
+ The second node option is used to mention to run the node command in the node 
+container.  
+ 
+ And finally we mention the name of our script.  
+We will then get the following  output. And from the output , we can clearly see that the 
+Node container ran as a container and executed the HelloWorld.js script . 
+ 
+
+Docker  
+96 
+ 
+MongoDB is a famous document -oriented database that is used by many modern -day web 
+applicati ons. Since MongoDB is a popular database for development, Docker has also 
+ensured it has support for MongoDB.  
+We will now see the various steps for getting the Docker container for MongoDB up and 
+running.  
+Step 1 : The first step is to pull the image from D ocker Hub. When you log into Docker 
+Hub, you will be able t o search and see the image for M ongo as shown below. Just type in 
+Mongo in t he search box and click on the M ongo (official) link which comes up in the search 
+results.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+23.  Docker – Setting MongoDB  
+Docker  
+97 
+ 
+Step 2 : You will see t hat the Docker  pull command for Mongo in the details of the 
+repository in Docker Hub. 
+ 
+Step 3 : On the Docker H ost, use the Docker  pull command as shown above to download 
+the latest Mongo image from D ocker Hub. 
+ 
+ 
+ 
+
+Docker  
+98 
+ 
+Step 4 : Now that we have the image for M ongo, let’s first run a M ongoDB container which 
+will be our instance for MongoDB. For this , we will issue the following  command : 
+sudo docker –it –d mongo 
+The following points can be noted about the above command : 
+ The –it option is used to run the container  in interactive mode.  
+ The –d option is used to run the container as a daemon process.  
+ And finally we are  creating a container from the M ongo image.  
+You can then issue the docker  ps command to see the running containers : 
+ 
+Take a note of the following points:  
+ The name of the container is tender_poitras . This name will be different since the 
+name of the containers keep on changing when you spin up a container. But just 
+make a note of the container which you have launched.  
+ 
+ Next, also notice the port number i t is running on. It is listening on the TCP port of 
+27017.  
+Step 5 : Now let’s spin up another container which will act as our client which will be used 
+to connect to the MongoDB database. Let’s issue the following command for this : 
+sudo docker run –it –link=tender_poitras:mongo mongo /bin/bash  
+The following points can be noted about the above command : 
+ The –it option is used to run the container in interactive mode.  
+ 
+ We are now linking our new container  to the already launched M ongoDB server 
+container. Here , you need to mention the name of the already launched container.  
+ 
+ We are then specifying that we want to launch the Mongo container as our client 
+and then run the bin/bash  shell in our new container.  
+ 
+You will now be in the new container.  
+
+Docker  
+99 
+ 
+Step 5 : Run the env command in the new container to see the details of how to connect 
+to the MongoDB server container.  
+ 
+Step 6 : Now it’s time to connect to the MongoDB server from the client container. We can 
+do this via the following command : 
+mongo 172.17.0.2:27017  
+The following points need to  be noted about the above command  
+ The mongo  command is the client mongo  comman d that is used to connect to a 
+MongoDB database.  
+ 
+ The IP and port number is what you get when you use the env command.  
+Once you run the command, you will then be connect ed to the MongoDB database.  
+
+Docker  
+100 
+ 
+ 
+You can then run any MongoDB command in the command prompt.  In our example, we 
+are running the following command:  
+use demo  
+This command is a M ongoDB command which is used to switch to a database name demo . 
+If the database is not available , it will be created.  
+ 
+Now you have successful ly created a client and server M ongoDB container.  
+
+Docker  
+101 
+ 
+NGINX is a popular lightweight web application that is used for developing server -side 
+applications. It is a n open -source web server that is developed to run on a variety of 
+operating systems. Since nginx  is a popular web server  for development, Docker has 
+ensured that it has support for nginx . 
+We will no w see the various steps for getting the Docker container f or nginx  up and 
+running.  
+Step 1 : The first step is to pull the image from Docker  Hub. When you log into Docker  
+Hub, you will be able to search and see the image for  nginx  as shown below. Just type in 
+nginx  in the search box and click on the nginx  (official ) link which comes up in the search 
+results.  
+ 
+Step 2 : You will see that the Docker  pull command for nginx  in the details of the 
+repository in Docker H ub. 
+24.  Docker – Setting NGINX  
+Docker  
+102 
+ 
+ 
+Step 3 : On the Docker  Host, use the Docker  pull command as shown above to download 
+the latest nginx  image from Docker H ub. 
+ 
+Step 4 : Now let’s run the nginx  container via the following command : 
+sudo docker run –p 8080:80 –d nginx 
+We are exposing the port on the nginx  server which is p ort 80 to the port 8080 on the 
+Docker Host.  
+ 
+ 
+
+Docker  
+103 
+ 
+Once you run  the comma nd, you will get the following  output if you browse to the URL 
+http://dockerhost:8080 . This shows that the nginx  container is up and running.  
+ 
+Step 5 : Let’s look at another example where we can host a simple web page  in our ngnix  
+container. In our example , we will create a simple HelloWorld.html  file and host it in our 
+nginx  container.  
+Let’s first create an HTML file called HelloWorld.html  
+ 
+Let’s add a simple line of Hello World in the HTML  file. 
+ 
+Let’s then run th e following Docker  command . 
+sudo docker run –p 8080:80 –v “$PWD”:/usr/share/nginx/html:ro –d nginx 
+The following points need to be n oted about the above command : 
+ We are exposing the port on the nginx  server which is port 80 to the port 8080 on 
+the Docker  Host.  
+ 
+ Next, we are attaching the volume on the container which is 
+/usr/share/nginx/html  to our present working directory. This is where our 
+HelloWorld.html file is stored.  
+
+Docker  
+104 
+ 
+ 
+Now if we browse to the URL http://dockerhost:8080/HelloWorld.html  we will get the 
+following output as expected : 
+ 
+ 
+
+Docker  
+105 
+ 
+In the introductory chapters, we have seen the installation of Docker  toolbox on Windows. 
+The Docker  toolbox is developed so that Docker  conta iners can be run on Windows and 
+MacOS. The site for toolbox on W indows is https://docs.docker.com/docker -for-windows/  
+ 
+For Windows,  you need  to have Windows 10 or Windows S erver 2016 with Hyper -V 
+enabled.  
+The toolbox consists of the following components : 
+ Docker Engine  – This is used as the base engine or Docker  daemon that is used 
+to run Docker  containers.  
+ 
+ Docker Machine  for running Docker  machine commands . 
+ 
+ Docker Compose  for running Docker  comp ose commands . 
+ 
+ Kinematic  – This is the Docker  GUI built for Windows and Mac OS.  
+ 
+ Oracle virtualbox  
+ 
+Let’s now discuss the different types of activities that are  possible with Docker  toolbox.  
+25.  Docker – Docker Toolbox  
+Docker  
+106 
+ 
+Running in Powershell  
+With Docker toolbox on Windows 10, you can now run Docker  commands off powershell . 
+If you open powershell on Windows and type in the command of Docker  version, you will 
+get all the required details about the Docker  version installed.  
+ 
+Pulling Images and Running C ontainers  
+You can also now pull Ima ges from Docker  Hub and run containers in powershell as you 
+would do in Linux. The following example will show in brief the downloading of the Ubuntu 
+image and running of the container off the image.  
+The first step is to use the Docker  pull command to pull  the Ubuntu image from Docker 
+Hub. 
+ 
+The next step is to run the Docker image using the following  run command : 
+docker run –it ubuntu /bin/bash  
+You will notice that the command is the same as it was in Linux .  
+ 
+
+Docker  
+107 
+ 
+Kitematic  
+This is the GUI equivalent of Docke r on Windows. To open this GUI, go to the taskbar and 
+on the Docker  icon, right -click and choose to open Kitematic.  
+ 
+It will prompt you to download Kitematic GUI. Once downloaded, just unzip the contents. 
+There will be a file called Kitematic.exe . Double -click this exe file to open the GUI 
+interface.  
+You will then be requested to log into Docker Hub, enter through the GUI. Just enter the 
+required username and password and then click the Login button.  
+ 
+ 
+
+Docker  
+108 
+ 
+Once logged in, you will be able to see all the image s downloaded on the system on the 
+left-hand side of the interface.  
+ 
+On the right -hand side , you will find all the images available on Docker H ub.  
+Let’s take an example to understand how to downl oad the Node image from Docker H ub 
+using Kitematic.  
+Step 1 : Enter the keyword of node in the search criteria.  
+ 
+
+Docker  
+109 
+ 
+Step 2 : Click the create  button on official Node image. You will then see the image being 
+downloaded.  
+ 
+Once the image has been downloaded, it will then start running the Node container . 
+ 
+ 
+
+Docker  
+110 
+ 
+Step 3 : If you go to the settings  tab, you can drill -down to further settings  options, as 
+shown below.  
+ General settings  – In this tab , you can name the container, change the  path 
+settings , and delete the container.  
+ 
+ Ports  – Here you can see the different port mappings . If you want , you can create 
+your own port mappings . 
+ 
+ 
+ 
+
+Docker  
+111 
+ 
+ Volumes  - Here you can see the different volume mappings.  
+ 
+ Advanced  – It contain s the advanced settings for the container.  
+ 
+ 
+
+Docker  
+112 
+ 
+ASP.N et is the standard web development frame work that is provided by Microsoft for 
+developing server -side applications. Since ASP.Net has been around for quite a long time 
+for development, Docker has ensured that it has support for ASP.Net.  
+In this chapter, w e will see the various steps for getting  the Docker container for ASP.Net 
+up and running.  
+Prerequisites  
+The following steps need to be carried out first for running ASP.Net.  
+Step 1: Since this can only run on Windows systems, you first need to ensure that you 
+have either Windows 10 or Window S erver 2016.  
+Step 2: Next, ensure that Hyper -V is and Containers are installed on the Windows system. 
+To install Hyper –V and Container s, you can go to Turn Windows Features ON  or OFF. Then 
+ensure the Hyper -V option and Containers is checked and click the OK  button.  
+ 
+The system might require a restart after this operation.  
+Step 3 : Next, you need to use the following Powershell command to install the 1.13.0 -
+rc4 version of D ocker. The following  command will download this and store it in the temp 
+location.  
+Invoke-WebRequest "https://test.docker.com/builds/Windows/x86_64/docker -1.13.0-
+rc4.zip" -OutFile "$env:TEMP \docker-1.13.0-rc4.zip" –UseBasicParsing  
+26.  Docker – Setting ASP.Net  
+Docker  
+113 
+ 
+ 
+Step 4 : Next, you need to expand the archive using the following  powershell  command.  
+Expand-Archive -Path "$en v:TEMP\docker-1.13.0-rc4.zip" -DestinationPath 
+$env:ProgramFiles  
+ 
+Step 5 : Next, you need to add the Docker F iles to the environment variable using the 
+following powershell  command.  
+$env:path += ";$env:ProgramFiles \Docker" 
+Step 6 : Next, you need to registe r the Docker D aemon Service using the following 
+powershell  command.  
+dockerd --register -service 
+Step 7 : Finally , you can start the docker  daemon  using the following command.  
+Start-Service Docker  
+Use the docker  version  command in powershell  to verify that t he docker  daemon  is 
+working .  
+ 
+ 
+
+Docker  
+114 
+ 
+Installing the ASP .Net C ontainer  
+Let’s see how to install the ASP.Net container.  
+Step 1 : The first step is to pull the image from D ocker Hub. When you log into D ocker 
+Hub, you will be able to search and see the image for Microsoft/aspnet  as shown below. 
+Just type in asp in the search box and click on the Microsoft/aspnet link which comes up 
+in the search results.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Docker  
+115 
+ 
+Step 2 : You will see that the D ocker pull command for ASP.Net in th e details of the 
+repository in  Docker Hub. 
+ 
+Step 3 : Go to D ocker Host and run the D ocker pull command for the microsoft/aspnet 
+image. Note that the image is pretty large, somewhere close to 4.2 GB.  
+ 
+Step 4 : Now go to the following location https://github.com/Microsoft/aspnet -docker  and 
+download the entire Git repository.  
+Step 5 : Create a folder call ed App in your C drive. Then copy the contents from the 
+4.6.2/sample  folder to your C drive. Go the Docker  File in the sample dire ctory and issue 
+the following command : 
+docker build –t aspnet -site-new –build-arg site_root=/  
+The following points need to be noted about the above command : 
+ It builds a new image called aspnet -site-new from the Docker File.  
+ The root path is set to the loc alpath folder.  
+
+Docker  
+116 
+ 
+ 
+Step 6 : Now it’s time to run the container. It can be done using the following command : 
+docker run –d –p 8000:80 –name my-running-site-new aspnet -site-new 
+ 
+Step 7 : You will no w have IIS running in the D ocker container.  To find the IP Addr ess of 
+the D ocker container, you can issue the Docker inspect  command as shown below . 
+ 
+
+Docker  
+117 
+ 
+The Docker C loud is a service provided by Docker in which you can carry out the following 
+operations : 
+ Nodes  ─ You can connect th e Docker C loud to yo ur existing cloud providers such 
+as Azure and AWS to spin up containers on these environments.  
+ 
+ Cloud Repository  ─ Provides a place where you can store your own repositories.  
+ 
+ Continuous Integration  ─ Connect with Github  and build a continuous 
+integration pipeline.  
+ 
+ Application Deployment  ─ Deploy and scale infrastructure and containers . 
+ 
+ Continuous Deployment  ─ Can automate deployments.  
+Getting started  
+You can go to the following link to getting started with Docker C loud: 
+https://cloud.docker.com/  
+ 
+ 
+ 
+27.  Docker – Docker Cloud  
+Docker  
+118 
+ 
+Once logged in, you will be provided with the following basic interface : 
+ 
+Connecting to the C loud P rovider  
+The first step is to connect to an existing cloud provider. The following steps will show you 
+how to connect with an Amazon Cl oud provider.  
+Step 1 : The first step is to ensure that you have the right AWS keys. This can be taken 
+from the aws console. Log into your aws account using the following link - 
+https://aws.amazon.com/console/  
+ 
+
+Docker  
+119 
+ 
+Step 2 : Once logged in, go to the Security Credentials section. Make a note of the access 
+keys which will be used from Docker Hub. 
+ 
+Step 3 : Next, you need to create a policy in aws that will allow Docker to view EC2 
+instances. Go to the profiles section in aws. Click the Create Policy  button . 
+ 
+
+Docker  
+120 
+ 
+Step 4 : Click on ‘Create Y our O wn Policy’ and give the policy name as dockercloud -
+policy  and the policy definition as shown below.  
+{ 
+  "Version": "2012 -10-17", 
+  "Statement": [  
+    { 
+      "Action": [  
+        "ec2:*",  
+        "iam:ListInstanceProfiles"  
+      ], 
+      "Effect": "Allow",  
+      "Resource": "*"  
+    } 
+  ] 
+} 
+ 
+Next, click the Create Policy  button . 
+ 
+
+Docker  
+121 
+ 
+Step 5 : Next, you need to create a role which will be used by Docker to spin up nodes on 
+AWS. For this , go to the Roles  section in AWS and click the Create New Role option . 
+ 
+Step 6 : Give the name for the role as dockercloud -role. 
+ 
+ 
+
+Docker  
+122 
+ 
+Step 7: On the next screen , go to ‘Role for Cross Account Access’ and select “Provide 
+access  between your account and a 3 rd party AWS account”  
+ 
+Step 8: On the next screen , enter the following details:  
+ In the  Account ID  field, enter the ID for the Docker Cloud service:  689684103426.  
+ In the  External ID  field, enter your Docker Cloud username.  
+ 
+
+Docker  
+123 
+ 
+Step 9: Then, click the Next Step  button and on the next screen , attach the policy which 
+was created in the earl ier step.  
+ 
+Step 10: Finally , on the last screen when the role is created, make sure to copy the arn 
+role which is created.  
+arn:aws:iam::085363624145:role/dockercloud -role 
+ 
+
+Docker  
+124 
+ 
+Step 11: Now go back to Docker C loud, select Cloud Providers , and click the plug 
+symbol  next t o Amazon Web Services.  
+ 
+Enter the arn role and click the Save  button.  
+ 
+ 
+ 
+
+Docker  
+125 
+ 
+Once saved, the integration with AWS would be complete . 
+ 
+Setting U p Nodes  
+Once the integration with AWS is complete, the next step is to setup a node. Go to the 
+Nodes section in Docker C loud. Note that the setting up of nodes will automatically setup 
+a node cluster first.  
+Step 1 : Go to the Nodes sec tion in Docker C loud. 
+ 
+
+Docker  
+126 
+ 
+Step 2 : Next, you can give the details of the nodes which will be setup in AWS.  
+ 
+You can then click the Launch Node cluster which will be present at the bottom of the 
+screen.  Once the node is deployed, you will ge t the notification in the Node C luster screen.  
+ 
+
+Docker  
+127 
+ 
+Deploying a S ervice  
+The next step after deploying a node is to deploy a service.  To do this, we nee d to perform 
+the following steps . 
+Step 1 : Go to the Services S ection  in Docker Cloud . Click the Create  button.  
+ 
+Step 2 : Choose the Service which is required. In our case, let’s choose mongo . 
+ 
+
+Docker  
+128 
+ 
+Step 3 : On the next screen , choose the Create & Deploy  option. This  will start deploying 
+the Mongo  container on your node cluster.  
+ 
+Once deployed, you will be able to see the container in a running state.  
+ 
+
+Docker  
+129 
+ 
+Docker has logging mechanisms in place which can be used to debug issues as and when 
+they occur.  There is logging at the daemon level  and at the container level . Let’s look 
+at the different levels of logging.  
+Daemon Logging  
+At the daemon logging level, there are four levels of logging available : 
+ Debug  ─ It details all the possible information handled by the daemon process.  
+ Info ─ It details all the errors + Information handled by the daemon process.  
+ Errors  ─ It details all the errors handled by the daemon process.  
+ Fatal  ─ It only details all the fatal errors handled by the daemon process.  
+Go th rough the following steps to learn how to enable logging .  
+Step 1 : First, we need to stop the docker  daemon  process , if it is already running. It 
+can be done using the following c ommand:  
+sudo service docker stop  
+ 
+Step 2 : Now we need to start the docker  daemon  process . But this time , we need to 
+append the –l parameter to specify the logging option. So let’s issue the following  
+command when starting the docker  daemon  process . 
+sudo dockerd –l debug &  
+The following points  need to be noted about the above command : 
+ dockerd  is the executable fo r the docker  daemon  process . 
+ 
+ The –l option is used to specify the logging level. In our case, we are putting this 
+as debug.  
+ 
+ & is used to come back to the command prompt after the logging has been enabled.  
+ 
+ 
+ 
+28.  Docker – Logging  
+Docker  
+130 
+ 
+Once you start the Docker process with lo gging , you will also now see the Debug  Logs 
+being sent to the console.  
+ 
+Now, if you execute any D ocker command such as docker  images , the Debug information 
+will also be sent to the console . 
+ 
+
+Docker  
+131 
+ 
+Container Logging  
+Logging is also available at the container level.  So in our example, let’s spin up an Ubuntu 
+container first.  We can do it by using the following command.  
+sudo docker run –it ubuntu /bin/bash  
+ 
+Now, we can use the docker  log command  to see the logs of the container.  
+Syntax  
+Docker logs containerID  
+Parameters  
+ contai nerID  – This is the ID of the container for which you need to see the logs.  
+Example  
+On our Docker Host, let’s issue the following  command. Before that , you can issue some 
+commands whilst in the container.  
+sudo docker logs 6bfb1271fcdd  
+Output  
+ 
+From the output , you can see that the commands executed in the container are shown in 
+the logs.  
+ 
+
+Docker  
+132 
+ 
+Docker  Compose  is used to run multiple containers as a single service. For example, 
+suppose you had an application which required NGNIX and MySQL,  you could create one 
+file which would start both the containers as a service without the need to start each one 
+separately.  
+In this chapter, we will see how to get started with Docker Compose. Then , we will look at 
+how to get a simple service with MySQL and NGNIX up and runnin g using D ocker C ompose.  
+Docker Compose ─ Installation  
+The following st eps need to be followed to get D ocker C ompose up and running . 
+Step 1 : Download the necessary files from github  using the following command : 
+curl -L "https://github.com/docker/compose/releases/download/1.10 .0-rc2/docker -
+compose-$(uname -s)-$(uname -m)" -o /home/demo/docker -compose 
+The above command will download the latest version of D ocker C ompose which at the time 
+of writing this article is 1.10.0 -rc2. It will then store it in the directory /home/demo/ . 
+ 
+Step 2 : Next, we need to provide execute privileges  to the downloaded Docker Compose 
+file, using the following command:  
+chmod +x /home/demo/docker -compose 
+ 
+We can then use the following  command to see the compose  version.  
+Syntax  
+docker-compose version  
+ 
+29.  Docker – Docker Compose  
+Docker  
+133 
+ 
+Parameters  
+ versi on – This is used to specify that we want  the details of the version of Docker  
+Compose . 
+Output  
+The version details of D ocker C ompose will be displayed.  
+Example  
+The following  example shows how to get the docker -compose  version . 
+sudo ./docker -compose -version 
+Outp ut 
+You will then get the following output : 
+ 
+Creating Y our F irst Docker -Compose File 
+Now let’s  go ahead and create our first D ocker Compose file.  All Docker Compose files are 
+YAML files. You can create one using the vim editor. So execute the following command 
+to create the compose  file: 
+sudo vim docker -compose.yml  
+
+Docker  
+134 
+ 
+ 
+Let’s take a close look at the various  details of this file: 
+ The database  and web keyword are used to define two separate services. One 
+will be running our mysql  database and the other will be our nginx  web serv er. 
+ 
+ The image  keyword is used to specify the image from dockerhub  for our mysql  
+and nginx  containers.  
+ 
+ For the database , we are using the ports keyword to mention the ports that need 
+to be exposed for mysql . 
+ 
+ And then , we also specify the environment variabl es for mysql  which are required 
+to run mysql . 
+Now let’s run our Docker Compose file using the following command : 
+sudo ./docker -compose up  
+This command will take the docker -compose.yml  file in your local directory and start 
+building the containers.  
+ 
+Once e xecuted, all the images will start downloading and the containers will start 
+automatically.  
+
+Docker  
+135 
+ 
+ 
+And when you do a docker  ps, you can see that the containers are indeed up and running.  
+ 
+
+Docker  
+136 
+ 
+Docker has integrations with many Conti nuous Integrations tools, which also includes the 
+popular CI tool known as Jenkins . Within Jenkins , you have plugin s available which can 
+be used to work with containe rs. So let’s quickly look at a D ocker plugin available for the 
+Jenkins tool.  
+Let’s go step by step and see what’s available in Jenkins for D ocker containers.  
+Step 1 : Go to your Jenkins dashboard and click Manage Jenkins . 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+30.  Docker – Continuous Integration  
+Docker  
+137 
+ 
+ 
+Step 2 : Go to Manage Plugins . 
+ 
+Step 3 : Search for Docker plugin s. Choose the Docker plugin and click the Install 
+without restart  button . 
+ 
+
+Docker  
+138 
+ 
+Step 4 : Once the installation is completed, go to your job in the Jenkins dashboard. In 
+our example, we have a job called Demo . 
+ 
+Step 5 : In the job, when you go to the Build step,  you can now see the option to s tart 
+and s top co ntainers.  
+ 
+
+Docker  
+139 
+ 
+Step 6 : As a simple example, you can choose the further option to stop containers when 
+the build is completed. Then , click the Save  button.  
+ 
+Now, just run you r job in Jenkins. In the Console output , you will now be able to see that 
+the command to Stop All containers has run.  
+ 
+
+Docker  
+140 
+ 
+Kubernetes is an orchestration framework for D ocker containers which helps expose 
+containers as services to the outside world. For example, you can have two services: One 
+service would contain nginx  and mongoDB , and another  service would contain nginx  
+and redis . Each service can have an IP or service point which can be connected by other 
+applications.  Kubernetes is then used to manage these services.  
+The following  diagram shows in a simplistic format how Kubernetes works from an 
+architecture point of view.  
+ 
+The minion  is the node on which all the services run. You can have many minions running 
+at one poi nt in time . Each minion will host one or more POD. Each POD is like hosting a 
+service.  Each POD then contains the D ocker containers. Each POD can host a different set 
+of Docker containers.  The proxy is then used to control the exposing of these services to 
+the outside world.  
+ 
+ 
+ 
+ 
+ 
+31.  Docker – Kubernetes Architecture  
+Docker  
+141 
+ 
+Kubernetes has several components in its architecture. The role of each component  is 
+explained  below:  
+ etcd ─ This component is a highly available key-value  store that is used for storing 
+shared configuration  and service discovery . Here the various a pplications will 
+be able to connect to the services via the discovery service . 
+ 
+ Flannel  ─ This is a backend network which is required for the containers.  
+ 
+ kube -apiserver  ─ This is an API which can be used to orchestrate the D ocker 
+containers . 
+ 
+ kube -controller -manager  ─ This is used to control the Kubernetes services . 
+ 
+ kube -scheduler  ─ This is used to schedule the containers on hosts.  
+ 
+ Kubelet  ─ This is used to control the launching of containers via manifest files . 
+ 
+ kube -proxy  ─ This is used to provide  network pr oxy services to the outside world.  
+ 
+Docker  
+142 
+ 
+In this chapter, we will see how to install Kubenetes  via kubeadm . This is a tool which 
+helps in the installation of Kubernetes. Let’s go step by step and learn how to install 
+Kubernetes:  
+Step 1 : Ensure that the Ubuntu server version  you are working on is 16.04 . 
+Step 2 : Ensure that you generate a ssh key which can be used for ssh login. You can do 
+this using the following command : 
+ssh-keygen  
+This will generate a key in your home folder  as show n below.  
+ 
+Step 3 : Next, depending on the version of Ubuntu you have, you will need to add the 
+relevant site to the docker.list  for the apt package  manager , so that  it will be able to 
+detect the Kubernetes  packages  from the kubernetes  site and download the m 
+accordingly.  
+We can do it using the following commands : 
+curl -s https://packages.cloud.google.com/apt/doc/apt -key.gpg | apt -key add - 
+ 
+echo "deb http://apt.kubernetes.io/ kubernetes -xenial main” | sudo tee 
+/etc/apt/sources.list.d/docker.list  
+ 
+ 
+32.  Docker – Working of Kubernetes  
+Docker  
+143 
+ 
+Step 4 : We then issue an apt -get update to ensure all packages are downloaded on the 
+Ubuntu server.  
+ 
+Step 5 : Install the Docker  package as detailed in the earlier chapters.  
+Step 6 : Now it’s time to install kubernetes  by installing the following  packages : 
+apt-get instal l –y kubelet kubeadm kubectl kubernetes -cni 
+ 
+ 
+
+Docker  
+144 
+ 
+Step 7 : Once all kubernetes  packages are downloaded, it ’s time to start the kubernetes  
+controller using  the following command : 
+kubeadm init  
+ 
+Once done, you will get a successful message that the master is up and running and nodes 
+can now join the cluster.  
+

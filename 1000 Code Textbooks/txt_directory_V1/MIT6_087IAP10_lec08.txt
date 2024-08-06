@@ -1,0 +1,286 @@
+6.087 Lecture 8 – Jan uary 21, 2010
+Review 
+Pointers 
+Void pointers 
+Function pointers 
+Hash tab le 
+1 
+Review:Pointer s
+• pointers: int x; int∗ p=&x; 
+• pointers to pointer : int x; int∗ p=&x;int ∗∗ pp=&p; 
+• Array of pointers: char∗ names[]={"abba","u2"}; 
+• Multidimensional arr ays: int x [20][20]; 
+1 
+Review: Stac ks
+LIFO: last in ﬁrst out data str ucture . • 
+items are inser ted and remo ved from the same end. •
+• operations: push(),pop(),top()
+• can be implemented using arr ays, linked list 
+2 
+Review: Queues
+FIFO: ﬁrst in ﬁrst out • 
+items are inser ted at the rear and remo ved from the front. •
+• operations: queue(),dequeue()
+• can be implemented using arr ays, linked list 
+3 
+Review: Expressions
+• Inﬁx: (A+B) *(C-D) 
+• preﬁx: *+AB-CD 
+• postﬁx: AB+CD-* 
+4 
+6.087 Lecture 8 – Jan uary 21, 2010
+Review 
+Pointers 
+Void pointers 
+Function pointers 
+Hash tab le 
+5 
+Void pointer s
+C does not allo w us to declare and use v oid v ariab les. • 
+•	void can be used only as retur n type or par ameter of a 
+function. 
+•	C allo ws void pointer s 
+•	Question: What are some scenar ios where y ou w ant to 
+pass v oid pointers? 
+•	void pointers can be used to point to an y data type 
+•	int x; void∗ p=&x; / ∗points to int ∗/ 
+•	ﬂoat f;void∗ p=&f; /∗points to ﬂoat ∗/ 
+•	void pointers cannot be deref erenced. The pointers should 
+always be cast bef ore deref erencing. 
+void∗ p; printf ("%d", ∗p); /∗ invalid ∗/ 
+void∗ p; int ∗px=(int ∗)p; printf ("%d", ∗px); /∗valid ∗/ 
+5 
+Function pointer s
+•	In some prog ramming languages , functions are ﬁrst class 
+variables (can be passed to functions , retur ned from 
+functions etc.). 
+•	In C, function itself is not a v ariable. But it is possib le to 
+declare pointer to functions . 
+•	Question: What are some scenar ios where y ou w ant to 
+pass pointers to functions? 
+•	Declar ation e xamples: 
+•	int (∗fp )( int )/∗notice the () ∗/ 
+•	int (∗fp )(void∗,void∗) 
+•	Function pointers can be assigned, pass to and from 
+functions , placed in arr ays etc. 
+6 
+Callbac ks
+Deﬁnition: Callbac k is a piece of e xecutab le code passed to
+functions . In C, callbac ks are implemented b y passing function
+pointers .
+Example:
+void qsor t(void∗ arr, int num,int siz e,int (∗fp )(void∗ pa,void∗pb))
+•	qsort() function from the standard libr ary can be sor t an 
+array of an y datatype . 
+•	Question: How does it do that? callbac ks. 
+•	qsort() calls a function whene ver a compar ison needs to 
+be done . 
+•	The function tak es tw o arguments and retur ns (<0,0,>0) 
+depending on the relativ e order of the tw o items . 
+7 
+Callbac k (cont.)
+int arr [] ={10 ,9 ,8 ,1 ,2 ,3 ,5}; 
+/ ∗ callback ∗ / 
+int asc ( void∗ pa , void∗ pb ) 
+{ 
+return (∗ ( int ∗ ) pa −∗ ( int ∗ )pb ); 
+} 
+/ ∗ callback ∗ / 
+int desc ( void∗ pa , void∗ pb ) 
+{ 
+return (∗ ( int ∗ ) pb −∗ ( int ∗ )pa ); 
+} 
+/ ∗ sort in ascending order ∗ / 
+qsort ( arr , sizeof ( arr )/ sizeof ( int ), sizeof ( int ) ,asc); 
+/ ∗ sort in descending order ∗ / 
+qsort ( arr , sizeof ( arr )/ sizeof ( int ), sizeof ( int ) ,desc); 
+8 
+Callbac k (cont.)
+Consider a link ed list with nodes deﬁned as f ollows: 
+struct node { 
+int data ; 
+struct node∗ next ; 
+}; 
+Also consider the function ’apply’ deﬁned as f ollows: 
+void apply ( struct node∗ phead , 
+void (∗ fp )( void ∗ , void∗ ), 
+void∗ arg) / ∗ only fp has to be named ∗ / 
+{ 
+struct node∗ p=phead ; 
+while ( p !=NULL) 
+{ 
+fp(p,arg); / ∗ can also use (∗ fp )(p,arg) ∗ / 
+p=p−>next ; 
+} 
+} 
+9 
+Callbac k (cont.)
+Iterating: 
+struct node∗ phead ; 
+/ ∗ populate somewhere ∗ / 
+void print ( void∗ p, void∗ arg ) 
+{ 
+struct node∗ np =( struct node ∗ )p; 
+printf ( "%d " ,np−>data ); 
+} 
+apply(phead,print ,NULL); 
+10 
+Callbac k (cont.) 
+Counting nodes: 
+void dototal ( void∗ p, void∗ arg ) 
+{ 
+struct node∗ np=( struct node ∗ )p; 
+int ∗ ptotal =( int ∗ )arg ; 
+∗ ptotal += np−>data ; 
+} 
+int total =0; 
+apply(phead,dototal ,&total ); 
+11 
+Array of function pointer s
+Example:Consider the case where diff erent functions are called 
+based on a v alue. 
+enum TYPE{SQUARE,RECT,CIRCILE ,POLYGON}; 
+struct shape { 
+float params[MAX] ; 
+enum TYPE type ; 
+};
+void draw ( struct shape∗ ps )
+{
+switch ( ps−>type ) 
+{ 
+case SQUARE: 
+draw_square(ps ); break ; 
+case RECT: 
+draw_rect (ps ); break ; 
+... 
+} 
+} 
+12 
+Array of function pointer s
+The same can be done using an arr ay of function pointers 
+instead. 
+void (∗ fp [4])( struct shape∗ ps)=
+{&draw_square,&draw_rec,&draw_circle ,&draw_poly };
+typedef void (∗ fp )( struct shape∗ ps) drawfn;
+drawfn fp[4] =
+{&draw_square,&draw_rec,&draw_circle ,&draw_poly };
+void draw ( struct shape∗ ps )
+{
+(∗ fp [ps−>type])(ps); / ∗ call the correct function ∗ / 
+} 
+13 
+6.087 Lecture 8 – Jan uary 21, 2010
+Review 
+Pointers 
+Void pointers 
+Function pointers 
+Hash tab le 
+14 
+Hash tab le
+Hash tab les (hashmaps) combine link ed list and arr ays to 
+provide an efﬁcient data str ucture f or stor ing dynamic data. 
+Hash tab les are commonly implemented as an arr ay of link ed 
+lists (hash tab les with chaining). 
+keys
+John Smith
+Lisa Smith
+Sam Doe
+Sandra Dee
+Ted Baker
+buckets
+000
+001
+002
+:
+:
+151
+152
+153
+154
+:
+:
+253
+254
+255
+entries
+Lisa Smith
+521-8976
+John Smith
+521-1234
+Sandra Dee
+521-9655
+Ted Baker
+418-4165
+Sam Doe
+521-5030
+Figure: Example of a hash tab le with chaining (source: wikipedia) 
+14 
+Hash tab le
+•	Each data item is associated with a k ey that deter mines its 
+location. 
+•	Hash functions are used to gener ate an e venly distr ibuted 
+hash v alue.
+A hash collision is said to occur when tw o items ha ve the
+ • 
+same hash v alue. 
+•	Items with the same hash k eys are chained 
+•	Retrieving an item is O (1) operation. 
+15 
+Hash tab les
+Hash functions: 
+•	A hash function maps its input into a ﬁnite r ange: hash 
+value, hash code . 
+•	The hash v alue should ideally ha ve unif orm distr ibution. 
+why? 
+•	Other uses of hash functions: cryptog raphy, caches 
+(computers/inter net), b loom ﬁlters etc. 
+•	Hash function types: 
+•	Division type 
+•	Multiplication type 
+•	Other w ays to a void collision: linear probing, doub le 
+hashing. 
+16 
+Hash tab le: example
+#define MAX_BUCKETS 1000 
+#define MULTIPLIER 31 
+struct wordrec 
+{ 
+char∗ word ;
+unsigned long count ;
+struct wordrec∗ next ;
+}; 
+/ ∗ hash bucket ∗ / 
+struct wordrec ∗ table [MAX_LEN]; 
+17 
+Hash tab le: example
+unsigned long hashstring ( const char∗ str ) 
+{ 
+unsigned long hash =0; 
+while (∗ str ) 
+{ 
+hash= hash∗MULTIPLIER+∗ str ; 
+str ++; 
+} 
+return hash%MAX_BUCKETS; 
+} 
+18 
+Hash tab le: example
+struct wordrec ∗ lookup ( const char∗ str , int create ) 
+{ 
+struct wordrec∗ curr =NULL; 
+unsigned long hash= hashstring(str ); 
+struct wordrec∗ wp= table [hash]; 
+for (curr =wp;curr!=NULL ;curr =curr −>next ) 
+/ ∗ search ∗ /; 
+notfound : 
+if ( create ) 
+/ ∗ add to front ∗ / 
+return curr ; 
+} 
+19 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

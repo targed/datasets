@@ -1,0 +1,578 @@
+6.087 Lecture 7 – Jan uary 20, 2010
+Review 
+More about P ointers 
+Pointers to P ointers 
+Pointer Arr ays 
+Multidimensional Arr ays 
+Data Str uctures 
+Stacks 
+Queues 
+Application: Calculator 
+1 
+Review: Compound data types
+•	struct -structure containing one or multiple ﬁelds , each with 
+its own type (or compound type) 
+•	size is combined siz e of all the ﬁelds , padded f or byte 
+alignment 
+•	anon ymous or named 
+•	union -structure containing one of se veral ﬁelds , each with 
+its own type (or compound type) 
+•	size is siz e of largest ﬁeld 
+• anon ymous or named
+Bit ﬁelds - structure ﬁelds with width in bits
+ • 
+•	aligned and ordered in architecture-dependent manner 
+can result in inefﬁcient code • 
+1 
+←2bytes
+←4bytes,
+4byte-aligned
+←bit fields
+←4bytes,
+4byte-aligned
+Review: Compound data types
+• Consider this compound data str ucture: 
+struct foo { 
+short s; 
+union { 
+int i; 
+char c;
+} u;
+unsigned int flag _s : 1;
+unsigned int flag_u : 2;
+unsigned int bar ;
+}; 
+•	Assuming a 32-bit x86 processor , evaluate 
+sizeof(struct foo) 
+2 
+Review: Compound data types
+• Consider this compound data str ucture: 
+struct foo { 
+short s; ← 2 bytes 
+union { ← 4 bytes, 
+int i; 4 byte-aligned 
+char c; 
+} u; 
+unsigned int flag _s : 1; bit fields 
+unsigned int flag_u : 2; ← 
+unsigned int bar ; 4 bytes,←
+};	 4 byte-aligned 
+•	Assuming a 32-bit x86 processor , evaluate 
+sizeof(struct foo) 
+2 
+•Answer:order from largest tosmallest:
+structfoo{
+union{
+inti;
+charc;
+}u;
+unsignedintbar;
+shorts;
+unsignedintflag_s:1;
+unsignedintflag_u:2;
+};
+sizeof(struct foo)=12
+Review: Compound data types
+• How can w e rearr ange the ﬁelds to minimiz e the siz e of 
+struct foo? 
+3 
+Review: Compound data types
+•	How can w e rearr ange the ﬁelds to minimiz e the siz e of 
+struct foo? 
+•	Answer: order from largest to smallest: 
+struct foo { 
+union {
+int i;
+char c;
+} u;
+unsigned i n t bar ;
+short s;
+unsigned i n t flag _s : 1;
+unsigned i n t flag _u : 2;
+}; 
+sizeof(struct foo) = 12 
+3 
+Review: Linked lists and trees
+•	Linked list and tree dynamically g row as data is 
+added/remo ved 
+•	Node in list or tree usually implemented as a struct 
+•	Use malloc(), free(), etc. to allocate/free memor y 
+dynamically 
+•	Unlik e arrays, do not pro vide f ast random access b y inde x 
+(need to iter ate) 
+4 
+6.087 Lecture 7 – Jan uary 20, 2010
+Review 
+More about P ointers 
+Pointers to P ointers 
+Pointer Arr ays 
+Multidimensional Arr ays 
+Data Str uctures 
+Stacks 
+Queues 
+Application: Calculator 
+5 
+Pointer re view
+•	Pointer represents address to v ariable in memor y 
+•	Examples: 
+int ∗pn; – pointer to int 
+struct div_t ∗ pdiv; – pointer to str ucture div_t 
+•	Addressing and indirection: 
+double pi = 3.14159;
+double ∗ ppi = &pi;
+printf ( "pi = %g\n" , ∗ ppi );
+•	Today: pointers to pointers , arrays of pointers , 
+multidimensional arr ays 
+5 
+Pointer s to pointer s
+•	Address stored b y pointer also data in memor y 
+•	Can address location of address in memor y – pointer to 
+that pointer 
+int n= 3;
+int ∗pn =&n; / ∗ pointer to n ∗ /
+int ∗∗ppn =&pn; / ∗ pointer to address of n ∗ /
+•	Many uses in C: pointer arr ays, string arr ays 
+6 
+•Howdoes itcompare tothefamiliar version ofswap?
+voidswap(int∗a,int∗b){
+inttemp=∗a;
+∗a=∗b;
+∗b=temp;
+}
+Pointer pointer s example
+What does this function do? • 
+void swap( int ∗∗a, int ∗∗b) { 
+int ∗temp = ∗a; 
+∗a= ∗b; 
+∗b = temp ; 
+} 
+7 
+Pointer pointer s example
+What does this function do? • 
+void swap( int ∗∗a, int ∗∗b) {
+int ∗temp = ∗a;
+∗a= ∗b;
+∗b = temp ;
+} 
+• How does it compare to the f amiliar v ersion of s wap? 
+void swap( int ∗a, int ∗b) {
+int temp = ∗a;
+∗a= ∗b;
+∗b = temp ;
+} 
+7 
+Pointer arra ys
+•	Pointer arr ay – arr ay of pointers 
+int ∗arr [20]; – an arr ay of pointers to int’ s 
+char ∗arr[10]; – an arr ay of pointers to char’ s 
+•	Pointers in arr ay can point to arr ays themselv es 
+char ∗strs [10]; – an arr ay of char arrays (or str ings) 
+8 
+Pointer arra y example
+•	Have an arr ay int arr [100]; that contains some n umbers 
+•	Want to ha ve a sor ted v ersion of the arr ay, but not modify 
+arr 
+•	Can declare a pointer array int ∗ sorted_arr ay[100]; containing 
+pointers to elements of arr and sor t the pointers instead 
+of the n umbers themselv es 
+•	Good approach f or sor ting arr ays whose elements are v ery 
+large (lik e strings) 
+9 
+Pointer arra y example
+Inser tion sor t: 
+/ ∗ move previous elements down until 
+insertion point reached ∗ / 
+void shift _element ( unsigned int i) { 
+int ∗ pvalue ; 
+/ ∗ guard against going outside array ∗ / 
+for ( pvalue = sorted_array [ i ] ; i && 
+∗ sorted_array [ i −1] > ∗ pvalue ; i −−){ 
+/ ∗ move pointer down ∗ / 
+sorted_array [ i ] = sorted_array [ i −1]; 
+} 
+sorted_array [ i ] = pvalue ; / ∗ insert pointer ∗ / 
+} 
+10 
+Pointer arra y example
+Inser tion sor t (contin ued): 
+/ ∗	iterate until out−of−order element found ; 
+shift the element , and continue iterating ∗ / 
+void insertion _sort ( void ){ 
+unsigned i n t i, len = array_length(arr); 
+for (i =1; i<len; i++) 
+if (∗ sorted_array [ i ] < ∗ sorted_array [ i −1]) 
+shift _element(i ); 
+} 
+11 
+String arra ys
+•	An arr ay of str ings, each stored as a pointer to an arr ay of 
+chars 
+•	Each str ing ma y be of diff erent length 
+char str1 [] = "hello" ;/ ∗ length = 6 ∗ /
+char str2 [] = "goodbye" ;/ ∗ length = 8 ∗ /
+char str3 [] = "ciao" ;/ ∗ length = 5 ∗ /
+char strArray[] = {str1, str2, str3};
+ ∗ 
+•	Note that strArr ay contains only pointers , not the char acters 
+themselv es! 
+12 
+Multidimensional arra ys
+•	C also permits multidimensional arrays speciﬁed using [] 
+brackets notation: 
+int world [20][30]; is a 20x30 2-D arr ay of int’ s 
+•	Higher dimensions possib le: 
+char bigchar matrix [15][7][35][4]; – what are the dimensions of 
+this? 
+•	Multidimensional arr ays are rectangular ; pointer arr ays can 
+be arbitr ary shaped 
+13 
+6.087 Lecture 7 – Jan uary 20, 2010
+Review 
+More about P ointers 
+Pointers to P ointers 
+Pointer Arr ays 
+Multidimensional Arr ays 
+Data Str uctures 
+Stacks 
+Queues 
+Application: Calculator 
+14 
+More data structures
+Last time: linked lists • 
+• Today: stack, queue 
+• Can be implemented using link ed list or arr ay stor age 
+14 
+The stac k
+•	Special type of list - last element in (push) is ﬁrst out (pop) 
+Read and wr ite from same end of list • 
+•	The stac k (where local v ariables are stored) is 
+implemented as a *gasp* stac k 
+15 
+Stac k as arra y
+•	Store as arr ay buffer (static allocation or dynamic 
+allocation): 
+int stack_buffer[100]; 
+•	Elements added and remo ved from end of arr ay; need to 
+track end: 
+int itop =0; /∗ end at zero => initializ ed for empty stac k ∗/ 
+16 
+Stac k as arra y
+•	Add element using void push(int ); 
+void	push ( int elem) {
+stack _buffer[itop++] = elem;
+}
+•	Remo ve element using int pop(v oid); 
+int	pop ( void ){
+if ( itop > 0)
+return stack _buffer[−− itop ];
+else
+return 0; / ∗ or other special value ∗ /
+}
+•	Some implementations pro vide int top(void); to read last 
+(top) element without remo ving it 
+17 
+Stac k as linked list
+•	Store as link ed list (dynamic allocation): 
+struct	s_listnode {
+int element ;
+struct s_listnode pnext;
+∗ 
+}; 
+struct s_listnode ∗ stack_buffer = NULL; – star t empty 
+•	“Top” is no w at front of link ed list (no need to tr ack) 
+18 
+;Stac k as linked list
+• Add element using void push(int ); 
+void push ( int elem) { 
+struct s_listnode ∗new_node = / ∗ allocate new node ∗ / 
+( struct s_listnode ∗ ) malloc ( sizeof ( struct s_listnode )) 
+new_node−>pnext = stack _buffer ; 
+new_node−>element = elem ; 
+stack _buffer = new_node; 
+} 
+• Adding an element pushes bac k the rest of the stac k 
+19 
+Stac k as linked list
+•	Remo ve element using int pop(v oid); 
+int pop ( void ){ 
+if (stack _buffer) { 
+struct s_listnode ∗pelem = stack _buffer ; 
+int elem = stack_buffer −>element ; 
+stack _buffer = pelem−>pnext ; 
+free(pelem); / ∗ remove node from memory ∗ / 
+return elem ; 
+}	else
+return 0; / ∗ or other special value ∗ /
+}
+•	Some implementations pro vide int top(void); to read last 
+(top) element without remo ving it 
+20 
+The queue
+•	Opposite of stac k -ﬁrst in (enqueue), ﬁrst out (dequeue) 
+•	Read and wr ite from opposite ends of list 
+•	Impor tant for UIs (event/message queues), netw orking (Tx, 
+Rx pac ket queues) 
+•	Imposes an order ing on elements 
+21 
+Queue as arra y
+•	Again, store as arr ay buffer (static or dynamic allocation); 
+ﬂoat queue_b uffer[100]; 
+•	Elements added to end (rear), remo ved from beginning 
+(front) 
+•	Need to k eep tr ack of front and rear : 
+int ifront = 0, irear = 0; 
+•	Alternativ ely, we can tr ack the front and n umber of 
+elements: 
+int ifront = 0, icount = 0; 
+•	We’ll use the second w ay (reason apparent later) 
+22 
+Queue as arra y
+•	Add element using void enqueue(ﬂoat); 
+void enqueue ( float elem) { 
+if ( icount < 100) { 
+queue_buffer[ifront+icount] = elem; 
+icount ++; 
+}
+}
+•	Remo ve element using ﬂoat dequeue(v oid); 
+float dequeue ( void ){ 
+if ( icount > 0) {
+icount −−;
+return queue_buffer[ ifront++];
+}	else 
+return 0.; / ∗ or other special value ∗ / 
+} 
+23 
+� �
+� �Queue as arra y
+This w ould mak e for a v ery poor queue! Obser ve a queue • 
+of capacity 4: 
+a cb 
+front rear 
+Enqueue ’d’ to the rear of the queue: • 
+a cb d 
+front rear
+The queue is no w full.
+24 
+� �Queue as arra y
+Dequeue ’a’:• 
+cb d 
+front rear 
+Enqueue ’e’ to the rear : where should it go? • 
+Solution: use a circular (or “r ing”) b uffer • 
+’e’ would go in the beginning of the arr ay • 
+25 
+Queue as arra y
+• Need to modify void enqueue(ﬂoat); and ﬂoat dequeue(v oid); 
+• New void enqueue(ﬂoat); : 
+void enqueue ( float elem) { 
+if ( icount < 100) { 
+queue_buffer[(ifront+icount) % 100] = elem; 
+icount ++; 
+}
+}
+26 
+Queue as arra y
+•	New ﬂoat dequeue(v oid);: 
+float dequeue ( void ){ 
+if ( icount > 0) { 
+float elem = queue_buffer[ ifront ]; 
+icount −−; 
+ifront ++; 
+if ( ifront == 100) 
+ifront = 0; 
+return elem ; 
+}	else 
+return 0.; / ∗ or other special value ∗ / 
+} 
+•	Why would using “front” and “rear” counters instead mak e 
+this harder? 
+27 
+Queue as linked list
+•	Store as link ed list (dynamic allocation): 
+struct	s_listnode {
+float element ;
+struct s_listnode pnext;
+∗ 
+}; 
+struct s_listnode ∗queue_b uffer = NULL; – star t empty 
+•	Let front be at beginning – no need to tr ack front 
+Rear is at end – w e should tr ack it: • 
+struct s_listnode ∗prear = NULL; 
+28 
+;Queue as linked list
+•	Add element using void enqueue(ﬂoat); 
+void enqueue ( float elem) { 
+struct s_listnode ∗new_node = / ∗ allocate new node ∗ / 
+( struct s_listnode ∗ ) malloc ( sizeof ( struct s_listnode )) 
+new_node−>element = elem ; 
+new_node−>pnext = NULL; / ∗ at rear ∗ / 
+if ( prear ) 
+prear −>pnext = new_node; 
+else / ∗ empty ∗ / 
+queue_buffer = new_node;
+prear = new_node;
+}
+•	Adding an element doesn’t aff ect the front if the queue is 
+not empty 
+29 
+Queue as linked list
+•	Remo ve element using ﬂoat dequeue(v oid); 
+float	dequeue ( void ){ 
+if ( queue_buffer ) { 
+struct s_listnode ∗pelem = queue_buffer ; 
+float elem = queue_buffer −>element ; 
+queue_buffer = pelem−>pnext ; 
+if (pelem == prear ) / ∗ at end ∗ / 
+prear = NULL; 
+free(pelem); / ∗ remove node from memory ∗ / 
+return elem ; 
+} else
+return 0.; / ∗ or other special value ∗ /
+}
+•	Remo ving element doesn’t aff ect rear unless resulting 
+queue is empty 
+30 
+A simple calculator
+•	Stacks and queues allo w us to design a simple e xpression 
+evaluator 
+•	Preﬁx, inﬁx, postﬁx notation: operator before, betw een, and 
+after oper ands , respectiv ely
+Inﬁx
+A+B
+A*B-C
+( A + B ) * ( C - D)
+Preﬁx
++AB 
+-*ABC 
+*+AB-CD Postﬁx
+AB+
+AB*C­
+AB+CD-*
+• Inﬁx more natur al to wr ite, postﬁx easier to e valuate 
+31 
+Inﬁx to postﬁx
+•	"Shunting y ard algor ithm" - Dijkstr a (1961): input and 
+output in queues , separ ate stac k for holding oper ators 
+•	Simplest v ersion (oper ands and binar y oper ators only): 
+1. dequeue tok en from input 
+2. if oper and (n umber), add to output queue 
+3. if oper ator, then pop oper ators off stac k and add to output 
+queue as long as 
+• top oper ator on stac k has higher precedence , or 
+• top oper ator on stac k has same precedence and is 
+left-associativ e
+and push ne w oper ator onto stac k
+4. return to step 1 as long as tok ens remain in input 
+5. pop remaining oper ators from stac k and add to output 
+queue 
+32 
+Inﬁx to postﬁx e xample
+• Inﬁx e xpression: A + B * C - D 
+Token
+A 
++ 
+B 
+* 
+C 
+-
+D 
+(end) Output queue
+A 
+A 
+AB 
+AB 
+ABC 
+ABC*+ 
+ABC*+D 
+ABC*+D-Oper ator stac k
++ + 
++* 
++* 
+--
+• Postﬁx e xpression: A B C * + D ­
+• What if e xpression includes parentheses? 
+33 
+Example with parentheses
+• Inﬁx e xpression: ( A + B ) * ( C - D ) 
+Token
+( 
+A 
++ 
+B 
+) 
+* 
+( 
+C 
+-
+D 
+) 
+(end) Output queue
+A 
+A AB 
+AB+ 
+AB+ 
+AB+ 
+AB+C 
+AB+C 
+AB+CD 
+AB+CD­
+AB+CD-* Oper ator stac k
+( ( (+ 
+(+ 
+* 
+*( 
+*( 
+*(­
+*(­
+* 
+• Postﬁx e xpression: A B + C D - * 
+34 
+Evaluating postﬁx
+• Postﬁx e valuation v ery easy with a stac k: 
+1. dequeue a tok en from the postﬁx queue 
+2. if tok en is an oper and, push onto stac k 
+3. if tok en is an oper ator, pop oper ands off stac k (2 for binar y 
+operator); push result onto stac k 
+4. repeat until queue is empty 
+5. item remaining in stac k is ﬁnal result 
+35 
+Postﬁx e valuation e xample
+• Postﬁx e xpression: 3 4 + 5 1 - * 
+Token
+3
+ 3 
+4
+ 34 
++
+ 7 
+5
+ 75 
+1
+ 751 
+-
+*
+ 28 
+(end)
+ answer = 28 Stack
+74 
+• Extends to e xpressions with functions , unar y oper ators 
+• Performs e valuation in one pass , unlik e with preﬁx notation 
+36 
+Summar y
+Topics co vered: 
+• Pointers to pointers 
+• pointer and str ing arr ays 
+• multidimensional arr ays
+Data str uctures
+ • 
+• stack and queue 
+• implemented as arr ays and link ed lists 
+• writing a calculator 
+37 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   

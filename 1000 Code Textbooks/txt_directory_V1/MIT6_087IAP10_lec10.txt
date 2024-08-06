@@ -1,0 +1,320 @@
+Outline
+Review 
+Standard Libr ary 
+<stdio .h> 
+<ctype .h> 
+<stdlib .h> 
+<asser t.h> 
+<stdarg.h> 
+<time .h> 
+1 
+6.087 Lecture 10 – Jan uary 25, 2010
+Review 
+Standard Libr ary 
+<stdio .h> 
+<ctype .h> 
+<stdlib .h> 
+<asser t.h> 
+<stdarg.h> 
+<time .h> 
+2 
+Review: Libraries
+•	linking: binds symbols to addresses . 
+•	static linkage: occurs at compile time (static libr aries). 
+•	dynamic linkage: occurs at r un time (shared libr aries). 
+shared libr aries: • 
+ld.so - locates shared libr aries • 
+•	ldconﬁg - updates links seen b y ld.so 
+•	dlopen(),dlsym(),dlclose() -load shared libr aries 
+on demand. 
+•	compiling static libr aries: gcc,ar 
+•	compiling shared libr aries: gcc,ldconﬁg 
+2 
+Review: BTree
+•	gener alized search tree–m ultiple children. 
+•	except f or root, each node can ha ve betw een t and 2t 
+children. 
+•	tree is al ways balanced. 
+•	Used in ﬁle systems , databases etc. 
+3 
+Review: Priority Queue
+• abstr act data str ucture: many implementations 
+• common implementations: heaps ,bst,link ed list 
+• elements are queued and dequeued in order of pr iority. 
+• operations: 
+peek(),insert(),extract-max()/extract-min() 
+4 
+6.087 Lecture 10 – Jan uary 25, 2010
+Review 
+Standard Libr ary 
+<stdio .h> 
+<ctype .h> 
+<stdlib .h> 
+<asser t.h> 
+<stdarg.h> 
+<time .h> 
+5 
+<stdio.h>: Opening, closing ﬁles
+FILE∗ fopen(const c har∗ ﬁlename,const c har∗ mode) 
+mode can be "r"(read),"w"(wr ite),"a"(append). • 
+"b" can be appended f or binar y input/output (unnecessar y • 
+in *nx)
+returns NULL on error .
+ • 
+FILE∗ freopen(const c har∗ ﬁlename,const c har∗ mode,FILE ∗ stream) 
+• redirects the stream to the ﬁle . 
+• returns NULL on error . 
+• Where can this be used? (redirecting stdin,stdout,stderr) 
+int fﬂush (FILE∗ stream) 
+ﬂushes an y unwr itten data. • 
+if stream is NULL ﬂushes all outputs streams . • 
+returns EOF on error . • 
+5 
+<stdio.h>: File operations
+int remo ve(const c har∗ ﬁlename) 
+remo ves the ﬁle from the ﬁle system. • 
+retrn non-z ero on error . • 
+int rename(const c har∗ oldname,const c har∗ newname) 
+renames ﬁle • 
+returns non-z ero on error (reasons?: permission, • 
+existence) 
+6 
+<stdio.h>:Temporary ﬁles
+FILE∗ tmpﬁle (void) 
+creates a tempor ary ﬁle with mode "wb+". • 
+the ﬁle is remo ved automaticall y when prog ram • 
+terminates . 
+char∗ tmpnam(c har s[L_tmpnam]) 
+creates a str ing that is not the name of an e xisting ﬁle . • 
+return reference to inter nal static arr ay if s is NULL. • 
+Populate s otherwise .
+gener ates a ne w name e very call.
+ • 
+7 
+<stdio.h>: Raw I/O
+size_t fread (void∗ ptr,size_t size,size_t nobj,FILE∗ stream) 
+reads at most nobj items of siz e size from stream into • 
+ptr.
+returns the n umber of items read.
+ • 
+feof and ferror must be used to test end of ﬁle . • 
+size_t fwrite (const v oid∗ ptr,size_t size,size_t nobj,FILE∗ stream) 
+write at most nobj items of siz e size from ptr onto • 
+stream.
+returns number of objects wr itten.
+ • 
+8 
+<stdio.h>: File position
+int fseek(FILE ∗ stream, long offset ,int origin ) 
+sets ﬁle position in the stream. Subsequent read/wr ite • 
+begins at this location
+origin can be SEEK_SET, SEEK_CUR, SEEK_END.
+ • 
+returns non-z ero on error . • 
+long ftell (FILE∗ stream) 
+returns the current position within the ﬁle . (limitation? long • 
+data type).
+returns -1L on error .
+• 
+int rewind(FILE ∗ stream) 
+sets the ﬁle pointer at the beginning. • 
+equiv alent to fseek(stream,0L,SEEK_SET); • 
+9 
+<stdio.h>: File errors
+void clearerr (FILE∗ stream) 
+clears EOF and other error indicators on stream. • 
+int feof(FILE∗ stream) 
+• return non-z ero (TR UE) if end of ﬁle indicator is set f or 
+stream. 
+• only w ay to test end of ﬁle f or functions such as 
+fwrite(),fread() 
+int ferror (FILE∗ stream) 
+returns non-z ero (TR UE) if an y error indicator is set f or • 
+stream. 
+10 
+<ctype.h>: Testing characters
+isalnum(c) isalpha (c) || isdigit (c) 
+iscntr l (c) control char acters 
+isdigit (c) 0-9 
+islower(c) ’a’-’z’ 
+isprint (c) printab le char acter (includes space) 
+ispunct (c) punctuation 
+isspace(c) space , tab or ne w line 
+isupper(c ) ’A’-’Z’ 
+11 
+<string.h>: Memory functions
+void∗ memcp y(void∗ dst,const v oid∗ src,siz e_t n) 
+copies n bytes from src to location dst • 
+returns a pointer to dst. • 
+src and dst cannot o verlap. • 
+void∗ memmo ve(void∗ dst,const v oid∗ src,siz e_t n) 
+beha ves same as memcpy() function. • 
+src and dst can o verlap. • 
+int memcmp(const v oid∗ cs,const v oid∗ ct,int n) 
+compares ﬁrst n bytes betw een cs and ct. • 
+void∗ memset(v oid∗ dst,int c,int n) 
+ﬁlls the ﬁrst n bytes of dst with the v alue c. • 
+returns a pointer to dst • 
+12 
+<stdlib.h>:Utility
+doub le atof(const c har∗ s) 
+int atoi (const c har∗ s) 
+long atol(const c har∗ s) 
+converts char acter to ﬂoat,integer and long respectiv ely. • 
+int rand() 
+returns a pseduo-r andom n umbers betw een 0 and • 
+RAND_MAX 
+void sr and(unsigned int seed) 
+sets the seed f or the pseudo-r andom gener ator! • 
+13 
+<stdlib.h>: Exiting
+void abor t(void) 
+• causes the prog ram to ter minate abnor mally . 
+void exit (int status ) 
+•	causes nor mal prog ram ter mination. The v alue status is 
+returned to the oper ating system. 
+•	0 EXIT_SUCCESS indicates successful ter mination. Any 
+other v alue indicates f ailure (EXIT_FAILURE) 
+14 
+<stdlib.h>:Exiting
+void atexit (void (∗fcn)(void)) 
+•	registers a function fcn to be called when the prog ram 
+terminates nor mally; 
+•	returns non z ero when registr ation cannot be made . 
+•	After exit() is called, the functions are called in re verse 
+order of registr ation. 
+int system(const c har∗ cmd) 
+•	executes the command in str ing cmd. 
+•	if cmd is not n ull, the prog ram e xecutes the command and 
+returns exit status retur ned b y the command. 
+15 
+<stdlib.h>:Searchign and sorting
+void  bsearch ( const void  key , const ∗ ∗ void∗ base , 
+size _t n, size _t size , 
+int (∗cmp ) ( const void∗ keyval , const void∗ datum ) ); 
+•	searches base[0] through base[n-1] for *key. 
+•	function cmp() is used to perf orm compar ison. 
+•	returns a pointer to the matching item if it e xists and NULL 
+otherwise . 
+void qsort ( void∗ base,size _t n, 
+size _t sz , 
+int (∗cmp ) ( const void ∗ , const void ∗ ))! 
+•	sorts base[0] through base[n-1] in
+ascending/descending order .
+•	function cmp() is used to perf orm compar ison. 
+16 
+<assert.h>:Diagnostics
+void asser t(int expression) 
+used to chec k for invariants/code consistency dur ing • 
+debugging.
+does nothing when e xpression is tr ue.
+ • 
+prints an error message indicating, e xpression, ﬁlename • 
+and line n umber . 
+Alternativ e ways to pr int ﬁlename and line n umber dur ing 
+execution is to use: __FILE__,__LINE__ macros . 
+17 
+<stdarg.h>:Variable argument lists
+Variable argument lists: 
+functions can v ariable number of arguments . • 
+the data type of the argument can be diff erent f or each • 
+argument.
+atleast one mandator y argument is required.
+ • 
+Declar ation: • 
+int printf (char∗ fmt ,...); /∗fmt is last named argument ∗/ 
+va_list ap 
+ap deﬁnes an iter ator that will point to the v ariable • 
+argument.
+before using, it has to be initializ ed using va_start.
+• 
+18 
+<stdarg.h>:Variable argument list
+va_star t( va_list ap, lastarg ) 
+ap lastarg ref ers to the name of the last named argument. • 
+va_star t is a macro . • 
+va_arg( va_list ap, type) 
+each call of va_arg points ap to the ne xt argument. • 
+type has to be inf erred from the ﬁx ed argument (e .g. printf) • 
+or deter mined based on pre vious argument(s). 
+va_end(v a_list ap) 
+must be called bef ore the function is e xited. • 
+19 
+<stdarg.h>:Variable argument list(cont.)
+int sum( int num, . . . ) 
+{ 
+va _list ap; int total =0; 
+va _start (ap,num); 
+while (num>0) 
+{ 
+t o t a l +=va_arg ( ap , int ); 
+num−−;
+}
+va_end(ap );
+return total ;
+} 
+int suma=sum(4 ,1 ,2 ,3 ,4); / ∗ called with five args ∗ / 
+int sumb=sum(2 ,1 ,2); / ∗ called with three args ∗ / 
+20 
+<time.h>
+time_t ,clock_t, struct tm data types associated with time . 
+struct tm:
+int tm_sec seconds 
+int tm_min minutes 
+int tm_hour hour since midnight (0,23) 
+int tm_mda y day of the month (1,31) 
+int tm_mon month 
+int tm_y ear years since 1900 
+int tm_wda y day since sunda y (0,6) 
+int tm_yda y day since J an 1 (0,365) 
+int tm_isdst DST ﬂag 
+21 
+<time.h>
+clock_t clock() 
+returns processor time used since beginning of prog ram. • 
+divide b y CLOCKS_PER_SEC to get time in seconds . • 
+time_t time(time_t ∗ tp) 
+returns current time (seconds since J an 1 1970). • 
+if tp is not NULL, also populates tp . • 
+doub le difftime (time_t t1,time_t t2) 
+returns diff erence in seconds . • 
+time_t mktime(struct tm ∗ tp) 
+converts the str ucture to a time_t object. • 
+returns -1 if con version is not possib le. • 
+22 
+<time.h>
+char∗ asctime(const struct tm ∗ tp) 
+returns str ing representation of the f orm "Sun J an 3 • 
+15:14:13 1988".
+returns static ref erence (can be o verwritten b y other calls).
+ • 
+struct tm∗ localtime (const time_t ∗ tp) 
+converts calendar time to local time". • 
+char∗ ctime(const time_t ∗ tp) 
+converts calendar time to str ing representation of local • 
+time".
+equiv alent to sctime(loc ltime(tp))!
+ • 
+23 
+<time.h>
+size_t strftime (char∗ s,size_t smax,const c har∗ fmt,const struct tm ∗ tp) 
+returns time in the desired f ormat. • 
+• does not write more than smax characters into the string s. 
+%a abbreviated w eekda y name 
+%A full w eekda y name 
+%b abbreviated month name 
+%B full month name 
+%d day of the month 
+%H hour (0-23) 
+%I hour (0-12) 
+%m month 
+%M minute 
+%p AM/PM 
+%S second 
+24 
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms. 
+MIT OpenCourseWare
+http://ocw.mit.edu  
+6.087 Practical Programming in C
+January (IAP) 2010
+For information about citing these materials or our Terms of Use,visit: http://ocw.mit.edu/terms.   
